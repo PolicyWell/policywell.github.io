@@ -2,13 +2,13 @@ import "server-only";
 
 import { runAgentTurn, type AgentTurnResult, type AgentWorkspace } from "./index";
 
-/** Optional OpenAI-backed synthesis — server-only. */
+/** OpenAI-backed synthesis on top of deterministic tool results — server-only. */
 export async function runAgentTurnWithOptionalLlm(
   message: string,
   workspace: AgentWorkspace,
 ): Promise<AgentTurnResult> {
   const base = runAgentTurn(message, workspace);
-  const key = process.env.OPENAI_API_KEY;
+  const key = process.env.OPENAI_API_KEY?.trim();
   if (!key) return base;
 
   try {
@@ -16,18 +16,54 @@ export async function runAgentTurnWithOptionalLlm(
     const { createOpenAI } = await import("@ai-sdk/openai");
     const openai = createOpenAI({ apiKey: key });
     const toolDigest = base.toolResults
-      .map((t) => `${t.tool}: ${t.summary}`)
+      .map(
+        (t) =>
+          `- ${t.tool} (${t.ok ? "ok" : "failed"}): ${t.summary}` +
+          (t.data ? `\n  data: ${JSON.stringify(t.data).slice(0, 1200)}` : ""),
+      )
       .join("\n");
+
+    const ctx = base.workspace.profile;
     const { text } = await generateText({
       model: openai("gpt-4o-mini"),
-      system:
-        "You are PolicyWell, an Insurance Intelligence Agent. Answer only using the tool results provided. " +
-        "Cite documents, extracted values, assumptions, and confidence. Never invent product claims. " +
-        "Recommendations require human approval. Be calm, premium, and analyst-like.",
-      prompt: `User: ${message}\n\nTool results:\n${toolDigest}\n\nWrite the reply to the user.`,
+      temperature: 0.3,
+      system: [
+        "You are PolicyWell, an Insurance Intelligence Agent — not a generic chatbot.",
+        "Speak like a calm, premium insurance analyst working alongside the user.",
+        "ONLY use facts from the tool results and known profile context below.",
+        "Always mention grounding when analyzing a policy: document name, key extracted values, assumptions, and confidence when present.",
+        "Never invent product claims, guarantees, or numbers that are not in the tool results.",
+        "Recommendations require human approval before client delivery — say so clearly.",
+        "Keep replies concise (2–4 short paragraphs). Use plain language.",
+      ].join(" "),
+      prompt: [
+        `User message: ${message}`,
+        ``,
+        `Profile: ${ctx.displayName} (${ctx.role}), confidence ${Math.round(ctx.overallConfidence * 100)}%, missing: ${ctx.missingFields.join(", ") || "none"}`,
+        `Carrier: ${ctx.carrier.primaryCarrier.value ?? "unknown"}; state: ${ctx.household.state.value ?? "unknown"}`,
+        ``,
+        `Tool results:`,
+        toolDigest || "(no tools ran)",
+        ``,
+        `Write the reply to the user now.`,
+      ].join("\n"),
     });
-    return { ...base, reply: text || base.reply, usedLlm: true };
-  } catch {
-    return base;
+
+    if (!text?.trim()) return base;
+    return { ...base, reply: text.trim(), usedLlm: true };
+  } catch (err) {
+    console.error("[policywell-agent] OpenAI synthesis failed:", err);
+    const raw = err instanceof Error ? err.message : String(err);
+    const quota =
+      /insufficient_quota|exceeded your current quota/i.test(raw) ||
+      /insufficient_quota/.test(JSON.stringify(err));
+    const note = quota
+      ? "_(OpenAI quota exceeded — add billing credits at platform.openai.com, then retry. Showing the tool-grounded analyst reply.)_"
+      : "_(LLM phrasing unavailable right now — showing the tool-grounded analyst reply.)_";
+    return {
+      ...base,
+      reply: `${base.reply}\n\n${note}`,
+      usedLlm: false,
+    };
   }
 }

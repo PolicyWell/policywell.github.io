@@ -25,6 +25,7 @@ interface ChatMessage {
   role: "user" | "assistant" | "system";
   content: string;
   tools?: { tool: string; summary: string; ok: boolean }[];
+  usedLlm?: boolean;
 }
 
 const WELCOME: ChatMessage = {
@@ -103,14 +104,14 @@ export default function AgentPage() {
     };
   }
 
-  function send(text: string) {
+  async function send(text: string) {
     const trimmed = text.trim();
     if (!trimmed || busyRef.current) return;
 
     busyRef.current = true;
     setBusy(true);
     setError(null);
-    setActivity("Running agent tools…");
+    setActivity("Planning tools…");
     setInput("");
     setMessages((m) => [
       ...m,
@@ -118,44 +119,63 @@ export default function AgentPage() {
     ]);
     scrollToBottom();
 
-    // Defer so the user message paints before the (sync) tool run
-    window.setTimeout(() => {
+    const user = ensureSession();
+    const workspace = buildWorkspace(user);
+
+    try {
+      setActivity("Calling intelligence tools + OpenAI…");
+      let result: ReturnType<typeof runAgentTurn> | null = null;
+
       try {
-        const user = ensureSession();
-        const result = runAgentTurn(trimmed, buildWorkspace(user));
-
-        persistProfile(result.workspace.profile);
-        persistRecommendations(result.workspace.recommendations);
-        persistTasks(result.workspace.tasks);
-
-        setMessages((m) => [
-          ...m,
-          {
-            id: `a_${Date.now()}`,
-            role: "assistant",
-            content: result.reply,
-            tools: result.toolResults.map((t) => ({
-              tool: t.tool,
-              summary: t.summary,
-              ok: t.ok,
-            })),
-          },
-        ]);
-      } catch (err) {
-        const msg =
-          err instanceof Error ? err.message : "The agent failed this turn.";
-        setError(msg);
-        setMessages((m) => [
-          ...m,
-          { id: `e_${Date.now()}`, role: "system", content: msg },
-        ]);
-      } finally {
-        busyRef.current = false;
-        setBusy(false);
-        setActivity(null);
-        scrollToBottom();
+        const res = await fetch("/api/agent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: trimmed, workspace }),
+        });
+        if (res.ok) {
+          result = (await res.json()) as ReturnType<typeof runAgentTurn>;
+        }
+      } catch {
+        // fall through to client-side agent
       }
-    }, 30);
+
+      if (!result) {
+        setActivity("Running agent tools locally…");
+        result = runAgentTurn(trimmed, workspace);
+      }
+
+      persistProfile(result.workspace.profile);
+      persistRecommendations(result.workspace.recommendations);
+      persistTasks(result.workspace.tasks);
+
+      setMessages((m) => [
+        ...m,
+        {
+          id: `a_${Date.now()}`,
+          role: "assistant",
+          content: result!.reply,
+          usedLlm: result!.usedLlm,
+          tools: result!.toolResults.map((t) => ({
+            tool: t.tool,
+            summary: t.summary,
+            ok: t.ok,
+          })),
+        },
+      ]);
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "The agent failed this turn.";
+      setError(msg);
+      setMessages((m) => [
+        ...m,
+        { id: `e_${Date.now()}`, role: "system", content: msg },
+      ]);
+    } finally {
+      busyRef.current = false;
+      setBusy(false);
+      setActivity(null);
+      scrollToBottom();
+    }
   }
 
   function seedDemo() {
@@ -254,6 +274,11 @@ export default function AgentPage() {
                         {t.tool}
                       </span>
                     ))}
+                    {m.usedLlm && (
+                      <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-moss/15 text-moss">
+                        openai
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -362,9 +387,10 @@ export default function AgentPage() {
           <div className="pw-panel p-5 text-sm text-stone space-y-2">
             <h2 className="font-display text-xl text-pine">How it works</h2>
             <p>
-              Each message runs the agent loop in your browser: plan tools →
-              update context / score / analyze / recommend → reply. Tool chips
-              under each answer show what ran.
+              Each message runs tools (context, scores, analysis, scenarios,
+              recommendations), then OpenAI phrases the grounded reply. Tool
+              chips show what ran; an <span className="text-moss">openai</span>{" "}
+              chip means LLM synthesis was used.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <Link href="/upload" className="pw-btn pw-btn-secondary !py-2 text-xs">
