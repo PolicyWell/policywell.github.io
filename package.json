@@ -17,6 +17,7 @@
     "verify": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.20",
     "@ai-sdk/openai": "^4.0.17",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",

@@ -123,7 +123,7 @@ export default function AgentPage() {
     const workspace = buildWorkspace(user);
 
     try {
-      setActivity("Calling intelligence tools + OpenAI…");
+      setActivity("Calling intelligence tools + Gemini…");
       let result: ReturnType<typeof runAgentTurn> | null = null;
 
       try {
@@ -276,7 +276,7 @@ export default function AgentPage() {
                     ))}
                     {m.usedLlm && (
                       <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-moss/15 text-moss">
-                        openai
+                        gemini
                       </span>
                     )}
                   </div>
@@ -388,9 +388,9 @@ export default function AgentPage() {
             <h2 className="font-display text-xl text-pine">How it works</h2>
             <p>
               Each message runs tools (context, scores, analysis, scenarios,
-              recommendations), then OpenAI phrases the grounded reply. Tool
-              chips show what ran; an <span className="text-moss">openai</span>{" "}
-              chip means LLM synthesis was used.
+              recommendations), then Gemini phrases the grounded reply. Tool
+              chips show what ran; a <span className="text-moss">gemini</span>{" "}
+              chip means Google AI synthesis was used.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <Link href="/upload" className="pw-btn pw-btn-secondary !py-2 text-xs">

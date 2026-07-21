@@ -2,19 +2,23 @@ import "server-only";
 
 import { runAgentTurn, type AgentTurnResult, type AgentWorkspace } from "./index";
 
-/** OpenAI-backed synthesis on top of deterministic tool results — server-only. */
+/** Google AI Studio (Gemini) synthesis on top of deterministic tool results. */
 export async function runAgentTurnWithOptionalLlm(
   message: string,
   workspace: AgentWorkspace,
 ): Promise<AgentTurnResult> {
   const base = runAgentTurn(message, workspace);
-  const key = process.env.OPENAI_API_KEY?.trim();
+  const key =
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
+    process.env.GEMINI_API_KEY?.trim() ||
+    process.env.GOOGLE_AI_API_KEY?.trim();
   if (!key) return base;
 
   try {
     const { generateText } = await import("ai");
-    const { createOpenAI } = await import("@ai-sdk/openai");
-    const openai = createOpenAI({ apiKey: key });
+    const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
+    const google = createGoogleGenerativeAI({ apiKey: key });
+
     const toolDigest = base.toolResults
       .map(
         (t) =>
@@ -25,7 +29,7 @@ export async function runAgentTurnWithOptionalLlm(
 
     const ctx = base.workspace.profile;
     const { text } = await generateText({
-      model: openai("gpt-4o-mini"),
+      model: google("gemini-flash-latest"),
       temperature: 0.3,
       system: [
         "You are PolicyWell, an Insurance Intelligence Agent — not a generic chatbot.",
@@ -52,14 +56,15 @@ export async function runAgentTurnWithOptionalLlm(
     if (!text?.trim()) return base;
     return { ...base, reply: text.trim(), usedLlm: true };
   } catch (err) {
-    console.error("[policywell-agent] OpenAI synthesis failed:", err);
+    console.error("[policywell-agent] Gemini synthesis failed:", err);
     const raw = err instanceof Error ? err.message : String(err);
-    const quota =
-      /insufficient_quota|exceeded your current quota/i.test(raw) ||
-      /insufficient_quota/.test(JSON.stringify(err));
+    const quota = /quota|resource.exhausted|429|billing/i.test(raw);
+    const auth = /api key|permission|401|403|invalid/i.test(raw);
     const note = quota
-      ? "_(OpenAI quota exceeded — add billing credits at platform.openai.com, then retry. Showing the tool-grounded analyst reply.)_"
-      : "_(LLM phrasing unavailable right now — showing the tool-grounded analyst reply.)_";
+      ? "_(Google AI quota exceeded — check AI Studio billing/limits, then retry. Showing the tool-grounded analyst reply.)_"
+      : auth
+        ? "_(Google AI API key rejected — verify the key in AI Studio. Showing the tool-grounded analyst reply.)_"
+        : "_(LLM phrasing unavailable right now — showing the tool-grounded analyst reply.)_";
     return {
       ...base,
       reply: `${base.reply}\n\n${note}`,

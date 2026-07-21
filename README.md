@@ -60,7 +60,7 @@ ls src/app/agent/page.tsx src/app/api/agent/route.ts src/lib/agent/index.ts
 | casey@imo.example | IMO |
 | morgan@carrier.example | Carrier |
 
-Optional LLM phrasing: `export OPENAI_API_KEY=sk-...` then restart `npm run dev`. Without a key the agent still runs (tool planner + synthesizer).
+Optional LLM phrasing: set `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local` (Google AI Studio / Gemini), then restart `npm run dev`. Without a key the agent still runs (tool planner + synthesizer).
 
 ## Docs
 
