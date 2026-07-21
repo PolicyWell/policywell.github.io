@@ -89,7 +89,7 @@ Every task must:
 
 | Scope | Status |
 |-------|--------|
-| Compliance-first `pw` CLI for client / producer / IMO / carrier | Design — see [CLI_DESIGN.md](./CLI_DESIGN.md) |
+| Compliance-first `pw` CLI for client / producer / IMO / carrier | Design — [web Docs](/docs/cli) · [CLI_DESIGN.md](./CLI_DESIGN.md) |
 
 ## Architecture
 

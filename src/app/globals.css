@@ -199,3 +199,104 @@ select {
   background: linear-gradient(90deg, var(--moss), var(--sage));
   border-radius: inherit;
 }
+
+/* Docs pages */
+.pw-docs .pw-docs-h1 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.85rem, 4vw, 2.6rem);
+  color: var(--pine);
+  margin: 0 0 1rem;
+  line-height: 1.15;
+}
+
+.pw-docs .pw-docs-h2 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.55rem;
+  color: var(--pine);
+  margin: 2.25rem 0 0.75rem;
+}
+
+.pw-docs .pw-docs-h3 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.2rem;
+  color: var(--pine);
+  margin: 1.75rem 0 0.5rem;
+}
+
+.pw-docs .pw-docs-h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 1.25rem 0 0.4rem;
+}
+
+.pw-docs .pw-docs-p {
+  color: var(--stone);
+  margin: 0.65rem 0;
+  line-height: 1.65;
+}
+
+.pw-docs .pw-docs-ul,
+.pw-docs .pw-docs-ol {
+  color: var(--stone);
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+}
+
+.pw-docs .pw-docs-ul li,
+.pw-docs .pw-docs-ol li {
+  margin: 0.35rem 0;
+}
+
+.pw-docs .pw-docs-pre {
+  margin: 1rem 0;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(15, 47, 40, 0.92);
+  color: #e7f0eb;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.pw-docs .pw-docs-pre code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.pw-docs code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.86em;
+  background: rgba(15, 47, 40, 0.06);
+  color: var(--pine);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.pw-docs .pw-docs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.pw-docs .pw-docs-table th,
+.pw-docs .pw-docs-table td {
+  border: 1px solid rgba(15, 47, 40, 0.1);
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pw-docs .pw-docs-table th {
+  background: rgba(15, 47, 40, 0.05);
+  color: var(--pine);
+  font-weight: 600;
+}
+
+.pw-docs .pw-docs-table td {
+  color: var(--stone);
+}

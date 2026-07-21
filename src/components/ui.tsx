@@ -27,6 +27,9 @@ export function SiteNav() {
         <Link href="/agent" className="hover:text-pine transition-colors">
           Agent
         </Link>
+        <Link href="/docs" className="hover:text-pine transition-colors">
+          Docs
+        </Link>
         <Link href="/demo" className="hover:text-pine transition-colors">
           Investor demo
         </Link>
@@ -41,6 +44,7 @@ export function SiteNav() {
 export function AppNav({ role }: { role?: string }) {
   const links = [
     { href: "/agent", label: "Agent" },
+    { href: "/docs", label: "Docs" },
     { href: "/workspace", label: "Workspace" },
     { href: "/onboarding", label: "Onboarding" },
     { href: "/profile", label: "Profile" },
