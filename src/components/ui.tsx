@@ -41,8 +41,15 @@ export function AppNav({ role }: { role?: string }) {
     { href: "/onboarding", label: "Onboarding" },
     { href: "/profile", label: "Profile" },
     { href: "/upload", label: "Upload" },
+    { href: "/compare", label: "Compare" },
     { href: "/report", label: "Report" },
   ];
+  if (role === "advisor" || role === "imo") {
+    links.unshift({ href: "/clients", label: "Clients" });
+  }
+  if (role === "carrier") {
+    links.push({ href: "/carrier", label: "Carrier console" });
+  }
   return (
     <header className="border-b border-pine/10 bg-foam/70 backdrop-blur-md sticky top-0 z-20">
       <div className="pw-shell flex flex-wrap items-center justify-between gap-3 py-4">

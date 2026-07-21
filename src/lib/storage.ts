@@ -10,6 +10,8 @@ const DOCS_KEY = "policywell_documents";
 const SESSION_KEY = "policywell_session";
 const FEEDBACK_KEY = "policywell_feedback";
 const ONBOARDING_KEY = "policywell_onboarding";
+const CLIENTS_KEY = "policywell_clients";
+const ACTIVE_CLIENT_KEY = "policywell_active_client";
 
 function canUseStorage() {
   return typeof window !== "undefined" && !!window.localStorage;
@@ -93,10 +95,36 @@ export function loadOnboardingRaw(): string | null {
   return localStorage.getItem(ONBOARDING_KEY);
 }
 
+export function saveClientsRaw(raw: string) {
+  if (!canUseStorage()) return;
+  localStorage.setItem(CLIENTS_KEY, raw);
+}
+
+export function loadClientsRaw(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(CLIENTS_KEY);
+}
+
+export function saveActiveClientId(id: string | null) {
+  if (!canUseStorage()) return;
+  if (id == null) {
+    localStorage.removeItem(ACTIVE_CLIENT_KEY);
+    return;
+  }
+  localStorage.setItem(ACTIVE_CLIENT_KEY, id);
+}
+
+export function loadActiveClientId(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(ACTIVE_CLIENT_KEY);
+}
+
 export function clearWorkspaceData() {
   if (!canUseStorage()) return;
   localStorage.removeItem(PROFILE_KEY);
   localStorage.removeItem(DOCS_KEY);
   localStorage.removeItem(FEEDBACK_KEY);
   localStorage.removeItem(ONBOARDING_KEY);
+  localStorage.removeItem(CLIENTS_KEY);
+  localStorage.removeItem(ACTIVE_CLIENT_KEY);
 }

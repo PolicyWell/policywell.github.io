@@ -31,6 +31,16 @@ Every task must:
 | 4 | Agent workspace, timeline, reports, feedback | Done |
 | 5 | QA, polish, investor demo, seed data, walkthrough | Done |
 
+## Sprint 2 status
+
+| Scope | Status |
+|-------|--------|
+| Advisor client roster (3 seeded households, workspace activation) | Done |
+| Policy comparison engine (IUL vs FIA, suitability, 1035 warnings) | Done |
+| Scenario modeling (deterministic projections, lapse detection) | Done |
+| Carrier content packs + compliance-preserving console | Done |
+| Role-aware navigation | Done |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)

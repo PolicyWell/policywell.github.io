@@ -9,12 +9,17 @@ import type {
   SessionUser,
   UserProfile,
 } from "./types";
+import type { ClientRecord } from "./clients";
 import {
+  loadActiveClientId,
+  loadClientsRaw,
   loadDocuments,
   loadFeedback,
   loadOnboardingRaw,
   loadProfile,
   loadSession,
+  saveActiveClientId,
+  saveClientsRaw,
   saveDocuments,
   saveFeedback,
   saveOnboardingRaw,
@@ -125,4 +130,40 @@ export function persistFeedback(entries: FeedbackEntry[]) {
 
 export function clearOnboardingBoot() {
   onboardingBoot.clear();
+}
+
+let clientsCache: { raw: string; parsed: ClientRecord[] } | null = null;
+
+function readClients(): ClientRecord[] {
+  const raw = loadClientsRaw();
+  if (!raw) return [];
+  if (clientsCache?.raw === raw) return clientsCache.parsed;
+  try {
+    const parsed = JSON.parse(raw) as ClientRecord[];
+    clientsCache = { raw, parsed };
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+export function useClients(): ClientRecord[] {
+  return useSyncExternalStore(subscribe, readClients, () => []);
+}
+
+export function useActiveClientId(): string | null {
+  return useSyncExternalStore(subscribe, loadActiveClientId, () => null);
+}
+
+export function persistClients(clients: ClientRecord[]) {
+  saveClientsRaw(JSON.stringify(clients));
+  notifyStore();
+}
+
+/** Activating a client loads their profile + documents into the shared workspace. */
+export function activateClient(client: ClientRecord) {
+  saveActiveClientId(client.id);
+  saveProfile(client.profile);
+  saveDocuments(client.documents);
+  notifyStore();
 }
