@@ -85,6 +85,12 @@ Every task must:
 | Demo role `riley@firm.example` (broker_dealer) | Done |
 | Stable localStorage snapshots (fix /agent React #185) | Done |
 
+## Sprint 8 candidate (CLI)
+
+| Scope | Status |
+|-------|--------|
+| Compliance-first `pw` CLI for client / producer / IMO / carrier | Design — see [CLI_DESIGN.md](./CLI_DESIGN.md) |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)
