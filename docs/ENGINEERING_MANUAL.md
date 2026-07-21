@@ -1,0 +1,50 @@
+# PolicyWell Engineering Manual
+
+**Version 0.1** — “Building the Intelligence Layer for Insurance.”
+
+This repository implements the PolicyWell Sprint 1 MVP according to the Engineering Manual.
+
+## Development rules
+
+Every task must:
+
+1. Read Engineering Manual
+2. Read Previous Sprint
+3. Read Acceptance Criteria
+4. Implement Feature
+5. Write Tests
+6. Run Tests
+7. Generate Morning Report
+8. Stop
+
+- No production deployment
+- No destructive migrations
+- No guessing
+
+## Sprint 1 status
+
+| Day | Scope | Status |
+|-----|-------|--------|
+| 1 | Repo, auth, landing, natural layout, conversational onboarding | Done |
+| 2 | Household profile, upload, OCR, extraction, review/edit | Done |
+| 3 | Hybrid context engine, deterministic scores, AI explanation | Done |
+| 4 | Agent workspace, timeline, reports, feedback | Done |
+| 5 | QA, polish, investor demo, seed data, walkthrough | Done |
+
+## Architecture
+
+- **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)
+- **Demo authentication** — role-gated sessions (`policyholder` / `advisor` / `carrier`)
+- **Conversational onboarding** — utterance → structured profiles with confidence + edit
+- **Ingestion engine** — drag/drop, OCR heuristics, extraction JSON, human verification, search
+- **Hybrid context engine** — always builds context before answering
+- **Deterministic PolicyWell Score** — explainable; feedback does not auto-mutate scores
+- **localStorage workspace** — Sprint 1 persistence (no production DB)
+
+## Demo accounts
+
+- `alex@example.com` — policyholder
+- `jordan@advisors.example` — advisor
+- `morgan@carrier.example` — carrier
+
+Investor path: `/demo` → Seed sample data → Workspace → Report.
