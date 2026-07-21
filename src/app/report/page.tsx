@@ -4,12 +4,22 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { AppNav } from "@/components/ui";
 import { generateAgentReport } from "@/lib/context-engine";
-import { useDocuments, useProfile, useSession } from "@/lib/use-workspace";
+import { approvedForReport } from "@/lib/recommendations";
+import {
+  useDocuments,
+  useProfile,
+  useRecommendations,
+  useSession,
+} from "@/lib/use-workspace";
 
 export default function ReportPage() {
   const session = useSession();
   const profile = useProfile();
   const docs = useDocuments();
+
+  const recommendations = useRecommendations();
+  const approved = approvedForReport(recommendations);
+  const pendingCount = recommendations.filter((r) => r.status === "pending").length;
 
   const report = useMemo(
     () => (profile ? generateAgentReport(profile, docs) : null),
@@ -68,6 +78,33 @@ export default function ReportPage() {
           <ListBlock title="Warnings" items={report.warnings} tone="warn" />
           <ListBlock title="Recommended follow-up" items={report.recommendedFollowUp} />
         </div>
+
+        <section className="pw-panel p-6 animate-rise-delay-2">
+          <h2 className="font-display text-2xl text-pine mb-2">
+            Approved recommendations
+          </h2>
+          <p className="text-xs text-stone mb-4">
+            Only human-approved recommendations appear here.
+            {pendingCount > 0 && (
+              <> {pendingCount} pending item{pendingCount === 1 ? "" : "s"} await approval in the workspace.</>
+            )}
+          </p>
+          {approved.length === 0 ? (
+            <p className="text-sm text-stone">
+              No approved recommendations yet — review the queue in the{" "}
+              <Link href="/workspace" className="underline">workspace</Link>.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {approved.map((r) => (
+                <li key={r.id} className="text-sm">
+                  <span className="text-ink font-medium">{r.title}</span>
+                  <span className="block text-xs text-stone mt-0.5">{r.rationale}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </main>
     </div>
   );

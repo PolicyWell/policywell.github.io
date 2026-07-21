@@ -50,6 +50,14 @@ Every task must:
 | IMO dashboard + IMO demo role | Done |
 | Email import ingestion channel | Done |
 
+## Sprint 4 status
+
+| Scope | Status |
+|-------|--------|
+| Deterministic recommendation engine (7 rules, rationale + confidence) | Done |
+| Human approval queue (approve/reject, gates client report) | Done |
+| Score history snapshots + trend | Done |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)

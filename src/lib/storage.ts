@@ -12,6 +12,8 @@ const FEEDBACK_KEY = "policywell_feedback";
 const ONBOARDING_KEY = "policywell_onboarding";
 const CLIENTS_KEY = "policywell_clients";
 const ACTIVE_CLIENT_KEY = "policywell_active_client";
+const RECS_KEY = "policywell_recommendations";
+const HISTORY_KEY = "policywell_score_history";
 
 function canUseStorage() {
   return typeof window !== "undefined" && !!window.localStorage;
@@ -119,6 +121,26 @@ export function loadActiveClientId(): string | null {
   return localStorage.getItem(ACTIVE_CLIENT_KEY);
 }
 
+export function saveRecommendationsRaw(raw: string) {
+  if (!canUseStorage()) return;
+  localStorage.setItem(RECS_KEY, raw);
+}
+
+export function loadRecommendationsRaw(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(RECS_KEY);
+}
+
+export function saveHistoryRaw(raw: string) {
+  if (!canUseStorage()) return;
+  localStorage.setItem(HISTORY_KEY, raw);
+}
+
+export function loadHistoryRaw(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(HISTORY_KEY);
+}
+
 export function clearWorkspaceData() {
   if (!canUseStorage()) return;
   localStorage.removeItem(PROFILE_KEY);
@@ -127,4 +149,6 @@ export function clearWorkspaceData() {
   localStorage.removeItem(ONBOARDING_KEY);
   localStorage.removeItem(CLIENTS_KEY);
   localStorage.removeItem(ACTIVE_CLIENT_KEY);
+  localStorage.removeItem(RECS_KEY);
+  localStorage.removeItem(HISTORY_KEY);
 }

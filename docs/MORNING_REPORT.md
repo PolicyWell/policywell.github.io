@@ -1,3 +1,43 @@
+# PolicyWell Morning Report — Sprint 4
+
+**Date:** 2026-07-21  
+**Branch:** `cursor/sprint1-mvp-c124`  
+**Manual version:** 0.1  
+**Previous sprint:** Sprint 3 (IMO engine + email import, see below)
+
+## Verdict
+
+Sprint 4 closes the remaining gap in the core workflow (Manual §4): an explicit **Human Approval** stage. Recommendations are now first-class objects generated deterministically from context and scores, reviewed in an approve/reject queue, and only approved items reach client-facing reports. Score trend history rounds out the Continuous Improvement loop.
+
+## Shipped
+
+### Recommendation engine + human approval (Manual §4)
+- `src/lib/recommendations.ts`: seven deterministic rules (fund to target, policy loan review, coverage gap, beneficiary confirmation, document verification, profile completion, schedule review) — each with rationale, input values, and confidence. All start `pending`.
+- **Approval queue** in the workspace: approve/reject per item with decision timestamps.
+- **Report gating**: `/report` shows an "Approved recommendations" section fed only by `approvedForReport()`; pending/rejected items never reach client output (test-asserted).
+
+### Score history (Continuous Improvement)
+- `src/lib/history.ts`: score snapshots (overall, policy health, protection, review priority), capped at 50 entries, with trend delta since first snapshot.
+- Workspace bar chart + "Record snapshot" action.
+
+## Tests
+
+`npm test`: **29/29 passing** (Sprint 4 adds 5 — rule determinism, per-client rule targeting on the IMO seed, approval gating, snapshot trend, history cap).
+Typecheck, lint, production build clean; routes smoke-tested.
+
+## Push status
+
+Push to `https://github.com/PolicyWell/PW-MVP` remains **blocked — no GitHub credentials in this environment**. `origin` is configured and ready. A full repo bundle exists at `policywell-sprints1-3.bundle` (untracked). Unblock via: PAT pasted in chat, `GITHUB_TOKEN` secret + new agent run, or relaunch from cursor.com/agents with the repo connected.
+
+## Next sprint candidates
+
+- Real LLM interview + extraction behind existing interfaces (needs API key)
+- Database persistence and real authentication (needs infra decision)
+- Broker-dealer / financial-institution views
+- Recommendation → follow-up task workflow for advisors
+
+---
+
 # PolicyWell Morning Report — Sprint 3
 
 **Date:** 2026-07-21  

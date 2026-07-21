@@ -10,9 +10,13 @@ import type {
   UserProfile,
 } from "./types";
 import type { ClientRecord } from "./clients";
+import type { ScoreSnapshot } from "./history";
+import type { Recommendation } from "./recommendations";
 import {
   loadActiveClientId,
   loadClientsRaw,
+  loadHistoryRaw,
+  loadRecommendationsRaw,
   loadDocuments,
   loadFeedback,
   loadOnboardingRaw,
@@ -22,6 +26,8 @@ import {
   saveClientsRaw,
   saveDocuments,
   saveFeedback,
+  saveHistoryRaw,
+  saveRecommendationsRaw,
   saveOnboardingRaw,
   saveProfile,
   saveSession,
@@ -165,5 +171,45 @@ export function activateClient(client: ClientRecord) {
   saveActiveClientId(client.id);
   saveProfile(client.profile);
   saveDocuments(client.documents);
+  notifyStore();
+}
+
+function makeJsonSnapshot<T>(read: () => string | null, fallback: T): () => T {
+  let cache: { raw: string; parsed: T } | null = null;
+  return () => {
+    const raw = read();
+    if (!raw) return fallback;
+    if (cache?.raw === raw) return cache.parsed;
+    try {
+      const parsed = JSON.parse(raw) as T;
+      cache = { raw, parsed };
+      return parsed;
+    } catch {
+      return fallback;
+    }
+  };
+}
+
+const EMPTY_RECS: Recommendation[] = [];
+const readRecs = makeJsonSnapshot<Recommendation[]>(loadRecommendationsRaw, EMPTY_RECS);
+
+export function useRecommendations(): Recommendation[] {
+  return useSyncExternalStore(subscribe, readRecs, () => EMPTY_RECS);
+}
+
+export function persistRecommendations(recs: Recommendation[]) {
+  saveRecommendationsRaw(JSON.stringify(recs));
+  notifyStore();
+}
+
+const EMPTY_HISTORY: ScoreSnapshot[] = [];
+const readHistory = makeJsonSnapshot<ScoreSnapshot[]>(loadHistoryRaw, EMPTY_HISTORY);
+
+export function useScoreHistory(): ScoreSnapshot[] {
+  return useSyncExternalStore(subscribe, readHistory, () => EMPTY_HISTORY);
+}
+
+export function persistScoreHistory(history: ScoreSnapshot[]) {
+  saveHistoryRaw(JSON.stringify(history));
   notifyStore();
 }

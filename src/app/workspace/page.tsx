@@ -10,12 +10,21 @@ import {
   generateAgentReport,
 } from "@/lib/context-engine";
 import { createFeedback, summarizeFeedback } from "@/lib/feedback";
+import { appendSnapshot, takeSnapshot, trendDelta } from "@/lib/history";
+import {
+  decideRecommendation,
+  generateRecommendations,
+} from "@/lib/recommendations";
 import { computePolicyWellScores } from "@/lib/scoring";
 import {
   persistFeedback,
+  persistRecommendations,
+  persistScoreHistory,
   useDocuments,
   useFeedbackEntries,
   useProfile,
+  useRecommendations,
+  useScoreHistory,
   useSession,
 } from "@/lib/use-workspace";
 import type { FeedbackEntry } from "@/lib/types";
@@ -27,6 +36,8 @@ export default function WorkspacePage() {
   const profile = useProfile();
   const docs = useDocuments();
   const feedback = useFeedbackEntries();
+  const recommendations = useRecommendations();
+  const history = useScoreHistory();
   const [question, setQuestion] = useState("Will my policy lapse?");
   const [answer, setAnswer] = useState<Grounded | null>(null);
 
@@ -211,6 +222,123 @@ export default function WorkspacePage() {
             )}
           </section>
         </div>
+
+        <section className="pw-panel p-6 animate-rise-delay-2 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-display text-2xl text-pine">Recommendations — human approval</h2>
+              <p className="text-sm text-stone mt-1">
+                Generated deterministically from context and scores. Only approved
+                items appear in the client report.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="pw-btn !py-2 text-sm"
+              onClick={() =>
+                persistRecommendations(generateRecommendations(profile, docs))
+              }
+            >
+              {recommendations.length ? "Regenerate" : "Generate recommendations"}
+            </button>
+          </div>
+          {recommendations.length === 0 ? (
+            <p className="text-sm text-stone">No recommendations generated yet.</p>
+          ) : (
+            <ul className="space-y-3">
+              {recommendations.map((r) => (
+                <li
+                  key={r.id}
+                  className="rounded-2xl bg-white/70 border border-pine/10 p-4 flex flex-wrap items-start justify-between gap-3"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium text-ink">{r.title}</div>
+                    <div className="text-xs text-stone mt-1">{r.rationale}</div>
+                    <div className="text-[11px] text-stone mt-1">
+                      Inputs: {r.inputs.join(" · ")} · Confidence {Math.round(r.confidence * 100)}%
+                    </div>
+                  </div>
+                  {r.status === "pending" ? (
+                    <div className="flex gap-2 shrink-0">
+                      <button
+                        type="button"
+                        className="pw-btn !py-1.5 !px-3 text-xs"
+                        onClick={() =>
+                          persistRecommendations(
+                            decideRecommendation(recommendations, r.id, "approved"),
+                          )
+                        }
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="pw-btn pw-btn-secondary !py-1.5 !px-3 text-xs"
+                        onClick={() =>
+                          persistRecommendations(
+                            decideRecommendation(recommendations, r.id, "rejected"),
+                          )
+                        }
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  ) : (
+                    <span
+                      className={`shrink-0 inline-flex items-center rounded-full px-2.5 py-1 text-xs ${
+                        r.status === "approved"
+                          ? "bg-ok/10 text-ok"
+                          : "bg-danger/10 text-danger"
+                      }`}
+                    >
+                      {r.status}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="pw-panel p-6 animate-rise-delay-2 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-display text-2xl text-pine">Score history</h2>
+            <button
+              type="button"
+              className="pw-btn pw-btn-secondary !py-2 text-sm"
+              onClick={() =>
+                persistScoreHistory(appendSnapshot(history, takeSnapshot(profile, docs)))
+              }
+            >
+              Record snapshot
+            </button>
+          </div>
+          {history.length === 0 ? (
+            <p className="text-sm text-stone">
+              No snapshots yet — record one to start tracking trends over time.
+            </p>
+          ) : (
+            <>
+              <div className="flex items-end gap-1 h-20">
+                {history.map((s) => (
+                  <div
+                    key={s.at}
+                    title={`${new Date(s.at).toLocaleString()} · ${s.overallIntelligenceScore}`}
+                    className="flex-1 max-w-6 rounded-t bg-moss/70"
+                    style={{ height: `${s.overallIntelligenceScore}%` }}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-stone">
+                {history.length} snapshot{history.length === 1 ? "" : "s"} · Overall
+                score {history[history.length - 1].overallIntelligenceScore}
+                {trendDelta(history) != null && (
+                  <> · trend {trendDelta(history)! >= 0 ? "+" : ""}{trendDelta(history)} since first snapshot</>
+                )}
+              </p>
+            </>
+          )}
+        </section>
 
         {report && (
           <section className="pw-panel p-6 animate-rise-delay-2">
