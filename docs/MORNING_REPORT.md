@@ -35,6 +35,12 @@ Sprint 1 MVP is implemented end-to-end: conversational onboarding, document inge
 - Feedback: Accurate / Needs Correction / Not Helpful (does not mutate scoring)
 - Investor demo flow + Mutual of Omaha IUL seed
 
+## QA verification (second pass, 2026-07-21 11:14 UTC)
+
+- `npm test`: 10/10 passing (onboarding, ingestion, scoring/context/feedback)
+- `npm run build`: clean production build, all 9 routes prerendered
+- Runtime smoke test against `next start`: `/`, `/login`, `/demo`, `/onboarding`, `/profile`, `/upload`, `/workspace`, `/report` all return 200; unknown routes return 404; landing, demo, and login render expected content
+
 ## Tests
 
 Run: `npm test`
