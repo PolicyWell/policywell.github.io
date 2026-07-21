@@ -16,18 +16,22 @@ export default function LoginPage() {
     e.preventDefault();
     const user = authenticateDemo(email);
     if (!user) {
-      setError("Unknown demo user. Try alex@example.com, jordan@advisors.example, or morgan@carrier.example");
+      setError(
+        "Unknown demo user. Try alex@example.com, jordan@advisors.example, casey@imo.example, riley@firm.example, or morgan@carrier.example",
+      );
       return;
     }
     persistSession(user);
     const destination =
       user.role === "imo"
         ? "/imo"
-        : user.role === "advisor"
-          ? "/clients"
-          : user.role === "carrier"
-            ? "/carrier"
-            : "/agent";
+        : user.role === "broker_dealer"
+          ? "/firm"
+          : user.role === "advisor"
+            ? "/clients"
+            : user.role === "carrier"
+              ? "/carrier"
+              : "/agent";
     router.push(destination);
   }
 
@@ -101,6 +105,16 @@ export default function LoginPage() {
                   casey@imo.example
                 </button>{" "}
                 — IMO
+              </li>
+              <li>
+                <button
+                  type="button"
+                  className="underline hover:text-pine"
+                  onClick={() => setEmail("riley@firm.example")}
+                >
+                  riley@firm.example
+                </button>{" "}
+                — broker-dealer / FI
               </li>
             </ul>
             <button

@@ -58,6 +58,7 @@ ls src/app/agent/page.tsx src/app/api/agent/route.ts src/lib/agent/index.ts
 | alex@example.com | Policyholder → lands on `/agent` |
 | jordan@advisors.example | Advisor |
 | casey@imo.example | IMO |
+| riley@firm.example | Broker-dealer / FI → `/firm` |
 | morgan@carrier.example | Carrier |
 
 Optional LLM phrasing: set `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local` (Google AI Studio / Gemini), then restart `npm run dev`. Without a key the agent still runs (tool planner + synthesizer).

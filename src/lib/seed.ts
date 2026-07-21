@@ -28,6 +28,12 @@ export const DEMO_USERS: SessionUser[] = [
     name: "Casey Nguyen",
     role: "imo",
   },
+  {
+    id: "user_riley",
+    email: "riley@firm.example",
+    name: "Riley Quinn",
+    role: "broker_dealer",
+  },
 ];
 
 export function authenticateDemo(email: string): SessionUser | null {

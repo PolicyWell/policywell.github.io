@@ -1,3 +1,47 @@
+# PolicyWell Morning Report — Sprint 7 (Firm ops)
+
+**Date:** 2026-07-21  
+**Branch:** `cursor/sprint7-firm-ops-c124`  
+**Manual version:** 0.1  
+**Previous sprint:** Sprint 6 (Agent)
+
+## Verdict
+
+Fixed the broken `/agent` page (React #185 from unstable `useSyncExternalStore` snapshots), then shipped Sprint 7 firm operations: multi-advisor **task ownership** and a **broker-dealer / FI supervision** console with suitability flags — still deterministic, still local-first.
+
+## Shipped
+
+### Agent page fix
+- Cached document/feedback/session/profile snapshots so `getSnapshot` returns stable references
+- `/agent` loads and chat starters work again (verified in headless Chrome)
+
+### Task ownership
+- `FollowUpTask` gains `assigneeId` / `assigneeName` / `assignedAt`
+- `assignTask`, `tasksGroupedByAssignee`, firm roster (`FIRM_ASSIGNEES`)
+- Tasks page: Owner dropdown for advisor / IMO / broker-dealer; unassigned count
+
+### Broker-dealer / FI console (`/firm`)
+- Seeded advisor books, assignment board, suitability/compliance queue from comparison warnings + review priority + unverified docs
+- Demo: `riley@firm.example` → `/firm`
+
+## Tests
+
+`npm test`: all passing (assignment + firm analytics coverage added).
+
+## How to feel it
+
+1. Open **/agent** — page should load (not “couldn’t load”)
+2. Sign in as **riley@firm.example** → Load firm demo → reassign an unassigned task
+3. Or as advisor: approve recs → Generate tasks → assign an owner
+
+## Next sprint candidates
+
+- Database persistence and real authentication (needs infra)
+- Deeper BD/RIA compliance packs (Reg BI narrative, principal review trail)
+- Task SLA / escalation rules
+
+---
+
 # PolicyWell Morning Report — Sprint 6 (Agent)
 
 **Date:** 2026-07-21  

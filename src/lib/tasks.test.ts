@@ -9,10 +9,13 @@ import {
 } from "@/lib/recommendations";
 import { buildDemoSeed } from "@/lib/seed";
 import {
+  assignTask,
   DUE_DAYS_BY_RULE,
+  FIRM_ASSIGNEES,
   isOverdue,
   taskSummary,
   tasksFromApprovedRecommendations,
+  tasksGroupedByAssignee,
   toggleTask,
 } from "@/lib/tasks";
 
@@ -39,6 +42,7 @@ describe("follow-up task workflow", () => {
     for (const t of tasks) {
       expect(t.status).toBe("open");
       expect(t.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(t.assigneeId ?? null).toBeNull();
     }
     // Sorted by due date ascending
     const dates = tasks.map((t) => t.dueDate);
@@ -74,6 +78,23 @@ describe("follow-up task workflow", () => {
     expect(isOverdue(tasks[0], "2026-07-21")).toBe(false);
     const summary = taskSummary(tasks, "2030-01-01");
     expect(summary.overdue).toBe(tasks.length);
+  });
+
+  it("assigns ownership across the firm roster", () => {
+    const { recs } = approvedRecs();
+    let tasks = tasksFromApprovedRecommendations(recs, [], NOW);
+    const id = tasks[0].id;
+    const jordan = FIRM_ASSIGNEES.find((a) => a.id === "adv_jordan")!;
+    tasks = assignTask(tasks, id, jordan, NOW);
+    expect(tasks.find((t) => t.id === id)!.assigneeId).toBe("adv_jordan");
+    expect(tasks.find((t) => t.id === id)!.assigneeName).toBe("Jordan Lee");
+    expect(taskSummary(tasks).unassigned).toBe(tasks.length - 1);
+
+    tasks = assignTask(tasks, id, null, NOW);
+    expect(tasks.find((t) => t.id === id)!.assigneeId).toBeNull();
+    expect(tasksGroupedByAssignee(tasks).some((g) => g.assigneeId == null)).toBe(
+      true,
+    );
   });
 });
 

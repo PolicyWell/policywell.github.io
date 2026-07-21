@@ -1,4 +1,9 @@
-export type UserRole = "policyholder" | "advisor" | "imo" | "carrier";
+export type UserRole =
+  | "policyholder"
+  | "advisor"
+  | "imo"
+  | "carrier"
+  | "broker_dealer";
 
 export type ConfidenceLevel = "high" | "medium" | "low";
 

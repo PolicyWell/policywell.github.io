@@ -75,6 +75,16 @@ Every task must:
 | Primary /agent chat UI + /api/agent | Done |
 | Landing/login wired to agent | Done |
 
+## Sprint 7 status (Firm ops)
+
+| Scope | Status |
+|-------|--------|
+| Task assignment / ownership across firm roster | Done |
+| Broker-dealer / FI firm supervision console (`/firm`) | Done |
+| Suitability & compliance queue from comparison + scores | Done |
+| Demo role `riley@firm.example` (broker_dealer) | Done |
+| Stable localStorage snapshots (fix /agent React #185) | Done |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)
@@ -89,6 +99,9 @@ Every task must:
 
 - `alex@example.com` — policyholder
 - `jordan@advisors.example` — advisor
+- `casey@imo.example` — IMO
+- `riley@firm.example` — broker-dealer / FI
 - `morgan@carrier.example` — carrier
 
 Investor path: `/demo` → Seed sample data → Workspace → Report.
+Firm path: login as `riley@firm.example` → `/firm` → Load firm demo.

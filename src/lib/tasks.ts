@@ -2,6 +2,41 @@ import type { Recommendation } from "./recommendations";
 
 export type TaskStatus = "open" | "completed";
 
+export interface FirmAssignee {
+  id: string;
+  name: string;
+  email: string;
+  role: "advisor" | "ops";
+}
+
+/** Seeded multi-advisor firm roster for assignment demos. */
+export const FIRM_ASSIGNEES: FirmAssignee[] = [
+  {
+    id: "adv_jordan",
+    name: "Jordan Lee",
+    email: "jordan@advisors.example",
+    role: "advisor",
+  },
+  {
+    id: "adv_samira",
+    name: "Samira Ortiz",
+    email: "samira@advisors.example",
+    role: "advisor",
+  },
+  {
+    id: "adv_devon",
+    name: "Devon Park",
+    email: "devon@advisors.example",
+    role: "advisor",
+  },
+  {
+    id: "ops_riley",
+    name: "Riley Quinn",
+    email: "riley@firm.example",
+    role: "ops",
+  },
+];
+
 export interface FollowUpTask {
   id: string;
   title: string;
@@ -11,6 +46,10 @@ export interface FollowUpTask {
   status: TaskStatus;
   createdAt: string;
   completedAt?: string;
+  /** Firm ownership — who is accountable for follow-through. */
+  assigneeId?: string | null;
+  assigneeName?: string | null;
+  assignedAt?: string;
 }
 
 /** Days until due, per recommendation rule. Documented, deterministic. */
@@ -59,6 +98,8 @@ export function tasksFromApprovedRecommendations(
       dueDate: addDays(now, dueDays),
       status: "open",
       createdAt: now,
+      assigneeId: null,
+      assigneeName: null,
     });
   }
 
@@ -78,18 +119,96 @@ export function toggleTask(
   });
 }
 
-export function isOverdue(task: FollowUpTask, today = new Date().toISOString().slice(0, 10)): boolean {
+/** Assign (or clear) ownership on a follow-up task. */
+export function assignTask(
+  tasks: FollowUpTask[],
+  taskId: string,
+  assignee: FirmAssignee | null,
+  now = new Date().toISOString(),
+): FollowUpTask[] {
+  return tasks.map((t) => {
+    if (t.id !== taskId) return t;
+    if (!assignee) {
+      return {
+        ...t,
+        assigneeId: null,
+        assigneeName: null,
+        assignedAt: undefined,
+      };
+    }
+    return {
+      ...t,
+      assigneeId: assignee.id,
+      assigneeName: assignee.name,
+      assignedAt: now,
+    };
+  });
+}
+
+export function isOverdue(
+  task: FollowUpTask,
+  today = new Date().toISOString().slice(0, 10),
+): boolean {
   return task.status === "open" && task.dueDate < today;
 }
 
-export function taskSummary(tasks: FollowUpTask[], today?: string): {
+export function taskSummary(
+  tasks: FollowUpTask[],
+  today?: string,
+): {
   open: number;
   completed: number;
   overdue: number;
+  unassigned: number;
 } {
   return {
     open: tasks.filter((t) => t.status === "open").length,
     completed: tasks.filter((t) => t.status === "completed").length,
     overdue: tasks.filter((t) => isOverdue(t, today)).length,
+    unassigned: tasks.filter((t) => t.status === "open" && !t.assigneeId)
+      .length,
   };
+}
+
+export function tasksGroupedByAssignee(tasks: FollowUpTask[]): {
+  assigneeId: string | null;
+  assigneeName: string;
+  tasks: FollowUpTask[];
+  open: number;
+  overdue: number;
+}[] {
+  const groups = new Map<
+    string,
+    {
+      assigneeId: string | null;
+      assigneeName: string;
+      tasks: FollowUpTask[];
+    }
+  >();
+
+  for (const t of tasks) {
+    const key = t.assigneeId ?? "__unassigned__";
+    const existing = groups.get(key);
+    if (existing) {
+      existing.tasks.push(t);
+    } else {
+      groups.set(key, {
+        assigneeId: t.assigneeId ?? null,
+        assigneeName: t.assigneeName ?? "Unassigned",
+        tasks: [t],
+      });
+    }
+  }
+
+  return [...groups.values()]
+    .map((g) => ({
+      ...g,
+      open: g.tasks.filter((t) => t.status === "open").length,
+      overdue: g.tasks.filter((t) => isOverdue(t)).length,
+    }))
+    .sort((a, b) => {
+      if (a.assigneeId == null) return 1;
+      if (b.assigneeId == null) return -1;
+      return a.assigneeName.localeCompare(b.assigneeName);
+    });
 }

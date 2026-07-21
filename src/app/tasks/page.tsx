@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { AppNav } from "@/components/ui";
 import {
+  assignTask,
+  FIRM_ASSIGNEES,
   isOverdue,
   taskSummary,
   tasksFromApprovedRecommendations,
@@ -35,6 +37,10 @@ export default function TasksPage() {
   const newAvailable =
     approvedCount >
     tasks.filter((t) => recommendations.some((r) => r.id === t.sourceRecommendationId)).length;
+  const canAssign =
+    session.role === "advisor" ||
+    session.role === "imo" ||
+    session.role === "broker_dealer";
 
   return (
     <div className="flex-1 flex flex-col">
@@ -44,9 +50,8 @@ export default function TasksPage() {
           <div>
             <h1 className="font-display text-4xl text-pine">Follow-up tasks</h1>
             <p className="text-stone mt-2 max-w-2xl">
-              Approved recommendations become dated tasks. Due dates follow
-              documented per-rule timelines — verification in 7 days, funding
-              changes in 14, reviews in 30.
+              Approved recommendations become dated tasks. Assign ownership across
+              the firm roster so follow-through is accountable.
             </p>
           </div>
           <button
@@ -61,9 +66,14 @@ export default function TasksPage() {
           </button>
         </div>
 
-        <section className="grid sm:grid-cols-3 gap-3 animate-rise-delay">
+        <section className="grid sm:grid-cols-4 gap-3 animate-rise-delay">
           <Stat label="Open" value={summary.open} />
           <Stat label="Overdue" value={summary.overdue} tone={summary.overdue ? "warn" : undefined} />
+          <Stat
+            label="Unassigned"
+            value={summary.unassigned}
+            tone={summary.unassigned ? "warn" : undefined}
+          />
           <Stat label="Completed" value={summary.completed} />
         </section>
 
@@ -86,7 +96,7 @@ export default function TasksPage() {
               return (
                 <li
                   key={t.id}
-                  className="pw-panel p-4 flex items-start gap-4"
+                  className="pw-panel p-4 flex flex-wrap items-start gap-4"
                 >
                   <input
                     type="checkbox"
@@ -104,6 +114,33 @@ export default function TasksPage() {
                       {t.title}
                     </div>
                     <div className="text-xs text-stone mt-1">{t.rationale}</div>
+                    {canAssign && (
+                      <label className="mt-2 inline-flex items-center gap-2 text-xs text-stone">
+                        Owner
+                        <select
+                          className="pw-input !py-1 !text-xs !w-auto"
+                          value={t.assigneeId ?? ""}
+                          onChange={(e) => {
+                            const id = e.target.value;
+                            const assignee =
+                              FIRM_ASSIGNEES.find((a) => a.id === id) ?? null;
+                            persistTasks(assignTask(tasks, t.id, assignee));
+                          }}
+                        >
+                          <option value="">Unassigned</option>
+                          {FIRM_ASSIGNEES.map((a) => (
+                            <option key={a.id} value={a.id}>
+                              {a.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+                    {!canAssign && t.assigneeName && (
+                      <div className="text-xs text-moss mt-2">
+                        Owner: {t.assigneeName}
+                      </div>
+                    )}
                   </div>
                   <span
                     className={`shrink-0 inline-flex items-center rounded-full px-2.5 py-1 text-xs ${
