@@ -22,6 +22,12 @@ export const DEMO_USERS: SessionUser[] = [
     name: "Morgan Chen",
     role: "carrier",
   },
+  {
+    id: "user_casey",
+    email: "casey@imo.example",
+    name: "Casey Nguyen",
+    role: "imo",
+  },
 ];
 
 export function authenticateDemo(email: string): SessionUser | null {

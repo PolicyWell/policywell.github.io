@@ -12,7 +12,7 @@ export interface ClientRecord {
   documents: IngestedDocument[];
 }
 
-function seedClientFromUtterances(
+export function seedClientFromUtterances(
   id: string,
   name: string,
   email: string,

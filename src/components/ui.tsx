@@ -47,6 +47,9 @@ export function AppNav({ role }: { role?: string }) {
   if (role === "advisor" || role === "imo") {
     links.unshift({ href: "/clients", label: "Clients" });
   }
+  if (role === "imo") {
+    links.unshift({ href: "/imo", label: "IMO dashboard" });
+  }
   if (role === "carrier") {
     links.push({ href: "/carrier", label: "Carrier console" });
   }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AppNav, ConfidenceBadge } from "@/components/ui";
+import { ingestEmail } from "@/lib/email-import";
 import {
   ingestDocument,
   searchDocuments,
@@ -22,6 +23,7 @@ export default function UploadPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
+  const [emailRaw, setEmailRaw] = useState("");
 
   const resolvedActiveId = activeId ?? docs[0]?.id ?? null;
   const active = docs.find((d) => d.id === resolvedActiveId) ?? null;
@@ -137,6 +139,37 @@ export default function UploadPage() {
             Tip: name a file with “Mutual” or “IUL” to seed the Mutual of Omaha extraction demo.
           </p>
         </div>
+
+        <details className="pw-panel p-5 animate-rise-delay">
+          <summary className="font-display text-xl text-pine cursor-pointer">
+            Email import
+          </summary>
+          <p className="text-sm text-stone mt-2 mb-3">
+            Paste a forwarded email (headers optional). The body is OCR-parsed and
+            extracted like any uploaded document.
+          </p>
+          <textarea
+            className="pw-input min-h-[140px] font-mono text-xs"
+            placeholder={"From: statements@carrier.example\nSubject: Annual Statement\n\nProduct: ...\nFace Amount: $..."}
+            value={emailRaw}
+            onChange={(e) => setEmailRaw(e.target.value)}
+          />
+          <button
+            type="button"
+            className="pw-btn mt-3"
+            disabled={!emailRaw.trim()}
+            onClick={() => {
+              if (!session || !emailRaw.trim()) return;
+              const doc = ingestEmail(session.id, emailRaw);
+              persist([doc, ...docs]);
+              setActiveId(doc.id);
+              setEmailRaw("");
+              setStatus(`Email imported as ${doc.filename}. Please verify extraction.`);
+            }}
+          >
+            Import email
+          </button>
+        </details>
 
         {status && <p className="text-sm text-ok animate-rise">{status}</p>}
 

@@ -41,6 +41,15 @@ Every task must:
 | Carrier content packs + compliance-preserving console | Done |
 | Role-aware navigation | Done |
 
+## Sprint 3 status
+
+| Scope | Status |
+|-------|--------|
+| IMO analytics (advisor activity, carrier distribution, review pipeline) | Done |
+| Standardized annual review checklist | Done |
+| IMO dashboard + IMO demo role | Done |
+| Email import ingestion channel | Done |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)

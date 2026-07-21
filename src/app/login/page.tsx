@@ -20,7 +20,13 @@ export default function LoginPage() {
       return;
     }
     persistSession(user);
-    router.push(user.role === "advisor" || user.role === "carrier" ? "/workspace" : "/onboarding");
+    const destination =
+      user.role === "imo"
+        ? "/imo"
+        : user.role === "advisor" || user.role === "carrier"
+          ? "/workspace"
+          : "/onboarding";
+    router.push(destination);
   }
 
   return (
@@ -83,6 +89,16 @@ export default function LoginPage() {
                   morgan@carrier.example
                 </button>{" "}
                 — carrier
+              </li>
+              <li>
+                <button
+                  type="button"
+                  className="underline hover:text-pine"
+                  onClick={() => setEmail("casey@imo.example")}
+                >
+                  casey@imo.example
+                </button>{" "}
+                — IMO
               </li>
             </ul>
             <button

@@ -1,3 +1,47 @@
+# PolicyWell Morning Report — Sprint 3
+
+**Date:** 2026-07-21  
+**Branch:** `cursor/sprint1-mvp-c124`  
+**Manual version:** 0.1  
+**Previous sprint:** Sprint 2 (advisor + carrier engines, see below)
+
+## Verdict
+
+Sprint 3 delivers the IMO use case (Manual §6) and the email import ingestion channel (Manual §9): advisor activity tracking, carrier analytics, a standardized annual review pipeline and checklist, and pasted-email ingestion that flows through the same OCR/extraction/verification path as file uploads.
+
+## Shipped
+
+### IMO engine (Manual §6)
+- **IMO analytics** (`src/lib/imo.ts`): deterministic aggregation across advisor rosters — per-advisor client counts, documents ingested, verification rates, average policy health, high-priority client counts; firm-wide carrier distribution; review pipeline sorted by review priority with overdue/due/current status thresholds (documented assumptions).
+- **Standardized annual review checklist**: six data-derived checks per client (profile completeness, document verification, beneficiary context, target funding, coverage gap, review scheduling) — the same checklist for every advisor, satisfying "standardize annual reviews".
+- **IMO dashboard** (`/imo`, IMO role): stat tiles, advisor activity table, carrier analytics bars, review pipeline, per-client checklist. Demo seed spans two advisors (Jordan Lee's 3 clients + Priya Shah's 2, including an intentionally unverified underfunded IUL that surfaces as overdue).
+- New demo account: `casey@imo.example` (IMO role, lands on `/imo`).
+
+### Email import channel (Manual §9)
+- `src/lib/email-import.ts`: parses pasted emails (From/Subject headers optional), ingests the body through the existing OCR → extraction → confidence → human verification pipeline as a `.eml` document; sender and subject are searchable.
+- Upload page gains an "Email import" panel.
+
+## Tests
+
+`npm test`: **24/24 passing** (Sprints 1–2: 18, Sprint 3: 6 — IMO aggregation determinism, overdue flagging, checklist, email parsing/ingestion).
+Typecheck, lint, production build clean. Runtime smoke test: all 12 routes return 200.
+
+## Acceptance criteria check (IMO goals, Manual §6)
+
+- Increase advisor productivity ✓ (shared engine + roster + checklists)
+- Standardize annual reviews ✓ (deterministic checklist, same for every client)
+- Track advisor activity ✓ (activity table with verification rates)
+- Carrier analytics ✓ (book-of-business distribution)
+
+## Next sprint candidates
+
+- Real LLM interview + extraction behind existing interfaces (needs API key secret)
+- Database persistence and real authentication (needs infra decision)
+- Broker-dealer / financial-institution views
+- Score trend history over time
+
+---
+
 # PolicyWell Morning Report — Sprint 2
 
 **Date:** 2026-07-21  
