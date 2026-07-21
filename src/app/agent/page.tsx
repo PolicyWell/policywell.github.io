@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AppNav, ConfidenceBadge } from "@/components/ui";
-import type { AgentTurnResult, AgentWorkspace } from "@/lib/agent";
+import { runAgentTurn, type AgentWorkspace } from "@/lib/agent";
 import { createEmptyProfile } from "@/lib/profile";
 import { buildDemoSeed } from "@/lib/seed";
 import {
@@ -25,8 +25,17 @@ interface ChatMessage {
   role: "user" | "assistant" | "system";
   content: string;
   tools?: { tool: string; summary: string; ok: boolean }[];
-  usedLlm?: boolean;
 }
+
+const WELCOME: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    "I'm your PolicyWell Insurance Intelligence Agent — not a chatbot. " +
+    "I update your household and policy context before I answer, reason with deterministic scores and documents, " +
+    "and keep every recommendation pending until you approve it.\n\n" +
+    "Click a starter below, seed the Mutual of Omaha demo, or type a question.",
+};
 
 const STARTERS = [
   "I'm married with three kids in TX, and I have a Mutual of Omaha IUL.",
@@ -44,33 +53,28 @@ export default function AgentPage() {
   const recommendations = useRecommendations();
   const tasks = useTasks();
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [activity, setActivity] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const busyRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const latest = useRef({ session, profile, documents, recommendations, tasks });
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, activity]);
+    latest.current = { session, profile, documents, recommendations, tasks };
+  }, [session, profile, documents, recommendations, tasks]);
 
-  useEffect(() => {
-    if (messages.length) return;
-    setMessages([
-      {
-        id: "welcome",
-        role: "assistant",
-        content:
-          "I'm your PolicyWell Insurance Intelligence Agent — not a chatbot. " +
-          "I update your household and policy context before I answer, reason with deterministic scores and documents, " +
-          "and keep every recommendation pending until you approve it.\n\n" +
-          "Tell me about your situation, seed the Mutual of Omaha demo, or ask a policy question.",
-      },
-    ]);
-  }, [messages.length]);
+  function scrollToBottom() {
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    });
+  }
 
   function ensureSession(): SessionUser {
-    if (session) return session;
+    const current = latest.current.session;
+    if (current) return current;
     const guest: SessionUser = {
       id: "user_guest",
       email: "guest@policywell.local",
@@ -78,7 +82,7 @@ export default function AgentPage() {
       role: "policyholder",
     };
     persistSession(guest);
-    if (!profile) {
+    if (!latest.current.profile) {
       persistProfile(
         createEmptyProfile(guest.id, guest.role, guest.name, guest.email),
       );
@@ -87,104 +91,103 @@ export default function AgentPage() {
   }
 
   function buildWorkspace(user: SessionUser): AgentWorkspace {
-    const p =
-      profile ??
-      createEmptyProfile(user.id, user.role, user.name, user.email);
+    const { profile: p, documents: docs, recommendations: recs, tasks: t } =
+      latest.current;
     return {
       user,
-      profile: p,
-      documents,
-      recommendations,
-      tasks,
+      profile:
+        p ?? createEmptyProfile(user.id, user.role, user.name, user.email),
+      documents: docs,
+      recommendations: recs,
+      tasks: t,
     };
   }
 
-  async function send(text: string) {
+  function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed || busy) return;
-    const user = ensureSession();
+    if (!trimmed || busyRef.current) return;
+
+    busyRef.current = true;
     setBusy(true);
-    setActivity("Planning tools…");
+    setError(null);
+    setActivity("Running agent tools…");
     setInput("");
     setMessages((m) => [
       ...m,
       { id: `u_${Date.now()}`, role: "user", content: trimmed },
     ]);
+    scrollToBottom();
 
-    try {
-      setActivity("Calling intelligence tools…");
-      const res = await fetch("/api/agent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: trimmed,
-          workspace: buildWorkspace(user),
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Agent error ${res.status}`);
+    // Defer so the user message paints before the (sync) tool run
+    window.setTimeout(() => {
+      try {
+        const user = ensureSession();
+        const result = runAgentTurn(trimmed, buildWorkspace(user));
+
+        persistProfile(result.workspace.profile);
+        persistRecommendations(result.workspace.recommendations);
+        persistTasks(result.workspace.tasks);
+
+        setMessages((m) => [
+          ...m,
+          {
+            id: `a_${Date.now()}`,
+            role: "assistant",
+            content: result.reply,
+            tools: result.toolResults.map((t) => ({
+              tool: t.tool,
+              summary: t.summary,
+              ok: t.ok,
+            })),
+          },
+        ]);
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "The agent failed this turn.";
+        setError(msg);
+        setMessages((m) => [
+          ...m,
+          { id: `e_${Date.now()}`, role: "system", content: msg },
+        ]);
+      } finally {
+        busyRef.current = false;
+        setBusy(false);
+        setActivity(null);
+        scrollToBottom();
       }
-      const result = (await res.json()) as AgentTurnResult;
-
-      persistProfile(result.workspace.profile);
-      persistRecommendations(result.workspace.recommendations);
-      persistTasks(result.workspace.tasks);
-
-      setMessages((m) => [
-        ...m,
-        {
-          id: `a_${Date.now()}`,
-          role: "assistant",
-          content: result.reply,
-          tools: result.toolResults.map((t) => ({
-            tool: t.tool,
-            summary: t.summary,
-            ok: t.ok,
-          })),
-          usedLlm: result.usedLlm,
-        },
-      ]);
-    } catch (err) {
-      setMessages((m) => [
-        ...m,
-        {
-          id: `e_${Date.now()}`,
-          role: "system",
-          content:
-            err instanceof Error ? err.message : "The agent failed this turn.",
-        },
-      ]);
-    } finally {
-      setBusy(false);
-      setActivity(null);
-    }
+    }, 30);
   }
 
   function seedDemo() {
-    const user = ensureSession();
-    const demoUser = {
-      ...user,
-      id: "user_alex",
-      email: "alex@example.com",
-      name: "Alex Rivera",
-      role: "policyholder" as const,
-    };
-    const { profile: p, documents: docs } = buildDemoSeed(demoUser);
-    persistSession(demoUser);
-    persistProfile(p);
-    persistDocuments(docs);
-    persistRecommendations([]);
-    persistTasks([]);
-    setMessages((m) => [
-      ...m,
-      {
-        id: `seed_${Date.now()}`,
-        role: "system",
-        content:
-          "Demo household loaded: Alex Rivera — married, 3 kids, TX mortgage, Mutual of Omaha IUL (verified). Ask me anything.",
-      },
-    ]);
+    try {
+      const user = ensureSession();
+      const demoUser: SessionUser = {
+        ...user,
+        id: "user_alex",
+        email: "alex@example.com",
+        name: "Alex Rivera",
+        role: "policyholder",
+      };
+      const { profile: p, documents: docs } = buildDemoSeed(demoUser);
+      persistSession(demoUser);
+      persistProfile(p);
+      persistDocuments(docs);
+      persistRecommendations([]);
+      persistTasks([]);
+      setError(null);
+      setMessages((m) => [
+        ...m,
+        {
+          id: `seed_${Date.now()}`,
+          role: "system",
+          content:
+            "Demo household loaded: Alex Rivera — married, 3 kids, TX mortgage, Mutual of Omaha IUL (verified). Ask me anything — try “Will my policy lapse?”",
+        },
+      ]);
+      scrollToBottom();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to seed demo");
+    }
   }
 
   const liveProfile =
@@ -225,9 +228,7 @@ export default function AgentPage() {
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`max-w-[92%] ${
-                  m.role === "user" ? "ml-auto" : ""
-                }`}
+                className={`max-w-[92%] ${m.role === "user" ? "ml-auto" : ""}`}
               >
                 <div
                   className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
@@ -246,26 +247,24 @@ export default function AgentPage() {
                       <span
                         key={`${m.id}_${i}`}
                         className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full ${
-                          t.ok
-                            ? "bg-ok/10 text-ok"
-                            : "bg-danger/10 text-danger"
+                          t.ok ? "bg-ok/10 text-ok" : "bg-danger/10 text-danger"
                         }`}
                         title={t.summary}
                       >
                         {t.tool}
                       </span>
                     ))}
-                    {m.usedLlm && (
-                      <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-moss/15 text-moss">
-                        llm
-                      </span>
-                    )}
                   </div>
                 )}
               </div>
             ))}
             {activity && (
               <div className="text-xs text-moss animate-pulse-soft">{activity}</div>
+            )}
+            {error && (
+              <div className="text-xs text-danger border border-danger/20 rounded-xl px-3 py-2">
+                {error}
+              </div>
             )}
             <div ref={bottomRef} />
           </div>
@@ -277,7 +276,7 @@ export default function AgentPage() {
                 type="button"
                 disabled={busy}
                 onClick={() => send(s)}
-                className="text-xs px-3 py-1.5 rounded-full border border-pine/15 text-stone hover:text-pine disabled:opacity-50"
+                className="text-xs px-3 py-1.5 rounded-full border border-pine/15 text-stone hover:text-pine disabled:opacity-50 cursor-pointer"
               >
                 {s}
               </button>
@@ -298,14 +297,18 @@ export default function AgentPage() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask the agent — household facts, lapse risk, scenarios, recommendations…"
             />
-            <button type="submit" className="pw-btn shrink-0" disabled={busy || !input.trim()}>
-              Send
+            <button
+              type="submit"
+              className="pw-btn shrink-0"
+              disabled={busy || !input.trim()}
+            >
+              {busy ? "…" : "Send"}
             </button>
           </form>
         </section>
 
         <aside className="space-y-4">
-          <div className="pw-panel p-5 animate-rise">
+          <div className="pw-panel p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-display text-xl text-pine">Live context</h2>
               {liveProfile && (
@@ -318,12 +321,35 @@ export default function AgentPage() {
               <dl className="text-sm space-y-2">
                 <Row label="Who" value={liveProfile.displayName} />
                 <Row label="Role" value={liveProfile.role} />
-                <Row label="Household" value={[liveProfile.household.maritalStatus.value, liveProfile.household.dependentsCount.value != null ? `${liveProfile.household.dependentsCount.value} dependents` : null].filter(Boolean).join(" · ") || "—"} />
+                <Row
+                  label="Household"
+                  value={
+                    [
+                      liveProfile.household.maritalStatus.value,
+                      liveProfile.household.dependentsCount.value != null
+                        ? `${liveProfile.household.dependentsCount.value} dependents`
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ") || "—"
+                  }
+                />
                 <Row label="State" value={liveProfile.household.state.value} />
-                <Row label="Carrier" value={liveProfile.carrier.primaryCarrier.value} />
+                <Row
+                  label="Carrier"
+                  value={liveProfile.carrier.primaryCarrier.value}
+                />
                 <Row label="Documents" value={String(documents.length)} />
-                <Row label="Pending recs" value={String(recommendations.filter((r) => r.status === "pending").length)} />
-                <Row label="Open tasks" value={String(tasks.filter((t) => t.status === "open").length)} />
+                <Row
+                  label="Pending recs"
+                  value={String(
+                    recommendations.filter((r) => r.status === "pending").length,
+                  )}
+                />
+                <Row
+                  label="Open tasks"
+                  value={String(tasks.filter((t) => t.status === "open").length)}
+                />
                 {liveProfile.missingFields.length > 0 && (
                   <div className="pt-2 text-xs text-danger">
                     Missing: {liveProfile.missingFields.join(", ")}
@@ -333,24 +359,21 @@ export default function AgentPage() {
             )}
           </div>
 
-          <div className="pw-panel p-5 animate-rise-delay text-sm text-stone space-y-2">
-            <h2 className="font-display text-xl text-pine">Agent tools</h2>
+          <div className="pw-panel p-5 text-sm text-stone space-y-2">
+            <h2 className="font-display text-xl text-pine">How it works</h2>
             <p>
-              Each turn the agent chooses tools: update context, scores, grounded
-              policy analysis, scenarios, comparison, recommendations, approval,
-              tasks, carrier packs.
-            </p>
-            <p className="text-xs">
-              LLM synthesis activates when{" "}
-              <code className="text-pine">OPENAI_API_KEY</code> is set; otherwise
-              the analyst synthesizer runs on tool outputs only — never invents
-              claims.
+              Each message runs the agent loop in your browser: plan tools →
+              update context / score / analyze / recommend → reply. Tool chips
+              under each answer show what ran.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <Link href="/upload" className="pw-btn pw-btn-secondary !py-2 text-xs">
                 Upload docs
               </Link>
-              <Link href="/workspace" className="pw-btn pw-btn-secondary !py-2 text-xs">
+              <Link
+                href="/workspace"
+                className="pw-btn pw-btn-secondary !py-2 text-xs"
+              >
                 Scores & approval
               </Link>
               <Link href="/tasks" className="pw-btn pw-btn-secondary !py-2 text-xs">
@@ -364,7 +387,13 @@ export default function AgentPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: string | null | undefined }) {
+function Row({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | null | undefined;
+}) {
   return (
     <div className="flex justify-between gap-3 border-b border-pine/5 pb-1.5">
       <dt className="text-stone">{label}</dt>

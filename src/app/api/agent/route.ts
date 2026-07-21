@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { runAgentTurnWithOptionalLlm, type AgentWorkspace } from "@/lib/agent";
+import type { AgentWorkspace } from "@/lib/agent";
+import { runAgentTurnWithOptionalLlm } from "@/lib/agent/llm";
 
 export const runtime = "nodejs";
 
