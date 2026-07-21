@@ -111,11 +111,12 @@ export default function AgentPage() {
     busyRef.current = true;
     setBusy(true);
     setError(null);
-    setActivity("Planning tools…");
+    setActivity("Running agent tools…");
     setInput("");
+    const assistantId = `a_${crypto.randomUUID()}`;
     setMessages((m) => [
       ...m,
-      { id: `u_${Date.now()}`, role: "user", content: trimmed },
+      { id: `u_${crypto.randomUUID()}`, role: "user", content: trimmed },
     ]);
     scrollToBottom();
 
@@ -123,45 +124,66 @@ export default function AgentPage() {
     const workspace = buildWorkspace(user);
 
     try {
-      setActivity("Calling intelligence tools + Gemini…");
-      let result: ReturnType<typeof runAgentTurn> | null = null;
-
-      try {
-        const res = await fetch("/api/agent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: trimmed, workspace }),
-        });
-        if (res.ok) {
-          result = (await res.json()) as ReturnType<typeof runAgentTurn>;
-        }
-      } catch {
-        // fall through to client-side agent
-      }
-
-      if (!result) {
-        setActivity("Running agent tools locally…");
-        result = runAgentTurn(trimmed, workspace);
-      }
-
-      persistProfile(result.workspace.profile);
-      persistRecommendations(result.workspace.recommendations);
-      persistTasks(result.workspace.tasks);
+      // Always run tools locally first so chat never depends on Gemini being up
+      const local = runAgentTurn(trimmed, workspace);
+      persistProfile(local.workspace.profile);
+      persistRecommendations(local.workspace.recommendations);
+      persistTasks(local.workspace.tasks);
 
       setMessages((m) => [
         ...m,
         {
-          id: `a_${Date.now()}`,
+          id: assistantId,
           role: "assistant",
-          content: result!.reply,
-          usedLlm: result!.usedLlm,
-          tools: result!.toolResults.map((t) => ({
+          content: local.reply,
+          usedLlm: false,
+          tools: local.toolResults.map((t) => ({
             tool: t.tool,
             summary: t.summary,
             ok: t.ok,
           })),
         },
       ]);
+      scrollToBottom();
+
+      // Then try Gemini to upgrade the phrasing
+      setActivity("Enhancing reply with Gemini…");
+      try {
+        const res = await fetch("/api/agent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: trimmed,
+            workspace: local.workspace,
+          }),
+        });
+        if (res.ok) {
+          const enhanced = (await res.json()) as ReturnType<typeof runAgentTurn>;
+          if (enhanced.usedLlm && enhanced.reply?.trim()) {
+            persistProfile(enhanced.workspace.profile);
+            persistRecommendations(enhanced.workspace.recommendations);
+            persistTasks(enhanced.workspace.tasks);
+            setMessages((m) =>
+              m.map((msg) =>
+                msg.id === assistantId
+                  ? {
+                      ...msg,
+                      content: enhanced.reply,
+                      usedLlm: true,
+                      tools: enhanced.toolResults.map((t) => ({
+                        tool: t.tool,
+                        summary: t.summary,
+                        ok: t.ok,
+                      })),
+                    }
+                  : msg,
+              ),
+            );
+          }
+        }
+      } catch {
+        // Keep the local grounded reply — Gemini is optional
+      }
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : "The agent failed this turn.";
@@ -226,6 +248,10 @@ export default function AgentPage() {
               <h1 className="font-display text-2xl text-pine">Intelligence Agent</h1>
               <p className="text-xs text-stone">
                 Context → tools → grounded answer · human approval required
+              </p>
+              <p className="text-[11px] text-amber mt-1">
+                Gemini phrasing needs AI Studio credits. Chat still works with the
+                local analyst engine if credits are depleted.
               </p>
             </div>
             <div className="flex gap-2">

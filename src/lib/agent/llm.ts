@@ -58,10 +58,13 @@ export async function runAgentTurnWithOptionalLlm(
   } catch (err) {
     console.error("[policywell-agent] Gemini synthesis failed:", err);
     const raw = err instanceof Error ? err.message : String(err);
-    const quota = /quota|resource.exhausted|429|billing/i.test(raw);
+    const quota =
+      /quota|resource.exhausted|429|billing|prepayment credits are depleted/i.test(
+        raw,
+      );
     const auth = /api key|permission|401|403|invalid/i.test(raw);
     const note = quota
-      ? "_(Google AI quota exceeded — check AI Studio billing/limits, then retry. Showing the tool-grounded analyst reply.)_"
+      ? "_(Google AI credits are depleted — add prepaid credits at https://ai.studio/projects, then retry for Gemini phrasing. Showing the tool-grounded analyst reply.)_"
       : auth
         ? "_(Google AI API key rejected — verify the key in AI Studio. Showing the tool-grounded analyst reply.)_"
         : "_(LLM phrasing unavailable right now — showing the tool-grounded analyst reply.)_";
