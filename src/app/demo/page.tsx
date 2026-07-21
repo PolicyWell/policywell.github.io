@@ -83,6 +83,13 @@ export default function DemoPage() {
               <button
                 type="button"
                 className="pw-btn pw-btn-secondary"
+                onClick={() => router.push("/agent")}
+              >
+                Open agent
+              </button>
+              <button
+                type="button"
+                className="pw-btn pw-btn-secondary"
                 onClick={() => router.push("/workspace")}
               >
                 Open workspace

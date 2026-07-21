@@ -1,3 +1,39 @@
+# PolicyWell Morning Report — Sprint 6 (Agent)
+
+**Date:** 2026-07-21  
+**Branch:** `cursor/sprint1-mvp-c124`  
+**Manual version:** 0.1  
+**Previous sprint:** Sprint 5
+
+## Verdict
+
+Addressed the core product gap: PolicyWell now has a real **Insurance Intelligence Agent** as the primary surface — multi-turn chat that plans and executes tools (context, scores, grounded policy analysis, scenarios, comparison, recommendations, approval, tasks, carrier packs) before answering. Not a page of widgets.
+
+## Shipped
+
+### Agent runtime (`src/lib/agent/`)
+- **Tools** (10): `update_context`, `get_context`, `get_scores`, `analyze_policy`, `run_scenarios`, `compare_policies`, `generate_recommendations`, `decide_recommendation`, `create_tasks`, `ask_carrier`
+- **Planner**: maps utterances to ordered tool calls; always updates context from free-form speech first (Manual §7)
+- **Synthesizer**: analyst-style replies from tool outputs only — cites documents, extracted values, confidence; never invents claims
+- **Optional LLM**: when `OPENAI_API_KEY` is set, OpenAI synthesizes the final reply from tool results via Vercel AI SDK; without a key the deterministic synthesizer runs
+
+### Primary product UI
+- **`/agent`**: full chat with starter prompts, tool-call chips per turn, live context panel, “Seed IUL demo”
+- Landing CTA → “Talk to the agent”; policyholder login lands on `/agent`
+- API: `POST /api/agent`
+
+## Tests
+
+`npm test`: **39/39** (4 new agent tests — context-first, grounded lapse answer, scenarios+pending recs, approve-all → tasks).
+
+## How to feel the agent
+
+Public URL: open **/agent** → Seed IUL demo → ask “Will my policy lapse?” → “What do you recommend?” → “approve all” → “Create follow-up tasks”.
+
+For real LLM phrasing: set `OPENAI_API_KEY` in the environment and restart.
+
+---
+
 # PolicyWell Morning Report — Sprint 5
 
 **Date:** 2026-07-21  

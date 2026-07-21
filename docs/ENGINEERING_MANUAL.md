@@ -66,6 +66,15 @@ Every task must:
 | Tasks page with overdue tracking | Done |
 | Meeting preparation pack + markdown export | Done |
 
+## Sprint 6 status (Agent)
+
+| Scope | Status |
+|-------|--------|
+| Agent runtime with 10 tools, planner, synthesizer | Done |
+| Optional OpenAI synthesis when OPENAI_API_KEY set | Done |
+| Primary /agent chat UI + /api/agent | Done |
+| Landing/login wired to agent | Done |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)

@@ -27,8 +27,8 @@ export default function HomePage() {
             recommendations second, always with human approval.
           </p>
           <div className="animate-rise-delay-2 mt-10 flex flex-wrap gap-3">
-            <Link href="/login" className="pw-btn !bg-foam !text-pine hover:!bg-white">
-              Enter the agent
+            <Link href="/agent" className="pw-btn !bg-foam !text-pine hover:!bg-white">
+              Talk to the agent
             </Link>
             <Link
               href="/demo"

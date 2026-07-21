@@ -23,9 +23,11 @@ export default function LoginPage() {
     const destination =
       user.role === "imo"
         ? "/imo"
-        : user.role === "advisor" || user.role === "carrier"
-          ? "/workspace"
-          : "/onboarding";
+        : user.role === "advisor"
+          ? "/clients"
+          : user.role === "carrier"
+            ? "/carrier"
+            : "/agent";
     router.push(destination);
   }
 

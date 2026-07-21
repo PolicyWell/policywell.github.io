@@ -24,6 +24,9 @@ export function SiteNav() {
     <header className="pw-shell flex items-center justify-between py-6 animate-rise">
       <BrandMark />
       <nav className="flex items-center gap-3 text-sm text-stone">
+        <Link href="/agent" className="hover:text-pine transition-colors">
+          Agent
+        </Link>
         <Link href="/demo" className="hover:text-pine transition-colors">
           Investor demo
         </Link>
@@ -37,6 +40,7 @@ export function SiteNav() {
 
 export function AppNav({ role }: { role?: string }) {
   const links = [
+    { href: "/agent", label: "Agent" },
     { href: "/workspace", label: "Workspace" },
     { href: "/onboarding", label: "Onboarding" },
     { href: "/profile", label: "Profile" },
