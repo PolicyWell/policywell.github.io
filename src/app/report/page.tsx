@@ -4,12 +4,17 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { AppNav } from "@/components/ui";
 import { generateAgentReport } from "@/lib/context-engine";
+import {
+  generateMeetingPrep,
+  meetingPrepToMarkdown,
+} from "@/lib/meeting-prep";
 import { approvedForReport } from "@/lib/recommendations";
 import {
   useDocuments,
   useProfile,
   useRecommendations,
   useSession,
+  useTasks,
 } from "@/lib/use-workspace";
 
 export default function ReportPage() {
@@ -18,8 +23,22 @@ export default function ReportPage() {
   const docs = useDocuments();
 
   const recommendations = useRecommendations();
+  const tasks = useTasks();
   const approved = approvedForReport(recommendations);
   const pendingCount = recommendations.filter((r) => r.status === "pending").length;
+
+  function downloadMeetingPrep() {
+    if (!profile) return;
+    const pack = generateMeetingPrep(profile, docs, recommendations, tasks);
+    const md = meetingPrepToMarkdown(pack);
+    const blob = new Blob([md], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `meeting-prep-${profile.displayName.replace(/\s+/g, "-").toLowerCase()}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   const report = useMemo(
     () => (profile ? generateAgentReport(profile, docs) : null),
@@ -53,14 +72,19 @@ export default function ReportPage() {
     <div className="flex-1 flex flex-col">
       <AppNav role={session.role} />
       <main className="pw-shell py-10 space-y-6">
-        <div className="animate-rise">
-          <h1 className="font-display text-4xl text-pine">Meeting preparation</h1>
-          <p className="text-stone mt-2">
-            Advisor receives client summary, advisor summary, questions, warnings, and recommended follow-up.
-          </p>
-          <p className="text-xs text-stone mt-1">
-            Generated {new Date(report.generatedAt).toLocaleString()}
-          </p>
+        <div className="animate-rise flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="font-display text-4xl text-pine">Meeting preparation</h1>
+            <p className="text-stone mt-2">
+              Advisor receives client summary, advisor summary, questions, warnings, and recommended follow-up.
+            </p>
+            <p className="text-xs text-stone mt-1">
+              Generated {new Date(report.generatedAt).toLocaleString()}
+            </p>
+          </div>
+          <button type="button" className="pw-btn" onClick={downloadMeetingPrep}>
+            Download meeting pack (.md)
+          </button>
         </div>
 
         <section className="pw-panel p-6 animate-rise-delay">

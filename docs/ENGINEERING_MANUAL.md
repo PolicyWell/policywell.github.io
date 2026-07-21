@@ -58,6 +58,14 @@ Every task must:
 | Human approval queue (approve/reject, gates client report) | Done |
 | Score history snapshots + trend | Done |
 
+## Sprint 5 status
+
+| Scope | Status |
+|-------|--------|
+| Follow-up tasks from approved recommendations (dated, idempotent) | Done |
+| Tasks page with overdue tracking | Done |
+| Meeting preparation pack + markdown export | Done |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)

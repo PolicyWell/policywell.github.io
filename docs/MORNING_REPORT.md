@@ -1,3 +1,42 @@
+# PolicyWell Morning Report — Sprint 5
+
+**Date:** 2026-07-21  
+**Branch:** `cursor/sprint1-mvp-c124`  
+**Manual version:** 0.1  
+**Previous sprint:** Sprint 4 (human approval + score history, see below)
+
+## Verdict
+
+Sprint 5 turns approvals into action: human-approved recommendations become dated follow-up tasks with documented per-rule timelines, and advisors get a downloadable meeting preparation pack (Manual §11 "Meeting preparation") assembled from context, deterministic reports, approved recommendations, and open tasks.
+
+## Shipped
+
+### Follow-up task workflow
+- `src/lib/tasks.ts`: only **approved** recommendations become tasks (pending/rejected never do — test-asserted). Due dates follow documented per-rule timelines (verification/profile 7 days, funding 14, loans/beneficiary 21, coverage/review 30). Regeneration is idempotent — existing tasks preserved. Toggle completion, overdue detection, open/overdue/completed summary.
+- **Tasks page** (`/tasks`, in nav for all roles): stat tiles, generate-from-approved, checkbox completion, overdue badges.
+
+### Meeting preparation pack (Manual §11)
+- `src/lib/meeting-prep.ts`: pack with agenda, talking points (scores, household, profile gaps), approved recommendations only, open tasks, questions, warnings, documents on file with verification state, three funding-scenario summaries, and documented assumptions.
+- Markdown export; **Download meeting pack (.md)** button on the report page.
+
+## Tests
+
+`npm test`: **35/35 passing** (Sprint 5 adds 6 — approval gating for tasks, due-date rules, idempotent regeneration, toggle/overdue, pack content, markdown export).
+Typecheck, lint, production build clean. Live server restarted; all routes 200 locally and via the public tunnel URL.
+
+## Push status
+
+Unchanged: no GitHub credentials in this environment; `origin` configured for `PolicyWell/PW-MVP`. User has local-push instructions + downloadable bundle. App is live at a temporary Cloudflare quick-tunnel URL.
+
+## Next sprint candidates
+
+- Real LLM interview + extraction behind existing interfaces (needs API key)
+- Database persistence and real authentication (needs infra decision)
+- Broker-dealer / financial-institution views
+- Task assignment/ownership for multi-advisor firms
+
+---
+
 # PolicyWell Morning Report — Sprint 4
 
 **Date:** 2026-07-21  

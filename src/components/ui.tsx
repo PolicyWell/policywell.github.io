@@ -42,6 +42,7 @@ export function AppNav({ role }: { role?: string }) {
     { href: "/profile", label: "Profile" },
     { href: "/upload", label: "Upload" },
     { href: "/compare", label: "Compare" },
+    { href: "/tasks", label: "Tasks" },
     { href: "/report", label: "Report" },
   ];
   if (role === "advisor" || role === "imo") {

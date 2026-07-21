@@ -12,11 +12,13 @@ import type {
 import type { ClientRecord } from "./clients";
 import type { ScoreSnapshot } from "./history";
 import type { Recommendation } from "./recommendations";
+import type { FollowUpTask } from "./tasks";
 import {
   loadActiveClientId,
   loadClientsRaw,
   loadHistoryRaw,
   loadRecommendationsRaw,
+  loadTasksRaw,
   loadDocuments,
   loadFeedback,
   loadOnboardingRaw,
@@ -28,6 +30,7 @@ import {
   saveFeedback,
   saveHistoryRaw,
   saveRecommendationsRaw,
+  saveTasksRaw,
   saveOnboardingRaw,
   saveProfile,
   saveSession,
@@ -211,5 +214,17 @@ export function useScoreHistory(): ScoreSnapshot[] {
 
 export function persistScoreHistory(history: ScoreSnapshot[]) {
   saveHistoryRaw(JSON.stringify(history));
+  notifyStore();
+}
+
+const EMPTY_TASKS: FollowUpTask[] = [];
+const readTasks = makeJsonSnapshot<FollowUpTask[]>(loadTasksRaw, EMPTY_TASKS);
+
+export function useTasks(): FollowUpTask[] {
+  return useSyncExternalStore(subscribe, readTasks, () => EMPTY_TASKS);
+}
+
+export function persistTasks(tasks: FollowUpTask[]) {
+  saveTasksRaw(JSON.stringify(tasks));
   notifyStore();
 }
