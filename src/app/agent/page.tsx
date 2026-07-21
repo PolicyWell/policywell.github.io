@@ -113,10 +113,10 @@ export default function AgentPage() {
     setError(null);
     setActivity("Running agent tools…");
     setInput("");
-    const assistantId = `a_${crypto.randomUUID()}`;
+    const assistantId = `a_${newId()}`;
     setMessages((m) => [
       ...m,
-      { id: `u_${crypto.randomUUID()}`, role: "user", content: trimmed },
+      { id: `u_${newId()}`, role: "user", content: trimmed },
     ]);
     scrollToBottom();
 
@@ -452,4 +452,11 @@ function Row({
       <dd className="text-ink text-right">{value || "—"}</dd>
     </div>
   );
+}
+
+function newId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `id_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }

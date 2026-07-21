@@ -61,9 +61,13 @@ export function saveDocuments(docs: IngestedDocument[]) {
   localStorage.setItem(DOCS_KEY, JSON.stringify(docs));
 }
 
+export function loadDocumentsRaw(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(DOCS_KEY);
+}
+
 export function loadDocuments(): IngestedDocument[] {
-  if (!canUseStorage()) return [];
-  const raw = localStorage.getItem(DOCS_KEY);
+  const raw = loadDocumentsRaw();
   if (!raw) return [];
   try {
     return JSON.parse(raw) as IngestedDocument[];
@@ -77,9 +81,13 @@ export function saveFeedback(entries: FeedbackEntry[]) {
   localStorage.setItem(FEEDBACK_KEY, JSON.stringify(entries));
 }
 
+export function loadFeedbackRaw(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(FEEDBACK_KEY);
+}
+
 export function loadFeedback(): FeedbackEntry[] {
-  if (!canUseStorage()) return [];
-  const raw = localStorage.getItem(FEEDBACK_KEY);
+  const raw = loadFeedbackRaw();
   if (!raw) return [];
   try {
     return JSON.parse(raw) as FeedbackEntry[];

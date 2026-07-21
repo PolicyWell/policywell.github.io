@@ -16,11 +16,11 @@ import type { FollowUpTask } from "./tasks";
 import {
   loadActiveClientId,
   loadClientsRaw,
+  loadDocumentsRaw,
+  loadFeedbackRaw,
   loadHistoryRaw,
   loadRecommendationsRaw,
   loadTasksRaw,
-  loadDocuments,
-  loadFeedback,
   loadOnboardingRaw,
   loadProfile,
   loadSession,
@@ -39,6 +39,42 @@ import {
 const EVENT = "policywell-store-change";
 const onboardingBoot = new Map<string, OnboardingState>();
 
+/**
+ * useSyncExternalStore requires getSnapshot to return a cached reference when
+ * data is unchanged. Returning a fresh [] / JSON.parse() every call causes
+ * React error #185 (maximum update depth exceeded) and blank "couldn't load" pages.
+ */
+function makeJsonSnapshot<T>(read: () => string | null, fallback: T): () => T {
+  let cache: { raw: string; parsed: T } | null = null;
+  return () => {
+    const raw = read();
+    if (!raw) return fallback;
+    if (cache?.raw === raw) return cache.parsed;
+    try {
+      const parsed = JSON.parse(raw) as T;
+      cache = { raw, parsed };
+      return parsed;
+    } catch {
+      return fallback;
+    }
+  };
+}
+
+function makeObjectSnapshot<T>(
+  load: () => T | null,
+  serialize: (value: T) => string,
+): () => T | null {
+  let cache: { raw: string; parsed: T } | null = null;
+  return () => {
+    const value = load();
+    if (value == null) return null;
+    const raw = serialize(value);
+    if (cache?.raw === raw) return cache.parsed;
+    cache = { raw, parsed: value };
+    return value;
+  };
+}
+
 export function notifyStore() {
   if (typeof window !== "undefined") {
     window.dispatchEvent(new Event(EVENT));
@@ -55,28 +91,50 @@ function subscribe(onStoreChange: () => void) {
   };
 }
 
+const readSession = makeObjectSnapshot(loadSession, (v) => JSON.stringify(v));
+const readProfile = makeObjectSnapshot(loadProfile, (v) => JSON.stringify(v));
+
 export function useSession(): SessionUser | null {
-  return useSyncExternalStore(subscribe, loadSession, () => null);
+  return useSyncExternalStore(subscribe, readSession, () => null);
 }
 
 export function useProfile(): UserProfile | null {
-  return useSyncExternalStore(subscribe, loadProfile, () => null);
+  return useSyncExternalStore(subscribe, readProfile, () => null);
 }
+
+const EMPTY_DOCS: IngestedDocument[] = [];
+const readDocuments = makeJsonSnapshot<IngestedDocument[]>(
+  loadDocumentsRaw,
+  EMPTY_DOCS,
+);
 
 export function useDocuments(): IngestedDocument[] {
-  return useSyncExternalStore(subscribe, loadDocuments, () => []);
+  return useSyncExternalStore(subscribe, readDocuments, () => EMPTY_DOCS);
 }
 
+const EMPTY_FEEDBACK: FeedbackEntry[] = [];
+const readFeedback = makeJsonSnapshot<FeedbackEntry[]>(
+  loadFeedbackRaw,
+  EMPTY_FEEDBACK,
+);
+
 export function useFeedbackEntries(): FeedbackEntry[] {
-  return useSyncExternalStore(subscribe, loadFeedback, () => []);
+  return useSyncExternalStore(subscribe, readFeedback, () => EMPTY_FEEDBACK);
 }
+
+let onboardingRawCache: { raw: string; parsed: OnboardingState } | null = null;
 
 function readOnboarding(session: SessionUser | null): OnboardingState | null {
   if (!session) return null;
   const raw = loadOnboardingRaw();
   if (raw) {
+    if (onboardingRawCache?.raw === raw) {
+      onboardingBoot.set(session.id, onboardingRawCache.parsed);
+      return onboardingRawCache.parsed;
+    }
     try {
       const parsed = JSON.parse(raw) as OnboardingState;
+      onboardingRawCache = { raw, parsed };
       onboardingBoot.set(session.id, parsed);
       return parsed;
     } catch {
@@ -98,10 +156,7 @@ function readOnboarding(session: SessionUser | null): OnboardingState | null {
 export function useOnboardingState(
   session: SessionUser | null,
 ): [OnboardingState | null, (next: OnboardingState) => void] {
-  const getSnapshot = useCallback(
-    () => readOnboarding(session),
-    [session],
-  );
+  const getSnapshot = useCallback(() => readOnboarding(session), [session]);
 
   const state = useSyncExternalStore(subscribe, getSnapshot, () => null);
 
@@ -141,23 +196,24 @@ export function clearOnboardingBoot() {
   onboardingBoot.clear();
 }
 
+const EMPTY_CLIENTS: ClientRecord[] = [];
 let clientsCache: { raw: string; parsed: ClientRecord[] } | null = null;
 
 function readClients(): ClientRecord[] {
   const raw = loadClientsRaw();
-  if (!raw) return [];
+  if (!raw) return EMPTY_CLIENTS;
   if (clientsCache?.raw === raw) return clientsCache.parsed;
   try {
     const parsed = JSON.parse(raw) as ClientRecord[];
     clientsCache = { raw, parsed };
     return parsed;
   } catch {
-    return [];
+    return EMPTY_CLIENTS;
   }
 }
 
 export function useClients(): ClientRecord[] {
-  return useSyncExternalStore(subscribe, readClients, () => []);
+  return useSyncExternalStore(subscribe, readClients, () => EMPTY_CLIENTS);
 }
 
 export function useActiveClientId(): string | null {
@@ -177,24 +233,11 @@ export function activateClient(client: ClientRecord) {
   notifyStore();
 }
 
-function makeJsonSnapshot<T>(read: () => string | null, fallback: T): () => T {
-  let cache: { raw: string; parsed: T } | null = null;
-  return () => {
-    const raw = read();
-    if (!raw) return fallback;
-    if (cache?.raw === raw) return cache.parsed;
-    try {
-      const parsed = JSON.parse(raw) as T;
-      cache = { raw, parsed };
-      return parsed;
-    } catch {
-      return fallback;
-    }
-  };
-}
-
 const EMPTY_RECS: Recommendation[] = [];
-const readRecs = makeJsonSnapshot<Recommendation[]>(loadRecommendationsRaw, EMPTY_RECS);
+const readRecs = makeJsonSnapshot<Recommendation[]>(
+  loadRecommendationsRaw,
+  EMPTY_RECS,
+);
 
 export function useRecommendations(): Recommendation[] {
   return useSyncExternalStore(subscribe, readRecs, () => EMPTY_RECS);
@@ -206,7 +249,10 @@ export function persistRecommendations(recs: Recommendation[]) {
 }
 
 const EMPTY_HISTORY: ScoreSnapshot[] = [];
-const readHistory = makeJsonSnapshot<ScoreSnapshot[]>(loadHistoryRaw, EMPTY_HISTORY);
+const readHistory = makeJsonSnapshot<ScoreSnapshot[]>(
+  loadHistoryRaw,
+  EMPTY_HISTORY,
+);
 
 export function useScoreHistory(): ScoreSnapshot[] {
   return useSyncExternalStore(subscribe, readHistory, () => EMPTY_HISTORY);
