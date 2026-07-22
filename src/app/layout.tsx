@@ -14,10 +14,40 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const SITE_URL = "https://policywell.github.io";
+const OG_IMAGE = `${SITE_URL}/og-image.png`;
+
 export const metadata: Metadata = {
-  title: "PolicyWell — Insurance Intelligence",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+    template: "%s · PolicyWell",
+  },
   description:
     "Building the Intelligence Layer for Insurance. Context-first AI for policyholders, advisors, IMOs, and carriers.",
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "PolicyWell",
+    title: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+    description:
+      "Building the Intelligence Layer for Insurance. Context-first AI for policyholders, advisors, IMOs, and carriers.",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1024,
+        height: 1024,
+        alt: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+    description:
+      "Building the Intelligence Layer for Insurance. Context-first AI for policyholders, advisors, IMOs, and carriers.",
+    images: [OG_IMAGE],
+  },
 };
 
 export default function RootLayout({
