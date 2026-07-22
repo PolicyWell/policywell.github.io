@@ -2,6 +2,11 @@
 
 **Building the Intelligence Layer for Insurance.**
 
+**Live site (GitHub Pages):** https://policywell.github.io/
+
+- Docs / CLI design: https://policywell.github.io/docs/cli/
+- Agent: https://policywell.github.io/agent/
+
 Primary product surface: the **Insurance Intelligence Agent** at `/agent`.
 
 ## Requirements
