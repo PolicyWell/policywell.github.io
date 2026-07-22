@@ -129,8 +129,14 @@ select {
 }
 
 .pw-shell {
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1120px, calc(100% - 1.25rem));
   margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .pw-shell {
+    width: min(1120px, calc(100% - 2rem));
+  }
 }
 
 .pw-btn {
@@ -146,6 +152,108 @@ select {
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 10px 24px rgba(15, 47, 40, 0.18);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pw-nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 47, 40, 0.18);
+  background: rgba(245, 250, 247, 0.9);
+  color: var(--pine);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* Pitch deck — full slide visible at any viewport width (16:9) */
+.pw-deck-frame {
+  border: 1px solid rgba(15, 47, 40, 0.1);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.pw-deck-slide {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0a1f1a;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.pw-deck-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #0a1f1a;
+}
+
+.pw-deck-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid rgba(15, 47, 40, 0.08);
+  background: rgba(245, 250, 247, 0.95);
+}
+
+.pw-deck-btn {
+  min-height: 44px;
+  min-width: 4.5rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 47, 40, 0.16);
+  background: white;
+  color: var(--pine);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.pw-deck-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pw-deck-count {
+  font-size: 0.8rem;
+  color: var(--stone);
+  text-align: center;
+  flex: 1;
+}
+
+.pw-deck-stack summary {
+  list-style: none;
+  font-weight: 500;
+}
+
+.pw-deck-stack summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .pw-btn {
+    padding: 0.8rem 1.15rem;
+  }
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 .pw-btn:hover {

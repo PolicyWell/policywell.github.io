@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
   return (
-    <Link href="/" className="inline-flex items-baseline gap-2">
+    <Link href="/" className="inline-flex items-baseline gap-2 min-w-0">
       <span
         className={`font-display text-pine tracking-tight ${
           large ? "text-4xl md:text-6xl" : "text-xl"
@@ -11,7 +14,7 @@ export function BrandMark({ large = false }: { large?: boolean }) {
         PolicyWell
       </span>
       {!large && (
-        <span className="text-[10px] uppercase tracking-[0.18em] text-stone">
+        <span className="hidden sm:inline text-[10px] uppercase tracking-[0.18em] text-stone">
           v0.1
         </span>
       )}
@@ -20,26 +23,87 @@ export function BrandMark({ large = false }: { large?: boolean }) {
 }
 
 export function SiteNav() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    function onResize() {
+      if (window.innerWidth >= 768) setOpen(false);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const links = [
+    { href: "/agent", label: "Agent" },
+    { href: "/deck", label: "Deck" },
+    { href: "/docs", label: "Docs" },
+    { href: "/demo", label: "Investor demo" },
+  ];
+
   return (
-    <header className="pw-shell flex items-center justify-between py-6 animate-rise">
-      <BrandMark />
-      <nav className="flex items-center gap-3 text-sm text-stone">
-        <Link href="/agent" className="hover:text-pine transition-colors">
-          Agent
-        </Link>
-        <Link href="/deck" className="hover:text-pine transition-colors">
-          Deck
-        </Link>
-        <Link href="/docs" className="hover:text-pine transition-colors">
-          Docs
-        </Link>
-        <Link href="/demo" className="hover:text-pine transition-colors">
-          Investor demo
-        </Link>
-        <Link href="/login" className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm">
-          Sign in
-        </Link>
-      </nav>
+    <header className="pw-shell py-4 md:py-6 animate-rise relative z-30">
+      <div className="flex items-center justify-between gap-3">
+        <BrandMark />
+        <nav className="hidden md:flex items-center gap-3 text-sm text-stone">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="hover:text-pine transition-colors whitespace-nowrap"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/login"
+            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
+          >
+            Sign in
+          </Link>
+        </nav>
+        <button
+          type="button"
+          className="md:hidden pw-nav-toggle"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? "Close" : "Menu"}
+        </button>
+      </div>
+
+      {open && (
+        <nav
+          id="mobile-nav"
+          className="md:hidden mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)]"
+        >
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="px-3 py-3 rounded-xl text-stone hover:text-pine hover:bg-pine/5"
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/login"
+            className="pw-btn mt-2 text-center"
+            onClick={() => setOpen(false)}
+          >
+            Sign in
+          </Link>
+        </nav>
+      )}
     </header>
   );
 }
@@ -70,23 +134,25 @@ export function AppNav({ role }: { role?: string }) {
   }
   return (
     <header className="border-b border-pine/10 bg-foam/70 backdrop-blur-md sticky top-0 z-20">
-      <div className="pw-shell flex flex-wrap items-center justify-between gap-3 py-4">
-        <BrandMark />
-        <nav className="flex flex-wrap items-center gap-1 text-sm">
+      <div className="pw-shell flex flex-col gap-2 py-3 md:py-4">
+        <div className="flex items-center justify-between gap-3">
+          <BrandMark />
+          {role && (
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-moss shrink-0">
+              {role}
+            </span>
+          )}
+        </div>
+        <nav className="flex items-center gap-1 text-sm overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="px-3 py-1.5 rounded-full text-stone hover:text-pine hover:bg-pine/5 transition-colors"
+              className="px-3 py-1.5 rounded-full text-stone hover:text-pine hover:bg-pine/5 transition-colors whitespace-nowrap shrink-0"
             >
               {l.label}
             </Link>
           ))}
-          {role && (
-            <span className="ml-2 text-xs uppercase tracking-wider text-moss">
-              {role}
-            </span>
-          )}
         </nav>
       </div>
     </header>

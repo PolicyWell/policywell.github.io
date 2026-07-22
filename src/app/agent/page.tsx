@@ -241,11 +241,13 @@ export default function AgentPage() {
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <AppNav role={session?.role} />
-      <main className="pw-shell flex-1 grid lg:grid-cols-[1.4fr_0.6fr] gap-6 py-6">
-        <section className="pw-panel flex flex-col min-h-[70vh] shadow-[var(--shadow-soft)]">
-          <header className="px-5 py-4 border-b border-pine/10 flex items-center justify-between gap-3">
-            <div>
-              <h1 className="font-display text-2xl text-pine">Intelligence Agent</h1>
+      <main className="pw-shell flex-1 grid lg:grid-cols-[1.4fr_0.6fr] gap-4 md:gap-6 py-4 md:py-6">
+        <section className="pw-panel flex flex-col min-h-[65vh] md:min-h-[70vh] shadow-[var(--shadow-soft)]">
+          <header className="px-4 sm:px-5 py-4 border-b border-pine/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="font-display text-xl sm:text-2xl text-pine">
+                Intelligence Agent
+              </h1>
               <p className="text-xs text-stone">
                 Context → tools → grounded answer · human approval required
               </p>
@@ -254,7 +256,7 @@ export default function AgentPage() {
                 local analyst engine if credits are depleted.
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 shrink-0">
               <button
                 type="button"
                 className="pw-btn pw-btn-secondary !py-2 !px-3 text-xs"
