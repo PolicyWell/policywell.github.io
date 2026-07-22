@@ -9,6 +9,7 @@
     "dev": "next dev",
     "dev:agent": "next dev -p 3000",
     "build": "next build",
+    "build:pages": "node scripts/build-pages.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",

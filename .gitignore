@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+/.pages-api-park/
+.netlify/
 
 # production
 /build
