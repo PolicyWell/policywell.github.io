@@ -27,6 +27,9 @@ export function SiteNav() {
         <Link href="/agent" className="hover:text-pine transition-colors">
           Agent
         </Link>
+        <Link href="/deck" className="hover:text-pine transition-colors">
+          Deck
+        </Link>
         <Link href="/docs" className="hover:text-pine transition-colors">
           Docs
         </Link>

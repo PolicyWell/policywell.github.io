@@ -3,6 +3,13 @@ import { SiteNav } from "@/components/ui";
 
 const DOCS = [
   {
+    href: "/deck",
+    title: "Pitch deck",
+    status: "Investors",
+    summary:
+      "View or download the PolicyWell pitch deck — product thesis and market narrative.",
+  },
+  {
     href: "/docs/cli",
     title: "CLI design",
     status: "Sprint 8 candidate",
