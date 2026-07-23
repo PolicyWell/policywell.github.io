@@ -21,12 +21,12 @@ const OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "PolicyWell — The Agentic Intelligence Layer for Insurance",
-    template: "%s · PolicyWell",
+    default: "PolicyWell AI — The AI Operating System for the Insurance Industry",
+    template: "%s · PolicyWell AI",
   },
   description:
-    "Building the Intelligence Layer for Insurance. Context-first AI for policyholders, advisors, IMOs, and carriers.",
-  applicationName: "PolicyWell",
+    "Analyze policies. Recommend actions. Keep humans in control. PolicyWell AI is the AI operating system for the insurance industry.",
+  applicationName: "PolicyWell AI",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -46,24 +46,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    siteName: "PolicyWell",
-    title: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+    siteName: "PolicyWell AI",
+    title: "PolicyWell AI — The AI Operating System for the Insurance Industry",
     description:
-      "Building the Intelligence Layer for Insurance. Context-first AI for policyholders, advisors, IMOs, and carriers.",
+      "Analyze policies. Recommend actions. Keep humans in control.",
     images: [
       {
         url: OG_IMAGE,
         width: 1024,
         height: 1024,
-        alt: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+        alt: "PolicyWell AI — The AI Operating System for the Insurance Industry",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PolicyWell — The Agentic Intelligence Layer for Insurance",
+    title: "PolicyWell AI — The AI Operating System for the Insurance Industry",
     description:
-      "Building the Intelligence Layer for Insurance. Context-first AI for policyholders, advisors, IMOs, and carriers.",
+      "Analyze policies. Recommend actions. Keep humans in control.",
     images: [OG_IMAGE],
   },
   manifest: "/site.webmanifest",
