@@ -22,8 +22,7 @@ export default function HomePage() {
               The Agentic AI Layer for the Insurance Industry
             </h1>
             <p className="animate-rise-delay mt-4 md:mt-5 max-w-3xl text-base sm:text-lg md:text-xl text-foam/85">
-              Analyze Illustrations &amp; Policies. Recommend actions. Aid Human
-              control.
+              Analyze Illustrations &amp; Policies. Recommend actions. Aid Human Control.
             </p>
           </div>
 
