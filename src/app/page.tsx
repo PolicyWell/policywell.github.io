@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DeckViewer } from "@/components/DeckViewer";
+import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 
@@ -18,6 +19,7 @@ export default function HomePage() {
             }}
           />
           <div className="pw-shell flex-1 flex flex-col justify-center pt-10 pb-6 md:pt-14 md:pb-8 text-foam">
+            <LiveAnalysisCounter className="animate-rise mb-5 md:mb-6" />
             <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight">
               The Agentic AI Layer for the Insurance Industry
             </h1>

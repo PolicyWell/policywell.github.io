@@ -15,8 +15,10 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const SITE_URL = "https://policywell.github.io";
+const SITE_URL = "https://policywell.ai";
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
+/** Bump to force browsers/CDNs to pick up refreshed shield favicons. */
+const ICON_V = "20260723b";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -29,16 +31,36 @@ export const metadata: Metadata = {
   applicationName: "PolicyWell",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: `/favicon.ico?v=${ICON_V}`, sizes: "any" },
+      {
+        url: `/favicon-16.png?v=${ICON_V}`,
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: `/favicon-32.png?v=${ICON_V}`,
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: `/icon-192.png?v=${ICON_V}`,
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: `/icon-512.png?v=${ICON_V}`,
+        sizes: "512x512",
+        type: "image/png",
+      },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      {
+        url: `/apple-touch-icon.png?v=${ICON_V}`,
+        sizes: "180x180",
+        type: "image/png",
+      },
     ],
-    shortcut: ["/favicon.ico"],
+    shortcut: [`/favicon.ico?v=${ICON_V}`],
   },
   appleWebApp: {
     capable: true,
@@ -68,7 +90,7 @@ export const metadata: Metadata = {
       "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
     images: [OG_IMAGE],
   },
-  manifest: "/site.webmanifest",
+  manifest: `/site.webmanifest?v=${ICON_V}`,
 };
 
 export default function RootLayout({
@@ -81,6 +103,28 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}
     >
+      <head>
+        {/* Explicit tags so every static route (including 404) gets the shield mark. */}
+        <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="any" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href={`/favicon-16.png?v=${ICON_V}`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={`/favicon-32.png?v=${ICON_V}`}
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href={`/apple-touch-icon.png?v=${ICON_V}`}
+        />
+        <link rel="manifest" href={`/site.webmanifest?v=${ICON_V}`} />
+      </head>
       <body className="min-h-full flex flex-col font-sans text-[15px] leading-relaxed">
         {children}
         <SiteFooter />
