@@ -304,11 +304,14 @@ export function PolicyWell404Scene() {
       const width = mount.clientWidth || window.innerWidth;
       const height = mount.clientHeight || window.innerHeight;
       const aspect = width / Math.max(height, 1);
+      const narrow = aspect < 0.75;
       camera.aspect = aspect;
       // Keep the full sculpture in the upper band above the bottom copy.
-      camera.fov = aspect < 0.75 ? 48 : aspect < 1.1 ? 44 : 40;
-      camera.position.z = aspect < 0.75 ? 7.2 : 6.4;
-      camera.position.y = aspect < 0.75 ? 2.15 : 1.85;
+      camera.fov = narrow ? 46 : aspect < 1.1 ? 42 : 40;
+      camera.position.z = narrow ? 6.6 : 6.4;
+      camera.position.y = narrow ? 2.45 : 1.95;
+      root.position.y = narrow ? 0.85 : 0.55;
+      root.scale.setScalar(narrow ? 0.82 : 0.92);
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
     };
@@ -350,7 +353,9 @@ export function PolicyWell404Scene() {
       spinBoost += ((pointer.holding ? 1.8 : 0) - spinBoost) * 0.06;
       glow.intensity = glowStrength;
 
-      const baseCamY = camera.aspect < 0.75 ? 2.15 : 1.85;
+      const narrow = camera.aspect < 0.75;
+      const baseCamY = narrow ? 2.45 : 1.95;
+      const lookY = narrow ? 1.35 : 1.1;
 
       if (reducedMotion) {
         root.rotation.set(-0.08, 0.2, 0);
@@ -369,7 +374,7 @@ export function PolicyWell404Scene() {
         camera.position.y = baseCamY + pointer.y * -0.12;
       }
 
-      camera.lookAt(0, 1.05, 0);
+      camera.lookAt(0, lookY, 0);
     };
 
     if (reducedMotion) {
