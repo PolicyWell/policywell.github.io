@@ -61,7 +61,7 @@ export default function ClientsPage() {
             className="pw-btn pw-btn-secondary"
             onClick={() => persistClients(buildAdvisorRoster())}
           >
-            {clients.length ? "Reset demo roster" : "Load demo roster"}
+            {clients.length ? "Reset sample roster" : "Load sample roster"}
           </button>
         </div>
 

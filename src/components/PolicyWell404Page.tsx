@@ -25,13 +25,10 @@ export function PolicyWell404Page() {
           </p>
           <div className="pw-404-actions">
             <Link href="/" className="pw-btn">
-              Back to home
+              Back home
             </Link>
             <Link href="/demo" className="pw-btn pw-btn-secondary">
-              Product demo
-            </Link>
-            <Link href="/agent" className="pw-btn pw-btn-secondary">
-              Talk to the agent
+              Experience PolicyWell
             </Link>
           </div>
           <p className="pw-404-hint">

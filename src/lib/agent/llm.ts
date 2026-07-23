@@ -2,7 +2,7 @@ import "server-only";
 
 import { runAgentTurn, type AgentTurnResult, type AgentWorkspace } from "./index";
 
-/** Google AI Studio (Gemini) synthesis on top of deterministic tool results. */
+/** Optional LLM phrasing on top of deterministic tool results. */
 export async function runAgentTurnWithOptionalLlm(
   message: string,
   workspace: AgentWorkspace,
@@ -32,7 +32,7 @@ export async function runAgentTurnWithOptionalLlm(
       model: google("gemini-flash-latest"),
       temperature: 0.3,
       system: [
-        "You are PolicyWell, an Insurance Intelligence Agent — not a generic chatbot.",
+        "You are PolicyWell, an Insurance Intelligence Agent.",
         "Speak like a calm, premium insurance analyst working alongside the user.",
         "ONLY use facts from the tool results and known profile context below.",
         "Always mention grounding when analyzing a policy: document name, key extracted values, assumptions, and confidence when present.",
@@ -56,21 +56,10 @@ export async function runAgentTurnWithOptionalLlm(
     if (!text?.trim()) return base;
     return { ...base, reply: text.trim(), usedLlm: true };
   } catch (err) {
-    console.error("[policywell-agent] Gemini synthesis failed:", err);
-    const raw = err instanceof Error ? err.message : String(err);
-    const quota =
-      /quota|resource.exhausted|429|billing|prepayment credits are depleted/i.test(
-        raw,
-      );
-    const auth = /api key|permission|401|403|invalid/i.test(raw);
-    const note = quota
-      ? "_(Google AI credits are depleted — add prepaid credits at https://ai.studio/projects, then retry for Gemini phrasing. Showing the tool-grounded analyst reply.)_"
-      : auth
-        ? "_(Google AI API key rejected — verify the key in AI Studio. Showing the tool-grounded analyst reply.)_"
-        : "_(LLM phrasing unavailable right now — showing the tool-grounded analyst reply.)_";
+    console.error("[policywell-agent] phrasing enhancement failed:", err);
     return {
       ...base,
-      reply: `${base.reply}\n\n${note}`,
+      reply: `${base.reply}\n\n_(Enhanced phrasing unavailable right now — showing the tool-grounded analyst reply.)_`,
       usedLlm: false,
     };
   }

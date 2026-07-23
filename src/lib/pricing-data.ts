@@ -16,10 +16,10 @@ export const PRICING = {
     eyebrow: "Pricing",
     headlineLines: [
       "Free for policyholders.",
-      "Built to power the insurance ecosystem.",
+      "Infrastructure for the insurance ecosystem.",
     ] as const,
     supporting:
-      "PolicyWell gives consumers free access to insurance intelligence while advisors, IMOs, and carriers pay for advanced workflows, portfolio insights, APIs, and enterprise infrastructure.",
+      "Individuals use PolicyWell to understand their insurance. Advisors, IMOs, and carriers pay for advanced intelligence, workflow automation, integrations, and enterprise infrastructure.",
     primaryCta: { label: "Start Free", href: "/login" },
     secondaryCta: {
       label: "Talk to Sales",
@@ -202,7 +202,7 @@ export const PRICING = {
         "Deploy PolicyWell across servicing, distribution, retention, and advisor enablement without replacing existing systems.",
       nestedPlan: null as NestedPlan | null,
       rangeNote:
-        "Typical contracts may begin around $100,000 annually and scale based on policy volume, integrations, workflows, and deployment scope.",
+        "Enterprise pricing varies by policy volume, integrations, deployment scope, and workflow requirements. Typical contracts may begin around $100,000 annually.",
     },
   ],
   valueMetrics: [
@@ -258,7 +258,7 @@ export const PRICING = {
       "Commission attribution",
     ],
     compliance:
-      "Insurance recommendations and transactions remain subject to licensed advisor review, carrier requirements, and applicable state and federal regulations.",
+      "Recommendations should be generated independently of compensation and remain subject to licensing, suitability, carrier, and regulatory requirements. Insurance recommendations and transactions remain subject to licensed advisor review, carrier requirements, and applicable state and federal regulations.",
   },
   comparison: {
     columns: [
