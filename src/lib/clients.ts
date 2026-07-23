@@ -30,7 +30,7 @@ export function seedClientFromUtterances(
 
 /** Advisor demo roster: three households in different situations. */
 export function buildAdvisorRoster(): ClientRecord[] {
-  // Client 1: Sprint 1 demo household + a proposed FIA quote for comparison
+  // Client 1: demo household + a proposed FIA quote for comparison
   const alex = buildDemoSeed();
   let fiaQuote = ingestDocument({
     userId: alex.profile.userId,

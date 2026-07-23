@@ -2,7 +2,7 @@
 /**
  * Static export for GitHub Pages.
  * Temporarily parks /api (route handlers aren't supported with output: "export").
- * Client-side agent still works; Gemini enhance API is omitted on Pages.
+ * Client-side agent still works; optional reasoning-engine enhance API is omitted on Pages.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
