@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s · PolicyWell",
   },
   description:
-    "Analyze Illustrations & Policies. Recommend actions. Aid Human Control.",
+    "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
   applicationName: "PolicyWell",
   icons: {
     icon: [
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     siteName: "PolicyWell",
     title: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
     description:
-      "Analyze Illustrations & Policies. Recommend actions. Aid Human Control.",
+      "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
     images: [
       {
         url: OG_IMAGE,
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
     description:
-      "Analyze Illustrations & Policies. Recommend actions. Aid Human Control.",
+      "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
     images: [OG_IMAGE],
   },
   manifest: "/site.webmanifest",
