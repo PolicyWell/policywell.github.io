@@ -36,7 +36,7 @@ export const PRICING = {
     {
       id: "policyholder",
       name: "Policyholder",
-      audience: "For individuals and families",
+      audience: "For individuals, families, and people exploring coverage",
       tone: "mint" as PricingTone,
       popular: false,
       price: {
