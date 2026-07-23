@@ -1,7 +1,7 @@
 {
   "name": "PolicyWell",
   "short_name": "PolicyWell",
-  "description": "The Agentic Intelligence Layer for Insurance",
+  "description": "The Agentic AI Layer for the Insurance Industry",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5faf7",
@@ -11,13 +11,25 @@
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
