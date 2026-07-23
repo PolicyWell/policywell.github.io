@@ -213,7 +213,7 @@ export function PolicyWellCLIShowcase({
             <span className="pw-cli-dot pw-cli-dot-yellow" />
             <span className="pw-cli-dot pw-cli-dot-green" />
           </div>
-          <p className="pw-cli-title">policywell — insurance intelligence</p>
+          <p className="pw-cli-title">PolicyWell — Insurance Intelligence Agent</p>
           <span className="pw-cli-chrome-spacer" aria-hidden />
         </div>
 
