@@ -30,11 +30,25 @@ export function SiteFooter() {
             PolicyWell
           </Link>
           <p className="text-xs text-stone mt-1 max-w-sm">
-            The Agentic Intelligence Layer for Insurance.
+            Insurance intelligence platform for policyholders, advisors, IMOs,
+            and carriers.
           </p>
           <p className="text-xs text-moss mt-3">
             Built With <span aria-hidden="true">💚</span>
             <span className="sr-only">love</span> in Boston
+          </p>
+          <p className="text-xs text-stone mt-3">
+            <Link href="/deck" className="hover:text-pine underline-offset-2 hover:underline">
+              Investor deck
+            </Link>
+            <span aria-hidden> · </span>
+            <Link href="/docs" className="hover:text-pine underline-offset-2 hover:underline">
+              Docs
+            </Link>
+            <span aria-hidden> · </span>
+            <Link href="/pricing" className="hover:text-pine underline-offset-2 hover:underline">
+              Pricing
+            </Link>
           </p>
         </div>
 

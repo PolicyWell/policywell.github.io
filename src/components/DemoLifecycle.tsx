@@ -23,8 +23,8 @@ import { clearOnboardingBoot, notifyStore } from "@/lib/use-workspace";
 
 const ANALYSIS_STEPS = [
   {
-    label: "Reading policy PDF · Ingestion via Secure Insurance APIs",
-    detail: "Ingesting pages, tables, riders, and carrier feeds",
+    label: "Reading policy PDF · Document ingestion engine",
+    detail: "Ingesting pages, tables, riders, and structured feeds",
   },
   { label: "Identifying carrier & product", detail: "Matching illustration to in-force record" },
   { label: "Extracting coverage terms", detail: "Face amount, premiums, cash value, riders" },
@@ -241,16 +241,19 @@ export function DemoLifecycle() {
       <section className="pw-demo-hero">
         <div className="pw-demo-hero-glow" aria-hidden />
         <div className="pw-shell pw-demo-hero-inner">
-          <p className="pw-demo-eyebrow animate-rise">Product demo</p>
+          <p className="pw-demo-eyebrow animate-rise">Experience PolicyWell</p>
           <h1 className="pw-demo-h1 animate-rise-delay">
-            Watch insurance
+            See PolicyWell
             <br />
-            intelligence think.
+            in action.
           </h1>
           <p className="pw-demo-lede animate-rise-delay-2">
-            Upload a policy. PolicyWell builds household context, reasons across
-            the financial picture, and surfaces recommendations — with advisors
-            in the loop.
+            See how insurance documents, household context, advisor workflows,
+            and carrier data become explainable recommendations and
+            human-approved actions.
+          </p>
+          <p className="pw-demo-illustrative animate-rise-delay-2">
+            Illustrative demonstration · Example policy scenario
           </p>
           <div className="pw-demo-hero-cta animate-rise-delay-2">
             <a href="#analysis" className="pw-btn">
@@ -262,7 +265,7 @@ export function DemoLifecycle() {
               onClick={openProduct}
               disabled={launching}
             >
-              {launching ? "Opening…" : "Open the product"}
+              {launching ? "Opening…" : "Open sample workspace"}
             </button>
           </div>
           <div className="pw-demo-flow animate-rise-delay-2" aria-hidden>
@@ -295,10 +298,11 @@ export function DemoLifecycle() {
       >
         <div className="pw-shell">
           <Reveal>
-            <p className="pw-demo-eyebrow">Live AI analysis</p>
-            <h2 className="pw-demo-h2">The model is working.</h2>
+            <p className="pw-demo-eyebrow">Policy analysis engine</p>
+            <h2 className="pw-demo-h2">From document to decision.</h2>
             <p className="pw-demo-section-copy">
-              From document to decision — visible reasoning, not a black box.
+              Illustrative demonstration of PolicyWell ingestion, context, scoring,
+              and recommendations — with human approval in the loop.
             </p>
           </Reveal>
 
@@ -577,13 +581,13 @@ export function DemoLifecycle() {
                 onClick={openProduct}
                 disabled={launching}
               >
-                {launching ? "Opening…" : "Open the product"}
+                {launching ? "Opening…" : "Open sample workspace"}
               </button>
               <Link
-                href="/deck"
+                href="/pricing"
                 className="pw-btn pw-btn-secondary !border-foam/35 !text-foam hover:!bg-foam/10"
               >
-                View the deck
+                View pricing
               </Link>
             </div>
           </Reveal>

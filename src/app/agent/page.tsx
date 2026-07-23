@@ -32,19 +32,19 @@ const WELCOME: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "I'm your PolicyWell Insurance Intelligence Agent — not a chatbot. " +
-    "I update your household and policy context before I answer, reason with deterministic scores and documents, " +
-    "and keep every recommendation pending until you approve it.\n\n" +
-    "Click a starter below, seed the Mutual of Omaha demo, or type a question.",
+    "PolicyWell Insurance Intelligence\n\n" +
+    "Ask questions about a policy, household context, policy health, coverage, funding, or available next actions.\n\n" +
+    "Answers are grounded in available policy data and are designed for human review.\n\n" +
+    "Load a sample household to begin, choose a starter prompt, or type a question.",
 };
 
 const STARTERS = [
-  "I'm married with three kids in TX, and I have a Mutual of Omaha IUL.",
-  "Will my policy lapse?",
-  "Run funding scenarios.",
-  "What do you recommend?",
-  "Compare my policies.",
-  "What do you know about me?",
+  "What does this policy cover?",
+  "Is this policy appropriately funded?",
+  "What could increase the risk of lapse?",
+  "How does this policy fit the household's current needs?",
+  "What options should an advisor review?",
+  "Show the evidence supporting this recommendation.",
 ];
 
 export default function AgentPage() {
@@ -124,7 +124,7 @@ export default function AgentPage() {
     const workspace = buildWorkspace(user);
 
     try {
-      // Always run tools locally first so chat never depends on Gemini being up
+      // Always run tools locally first so chat never depends on optional phrasing
       const local = runAgentTurn(trimmed, workspace);
       persistProfile(local.workspace.profile);
       persistRecommendations(local.workspace.recommendations);
@@ -146,8 +146,8 @@ export default function AgentPage() {
       ]);
       scrollToBottom();
 
-      // Then try Gemini to upgrade the phrasing
-      setActivity("Enhancing reply with Gemini…");
+      // Then try optional phrasing enhancement
+      setActivity("Refining reply…");
       try {
         const res = await fetch("/api/agent", {
           method: "POST",
@@ -182,7 +182,7 @@ export default function AgentPage() {
           }
         }
       } catch {
-        // Keep the local grounded reply — Gemini is optional
+        // Keep the local grounded reply — enhanced phrasing is optional
       }
     } catch (err) {
       const msg =
@@ -223,12 +223,12 @@ export default function AgentPage() {
           id: `seed_${Date.now()}`,
           role: "system",
           content:
-            "Demo household loaded: Alex Rivera — married, 3 kids, TX mortgage, Mutual of Omaha IUL (verified). Ask me anything — try “Will my policy lapse?”",
+            "Sample household loaded (illustrative demonstration): Alex Rivera — married, 3 dependents, TX mortgage, indexed universal life policy (verified). Try “Is this policy appropriately funded?”",
         },
       ]);
       scrollToBottom();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to seed demo");
+      setError(err instanceof Error ? err.message : "Failed to load sample household");
     }
   }
 
@@ -246,14 +246,10 @@ export default function AgentPage() {
           <header className="px-4 sm:px-5 py-4 border-b border-pine/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="min-w-0">
               <h1 className="font-display text-xl sm:text-2xl text-pine">
-                Intelligence Agent
+                PolicyWell Insurance Intelligence
               </h1>
               <p className="text-xs text-stone">
-                Context → tools → grounded answer · human approval required
-              </p>
-              <p className="text-[11px] text-amber mt-1">
-                Gemini phrasing needs AI Studio credits. Chat still works with the
-                local analyst engine if credits are depleted.
+                Grounded answers · human review required
               </p>
             </div>
             <div className="flex flex-wrap gap-2 shrink-0">
@@ -262,7 +258,7 @@ export default function AgentPage() {
                 className="pw-btn pw-btn-secondary !py-2 !px-3 text-xs"
                 onClick={seedDemo}
               >
-                Seed IUL demo
+                Load sample household
               </button>
               {!session && (
                 <Link href="/login" className="pw-btn !py-2 !px-3 text-xs">
@@ -304,7 +300,7 @@ export default function AgentPage() {
                     ))}
                     {m.usedLlm && (
                       <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-moss/15 text-moss">
-                        gemini
+                        enhanced
                       </span>
                     )}
                   </div>
@@ -415,10 +411,10 @@ export default function AgentPage() {
           <div className="pw-panel p-5 text-sm text-stone space-y-2">
             <h2 className="font-display text-xl text-pine">How it works</h2>
             <p>
-              Each message runs tools (context, scores, analysis, scenarios,
-              recommendations), then Gemini phrases the grounded reply. Tool
-              chips show what ran; a <span className="text-moss">gemini</span>{" "}
-              chip means Google AI synthesis was used.
+              Each message updates context, runs the policy analysis engine, and
+              returns a grounded reply. Tool chips show what ran. An{" "}
+              <span className="text-moss">enhanced</span> chip means optional
+              phrasing was applied on top of the same grounded results.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <Link href="/upload" className="pw-btn pw-btn-secondary !py-2 text-xs">
@@ -428,7 +424,7 @@ export default function AgentPage() {
                 href="/workspace"
                 className="pw-btn pw-btn-secondary !py-2 text-xs"
               >
-                Scores & approval
+                Scores &amp; approval
               </Link>
               <Link href="/tasks" className="pw-btn pw-btn-secondary !py-2 text-xs">
                 Tasks

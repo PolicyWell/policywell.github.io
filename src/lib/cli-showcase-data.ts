@@ -25,11 +25,11 @@ export type CliAudience = {
 export const CLI_AUDIENCES: CliAudience[] = [
   {
     id: "policyholders",
-    label: "Policyholders",
+    label: "Policyholder workflow",
     shortLabel: "Policyholders",
     lines: [
       {
-        text: "$ policywell policy connect --carrier mutual-of-omaha",
+        text: "$ policywell policy connect --carrier illustrative-iul",
         tone: "command",
       },
       { text: "✓ Secure carrier connection established", tone: "success" },

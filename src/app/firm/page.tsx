@@ -75,7 +75,7 @@ export default function FirmPage() {
               persistTasks(seed.tasks);
             }}
           >
-            {books ? "Reset firm demo" : "Load firm demo"}
+            {books ? "Reset sample firm" : "Load sample firm"}
           </button>
         </div>
 

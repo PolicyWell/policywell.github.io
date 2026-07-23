@@ -4,7 +4,7 @@ import { SiteNav } from "@/components/ui";
 
 export const metadata = {
   title: "Pitch deck",
-  description: "PolicyWell investor pitch deck.",
+  description: "PolicyWell pitch deck for partners and investors.",
 };
 
 export default function DeckPage() {
@@ -14,7 +14,7 @@ export default function DeckPage() {
       <main className="pw-shell py-8 md:py-14 space-y-6">
         <header className="animate-rise space-y-3">
           <p className="text-xs uppercase tracking-[0.22em] text-moss">
-            Investors
+            Company
           </p>
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-pine">
             Pitch deck
