@@ -1,0 +1,28 @@
+# PolicyWell
+
+> PolicyWell is the insurance intelligence platform connecting policyholders, advisors, IMOs, and carriers through explainable recommendations and human-approved workflows.
+
+## The one page to read
+
+- [Start here](https://policywell.ai/docs): Common use cases and getting started
+
+## Common use cases
+
+- [Policy Intelligence](https://policywell.ai/docs/guides/policy-intelligence): Upload and analyze life insurance policies
+- [Annuity Intelligence](https://policywell.ai/docs/guides/annuity-intelligence): FIA, MYGA, SPIA analysis and comparisons
+- [AI Insurance Assistant](https://policywell.ai/docs/guides/ai-insurance-assistant): Embedded assistant for consumers and advisors
+- [Document Processing](https://policywell.ai/docs/guides/document-processing): Ingest policies and illustrations
+- [Recommendation Engine](https://policywell.ai/docs/guides/recommendation-engine): Funding, coverage, and exchange recommendations
+- [Advisor CRM Integration](https://policywell.ai/docs/guides/advisor-crm-integration): Salesforce, Redtail, Wealthbox, HubSpot, Dynamics
+- [Carrier APIs](https://policywell.ai/docs/guides/carrier-apis): Quotes, illustrations, underwriting, and servicing
+- [IMO Platform](https://policywell.ai/docs/guides/imo-platform): Advisor networks and book-of-business intelligence
+- [Webhooks](https://policywell.ai/docs/guides/webhooks): Lifecycle event notifications
+- [Workflow Automation](https://policywell.ai/docs/guides/workflow-automation): Reviews, notifications, and follow-ups
+- [White-Label Platform](https://policywell.ai/docs/guides/white-label-platform): Branded multi-tenant deployments
+- [AI Agent SDK](https://policywell.ai/docs/guides/ai-agent-sdk): Specialized insurance agents
+
+## Platform
+
+- [CLI](https://policywell.ai/docs/cli): Enterprise and batch automation
+- [Engineering](https://policywell.ai/docs/engineering): Architecture reference
+- [Pricing](https://policywell.ai/pricing): Packaging for the insurance ecosystem
