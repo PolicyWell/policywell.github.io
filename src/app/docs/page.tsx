@@ -17,8 +17,9 @@ export default function DocsStartHerePage() {
   return (
     <article className="pw-docs-article">
       <header className="pw-docs-article-header">
-        <p className="pw-docs-eyebrow">Overview</p>
-        <h1>{DOCS_META.title}</h1>
+        <div className="pw-docs-title-row">
+          <h1>{DOCS_META.title}</h1>
+        </div>
         <p className="pw-docs-lede">{DOCS_META.description}</p>
       </header>
 
@@ -35,87 +36,73 @@ export default function DocsStartHerePage() {
         <h2 id="using-heading">Using PolicyWell</h2>
         <ol className="pw-docs-steps">
           <li className="pw-docs-step">
-            <h3>Create an account</h3>
+            <h3>Sign up</h3>
             <p>
               Sign in at{" "}
               <Link href="/login" className="pw-docs-inline-link">
                 policywell.ai/login
               </Link>{" "}
-              and complete household or advisor onboarding.
+              and complete household or advisor onboarding in the product.
             </p>
           </li>
           <li className="pw-docs-step">
-            <h3>Connect a policy or illustration</h3>
+            <h3>Connect insurance data</h3>
             <p>
               Upload a life insurance policy or illustration, or explore the{" "}
               <Link href="/demo" className="pw-docs-inline-link">
                 product demo
               </Link>{" "}
-              with an illustrative scenario.
-            </p>
-          </li>
-          <li className="pw-docs-step">
-            <h3>Review intelligence with a human in the loop</h3>
-            <p>
-              Ask the{" "}
+              with an illustrative scenario. Then ask the{" "}
               <Link href="/agent" className="pw-docs-inline-link">
                 AI Insurance Assistant
               </Link>
-              , review policy-health signals, and approve recommendations before
-              client presentation.
+              .
             </p>
+            <div className="pw-docs-codeblock" role="region" aria-label="Example prompt">
+              <code>What does this policy cover, and is it appropriately funded?</code>
+            </div>
           </li>
           <li className="pw-docs-step">
-            <h3>Integrate across the ecosystem</h3>
+            <h3>Or build with PolicyWell</h3>
             <p>
-              Carriers, IMOs, and technology teams can explore the{" "}
-              <Link href="/docs/cli" className="pw-docs-inline-link">
-                CLI
-              </Link>
-              , planned APIs, webhooks, and white-label deployment options.
+              You are writing software that uses PolicyWell: a carrier workflow,
+              IMO operations console, advisor CRM sync, or batch analysis
+              pipeline.
+            </p>
+            <ol className="pw-docs-nested-steps">
+              <li>
+                Start with{" "}
+                <Link href="/docs/guides/document-processing" className="pw-docs-inline-link">
+                  Document Processing
+                </Link>{" "}
+                and{" "}
+                <Link href="/docs/guides/policy-intelligence" className="pw-docs-inline-link">
+                  Policy Intelligence
+                </Link>
+                .
+              </li>
+              <li>
+                Review the{" "}
+                <Link href="/docs/cli" className="pw-docs-inline-link">
+                  CLI
+                </Link>{" "}
+                for batch and enterprise automation.
+              </li>
+              <li>
+                See packaging on the{" "}
+                <Link href="/pricing" className="pw-docs-inline-link">
+                  pricing page
+                </Link>
+                .
+              </li>
+            </ol>
+            <p className="pw-docs-note">
+              Capabilities marked <strong>Preview</strong> or{" "}
+              <strong>Planned</strong> on guide pages are not generally
+              available yet.
             </p>
           </li>
         </ol>
-      </section>
-
-      <section aria-labelledby="build-heading" className="pw-docs-section">
-        <h2 id="build-heading">Or build with PolicyWell</h2>
-        <p className="pw-docs-body">
-          You are writing software that uses PolicyWell: a carrier workflow, IMO
-          operations console, advisor CRM sync, or batch analysis pipeline.
-        </p>
-        <ul className="pw-docs-bullet-list">
-          <li>
-            Start with{" "}
-            <Link href="/docs/guides/document-processing" className="pw-docs-inline-link">
-              Document Processing
-            </Link>{" "}
-            and{" "}
-            <Link href="/docs/guides/policy-intelligence" className="pw-docs-inline-link">
-              Policy Intelligence
-            </Link>
-            .
-          </li>
-          <li>
-            Review the{" "}
-            <Link href="/docs/cli" className="pw-docs-inline-link">
-              CLI design
-            </Link>{" "}
-            for batch and enterprise automation.
-          </li>
-          <li>
-            See packaging on the{" "}
-            <Link href="/pricing" className="pw-docs-inline-link">
-              pricing page
-            </Link>
-            .
-          </li>
-        </ul>
-        <p className="pw-docs-note">
-          Capabilities marked <strong>Preview</strong> or <strong>Planned</strong>{" "}
-          are not generally available. Do not treat them as production-ready
-          integrations until status changes to Available.
-        </p>
       </section>
     </article>
   );

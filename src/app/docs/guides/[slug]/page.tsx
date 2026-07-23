@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DocsIcon } from "@/components/docs/DocsIcon";
 import { StatusBadge } from "@/components/docs/UseCaseCard";
 import { DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
 
@@ -43,23 +42,11 @@ export default async function DocsGuidePage({ params }: PageProps) {
   return (
     <article className="pw-docs-article">
       <header className="pw-docs-article-header">
-        <p className="pw-docs-eyebrow">
-          <Link href="/docs" className="pw-docs-inline-link">
-            Common use cases
-          </Link>
-        </p>
-        <div className="flex items-start gap-3 flex-wrap">
-          <span className="pw-docs-guide-icon" aria-hidden>
-            <DocsIcon name={useCase.icon} className="h-6 w-6" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1>{useCase.title}</h1>
-              <StatusBadge status={useCase.status} />
-            </div>
-            <p className="pw-docs-lede">{useCase.summary}</p>
-          </div>
+        <div className="pw-docs-title-row">
+          <h1>{useCase.title}</h1>
+          <StatusBadge status={useCase.status} />
         </div>
+        <p className="pw-docs-lede">{useCase.summary}</p>
       </header>
 
       <section className="pw-docs-section">

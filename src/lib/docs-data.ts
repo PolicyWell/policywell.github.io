@@ -29,7 +29,7 @@ export const DOCS_META = {
   product: "PolicyWell Docs",
   title: "Getting started",
   description:
-    "Explore common use cases and integrate PolicyWell across the insurance ecosystem.",
+    "Explore common use cases and integrate PolicyWell immediately.",
 } as const;
 
 /** Common use cases — Natural-style start-here card grid. */
@@ -38,7 +38,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "policy-intelligence",
     title: "Policy Intelligence",
     summary:
-      "Upload and analyze life insurance policies with explainable health and risk signals.",
+      "Upload and analyze life insurance policies for health, risk, and coverage gaps",
     status: "Available",
     icon: "shield",
     overview:
@@ -62,7 +62,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "annuity-intelligence",
     title: "Annuity Intelligence",
     summary:
-      "Compare FIAs, MYGAs, and SPIAs with income, surrender, and exchange analysis.",
+      "Compare FIAs, MYGAs, and SPIAs with income and exchange analysis",
     status: "Preview",
     icon: "chart",
     overview:
@@ -85,7 +85,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "ai-insurance-assistant",
     title: "AI Insurance Assistant",
     summary:
-      "Embedded assistant with consumer and advisor modes grounded in policy and household data.",
+      "Embedded assistant for consumer and advisor conversations",
     status: "Available",
     icon: "chat",
     overview:
@@ -106,7 +106,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "document-processing",
     title: "Document Processing",
     summary:
-      "Ingest policies and illustrations, extract structured fields, and generate recommendations.",
+      "Ingest policies and illustrations into structured insurance data",
     status: "Available",
     icon: "document",
     overview:
@@ -126,7 +126,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "recommendation-engine",
     title: "Recommendation Engine",
     summary:
-      "Funding, coverage, rider, optimization, and exchange recommendations for human approval.",
+      "Funding, coverage, rider, and exchange recommendations for human review",
     status: "Available",
     icon: "spark",
     overview:
@@ -147,7 +147,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "advisor-crm-integration",
     title: "Advisor CRM Integration",
     summary:
-      "Connect PolicyWell intelligence to the CRMs advisors already use every day.",
+      "Connect PolicyWell to Salesforce, Redtail, Wealthbox, and more",
     status: "Planned",
     icon: "crm",
     overview:
@@ -165,7 +165,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "carrier-apis",
     title: "Carrier APIs",
     summary:
-      "Quotes, illustrations, underwriting, policy status, premiums, and claims connectivity.",
+      "Quotes, illustrations, underwriting status, and policy servicing",
     status: "Planned",
     icon: "api",
     overview:
@@ -187,7 +187,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "imo-platform",
     title: "IMO Platform",
     summary:
-      "Advisor networks, book-of-business intelligence, persistency, and production dashboards.",
+      "Advisor networks, persistency analytics, and production dashboards",
     status: "Preview",
     icon: "building",
     overview:
@@ -208,7 +208,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "webhooks",
     title: "Webhooks",
     summary:
-      "Event notifications for uploads, analysis, recommendations, lapse risk, and reviews.",
+      "Event notifications for uploads, analysis, lapse risk, and reviews",
     status: "Planned",
     icon: "webhook",
     overview:
@@ -227,7 +227,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "workflow-automation",
     title: "Workflow Automation",
     summary:
-      "Trigger analyses, notify advisors, schedule reviews, and run insurance follow-ups.",
+      "Trigger analyses, notify advisors, and schedule client follow-ups",
     status: "Preview",
     icon: "workflow",
     overview:
@@ -248,7 +248,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "white-label-platform",
     title: "White-Label Platform",
     summary:
-      "Custom branding, domains, multi-tenant organizations, and embedded experiences.",
+      "Custom branding, domains, and embedded PolicyWell experiences",
     status: "Planned",
     icon: "brand",
     overview:
@@ -265,7 +265,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     slug: "ai-agent-sdk",
     title: "AI Agent SDK",
     summary:
-      "Build specialized insurance agents for review, income, underwriting, claims, and more.",
+      "Build specialized agents for review, underwriting, claims, and sales",
     status: "Planned",
     icon: "sdk",
     overview:
