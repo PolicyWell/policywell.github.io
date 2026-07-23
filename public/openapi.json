@@ -1,0 +1,1880 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PolicyWell API",
+    "version": "1.0.0",
+    "description": "REST endpoints for PolicyWell insurance intelligence — policies, documents, analysis, recommendations, webhooks, and enterprise workflows. Status: planned contract for backend wiring."
+  },
+  "servers": [
+    {
+      "url": "https://api.policywell.ai/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API key",
+        "description": "Use pw_test_... or pw_live_... API keys"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "API keys, scopes, and request authentication."
+    },
+    {
+      "name": "Households",
+      "description": "Household context used by analysis and recommendations."
+    },
+    {
+      "name": "Documents",
+      "description": "Upload and process policies, illustrations, and statements."
+    },
+    {
+      "name": "Policies",
+      "description": "Structured policy records derived from documents and carrier data."
+    },
+    {
+      "name": "Analyses",
+      "description": "Policy-health scoring, lapse risk, COI, and coverage-gap analysis."
+    },
+    {
+      "name": "Recommendations",
+      "description": "Funding, coverage, rider, optimization, and exchange recommendations."
+    },
+    {
+      "name": "Assistant",
+      "description": "Document-aware and household-aware insurance Q&A."
+    },
+    {
+      "name": "Annuities",
+      "description": "FIA, MYGA, and SPIA comparison and income analysis."
+    },
+    {
+      "name": "Organizations",
+      "description": "IMO/BGA workspaces, advisors, and book-of-business views."
+    },
+    {
+      "name": "Carrier",
+      "description": "Carrier-facing ingestion, status, and servicing endpoints."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Subscribe to PolicyWell lifecycle events."
+    },
+    {
+      "name": "Workflows",
+      "description": "Trigger analyses, notify advisors, and schedule reviews."
+    },
+    {
+      "name": "Reports",
+      "description": "Client-ready and advisor meeting reports."
+    },
+    {
+      "name": "Batch jobs",
+      "description": "Enterprise batch ingestion and analysis for carriers and IMOs."
+    }
+  ],
+  "paths": {
+    "/auth/api-keys": {
+      "post": {
+        "operationId": "create-api-key",
+        "summary": "Create API key",
+        "description": "Create a test or live API key for organization integrations.",
+        "tags": [
+          "Authentication"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "key_01J8Z9K2M3N4P5Q6R7S8T9",
+                  "name": "Carrier staging",
+                  "environment": "test",
+                  "key": "pw_test_3f9c2a8b1d4e6f70",
+                  "scopes": [
+                    "policies:read",
+                    "documents:write",
+                    "analyses:write"
+                  ],
+                  "created_at": "2026-07-23T12:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "name": "Carrier staging",
+                "environment": "test",
+                "scopes": [
+                  "policies:read",
+                  "documents:write",
+                  "analyses:write"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "list-api-keys",
+        "summary": "List API keys",
+        "description": "List API keys for the authenticated organization.",
+        "tags": [
+          "Authentication"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "key_01J8Z9K2M3N4P5Q6R7S8T9",
+                      "name": "Carrier staging",
+                      "environment": "test",
+                      "scopes": [
+                        "policies:read",
+                        "documents:write",
+                        "analyses:write"
+                      ],
+                      "created_at": "2026-07-23T12:00:00Z",
+                      "last_used_at": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/households": {
+      "post": {
+        "operationId": "create-household",
+        "summary": "Create household",
+        "description": "Create a household profile for a consumer or advisor client.",
+        "tags": [
+          "Households"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "hh_01J8HOUSEHOLD",
+                  "external_id": "crm_contact_88421",
+                  "primary_name": "Alex Rivera",
+                  "state": "TX",
+                  "created_at": "2026-07-23T12:01:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "external_id": "crm_contact_88421",
+                "primary_name": "Alex Rivera",
+                "email": "alex@example.com",
+                "state": "TX",
+                "marital_status": "married",
+                "dependents_count": 3,
+                "has_mortgage": true,
+                "mortgage_balance": 285000,
+                "annual_income": 145000,
+                "goals": [
+                  "prevent_lapse",
+                  "income_replacement"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/households/{household_id}": {
+      "get": {
+        "operationId": "get-household",
+        "summary": "Retrieve household",
+        "description": "Get household context and linked policy references.",
+        "tags": [
+          "Households"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "household_id",
+            "in": "path",
+            "required": true,
+            "description": "Household ID (`hh_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "hh_01J8HOUSEHOLD",
+                  "primary_name": "Alex Rivera",
+                  "state": "TX",
+                  "dependents_count": 3,
+                  "policy_ids": [
+                    "pol_01J8POLICY"
+                  ],
+                  "updated_at": "2026-07-23T12:05:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update-household",
+        "summary": "Update household",
+        "description": "Patch household attributes used for context-aware analysis.",
+        "tags": [
+          "Households"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "household_id",
+            "in": "path",
+            "required": true,
+            "description": "Household ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "hh_01J8HOUSEHOLD",
+                  "annual_income": 152000,
+                  "updated_at": "2026-07-23T12:10:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "annual_income": 152000,
+                "goals": [
+                  "prevent_lapse",
+                  "estate_planning"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents": {
+      "post": {
+        "operationId": "create-document",
+        "summary": "Upload document",
+        "description": "Create a document ingestion job from a multipart upload or signed URL.",
+        "tags": [
+          "Documents"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "doc_01J8DOCUMENT",
+                  "status": "processing",
+                  "document_type": "policy_illustration",
+                  "household_id": "hh_01J8HOUSEHOLD",
+                  "created_at": "2026-07-23T12:02:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "household_id": "hh_01J8HOUSEHOLD",
+                "document_type": "policy_illustration",
+                "filename": "iul-illustration.pdf",
+                "content_type": "application/pdf",
+                "source_url": "https://files.example.com/iul-illustration.pdf"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "list-documents",
+        "summary": "List documents",
+        "description": "List documents for a household or organization.",
+        "tags": [
+          "Documents"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "household_id",
+            "in": "query",
+            "required": false,
+            "description": "Filter by household.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "processing | verified | failed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "doc_01J8DOCUMENT",
+                      "status": "verified"
+                    }
+                  ],
+                  "next_cursor": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/documents/{document_id}": {
+      "get": {
+        "operationId": "get-document",
+        "summary": "Retrieve document",
+        "description": "Get document status and extracted field summary.",
+        "tags": [
+          "Documents"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "description": "Document ID (`doc_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "doc_01J8DOCUMENT",
+                  "status": "verified",
+                  "document_type": "policy_illustration",
+                  "extraction": {
+                    "carrier": {
+                      "value": "Example Life",
+                      "confidence": 0.94
+                    },
+                    "product_type": {
+                      "value": "IUL",
+                      "confidence": 0.91
+                    },
+                    "face_amount": {
+                      "value": 500000,
+                      "confidence": 0.88
+                    }
+                  },
+                  "policy_id": "pol_01J8POLICY"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/policies": {
+      "post": {
+        "operationId": "create-policy",
+        "summary": "Create policy",
+        "description": "Create a structured policy from verified extraction or carrier payload.",
+        "tags": [
+          "Policies"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "pol_01J8POLICY",
+                  "household_id": "hh_01J8HOUSEHOLD",
+                  "product_type": "IUL",
+                  "status": "active",
+                  "created_at": "2026-07-23T12:03:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "household_id": "hh_01J8HOUSEHOLD",
+                "document_id": "doc_01J8DOCUMENT",
+                "carrier": "Example Life",
+                "product_name": "Indexed Universal Life",
+                "product_type": "IUL",
+                "face_amount": 500000,
+                "cash_value": 28450,
+                "current_premium": 6200,
+                "target_premium": 7500,
+                "issue_age": 38,
+                "riders": [
+                  "waiver_of_premium",
+                  "accelerated_death_benefit"
+                ],
+                "beneficiaries": [
+                  {
+                    "name": "Jordan Rivera",
+                    "allocation_pct": 100,
+                    "relationship": "spouse"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "list-policies",
+        "summary": "List policies",
+        "description": "List policies for a household, advisor book, or organization.",
+        "tags": [
+          "Policies"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "household_id",
+            "in": "query",
+            "required": false,
+            "description": "Filter by household.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_type",
+            "in": "query",
+            "required": false,
+            "description": "IUL | WL | TERM | FIA | MYGA | SPIA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "pol_01J8POLICY",
+                      "product_type": "IUL",
+                      "face_amount": 500000,
+                      "household_id": "hh_01J8HOUSEHOLD"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/policies/{policy_id}": {
+      "get": {
+        "operationId": "get-policy",
+        "summary": "Retrieve policy",
+        "description": "Get a policy record with structured fields and confidence metadata.",
+        "tags": [
+          "Policies"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "household_id",
+            "in": "query",
+            "required": false,
+            "description": "Optional household scope check.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "description": "Policy ID (`pol_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "pol_01J8POLICY",
+                  "carrier": "Example Life",
+                  "product_type": "IUL",
+                  "face_amount": 500000,
+                  "cash_value": 28450,
+                  "current_premium": 6200,
+                  "target_premium": 7500,
+                  "riders": [
+                    "waiver_of_premium",
+                    "accelerated_death_benefit"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/policies/compare": {
+      "post": {
+        "operationId": "compare-policies",
+        "summary": "Compare policies",
+        "description": "Run a structured comparison, including 1035 exchange warnings when relevant.",
+        "tags": [
+          "Policies"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "cmp_01J8COMPARE",
+                  "policy_ids": [
+                    "pol_01J8POLICY",
+                    "pol_01J8PROPOSED"
+                  ],
+                  "summary": {
+                    "lower_cost_option": "pol_01J8PROPOSED",
+                    "higher_guaranteed_death_benefit": "pol_01J8POLICY"
+                  },
+                  "warnings": [
+                    {
+                      "code": "1035_exchange_review",
+                      "message": "Replacement may require 1035 exchange documentation."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "policy_ids": [
+                  "pol_01J8POLICY",
+                  "pol_01J8PROPOSED"
+                ],
+                "include_1035_analysis": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyses": {
+      "post": {
+        "operationId": "create-analysis",
+        "summary": "Create analysis",
+        "description": "Run Policy Intelligence against a policy and household context.",
+        "tags": [
+          "Analyses"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "anl_01J8ANALYSIS",
+                  "status": "completed",
+                  "policy_id": "pol_01J8POLICY",
+                  "scores": {
+                    "policy_health": 72,
+                    "lapse_risk": 38,
+                    "funding_adequacy": 64,
+                    "confidence": 0.86
+                  },
+                  "signals": [
+                    {
+                      "code": "premium_below_target",
+                      "severity": "medium",
+                      "message": "Current premium is below target premium."
+                    }
+                  ],
+                  "illustrative": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "policy_id": "pol_01J8POLICY",
+                "household_id": "hh_01J8HOUSEHOLD",
+                "modules": [
+                  "policy_health",
+                  "lapse_risk",
+                  "cash_value_projection",
+                  "coi",
+                  "coverage_gap",
+                  "rider_detection",
+                  "beneficiary"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyses/{analysis_id}": {
+      "get": {
+        "operationId": "get-analysis",
+        "summary": "Retrieve analysis",
+        "description": "Fetch analysis results and evidence summaries.",
+        "tags": [
+          "Analyses"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "analysis_id",
+            "in": "path",
+            "required": true,
+            "description": "Analysis ID (`anl_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "anl_01J8ANALYSIS",
+                  "status": "completed",
+                  "scores": {
+                    "policy_health": 72,
+                    "lapse_risk": 38,
+                    "confidence": 0.86
+                  },
+                  "evidence": [
+                    {
+                      "source": "document",
+                      "field": "current_premium",
+                      "value": 6200,
+                      "document_id": "doc_01J8DOCUMENT"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/recommendations": {
+      "post": {
+        "operationId": "create-recommendations",
+        "summary": "Generate recommendations",
+        "description": "Generate recommendations from an analysis for human review.",
+        "tags": [
+          "Recommendations"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "rec_01J8FUNDING",
+                      "type": "funding",
+                      "title": "Increase planned premium toward target",
+                      "status": "pending_review",
+                      "rationale": "Current premium trails target premium and increases modeled lapse risk."
+                    },
+                    {
+                      "id": "rec_01J8RIDER",
+                      "type": "rider",
+                      "title": "Review chronic illness rider suitability",
+                      "status": "pending_review"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "analysis_id": "anl_01J8ANALYSIS",
+                "audience": "advisor"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "list-recommendations",
+        "summary": "List recommendations",
+        "description": "List recommendations by household, policy, or approval status.",
+        "tags": [
+          "Recommendations"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "query",
+            "required": false,
+            "description": "Filter by policy.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "pending_review | approved | rejected",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "rec_01J8FUNDING",
+                      "type": "funding",
+                      "status": "pending_review"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/recommendations/{recommendation_id}/approve": {
+      "post": {
+        "operationId": "approve-recommendation",
+        "summary": "Approve recommendation",
+        "description": "Record licensed advisor approval before client presentation.",
+        "tags": [
+          "Recommendations"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "recommendation_id",
+            "in": "path",
+            "required": true,
+            "description": "Recommendation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "rec_01J8FUNDING",
+                  "status": "approved",
+                  "approved_at": "2026-07-23T12:20:00Z",
+                  "approved_by": "adv_01J8ADVISOR"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "advisor_id": "adv_01J8ADVISOR",
+                "notes": "Suitable given household income and goals."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recommendations/{recommendation_id}/reject": {
+      "post": {
+        "operationId": "reject-recommendation",
+        "summary": "Reject recommendation",
+        "description": "Reject a recommendation with a documented reason.",
+        "tags": [
+          "Recommendations"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "recommendation_id",
+            "in": "path",
+            "required": true,
+            "description": "Recommendation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "rec_01J8FUNDING",
+                  "status": "rejected",
+                  "rejected_at": "2026-07-23T12:21:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "advisor_id": "adv_01J8ADVISOR",
+                "reason": "Client risk tolerance does not support this change."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/sessions": {
+      "post": {
+        "operationId": "create-assistant-session",
+        "summary": "Create assistant session",
+        "description": "Open a grounded chat session for consumer or advisor mode.",
+        "tags": [
+          "Assistant"
+        ],
+        "x-status": "Preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "asess_01J8SESSION",
+                  "mode": "advisor",
+                  "created_at": "2026-07-23T12:22:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "mode": "advisor",
+                "household_id": "hh_01J8HOUSEHOLD",
+                "policy_ids": [
+                  "pol_01J8POLICY"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/sessions/{session_id}/messages": {
+      "post": {
+        "operationId": "assistant-message",
+        "summary": "Send message",
+        "description": "Ask a grounded question and receive an evidence-linked answer.",
+        "tags": [
+          "Assistant"
+        ],
+        "x-status": "Preview",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "description": "Assistant session ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "msg_01J8MESSAGE",
+                  "role": "assistant",
+                  "content": "Current premium is below target premium. Funding adequacy score is 64.",
+                  "evidence": [
+                    {
+                      "type": "policy_field",
+                      "field": "current_premium",
+                      "value": 6200
+                    },
+                    {
+                      "type": "analysis_signal",
+                      "code": "premium_below_target"
+                    }
+                  ],
+                  "for_human_review": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "content": "Is this policy appropriately funded?"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/annuities/compare": {
+      "post": {
+        "operationId": "compare-annuities",
+        "summary": "Compare annuities",
+        "description": "Compare FIA, MYGA, or SPIA illustrations side by side.",
+        "tags": [
+          "Annuities"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "acmp_01J8ANN",
+                  "products": [
+                    "ann_01J8FIA",
+                    "ann_01J8MYGA"
+                  ],
+                  "income_projection": {
+                    "ann_01J8FIA": {
+                      "annual_income": 16200,
+                      "assumptions": "illustrated"
+                    },
+                    "ann_01J8MYGA": {
+                      "annual_income": 14850,
+                      "assumptions": "guaranteed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "product_ids": [
+                  "ann_01J8FIA",
+                  "ann_01J8MYGA"
+                ],
+                "income_start_age": 65,
+                "premium": 250000
+              }
+            }
+          }
+        }
+      }
+    },
+    "/annuities/1035-analysis": {
+      "post": {
+        "operationId": "annuity-exchange-analysis",
+        "summary": "1035 exchange analysis",
+        "description": "Evaluate surrender schedules and exchange implications.",
+        "tags": [
+          "Annuities"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "ex_01J8EXCHANGE",
+                  "surrender_charge": 12500,
+                  "years_remaining_in_surrender": 4,
+                  "warnings": [
+                    "Review suitability and replacement paperwork."
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "from_policy_id": "ann_01J8EXISTING",
+                "to_product_id": "ann_01J8PROPOSED"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/{org_id}/advisors": {
+      "get": {
+        "operationId": "list-advisors",
+        "summary": "List advisors",
+        "description": "List advisors in an IMO or firm workspace.",
+        "tags": [
+          "Organizations"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "description": "Organization ID (`org_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "adv_01J8ADVISOR",
+                      "name": "Sam Chen",
+                      "open_reviews": 12,
+                      "persistency_score": 0.93
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/organizations/{org_id}/portfolio": {
+      "get": {
+        "operationId": "org-portfolio",
+        "summary": "Portfolio intelligence",
+        "description": "Persistency, lapse monitoring, and production rollups.",
+        "tags": [
+          "Organizations"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "description": "Organization ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "policies_under_management": 18420,
+                  "lapse_risk_high": 214,
+                  "annual_reviews_due_30d": 96,
+                  "production_mtd": 1280000
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/carrier/quotes": {
+      "post": {
+        "operationId": "carrier-quote",
+        "summary": "Request quote",
+        "description": "Submit a quote request to a connected carrier workflow.",
+        "tags": [
+          "Carrier"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8QUOTE",
+                  "status": "pending",
+                  "carrier_ref": "carrier_quote_8891"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "product_type": "IUL",
+                "face_amount": 500000,
+                "issue_age": 40,
+                "state": "TX",
+                "household_id": "hh_01J8HOUSEHOLD"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carrier/policies/{carrier_policy_id}/status": {
+      "get": {
+        "operationId": "carrier-policy-status",
+        "summary": "Policy status",
+        "description": "Fetch underwriting or in-force servicing status.",
+        "tags": [
+          "Carrier"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "carrier_policy_id",
+            "in": "path",
+            "required": true,
+            "description": "Carrier policy identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "carrier_policy_id": "EL-998877",
+                  "status": "in_force",
+                  "premium_status": "current",
+                  "last_premium_paid_at": "2026-06-01"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/carrier/illustrations": {
+      "post": {
+        "operationId": "carrier-illustration",
+        "summary": "Request illustration",
+        "description": "Request a carrier illustration and attach it to a household.",
+        "tags": [
+          "Carrier"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "ill_01J8ILLUS",
+                  "status": "ready",
+                  "document_id": "doc_01J8ILLUS"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "product_code": "IUL-SELECT",
+                "household_id": "hh_01J8HOUSEHOLD",
+                "planned_premium": 7500,
+                "face_amount": 500000
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "post": {
+        "operationId": "create-webhook",
+        "summary": "Create webhook endpoint",
+        "description": "Register an HTTPS endpoint for event delivery.",
+        "tags": [
+          "Webhooks"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "wh_01J8WEBHOOK",
+                  "url": "https://example.com/hooks/policywell",
+                  "status": "enabled",
+                  "created_at": "2026-07-23T12:30:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "url": "https://example.com/hooks/policywell",
+                "events": [
+                  "policy.uploaded",
+                  "analysis.completed",
+                  "recommendation.generated",
+                  "policy.nearing_lapse",
+                  "annual_review.due",
+                  "premium.missed"
+                ],
+                "secret": "whsec_replace_me"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{webhook_id}/deliveries": {
+      "get": {
+        "operationId": "list-webhook-deliveries",
+        "summary": "List deliveries",
+        "description": "Inspect recent webhook delivery attempts.",
+        "tags": [
+          "Webhooks"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "description": "Webhook ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "del_01J8DELIVERY",
+                      "event": "analysis.completed",
+                      "response_status": 200,
+                      "delivered_at": "2026-07-23T12:31:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/workflows/runs": {
+      "post": {
+        "operationId": "create-workflow-run",
+        "summary": "Trigger workflow",
+        "description": "Start an automated insurance workflow run.",
+        "tags": [
+          "Workflows"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "wfr_01J8RUN",
+                  "workflow": "annual_review",
+                  "status": "queued"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "workflow": "annual_review",
+                "household_id": "hh_01J8HOUSEHOLD",
+                "notify_advisor_id": "adv_01J8ADVISOR"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/tasks": {
+      "post": {
+        "operationId": "create-follow-up-task",
+        "summary": "Create follow-up task",
+        "description": "Create an advisor follow-up from an approved recommendation.",
+        "tags": [
+          "Workflows"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "task_01J8TASK",
+                  "status": "open",
+                  "due_at": "2026-08-01T17:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "recommendation_id": "rec_01J8FUNDING",
+                "due_at": "2026-08-01T17:00:00Z",
+                "assignee_id": "adv_01J8ADVISOR"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports": {
+      "post": {
+        "operationId": "create-report",
+        "summary": "Generate report",
+        "description": "Generate a client or advisor report from approved recommendations.",
+        "tags": [
+          "Reports"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "rpt_01J8REPORT",
+                  "status": "ready",
+                  "download_url": "https://api.policywell.ai/v1/reports/rpt_01J8REPORT.pdf"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "household_id": "hh_01J8HOUSEHOLD",
+                "policy_ids": [
+                  "pol_01J8POLICY"
+                ],
+                "audience": "client",
+                "include_only_approved_recommendations": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/{report_id}": {
+      "get": {
+        "operationId": "get-report",
+        "summary": "Retrieve report",
+        "description": "Fetch report metadata and download link.",
+        "tags": [
+          "Reports"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "description": "Report ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "rpt_01J8REPORT",
+                  "status": "ready",
+                  "audience": "client",
+                  "created_at": "2026-07-23T12:40:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/batch/jobs": {
+      "post": {
+        "operationId": "create-batch-job",
+        "summary": "Create batch job",
+        "description": "Queue a batch document ingest or portfolio analysis job.",
+        "tags": [
+          "Batch jobs"
+        ],
+        "x-status": "Planned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "job_01J8BATCH",
+                  "type": "document_ingest",
+                  "status": "queued",
+                  "created_at": "2026-07-23T12:45:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "type": "document_ingest",
+                "source": {
+                  "type": "s3",
+                  "bucket": "carrier-exports",
+                  "prefix": "illustrations/2026-07/"
+                },
+                "organization_id": "org_01J8IMO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batch/jobs/{job_id}": {
+      "get": {
+        "operationId": "get-batch-job",
+        "summary": "Retrieve batch job",
+        "description": "Check batch progress and error summary.",
+        "tags": [
+          "Batch jobs"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "description": "Batch job ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "job_01J8BATCH",
+                  "status": "running",
+                  "progress": {
+                    "processed": 420,
+                    "failed": 3,
+                    "total": 1000
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  }
+}

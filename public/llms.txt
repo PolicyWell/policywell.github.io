@@ -6,6 +6,29 @@
 
 - [Start here](https://policywell.ai/docs): Common use cases and getting started
 
+## API
+
+- [API reference](https://policywell.ai/docs/api): REST contract for backend integrations
+- [OpenAPI](https://policywell.ai/openapi.json): Machine-readable OpenAPI 3.1 spec
+- Base URL: `https://api.policywell.ai/v1`
+
+### Resource groups
+
+- [Authentication](https://policywell.ai/docs/api/authentication)
+- [Households](https://policywell.ai/docs/api/households)
+- [Documents](https://policywell.ai/docs/api/documents)
+- [Policies](https://policywell.ai/docs/api/policies)
+- [Analyses](https://policywell.ai/docs/api/analyses)
+- [Recommendations](https://policywell.ai/docs/api/recommendations)
+- [Assistant](https://policywell.ai/docs/api/assistant)
+- [Annuities](https://policywell.ai/docs/api/annuities)
+- [Organizations](https://policywell.ai/docs/api/organizations)
+- [Carrier](https://policywell.ai/docs/api/carrier)
+- [Webhooks](https://policywell.ai/docs/api/webhooks)
+- [Workflows](https://policywell.ai/docs/api/workflows)
+- [Reports](https://policywell.ai/docs/api/reports)
+- [Batch jobs](https://policywell.ai/docs/api/batch)
+
 ## Common use cases
 
 - [Policy Intelligence](https://policywell.ai/docs/guides/policy-intelligence): Upload and analyze life insurance policies

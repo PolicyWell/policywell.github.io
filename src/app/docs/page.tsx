@@ -83,6 +83,10 @@ export default function DocsStartHerePage() {
               </li>
               <li>
                 Review the{" "}
+                <Link href="/docs/api" className="pw-docs-inline-link">
+                  API reference
+                </Link>{" "}
+                and{" "}
                 <Link href="/docs/cli" className="pw-docs-inline-link">
                   CLI
                 </Link>{" "}

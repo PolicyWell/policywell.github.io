@@ -316,6 +316,7 @@ export const DOCS_NAV: readonly DocsNavGroup[] = [
   {
     title: "Platform",
     items: [
+      { label: "API reference", href: "/docs/api" },
       { label: "CLI", href: "/docs/cli" },
       { label: "Engineering", href: "/docs/engineering" },
       { label: "Pricing", href: "/pricing" },

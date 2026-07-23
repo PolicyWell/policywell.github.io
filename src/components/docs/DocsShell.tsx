@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
 import { DOCS_NAV, DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
+import { getApiGroup } from "@/lib/api-reference-data";
 
 function NavLinks({
   onNavigate,
@@ -78,6 +79,24 @@ function useBreadcrumbs(pathname: string) {
       return [
         { label: "Platform", href: "/docs" },
         { label: "Engineering", href: "/docs/engineering" },
+      ];
+    }
+    if (clean === "/docs/api") {
+      return [
+        { label: "Platform", href: "/docs" },
+        { label: "API reference", href: "/docs/api" },
+      ];
+    }
+    const apiMatch = clean.match(/^\/docs\/api\/([^/]+)$/);
+    if (apiMatch) {
+      const group = getApiGroup(apiMatch[1]);
+      return [
+        { label: "Platform", href: "/docs" },
+        { label: "API reference", href: "/docs/api" },
+        {
+          label: group?.title ?? apiMatch[1],
+          href: `/docs/api/${apiMatch[1]}`,
+        },
       ];
     }
     const guideMatch = clean.match(/^\/docs\/guides\/([^/]+)$/);
