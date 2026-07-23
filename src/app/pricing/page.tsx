@@ -4,7 +4,7 @@ import { PricingPage } from "@/components/PricingPage";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Free for policyholders. Built to power the insurance ecosystem. Advisor, IMO/BGA, and carrier enterprise pricing for PolicyWell.",
+    "Free for policyholders and policy seekers. Built to power the insurance ecosystem. Free for consumers. Built for advisors, IMOs, and carriers.",
 };
 
 export default function PricingRoute() {

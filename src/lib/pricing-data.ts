@@ -15,11 +15,11 @@ export const PRICING = {
   hero: {
     eyebrow: "Pricing",
     headlineLines: [
-      "Free for policyholders.",
+      "Free for policyholders and policy seekers.",
       "Built to power the insurance ecosystem.",
     ] as const,
     supporting:
-      "PolicyWell gives consumers free access to insurance intelligence while advisors, IMOs, and carriers pay for advanced workflows, portfolio insights, APIs, and enterprise infrastructure.",
+      "Free for consumers. Built for advisors, IMOs, and carriers.",
     primaryCta: { label: "Start Free", href: "/login" },
     secondaryCta: {
       label: "Talk to Sales",
@@ -325,8 +325,8 @@ export const PRICING = {
   },
   faqs: [
     {
-      q: "Why is PolicyWell free for policyholders?",
-      a: "Policyholders get free access to insurance intelligence so they can understand coverage, gaps, and next steps. Advisors, IMOs, and carriers fund the product by paying for productivity tools, portfolio intelligence, APIs, and enterprise infrastructure.",
+      q: "Why is PolicyWell free for policyholders and policy seekers?",
+      a: "Consumers get free access to insurance intelligence so they can understand coverage, gaps, and next steps. Advisors, IMOs, and carriers fund the product by paying for productivity tools, portfolio intelligence, APIs, and enterprise infrastructure.",
     },
     {
       q: "Do advisors need a license to use PolicyWell?",
