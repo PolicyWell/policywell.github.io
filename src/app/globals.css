@@ -1755,6 +1755,10 @@ body:has(.pw-404) > .pw-site-footer {
   .pw-cli-chrome-spacer {
     width: 36px;
   }
+
+  .pw-cli-title {
+    max-width: calc(100% - 4.25rem);
+  }
 }
 
 .pw-cli-panel {
