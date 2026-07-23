@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { DemoLifecycle } from "@/components/DemoLifecycle";
 
 export const metadata: Metadata = {
-  title: "Product demo",
+  title: "Experience PolicyWell",
   description:
-    "Watch PolicyWell ingest a policy, build household context, reason across the financial picture, and surface advisor-approved recommendations.",
+    "See how insurance documents, household context, advisor workflows, and carrier data become explainable recommendations and human-approved actions.",
 };
 
 export default function DemoPage() {

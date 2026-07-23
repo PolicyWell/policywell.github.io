@@ -28,7 +28,7 @@ export default function OnboardingPage() {
       "I live in TX and I have a mortgage.",
       "I own a business and make about $180k a year.",
       "I'm 42 and planning for retirement.",
-      "I have a Mutual of Omaha Indexed Universal Life policy.",
+      "I have an indexed universal life policy.",
       "I'm worried about my policy lapsing.",
     ],
     [],

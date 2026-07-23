@@ -73,7 +73,7 @@ export default function ImoDashboardPage() {
             className="pw-btn pw-btn-secondary"
             onClick={() => setRosters(buildImoSeed())}
           >
-            {rosters ? "Reset demo data" : "Load demo data"}
+            {rosters ? "Reset sample data" : "Load sample data"}
           </button>
         </div>
 
