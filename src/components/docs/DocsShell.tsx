@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
-import { DOCS_NAV, DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
+import { DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
+import { DOCS_NAV } from "@/lib/docs-nav";
 import { getApiGroup } from "@/lib/api-reference-data";
 
 function NavLinks({
@@ -23,7 +24,11 @@ function NavLinks({
               const active =
                 pathname === item.href ||
                 pathname === `${item.href}/` ||
-                (item.href !== "/docs" && pathname.startsWith(`${item.href}/`));
+                (item.href !== "/docs" &&
+                  item.href !== "/docs/api" &&
+                  !item.href.endsWith(".json") &&
+                  pathname.startsWith(`${item.href}/`));
+              const external = item.href.endsWith(".json");
               return (
                 <li key={item.href}>
                   <Link
@@ -31,6 +36,9 @@ function NavLinks({
                     className={`pw-docs-nav-link${active ? " is-active" : ""}`}
                     aria-current={active ? "page" : undefined}
                     onClick={onNavigate}
+                    {...(external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
                   >
                     {item.label}
                   </Link>
