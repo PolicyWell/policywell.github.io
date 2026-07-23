@@ -1457,11 +1457,12 @@ body:has(.pw-404) > .pw-site-footer {
 
 /* Hero supporting line — always one row, scales down on narrow screens */
 .pw-hero-subline {
-  margin: 1rem 0 0;
+  margin: 1rem auto 0;
   color: rgba(245, 250, 247, 0.85);
   white-space: nowrap;
   letter-spacing: -0.02em;
   line-height: 1.25;
+  text-align: center;
   /* Fit the full sentence inside .pw-shell — min must stay small on phones */
   font-size: clamp(0.58rem, calc((100vw - 3rem) / 52), 1.2rem);
   width: 100%;
