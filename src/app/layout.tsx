@@ -16,7 +16,7 @@ const manrope = Manrope({
 });
 
 const SITE_URL = "https://policywell.ai";
-const OG_IMAGE = `${SITE_URL}/og-image.png`;
+const OG_IMAGE = `${SITE_URL}/og-image.png?v=20260723c`;
 /** Bump to force browsers/CDNs to pick up refreshed shield favicons. */
 const ICON_V = "20260723b";
 
