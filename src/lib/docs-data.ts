@@ -300,26 +300,3 @@ export type DocsNavGroup = {
   title: string;
   items: readonly DocsNavItem[];
 };
-
-export const DOCS_NAV: readonly DocsNavGroup[] = [
-  {
-    title: "Overview",
-    items: [{ label: "Start here", href: "/docs" }],
-  },
-  {
-    title: "Common use cases",
-    items: DOCS_USE_CASES.map((u) => ({
-      label: u.title,
-      href: `/docs/guides/${u.slug}`,
-    })),
-  },
-  {
-    title: "Platform",
-    items: [
-      { label: "API reference", href: "/docs/api" },
-      { label: "CLI", href: "/docs/cli" },
-      { label: "Engineering", href: "/docs/engineering" },
-      { label: "Pricing", href: "/pricing" },
-    ],
-  },
-] as const;

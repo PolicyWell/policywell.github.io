@@ -54,7 +54,12 @@ export default function ApiReferenceIndexPage() {
       </section>
 
       <section className="pw-docs-section">
-        <h2>Resource groups</h2>
+        <h2>Reference docs</h2>
+        <p className="pw-docs-body" style={{ marginBottom: "0.9rem" }}>
+          Browse each resource group for methods, paths, parameters, request and
+          response examples, and cURL. These pages are also listed under{" "}
+          <strong>API reference</strong> in the docs sidebar.
+        </p>
         <div className="pw-docs-card-grid">
           {API_GROUPS.map((group) => (
             <Link
