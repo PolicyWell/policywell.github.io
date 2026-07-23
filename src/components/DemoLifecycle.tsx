@@ -22,7 +22,10 @@ import {
 import { clearOnboardingBoot, notifyStore } from "@/lib/use-workspace";
 
 const ANALYSIS_STEPS = [
-  { label: "Reading policy PDF", detail: "Ingesting pages, tables, and riders" },
+  {
+    label: "Reading policy PDF · Ingestion via Secure Insurance APIs",
+    detail: "Ingesting pages, tables, riders, and carrier feeds",
+  },
   { label: "Identifying carrier & product", detail: "Matching illustration to in-force record" },
   { label: "Extracting coverage terms", detail: "Face amount, premiums, cash value, riders" },
   { label: "Building household context", detail: "Dependents, mortgage, income, goals" },
@@ -317,7 +320,7 @@ export function DemoLifecycle() {
                 {analysisDone
                   ? "Analysis complete"
                   : analysisStarted
-                    ? "Reading policy…"
+                    ? "Ingesting policy…"
                     : "Waiting to start…"}
                 <span className="pw-demo-terminal-pct">{progress}%</span>
               </p>
