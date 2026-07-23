@@ -32,6 +32,10 @@ export function SiteFooter() {
           <p className="text-xs text-stone mt-1 max-w-sm">
             The Agentic Intelligence Layer for Insurance.
           </p>
+          <p className="text-xs text-moss mt-3">
+            Built With <span aria-hidden="true">💚</span>
+            <span className="sr-only">love</span> in Boston
+          </p>
         </div>
 
         <div className="flex flex-col items-start sm:items-end gap-3">
