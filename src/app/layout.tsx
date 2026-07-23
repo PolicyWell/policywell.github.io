@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
+import { MeetOpeWidget } from "@/components/MeetOpeWidget";
 import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
@@ -135,6 +136,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans text-[15px] leading-relaxed">
         {children}
         <SiteFooter />
+        <MeetOpeWidget />
       </body>
     </html>
   );
