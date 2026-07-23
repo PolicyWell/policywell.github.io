@@ -28,7 +28,7 @@ Open:
 - Agent: http://localhost:3000/agent
 - Home: http://localhost:3000
 
-On `/agent`: click **Seed IUL demo**, then ask `Will my policy lapse?`
+On `/agent`: click **Load sample household**, then ask `Is this policy appropriately funded?`
 
 ## Production build locally
 
@@ -66,9 +66,10 @@ ls src/app/agent/page.tsx src/app/api/agent/route.ts src/lib/agent/index.ts
 | riley@firm.example | Broker-dealer / FI → `/firm` |
 | morgan@carrier.example | Carrier |
 
-Optional LLM phrasing: set `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local` (Google AI Studio / Gemini), then restart `npm run dev`. Without a key the agent still runs (tool planner + synthesizer).
+Optional LLM phrasing: set `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local`, then restart `npm run dev`. Without a key the agent still runs (tool planner + synthesizer).
 
 ## Docs
 
-- [Engineering Manual](./docs/ENGINEERING_MANUAL.md)
-- [Morning Report](./docs/MORNING_REPORT.md)
+- Public product docs: `/docs`
+- Internal architecture notes: `./docs/ENGINEERING_MANUAL.md`
+- Internal morning reports: `./docs/MORNING_REPORT.md`

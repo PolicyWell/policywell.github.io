@@ -48,7 +48,7 @@ export interface FirmAnalytics {
   }[];
 }
 
-/** Seeded firm books: three advisors with the Sprint 2 client households. */
+/** Seeded firm books: three advisors with demo client households. */
 export function buildFirmSeed(): {
   advisors: FirmAdvisorBook[];
   tasks: FollowUpTask[];

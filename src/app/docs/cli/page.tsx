@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import Link from "next/link";
 import { markdownToHtml } from "@/lib/markdown";
+import { sanitizePublicDocsMarkdown } from "@/lib/sanitize-public-docs";
 
 export const metadata = {
   title: "CLI",
@@ -11,18 +12,16 @@ export const metadata = {
 
 export default async function CliDocsPage() {
   const mdPath = path.join(process.cwd(), "docs", "CLI_DESIGN.md");
-  const md = await readFile(mdPath, "utf8");
+  const md = sanitizePublicDocsMarkdown(await readFile(mdPath, "utf8"));
   const html = markdownToHtml(md);
 
   return (
     <article className="pw-docs-article">
       <header className="pw-docs-article-header">
-        <p className="pw-docs-eyebrow">
-          <Link href="/docs" className="pw-docs-inline-link">
-            Platform
-          </Link>
-        </p>
-        <h1>CLI</h1>
+        <div className="pw-docs-title-row">
+          <h1>CLI</h1>
+          <span className="pw-docs-status pw-docs-status-preview">Preview</span>
+        </div>
         <p className="pw-docs-lede">
           Compliance-first PolicyWell CLI for producers, IMOs, carriers, and
           enterprise technology teams.

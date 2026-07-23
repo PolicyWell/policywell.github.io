@@ -111,7 +111,9 @@ export default function UploadPage() {
         <div className="animate-rise">
           <h1 className="font-display text-4xl text-pine">Insurance ingestion</h1>
           <p className="text-stone mt-2 max-w-2xl">
-            Upload policy PDFs, illustrations, ledgers, or 1035 forms. OCR runs locally in the Sprint 1 engine, AI extracts structured fields, and you verify before anything is trusted.
+            Upload policy PDFs, illustrations, ledgers, or 1035 forms. The document
+            ingestion engine runs OCR locally, extracts structured fields, and you
+            verify before anything is trusted.
           </p>
         </div>
 
@@ -136,7 +138,8 @@ export default function UploadPage() {
             />
           </label>
           <p className="mt-4 text-xs text-stone">
-            Tip: name a file with “Mutual” or “IUL” to seed the Mutual of Omaha extraction demo.
+            Tip: name a file with “IUL” to load the illustrative indexed universal
+            life extraction example.
           </p>
         </div>
 
