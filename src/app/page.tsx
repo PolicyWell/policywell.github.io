@@ -21,8 +21,9 @@ export default function HomePage() {
             <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight">
               The Agentic AI Layer for the Insurance Industry
             </h1>
-            <p className="animate-rise-delay mt-4 md:mt-5 max-w-3xl text-base sm:text-lg md:text-xl text-foam/85">
-              Analyze Illustrations &amp; Policies. Recommendation Actions. Aid Human Control.
+            <p className="animate-rise-delay mt-4 md:mt-5 text-foam/85 whitespace-nowrap tracking-tight text-[clamp(0.7rem,2.85vw,1.15rem)] leading-snug">
+              Analyze Illustrations &amp; Policies. Recommendation Actions. Aid
+              Human Control.
             </p>
           </div>
 
