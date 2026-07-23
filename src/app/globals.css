@@ -3912,14 +3912,154 @@ body:has(.pw-docs-app) > footer {
 }
 
 .pw-ope-panel {
-  width: min(20.5rem, calc(100vw - 1.5rem));
-  border-radius: 18px;
+  width: min(22rem, calc(100vw - 1.5rem));
+  border-radius: 22px;
   border: 1px solid rgba(15, 47, 40, 0.12);
   background: rgba(245, 250, 247, 0.97);
   backdrop-filter: blur(12px);
   box-shadow: 0 18px 44px rgba(15, 47, 40, 0.18);
   padding: 0.95rem 1rem 1.05rem;
   animation: pw-ope-rise 0.22s ease-out both;
+  max-height: min(34rem, calc(100dvh - 6.5rem));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pw-ope-chat {
+  padding-bottom: 0.75rem;
+}
+
+.pw-ope-chat-body {
+  margin-top: 0.75rem;
+  flex: 1 1 auto;
+  min-height: 11rem;
+  max-height: 16.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-right: 0.15rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pw-ope-bubble {
+  max-width: 92%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 14px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pw-ope-bubble-assistant,
+.pw-ope-bubble-system {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 47, 40, 0.1);
+  color: #13201c;
+}
+
+.pw-ope-bubble-system {
+  background: rgba(194, 161, 90, 0.12);
+  border-color: rgba(194, 161, 90, 0.28);
+}
+
+.pw-ope-bubble-user {
+  align-self: flex-end;
+  background: #0f2f28;
+  color: #f5faf7;
+}
+
+.pw-ope-typing {
+  opacity: 0.72;
+  font-style: italic;
+}
+
+.pw-ope-starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.pw-ope-starter {
+  border: 1px solid rgba(15, 47, 40, 0.14);
+  background: rgba(255, 255, 255, 0.85);
+  color: #0f2f28;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.pw-ope-starter:hover:not(:disabled) {
+  border-color: rgba(61, 107, 90, 0.45);
+  background: rgba(231, 240, 235, 0.95);
+}
+
+.pw-ope-starter:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pw-ope-composer {
+  margin-top: 0.7rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.pw-ope-composer input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 2.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 47, 40, 0.16);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.55rem 0.9rem;
+  color: #13201c;
+  outline: none;
+}
+
+.pw-ope-composer input:focus {
+  border-color: rgba(61, 107, 90, 0.55);
+  box-shadow: 0 0 0 3px rgba(61, 107, 90, 0.12);
+}
+
+.pw-ope-send {
+  flex: 0 0 auto;
+  min-height: 2.55rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  background: #0f2f28;
+  color: #f5faf7;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.pw-ope-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pw-ope-chat-foot {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+  color: #5c6b64;
+}
+
+.pw-ope-chat-foot a:hover {
+  color: #0f2f28;
 }
 
 .pw-ope-panel-head {
@@ -4034,6 +4174,12 @@ body:has(.pw-docs-app) .pw-ope {
 
   .pw-ope-fab:hover {
     transform: none;
+  }
+
+  .pw-ope-starter,
+  .pw-ope-send,
+  .pw-ope-composer input {
+    transition: none;
   }
 }
 
