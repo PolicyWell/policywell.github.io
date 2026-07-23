@@ -9,9 +9,9 @@ export const metadata = {
 
 export default function DeckPage() {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-clip">
       <SiteNav />
-      <main className="pw-shell py-8 md:py-14 space-y-6">
+      <main className="pw-shell py-8 md:py-14 space-y-6 min-w-0 w-full">
         <header className="animate-rise space-y-3">
           <p className="text-xs uppercase tracking-[0.22em] text-moss">
             Investors
