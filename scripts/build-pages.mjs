@@ -52,4 +52,11 @@ if (!fs.existsSync(path.join(root, "out", "index.html"))) {
   process.exit(1);
 }
 
-console.log("GitHub Pages static export ready in ./out");
+// GitHub Pages serves this for every unknown path (no matching landing page).
+const notFoundHtml = path.join(root, "out", "404.html");
+if (!fs.existsSync(notFoundHtml)) {
+  console.error("Pages build failed: out/404.html missing");
+  process.exit(1);
+}
+
+console.log("GitHub Pages static export ready in ./out (includes 404.html)");

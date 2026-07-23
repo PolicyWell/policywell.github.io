@@ -1259,14 +1259,26 @@ select {
 }
 
 /* ── Three.js 404 ── */
+body:has(.pw-404) {
+  overflow: hidden;
+  background: #e7f0eb;
+}
+
+body:has(.pw-404) > .pw-site-footer {
+  display: none;
+}
+
 .pw-404 {
-  position: relative;
-  min-height: 100svh;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
   width: 100%;
+  height: 100svh;
+  height: 100dvh;
   overflow: hidden;
   background:
-    radial-gradient(900px 520px at 70% 20%, rgba(143, 175, 160, 0.35), transparent 60%),
-    radial-gradient(700px 480px at 15% 80%, rgba(61, 107, 90, 0.18), transparent 55%),
+    radial-gradient(900px 520px at 70% 18%, rgba(143, 175, 160, 0.35), transparent 60%),
+    radial-gradient(700px 480px at 15% 70%, rgba(61, 107, 90, 0.18), transparent 55%),
     linear-gradient(165deg, #f5faf7 0%, #e7f0eb 48%, #d5e4dc 100%);
 }
 
@@ -1289,11 +1301,9 @@ select {
 }
 
 .pw-404-ui {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
   pointer-events: none;
 }
 
@@ -1304,9 +1314,13 @@ select {
 }
 
 .pw-404-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   width: min(1120px, calc(100% - 1.5rem));
   margin: 0 auto;
-  padding: 1.25rem 0;
+  padding: 1rem 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1323,22 +1337,24 @@ select {
 }
 
 .pw-404-main {
-  width: min(640px, calc(100% - 1.75rem));
-  margin: auto 0 0;
-  padding: 1.5rem 0 2.5rem;
-  margin-left: max(1rem, calc((100% - 1120px) / 2 + 0.5rem));
-}
-
-@media (min-width: 900px) {
-  .pw-404-main {
-    margin-top: auto;
-    margin-bottom: 4.5rem;
-    padding-bottom: 0;
-  }
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: min(720px, calc(100% - 1.5rem));
+  margin: 0 auto;
+  padding: 1.25rem 0 max(1.1rem, env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(245, 250, 247, 0.55) 28%,
+    rgba(245, 250, 247, 0.92) 100%
+  );
 }
 
 .pw-404-eyebrow {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.55rem;
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1349,8 +1365,8 @@ select {
 .pw-404-title {
   margin: 0;
   font-family: var(--font-fraunces), Georgia, serif;
-  font-size: clamp(2.2rem, 6vw, 3.6rem);
-  line-height: 1.02;
+  font-size: clamp(1.85rem, 5.2vw, 3.1rem);
+  line-height: 1.05;
   letter-spacing: -0.03em;
   color: var(--pine);
   font-weight: 500;
@@ -1358,22 +1374,23 @@ select {
 }
 
 .pw-404-copy {
-  margin: 1rem 0 0;
+  margin: 0.65rem auto 0;
   max-width: 28rem;
-  font-size: clamp(1rem, 2.2vw, 1.15rem);
-  line-height: 1.55;
+  font-size: clamp(0.95rem, 2vw, 1.08rem);
+  line-height: 1.5;
   color: var(--stone);
 }
 
 .pw-404-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.65rem;
-  margin-top: 1.6rem;
+  margin-top: 1.15rem;
 }
 
 .pw-404-hint {
-  margin: 1.1rem 0 0;
+  margin: 0.75rem 0 0;
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   color: rgba(92, 107, 100, 0.85);
@@ -1381,24 +1398,13 @@ select {
 
 @media (max-width: 639px) {
   .pw-404-main {
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 0 1.75rem;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(245, 250, 247, 0.72) 28%,
-      rgba(245, 250, 247, 0.92) 100%
-    );
+    width: 100%;
+    padding: 1.5rem 1rem max(1rem, env(safe-area-inset-bottom, 0px));
   }
 
   .pw-404-actions .pw-btn {
     width: 100%;
     justify-content: center;
-  }
-
-  .pw-404-hint {
-    text-align: center;
   }
 }
 

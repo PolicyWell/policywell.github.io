@@ -233,8 +233,8 @@ export function PolicyWell404Scene() {
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0xe7f0eb, 0.045);
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 1.45, 5.4);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 1.85, 6.4);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -247,6 +247,9 @@ export function PolicyWell404Scene() {
     mount.appendChild(renderer.domElement);
 
     const root = new THREE.Group();
+    // Lift + slightly shrink so the full well/doc/shield sits above bottom copy.
+    root.position.y = 0.55;
+    root.scale.setScalar(0.92);
     scene.add(root);
 
     const well = createWell();
@@ -300,7 +303,12 @@ export function PolicyWell404Scene() {
     const resize = () => {
       const width = mount.clientWidth || window.innerWidth;
       const height = mount.clientHeight || window.innerHeight;
-      camera.aspect = width / Math.max(height, 1);
+      const aspect = width / Math.max(height, 1);
+      camera.aspect = aspect;
+      // Keep the full sculpture in the upper band above the bottom copy.
+      camera.fov = aspect < 0.75 ? 48 : aspect < 1.1 ? 44 : 40;
+      camera.position.z = aspect < 0.75 ? 7.2 : 6.4;
+      camera.position.y = aspect < 0.75 ? 2.15 : 1.85;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
     };
@@ -342,10 +350,14 @@ export function PolicyWell404Scene() {
       spinBoost += ((pointer.holding ? 1.8 : 0) - spinBoost) * 0.06;
       glow.intensity = glowStrength;
 
+      const baseCamY = camera.aspect < 0.75 ? 2.15 : 1.85;
+
       if (reducedMotion) {
         root.rotation.set(-0.08, 0.2, 0);
         documentGroup.position.y = 1.55;
         documentGroup.rotation.set(0, 0.15, 0);
+        camera.position.x = 0;
+        camera.position.y = baseCamY;
       } else {
         root.rotation.y = pointer.x * 0.35 + t * (0.12 + spinBoost * 0.35);
         root.rotation.x = -pointer.y * 0.18;
@@ -353,11 +365,11 @@ export function PolicyWell404Scene() {
         documentGroup.rotation.y = Math.sin(t * 0.7) * 0.25 + spinBoost * 0.4;
         documentGroup.rotation.z = Math.sin(t * 0.9) * 0.05;
         shield.rotation.z = Math.sin(t * 0.35) * 0.03;
-        camera.position.x = pointer.x * 0.35;
-        camera.position.y = 1.45 + pointer.y * -0.15;
+        camera.position.x = pointer.x * 0.28;
+        camera.position.y = baseCamY + pointer.y * -0.12;
       }
 
-      camera.lookAt(0, 0.7, 0);
+      camera.lookAt(0, 1.05, 0);
     };
 
     if (reducedMotion) {

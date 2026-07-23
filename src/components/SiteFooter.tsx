@@ -20,7 +20,7 @@ const SOCIALS = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-pine/10 bg-foam/50 backdrop-blur-sm">
+    <footer className="pw-site-footer mt-auto border-t border-pine/10 bg-foam/50 backdrop-blur-sm">
       <div className="pw-shell py-8 md:py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div className="min-w-0">
           <Link
