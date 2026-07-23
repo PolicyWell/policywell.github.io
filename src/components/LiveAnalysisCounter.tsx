@@ -24,7 +24,7 @@ export function LiveAnalysisCounter({
       <span className="pw-live-counter-dot" aria-hidden="true" />
       <span className="pw-live-counter-num">{formatCount(ANALYZED_COUNT)}</span>
       <span className="pw-live-counter-label">
-        Policies and Illustrations Analyzed · live
+        Policies and Illustrations Analyzed • Live
       </span>
     </div>
   );
