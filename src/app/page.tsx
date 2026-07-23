@@ -18,16 +18,12 @@ export default function HomePage() {
             }}
           />
           <div className="pw-shell flex-1 flex flex-col justify-center pt-10 pb-6 md:pt-14 md:pb-8 text-foam">
-            <h1 className="animate-rise font-display text-[2.75rem] leading-[0.95] sm:text-5xl md:text-7xl lg:text-8xl max-w-4xl">
-              PolicyWell AI
+            <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight">
+              The Agentic AI Layer for the Insurance Industry
             </h1>
-            <p className="animate-rise-delay mt-5 md:mt-6 max-w-2xl font-display text-2xl sm:text-3xl md:text-4xl leading-[1.15] tracking-tight text-foam">
-              The AI Operating System for the Insurance Industry
-            </p>
-            <p className="animate-rise-delay-2 mt-4 md:mt-5 max-w-xl text-base sm:text-lg md:text-xl text-foam/85">
-              Analyze policies.
-              <br className="sm:hidden" /> Recommend actions.
-              <br className="sm:hidden" /> Keep humans in control.
+            <p className="animate-rise-delay mt-4 md:mt-5 max-w-3xl text-base sm:text-lg md:text-xl text-foam/85">
+              Analyze Illustrations &amp; Policies. Recommend actions. Aid Human
+              control.
             </p>
           </div>
 
