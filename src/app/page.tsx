@@ -38,7 +38,7 @@ export default function HomePage() {
                 href="/demo"
                 className="pw-btn pw-btn-secondary !border-foam/35 !text-foam hover:!bg-foam/10 w-full sm:w-auto justify-center"
               >
-                Run investor demo
+                Product demo
               </Link>
             </div>
           </div>

@@ -61,8 +61,8 @@ export default function ReportPage() {
         <AppNav role={session.role} />
         <main className="pw-shell py-16">
           <h1 className="font-display text-4xl text-pine mb-3">Reports</h1>
-          <p className="text-stone mb-6">Complete onboarding or load the demo seed first.</p>
-          <Link href="/demo" className="pw-btn">Investor demo</Link>
+          <p className="text-stone mb-6">Complete onboarding or open the product demo first.</p>
+          <Link href="/demo" className="pw-btn">Product demo</Link>
         </main>
       </div>
     );

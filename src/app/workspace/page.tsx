@@ -97,10 +97,10 @@ export default function WorkspacePage() {
         <AppNav role={session.role} />
         <main className="pw-shell py-16">
           <h1 className="font-display text-4xl text-pine mb-3">Agent workspace</h1>
-          <p className="text-stone mb-6">Load context via onboarding or the investor demo first.</p>
+          <p className="text-stone mb-6">Load context via onboarding or the product demo first.</p>
           <div className="flex gap-3">
             <Link href="/onboarding" className="pw-btn">Onboarding</Link>
-            <Link href="/demo" className="pw-btn pw-btn-secondary">Investor demo</Link>
+            <Link href="/demo" className="pw-btn pw-btn-secondary">Product demo</Link>
           </div>
         </main>
       </div>
