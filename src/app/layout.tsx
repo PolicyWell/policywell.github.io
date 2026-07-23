@@ -21,12 +21,12 @@ const OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "PolicyWell AI — The AI Operating System for the Insurance Industry",
-    template: "%s · PolicyWell AI",
+    default: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
+    template: "%s · PolicyWell",
   },
   description:
-    "Analyze policies. Recommend actions. Keep humans in control. PolicyWell AI is the AI operating system for the insurance industry.",
-  applicationName: "PolicyWell AI",
+    "Analyze Illustrations & Policies. Recommend actions. Aid Human control.",
+  applicationName: "PolicyWell",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -46,24 +46,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    siteName: "PolicyWell AI",
-    title: "PolicyWell AI — The AI Operating System for the Insurance Industry",
+    siteName: "PolicyWell",
+    title: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
     description:
-      "Analyze policies. Recommend actions. Keep humans in control.",
+      "Analyze Illustrations & Policies. Recommend actions. Aid Human control.",
     images: [
       {
         url: OG_IMAGE,
         width: 1024,
         height: 1024,
-        alt: "PolicyWell AI — The AI Operating System for the Insurance Industry",
+        alt: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PolicyWell AI — The AI Operating System for the Insurance Industry",
+    title: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
     description:
-      "Analyze policies. Recommend actions. Keep humans in control.",
+      "Analyze Illustrations & Policies. Recommend actions. Aid Human control.",
     images: [OG_IMAGE],
   },
   manifest: "/site.webmanifest",

@@ -109,10 +109,13 @@ function TerminalBody({
 export function PolicyWellCLIShowcase({
   className = "",
   compact = false,
+  hideIntro = false,
 }: {
   className?: string;
   /** Tighter spacing when embedded inside the dark hero */
   compact?: boolean;
+  /** Hide the section heading and supporting copy */
+  hideIntro?: boolean;
 }) {
   const tabsId = useId();
   const [activeId, setActiveId] = useState(CLI_AUDIENCES[0].id);
@@ -191,15 +194,17 @@ export function PolicyWellCLIShowcase({
       className={`pw-cli ${compact ? "pw-cli-compact" : ""} ${className}`}
       aria-label="PolicyWell CLI showcase"
     >
-      <div className="pw-cli-intro">
-        <h2 className="pw-cli-heading">
-          Insurance intelligence for every part of the ecosystem.
-        </h2>
-        <p className="pw-cli-lede">
-          PolicyWell turns policies, carrier data, and household context into
-          explainable decisions, recommendations, and actions.
-        </p>
-      </div>
+      {!(hideIntro || compact) && (
+        <div className="pw-cli-intro">
+          <h2 className="pw-cli-heading">
+            Insurance intelligence for every part of the ecosystem.
+          </h2>
+          <p className="pw-cli-lede">
+            PolicyWell turns policies, carrier data, and household context into
+            explainable decisions, recommendations, and actions.
+          </p>
+        </div>
+      )}
 
       <div className="pw-cli-window">
         <div className="pw-cli-chrome">
