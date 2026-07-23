@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: OG_IMAGE,
-        width: 1024,
+        width: 1536,
         height: 1024,
         alt: "PolicyWell - The Agentic AI Layer for the Insurance Industry",
       },
