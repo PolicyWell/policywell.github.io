@@ -3804,3 +3804,225 @@ body:has(.pw-docs-app) > footer {
     display: none;
   }
 }
+
+/* ─── Meet Ope floating guide ─── */
+
+.pw-ope {
+  position: fixed;
+  right: max(0.85rem, env(safe-area-inset-right));
+  bottom: max(0.85rem, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.65rem;
+  max-width: min(22rem, calc(100vw - 1.5rem));
+}
+
+.pw-ope-fab {
+  position: relative;
+  width: 4.15rem;
+  height: 4.15rem;
+  border-radius: 999px;
+  border: 2px solid rgba(245, 250, 247, 0.95);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(143, 175, 160, 0.55), transparent 55%),
+    linear-gradient(160deg, #3d6b5a 0%, #0f2f28 100%);
+  box-shadow:
+    0 12px 28px rgba(15, 47, 40, 0.28),
+    0 0 0 1px rgba(15, 47, 40, 0.12);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  overflow: visible;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pw-ope-fab:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 16px 34px rgba(15, 47, 40, 0.34),
+    0 0 0 1px rgba(15, 47, 40, 0.14);
+}
+
+.pw-ope-fab:focus-visible {
+  outline: 2px solid #3d6b5a;
+  outline-offset: 3px;
+}
+
+.pw-ope-fab-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  border: 1.5px solid rgba(61, 107, 90, 0.35);
+  animation: pw-ope-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+.pw-ope-fab-img {
+  width: 3.15rem;
+  height: 3.15rem;
+  object-fit: contain;
+  border-radius: 999px;
+  position: relative;
+  z-index: 1;
+}
+
+.pw-ope-fab-label {
+  position: absolute;
+  right: calc(100% + 0.55rem);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(15, 47, 40, 0.94);
+  color: #f5faf7;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 20px rgba(15, 47, 40, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.pw-ope-fab:hover .pw-ope-fab-label,
+.pw-ope-fab:focus-visible .pw-ope-fab-label,
+.pw-ope.is-open .pw-ope-fab-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-2px);
+}
+
+.pw-ope-panel {
+  width: min(20.5rem, calc(100vw - 1.5rem));
+  border-radius: 18px;
+  border: 1px solid rgba(15, 47, 40, 0.12);
+  background: rgba(245, 250, 247, 0.97);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 18px 44px rgba(15, 47, 40, 0.18);
+  padding: 0.95rem 1rem 1.05rem;
+  animation: pw-ope-rise 0.22s ease-out both;
+}
+
+.pw-ope-panel-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.pw-ope-panel-avatar {
+  width: 3.1rem;
+  height: 3.1rem;
+  object-fit: contain;
+  border-radius: 999px;
+  background: rgba(61, 107, 90, 0.12);
+  flex-shrink: 0;
+}
+
+.pw-ope-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3d6b5a;
+}
+
+.pw-ope-title {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #0f2f28;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.pw-ope-close {
+  margin-left: auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #5c6b64;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pw-ope-close:hover {
+  background: rgba(15, 47, 40, 0.06);
+  color: #0f2f28;
+}
+
+.pw-ope-copy {
+  margin: 0.75rem 0 0;
+  color: #5c6b64;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.pw-ope-actions {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+@keyframes pw-ope-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes pw-ope-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Keep clear of docs ask bar on small screens */
+body:has(.pw-docs-app) .pw-ope {
+  bottom: max(5.25rem, calc(4.5rem + env(safe-area-inset-bottom)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-ope-fab,
+  .pw-ope-fab-label,
+  .pw-ope-panel {
+    transition: none;
+    animation: none;
+  }
+
+  .pw-ope-fab-ring {
+    animation: none;
+    opacity: 0.35;
+  }
+
+  .pw-ope-fab:hover {
+    transform: none;
+  }
+}
+
+@media print {
+  .pw-ope {
+    display: none !important;
+  }
+}
