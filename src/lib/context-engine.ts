@@ -124,7 +124,7 @@ export function answerPolicyQuestion(
       answer =
         `Based on the uploaded ${doc?.filename ?? "policy document"}, current planned premium ($${current.toLocaleString()}) is below target ($${target.toLocaleString()}). ` +
         `With cash value around $${cash.toLocaleString()}, underfunding elevates lapse risk if crediting or COI worsens. ` +
-        `Policy Health Score is ${context.scores.policyHealthScore}/100. This is not a guarantee — confirm with an in-force illustration.`;
+        `Policy Health Score is ${context.scores.policyHealthScore}/100. This is not a guarantee - confirm with an in-force illustration.`;
       confidence = Math.min(confidence, 0.82);
     } else if (current >= target && target > 0) {
       answer =
@@ -138,7 +138,7 @@ export function answerPolicyQuestion(
     const target = ext?.targetPremium.value;
     answer = target
       ? `Extracted target premium is $${target.toLocaleString()} annually. Funding at or above target generally improves policy durability for IULs, subject to illustrated assumptions (${context.assumptions[0] ?? "see document"}).`
-      : "Target premium was not confidently extracted — please verify on the review screen.";
+      : "Target premium was not confidently extracted - please verify on the review screen.";
   } else if (/borrow|loan/i.test(q)) {
     const cash = ext?.cashValue.value ?? 0;
     const loans = ext?.loans.value ?? 0;
@@ -149,7 +149,7 @@ export function answerPolicyQuestion(
   } else if (/stop paying|stop premium/i.test(q)) {
     const cash = ext?.cashValue.value ?? 0;
     answer =
-      `If premiums stop, the policy may rely on cash value (≈$${cash.toLocaleString()}) to cover COI and expenses until depleted — increasing lapse risk. Request an in-force illustration for a timed projection.`;
+      `If premiums stop, the policy may rely on cash value (≈$${cash.toLocaleString()}) to cover COI and expenses until depleted - increasing lapse risk. Request an in-force illustration for a timed projection.`;
   } else if (/cash value|increase/i.test(q)) {
     answer =
       `Cash value growth depends on funding above expenses/COI and index crediting. Current extracted cash value: $${(ext?.cashValue.value ?? 0).toLocaleString()}. Increasing planned premium toward/above target is the primary controllable lever.`;
@@ -228,7 +228,7 @@ export function generateAgentReport(
 
   const warnings: string[] = [];
   if (scores.policyHealthScore < 55) warnings.push("Policy health is below comfort threshold.");
-  if (scores.reviewPriorityScore >= 60) warnings.push("Elevated review priority — schedule follow-up.");
+  if (scores.reviewPriorityScore >= 60) warnings.push("Elevated review priority - schedule follow-up.");
   if (profile.insurance.worriedAboutLapse.value) warnings.push("Client expressed lapse concern.");
 
   return {

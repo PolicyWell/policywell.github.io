@@ -115,7 +115,7 @@ export default function ReportPage() {
           </p>
           {approved.length === 0 ? (
             <p className="text-sm text-stone">
-              No approved recommendations yet — review the queue in the{" "}
+              No approved recommendations yet - review the queue in the{" "}
               <Link href="/workspace" className="underline">workspace</Link>.
             </p>
           ) : (

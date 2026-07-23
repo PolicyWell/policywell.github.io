@@ -32,7 +32,7 @@ export const DOCS_META = {
     "Explore common use cases and integrate PolicyWell immediately.",
 } as const;
 
-/** Common use cases — Natural-style start-here card grid. */
+/** Common use cases - Natural-style start-here card grid. */
 export const DOCS_USE_CASES: readonly DocsUseCase[] = [
   {
     slug: "policy-intelligence",
@@ -42,7 +42,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     status: "Available",
     icon: "shield",
     overview:
-      "Policy Intelligence turns policy documents and household context into structured understanding — coverage, funding, riders, beneficiaries, and policy-health scoring — so advisors and consumers can act with clarity.",
+      "Policy Intelligence turns policy documents and household context into structured understanding - coverage, funding, riders, beneficiaries, and policy-health scoring - so advisors and consumers can act with clarity.",
     capabilities: [
       "Upload and analyze life insurance policies",
       "Lapse risk analysis",
@@ -66,7 +66,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     status: "Preview",
     icon: "chart",
     overview:
-      "Annuity Intelligence helps advisors evaluate income products side by side — illustrations, surrender schedules, bonuses, and 1035 exchange considerations — with clear outputs for client conversations.",
+      "Annuity Intelligence helps advisors evaluate income products side by side - illustrations, surrender schedules, bonuses, and 1035 exchange considerations - with clear outputs for client conversations.",
     capabilities: [
       "FIA comparisons",
       "MYGA comparisons",
@@ -130,7 +130,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     status: "Available",
     icon: "spark",
     overview:
-      "The Recommendation Engine proposes next actions from policy and household context. Recommendations are reviewed by licensed professionals before presentation — PolicyWell does not bind coverage automatically.",
+      "The Recommendation Engine proposes next actions from policy and household context. Recommendations are reviewed by licensed professionals before presentation - PolicyWell does not bind coverage automatically.",
     capabilities: [
       "Funding recommendations",
       "Coverage recommendations",
@@ -191,7 +191,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     status: "Preview",
     icon: "building",
     overview:
-      "The IMO Platform gives marketing organizations visibility across advisor activity, persistency, lapse risk, and production — with workflows that connect field activity back to PolicyWell intelligence.",
+      "The IMO Platform gives marketing organizations visibility across advisor activity, persistency, lapse risk, and production - with workflows that connect field activity back to PolicyWell intelligence.",
     capabilities: [
       "Advisor management",
       "Book of business",
@@ -231,7 +231,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     status: "Preview",
     icon: "workflow",
     overview:
-      "Workflow Automation connects PolicyWell signals to advisor and organization processes — analysis triggers, review scheduling, client follow-ups, and human-approval gates.",
+      "Workflow Automation connects PolicyWell signals to advisor and organization processes - analysis triggers, review scheduling, client follow-ups, and human-approval gates.",
     capabilities: [
       "Trigger analyses",
       "Notify advisors",
@@ -252,7 +252,7 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
     status: "Planned",
     icon: "brand",
     overview:
-      "White-Label Platform lets carriers, IMOs, and institutions deploy PolicyWell under their brand — with tenant isolation, custom domains, and embedded product surfaces.",
+      "White-Label Platform lets carriers, IMOs, and institutions deploy PolicyWell under their brand - with tenant isolation, custom domains, and embedded product surfaces.",
     capabilities: [
       "Custom branding",
       "Custom domains",

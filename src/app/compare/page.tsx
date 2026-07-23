@@ -147,7 +147,7 @@ export default function ComparePage() {
             {current && scenarios.length > 0 && (
               <section className="pw-panel p-6 animate-rise-delay-2 space-y-4">
                 <h2 className="font-display text-2xl text-pine">
-                  Funding scenarios — {current.filename}
+                  Funding scenarios - {current.filename}
                 </h2>
                 <div className="grid md:grid-cols-3 gap-4">
                   {scenarios.map((s) => (

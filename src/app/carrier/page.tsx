@@ -121,7 +121,7 @@ export default function CarrierConsolePage() {
               )}
               {!answer.supported && (
                 <p className="text-xs text-danger">
-                  Declined — outside approved content. No unsupported claims generated.
+                  Declined - outside approved content. No unsupported claims generated.
                 </p>
               )}
             </div>
@@ -131,7 +131,7 @@ export default function CarrierConsolePage() {
         {pack && (
           <section className="pw-panel p-6 animate-rise-delay-2">
             <h2 className="font-display text-2xl text-pine mb-3">
-              Approved pack — {pack.carrier}
+              Approved pack - {pack.carrier}
             </h2>
             {pack.products.map((p) => (
               <div key={p.productName} className="mb-4">

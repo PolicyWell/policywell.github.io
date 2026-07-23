@@ -52,8 +52,8 @@ export default function ClientsPage() {
           <div>
             <h1 className="font-display text-4xl text-pine">Client roster</h1>
             <p className="text-stone mt-2 max-w-2xl">
-              Select a household to load its full context — profile, documents,
-              scores — into the shared intelligence workspace.
+              Select a household to load its full context - profile, documents,
+              scores - into the shared intelligence workspace.
             </p>
           </div>
           <button
@@ -67,7 +67,7 @@ export default function ClientsPage() {
 
         {!clients.length ? (
           <p className="text-stone animate-rise-delay">
-            No clients yet — load the demo roster to begin.
+            No clients yet - load the demo roster to begin.
           </p>
         ) : (
           <div className="grid md:grid-cols-3 gap-5 animate-rise-delay">

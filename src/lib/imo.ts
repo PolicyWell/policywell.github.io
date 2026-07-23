@@ -15,7 +15,7 @@ export interface AdvisorActivity {
   advisorName: string;
   clientCount: number;
   documentsIngested: number;
-  verifiedRate: number; // 0–1
+  verifiedRate: number; // 0-1
   avgPolicyHealth: number;
   avgReviewPriority: number;
   highPriorityClients: number;
@@ -128,7 +128,7 @@ export function buildImoAnalytics(rosters: AdvisorRoster[]): ImoAnalytics {
     },
     assumptions: [
       `Review status: overdue ≥ ${HIGH_PRIORITY_THRESHOLD} priority, due ≥ ${DUE_THRESHOLD}, else current.`,
-      "All metrics derive from the deterministic PolicyWell score engine — no LLM output.",
+      "All metrics derive from the deterministic PolicyWell score engine - no LLM output.",
     ],
   };
 }
@@ -174,7 +174,7 @@ export function generateAnnualReviewChecklist(client: ClientRecord): ChecklistIt
       done: fundedToTarget,
       detail: fundedToTarget
         ? "At least one policy funded to target."
-        : "No policy confirmed at target funding — review with client.",
+        : "No policy confirmed at target funding - review with client.",
     },
     {
       label: "Coverage gap reviewed",
@@ -245,7 +245,7 @@ export function buildImoSeed(): AdvisorRoster[] {
       "Outstanding Loans: $2,500",
     ].join("\n"),
   });
-  // Intentionally left unverified — shows up in IMO verification metrics.
+  // Intentionally left unverified - shows up in IMO verification metrics.
 
   const priya: AdvisorRoster = {
     advisorName: "Priya Shah",
@@ -260,7 +260,7 @@ export function buildImoSeed(): AdvisorRoster[] {
       {
         id: "client_eva",
         label: "Eva Martins",
-        summary: "AZ · married, 1 kid · underfunded IUL with loan — lapse concern",
+        summary: "AZ · married, 1 kid · underfunded IUL with loan - lapse concern",
         profile: evaProfile,
         documents: [evaDoc],
       },

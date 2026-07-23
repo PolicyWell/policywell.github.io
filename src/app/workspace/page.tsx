@@ -114,7 +114,7 @@ export default function WorkspacePage() {
         <div className="animate-rise">
           <h1 className="font-display text-4xl md:text-5xl text-pine">Agent workspace</h1>
           <p className="text-stone mt-2 max-w-2xl">
-            Hybrid contextual intelligence — every answer is grounded in who is asking, what they own, and what was uploaded.
+            Hybrid contextual intelligence - every answer is grounded in who is asking, what they own, and what was uploaded.
           </p>
         </div>
 
@@ -178,7 +178,7 @@ export default function WorkspacePage() {
                   )}
                 </div>
                 <div className="text-xs text-stone space-y-1">
-                  <div>Extracted: {answer.references.extractedValues.join(" · ") || "—"}</div>
+                  <div>Extracted: {answer.references.extractedValues.join(" · ") || "-"}</div>
                   <div>Assumptions: {answer.references.assumptions.join(" · ")}</div>
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2">
@@ -193,7 +193,7 @@ export default function WorkspacePage() {
                   </button>
                 </div>
                 <p className="text-[11px] text-stone">
-                  Feedback stored for review — it does not automatically change scoring logic.
+                  Feedback stored for review - it does not automatically change scoring logic.
                   ({fbSummary.accurate} accurate · {fbSummary.needsCorrection} corrections · {fbSummary.notHelpful} not helpful)
                 </p>
               </div>
@@ -216,8 +216,8 @@ export default function WorkspacePage() {
                 <div>Who: {context.who} ({context.role})</div>
                 <div>Household: {context.household}</div>
                 <div>Carrier: {context.carrier} · State: {context.state}</div>
-                <div>Goals: {context.goals.join(", ") || "—"}</div>
-                <div>Documents: {context.documents.join(", ") || "—"}</div>
+                <div>Goals: {context.goals.join(", ") || "-"}</div>
+                <div>Documents: {context.documents.join(", ") || "-"}</div>
               </div>
             )}
           </section>
@@ -226,7 +226,7 @@ export default function WorkspacePage() {
         <section className="pw-panel p-6 animate-rise-delay-2 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="font-display text-2xl text-pine">Recommendations — human approval</h2>
+              <h2 className="font-display text-2xl text-pine">Recommendations - human approval</h2>
               <p className="text-sm text-stone mt-1">
                 Generated deterministically from context and scores. Only approved
                 items appear in the client report.
@@ -315,7 +315,7 @@ export default function WorkspacePage() {
           </div>
           {history.length === 0 ? (
             <p className="text-sm text-stone">
-              No snapshots yet — record one to start tracking trends over time.
+              No snapshots yet - record one to start tracking trends over time.
             </p>
           ) : (
             <>

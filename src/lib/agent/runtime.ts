@@ -1,7 +1,7 @@
 import type { ToolResult } from "./tools";
 import type { AgentWorkspace } from "./tools";
 
-/** Analyst-style reply synthesized from tool results — never invents claims. */
+/** Analyst-style reply synthesized from tool results - never invents claims. */
 export function synthesizeReply(
   message: string,
   toolResults: ToolResult[],
@@ -56,7 +56,7 @@ export function synthesizeReply(
             [
               "Grounding for this answer:",
               `• Document: ${refs.document ?? "none on file"}`,
-              `• Extracted values: ${(refs.extractedValues ?? []).join(", ") || "—"}`,
+              `• Extracted values: ${(refs.extractedValues ?? []).join(", ") || "-"}`,
               `• Confidence: ${Math.round((refs.confidence ?? 0) * 100)}%`,
               refs.assumptions?.length
                 ? `• Assumptions: ${refs.assumptions.slice(0, 2).join(" ")}`
@@ -71,7 +71,7 @@ export function synthesizeReply(
       case "run_scenarios":
         parts.push(
           `I projected three funding paths under documented assumptions:\n${t.summary}\n` +
-            `These are deterministic model outputs — useful for meeting prep, not guarantees.`,
+            `These are deterministic model outputs - useful for meeting prep, not guarantees.`,
         );
         break;
       case "compare_policies": {

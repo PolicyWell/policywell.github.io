@@ -67,7 +67,7 @@ export function runScenario(name: string, inputs: ScenarioInputs): ScenarioResul
       `Illustrated crediting rate ${(creditRate * 100).toFixed(1)}% (non-guaranteed).`,
       `COI grows ${(coiGrowth * 100).toFixed(1)}% per year from $${Math.round(inputs.annualCoi).toLocaleString()}.`,
       `Projection horizon ${horizon} years; lapse = cash value below zero.`,
-      "Simplified model — carrier in-force illustration controls.",
+      "Simplified model - carrier in-force illustration controls.",
     ],
   };
 }

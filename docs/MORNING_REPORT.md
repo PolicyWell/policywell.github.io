@@ -1,4 +1,4 @@
-# PolicyWell Morning Report — Sprint 7 (Firm ops)
+# PolicyWell Morning Report - Sprint 7 (Firm ops)
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint7-firm-ops-c124`  
@@ -7,7 +7,7 @@
 
 ## Verdict
 
-Fixed the broken `/agent` page (React #185 from unstable `useSyncExternalStore` snapshots), then shipped Sprint 7 firm operations: multi-advisor **task ownership** and a **broker-dealer / FI supervision** console with suitability flags — still deterministic, still local-first.
+Fixed the broken `/agent` page (React #185 from unstable `useSyncExternalStore` snapshots), then shipped Sprint 7 firm operations: multi-advisor **task ownership** and a **broker-dealer / FI supervision** console with suitability flags - still deterministic, still local-first.
 
 ## Shipped
 
@@ -30,7 +30,7 @@ Fixed the broken `/agent` page (React #185 from unstable `useSyncExternalStore` 
 
 ## How to feel it
 
-1. Open **/agent** — page should load (not “couldn’t load”)
+1. Open **/agent** - page should load (not “couldn’t load”)
 2. Sign in as **riley@firm.example** → Load firm demo → reassign an unassigned task
 3. Or as advisor: approve recs → Generate tasks → assign an owner
 
@@ -42,7 +42,7 @@ Fixed the broken `/agent` page (React #185 from unstable `useSyncExternalStore` 
 
 ---
 
-# PolicyWell Morning Report — Sprint 6 (Agent)
+# PolicyWell Morning Report - Sprint 6 (Agent)
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint1-mvp-c124`  
@@ -51,14 +51,14 @@ Fixed the broken `/agent` page (React #185 from unstable `useSyncExternalStore` 
 
 ## Verdict
 
-Addressed the core product gap: PolicyWell now has a real **Insurance Intelligence Agent** as the primary surface — multi-turn chat that plans and executes tools (context, scores, grounded policy analysis, scenarios, comparison, recommendations, approval, tasks, carrier packs) before answering. Not a page of widgets.
+Addressed the core product gap: PolicyWell now has a real **Insurance Intelligence Agent** as the primary surface - multi-turn chat that plans and executes tools (context, scores, grounded policy analysis, scenarios, comparison, recommendations, approval, tasks, carrier packs) before answering. Not a page of widgets.
 
 ## Shipped
 
 ### Agent runtime (`src/lib/agent/`)
 - **Tools** (10): `update_context`, `get_context`, `get_scores`, `analyze_policy`, `run_scenarios`, `compare_policies`, `generate_recommendations`, `decide_recommendation`, `create_tasks`, `ask_carrier`
 - **Planner**: maps utterances to ordered tool calls; always updates context from free-form speech first (Manual §7)
-- **Synthesizer**: analyst-style replies from tool outputs only — cites documents, extracted values, confidence; never invents claims
+- **Synthesizer**: analyst-style replies from tool outputs only - cites documents, extracted values, confidence; never invents claims
 - **Optional LLM**: when `OPENAI_API_KEY` is set, OpenAI synthesizes the final reply from tool results via Vercel AI SDK; without a key the deterministic synthesizer runs
 
 ### Primary product UI
@@ -68,7 +68,7 @@ Addressed the core product gap: PolicyWell now has a real **Insurance Intelligen
 
 ## Tests
 
-`npm test`: **39/39** (4 new agent tests — context-first, grounded lapse answer, scenarios+pending recs, approve-all → tasks).
+`npm test`: **39/39** (4 new agent tests - context-first, grounded lapse answer, scenarios+pending recs, approve-all → tasks).
 
 ## How to feel the agent
 
@@ -78,7 +78,7 @@ For real LLM phrasing: set `OPENAI_API_KEY` in the environment and restart.
 
 ---
 
-# PolicyWell Morning Report — Sprint 5
+# PolicyWell Morning Report - Sprint 5
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint1-mvp-c124`  
@@ -92,7 +92,7 @@ Sprint 5 turns approvals into action: human-approved recommendations become date
 ## Shipped
 
 ### Follow-up task workflow
-- `src/lib/tasks.ts`: only **approved** recommendations become tasks (pending/rejected never do — test-asserted). Due dates follow documented per-rule timelines (verification/profile 7 days, funding 14, loans/beneficiary 21, coverage/review 30). Regeneration is idempotent — existing tasks preserved. Toggle completion, overdue detection, open/overdue/completed summary.
+- `src/lib/tasks.ts`: only **approved** recommendations become tasks (pending/rejected never do - test-asserted). Due dates follow documented per-rule timelines (verification/profile 7 days, funding 14, loans/beneficiary 21, coverage/review 30). Regeneration is idempotent - existing tasks preserved. Toggle completion, overdue detection, open/overdue/completed summary.
 - **Tasks page** (`/tasks`, in nav for all roles): stat tiles, generate-from-approved, checkbox completion, overdue badges.
 
 ### Meeting preparation pack (Manual §11)
@@ -101,7 +101,7 @@ Sprint 5 turns approvals into action: human-approved recommendations become date
 
 ## Tests
 
-`npm test`: **35/35 passing** (Sprint 5 adds 6 — approval gating for tasks, due-date rules, idempotent regeneration, toggle/overdue, pack content, markdown export).
+`npm test`: **35/35 passing** (Sprint 5 adds 6 - approval gating for tasks, due-date rules, idempotent regeneration, toggle/overdue, pack content, markdown export).
 Typecheck, lint, production build clean. Live server restarted; all routes 200 locally and via the public tunnel URL.
 
 ## Push status
@@ -117,7 +117,7 @@ Unchanged: no GitHub credentials in this environment; `origin` configured for `P
 
 ---
 
-# PolicyWell Morning Report — Sprint 4
+# PolicyWell Morning Report - Sprint 4
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint1-mvp-c124`  
@@ -131,7 +131,7 @@ Sprint 4 closes the remaining gap in the core workflow (Manual §4): an explicit
 ## Shipped
 
 ### Recommendation engine + human approval (Manual §4)
-- `src/lib/recommendations.ts`: seven deterministic rules (fund to target, policy loan review, coverage gap, beneficiary confirmation, document verification, profile completion, schedule review) — each with rationale, input values, and confidence. All start `pending`.
+- `src/lib/recommendations.ts`: seven deterministic rules (fund to target, policy loan review, coverage gap, beneficiary confirmation, document verification, profile completion, schedule review) - each with rationale, input values, and confidence. All start `pending`.
 - **Approval queue** in the workspace: approve/reject per item with decision timestamps.
 - **Report gating**: `/report` shows an "Approved recommendations" section fed only by `approvedForReport()`; pending/rejected items never reach client output (test-asserted).
 
@@ -141,12 +141,12 @@ Sprint 4 closes the remaining gap in the core workflow (Manual §4): an explicit
 
 ## Tests
 
-`npm test`: **29/29 passing** (Sprint 4 adds 5 — rule determinism, per-client rule targeting on the IMO seed, approval gating, snapshot trend, history cap).
+`npm test`: **29/29 passing** (Sprint 4 adds 5 - rule determinism, per-client rule targeting on the IMO seed, approval gating, snapshot trend, history cap).
 Typecheck, lint, production build clean; routes smoke-tested.
 
 ## Push status
 
-Push to `https://github.com/PolicyWell/PW-MVP` remains **blocked — no GitHub credentials in this environment**. `origin` is configured and ready. A full repo bundle exists at `policywell-sprints1-3.bundle` (untracked). Unblock via: PAT pasted in chat, `GITHUB_TOKEN` secret + new agent run, or relaunch from cursor.com/agents with the repo connected.
+Push to `https://github.com/PolicyWell/PW-MVP` remains **blocked - no GitHub credentials in this environment**. `origin` is configured and ready. A full repo bundle exists at `policywell-sprints1-3.bundle` (untracked). Unblock via: PAT pasted in chat, `GITHUB_TOKEN` secret + new agent run, or relaunch from cursor.com/agents with the repo connected.
 
 ## Next sprint candidates
 
@@ -157,7 +157,7 @@ Push to `https://github.com/PolicyWell/PW-MVP` remains **blocked — no GitHub c
 
 ---
 
-# PolicyWell Morning Report — Sprint 3
+# PolicyWell Morning Report - Sprint 3
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint1-mvp-c124`  
@@ -171,8 +171,8 @@ Sprint 3 delivers the IMO use case (Manual §6) and the email import ingestion c
 ## Shipped
 
 ### IMO engine (Manual §6)
-- **IMO analytics** (`src/lib/imo.ts`): deterministic aggregation across advisor rosters — per-advisor client counts, documents ingested, verification rates, average policy health, high-priority client counts; firm-wide carrier distribution; review pipeline sorted by review priority with overdue/due/current status thresholds (documented assumptions).
-- **Standardized annual review checklist**: six data-derived checks per client (profile completeness, document verification, beneficiary context, target funding, coverage gap, review scheduling) — the same checklist for every advisor, satisfying "standardize annual reviews".
+- **IMO analytics** (`src/lib/imo.ts`): deterministic aggregation across advisor rosters - per-advisor client counts, documents ingested, verification rates, average policy health, high-priority client counts; firm-wide carrier distribution; review pipeline sorted by review priority with overdue/due/current status thresholds (documented assumptions).
+- **Standardized annual review checklist**: six data-derived checks per client (profile completeness, document verification, beneficiary context, target funding, coverage gap, review scheduling) - the same checklist for every advisor, satisfying "standardize annual reviews".
 - **IMO dashboard** (`/imo`, IMO role): stat tiles, advisor activity table, carrier analytics bars, review pipeline, per-client checklist. Demo seed spans two advisors (Jordan Lee's 3 clients + Priya Shah's 2, including an intentionally unverified underfunded IUL that surfaces as overdue).
 - New demo account: `casey@imo.example` (IMO role, lands on `/imo`).
 
@@ -182,7 +182,7 @@ Sprint 3 delivers the IMO use case (Manual §6) and the email import ingestion c
 
 ## Tests
 
-`npm test`: **24/24 passing** (Sprints 1–2: 18, Sprint 3: 6 — IMO aggregation determinism, overdue flagging, checklist, email parsing/ingestion).
+`npm test`: **24/24 passing** (Sprints 1-2: 18, Sprint 3: 6 - IMO aggregation determinism, overdue flagging, checklist, email parsing/ingestion).
 Typecheck, lint, production build clean. Runtime smoke test: all 12 routes return 200.
 
 ## Acceptance criteria check (IMO goals, Manual §6)
@@ -201,7 +201,7 @@ Typecheck, lint, production build clean. Runtime smoke test: all 12 routes retur
 
 ---
 
-# PolicyWell Morning Report — Sprint 2
+# PolicyWell Morning Report - Sprint 2
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint1-mvp-c124`  
@@ -215,13 +215,13 @@ Sprint 2 delivers the Advisor use case (Manual §11) and Carrier use case (Manua
 ## Shipped
 
 ### Advisor engine (Manual §11)
-- **Client roster** (`/clients`, advisor/IMO roles): three seeded households — Alex Rivera (IUL + proposed FIA 1035 review), Taylor Brooks (underinsured young family), Ruka Tanaka (pre-retiree whole life with loan). Selecting a client loads their full context into the shared workspace.
+- **Client roster** (`/clients`, advisor/IMO roles): three seeded households - Alex Rivera (IUL + proposed FIA 1035 review), Taylor Brooks (underinsured young family), Ruka Tanaka (pre-retiree whole life with loan). Selecting a client loads their full context into the shared workspace.
 - **Policy comparison** (`/compare`): deterministic side-by-side rows (carrier, product type, death benefit, cash value, premium, loans, riders), suitability summary requiring human advisor approval, clarification questions, and warnings (life→annuity death-benefit loss, dependents check, loan boot in 1035, surrender schedule restart).
-- **Scenario modeling** (`src/lib/scenarios.ts`): deterministic annual projection — cash grows at documented crediting rate, COI grows at documented rate, lapse detected when cash value goes negative. Standard set: current funding / target funding / stop paying, rendered with sparkline charts.
+- **Scenario modeling** (`src/lib/scenarios.ts`): deterministic annual projection - cash grows at documented crediting rate, COI grows at documented rate, lapse detected when cash value goes negative. Standard set: current funding / target funding / stop paying, rendered with sparkline charts.
 
 ### Carrier engine (Manual §12)
 - **Approved content packs** (`src/lib/carrier-kb.ts`): Mutual of Omaha (Life Protection Advantage IUL) and Athene (Performance Elite FIA), each with approved claims, illustration notes, and compliance language.
-- **Carrier console** (`/carrier`, in nav for carrier role): answers assembled ONLY from approved claims; compliance language appended verbatim; unknown carriers/products are declined — no unsupported claims generated.
+- **Carrier console** (`/carrier`, in nav for carrier role): answers assembled ONLY from approved claims; compliance language appended verbatim; unknown carriers/products are declined - no unsupported claims generated.
 
 ### Platform
 - Role-aware navigation (Clients for advisor/IMO, Carrier console for carrier; Compare for all).
@@ -229,7 +229,7 @@ Sprint 2 delivers the Advisor use case (Manual §11) and Carrier use case (Manua
 
 ## Tests
 
-`npm test`: **18/18 passing** (Sprint 1: 10, Sprint 2: 8 — scenarios, comparison, roster, carrier packs).
+`npm test`: **18/18 passing** (Sprint 1: 10, Sprint 2: 8 - scenarios, comparison, roster, carrier packs).
 Typecheck, lint, and production build clean. Runtime smoke test: all 11 routes return 200.
 
 ## Acceptance criteria check
@@ -246,14 +246,14 @@ Production deployment, destructive migrations, live carrier APIs, real LLM/OCR v
 
 ## Next sprint candidates
 
-- IMO dashboards (advisor activity, carrier analytics — Manual §6)
+- IMO dashboards (advisor activity, carrier analytics - Manual §6)
 - Real LLM interview + extraction behind existing interfaces
 - Database persistence and real authentication
 - Email import channel for ingestion
 
 ---
 
-# PolicyWell Morning Report — Sprint 1
+# PolicyWell Morning Report - Sprint 1
 
 **Date:** 2026-07-21  
 **Branch:** `cursor/sprint1-mvp-c124`  
@@ -266,14 +266,14 @@ Sprint 1 MVP is implemented end-to-end: conversational onboarding, document inge
 
 ## Shipped
 
-### Epic 1 — Onboarding Engine
+### Epic 1 - Onboarding Engine
 - Conversational interview (no forms)
 - Structured extraction (household, financial, insurance, goals, risk, retirement, carrier)
 - Edit extracted fields
 - Confidence score + missing-field highlights
 - Profile save (localStorage)
 
-### Epic 2 — Insurance Ingestion Engine
+### Epic 2 - Insurance Ingestion Engine
 - Drag & drop / file upload
 - OCR heuristics (Mutual of Omaha IUL demo template)
 - AI extraction → structured JSON + confidence
@@ -284,7 +284,7 @@ Sprint 1 MVP is implemented end-to-end: conversational onboarding, document inge
 - Deterministic scores: Protection, Retirement, Mortgage, Income Replacement, Beneficiary, Policy Health, Review Priority, Overall Intelligence
 - Grounded answers cite document, extracted values, assumptions, confidence
 
-### Agent workspace / Day 4–5
+### Agent workspace / Day 4-5
 - Analysis timeline
 - Client + advisor report (questions, warnings, follow-up)
 - Feedback: Accurate / Needs Correction / Not Helpful (does not mutate scoring)
@@ -305,12 +305,12 @@ Coverage focuses on acceptance criteria for onboarding, ingestion, scoring, grou
 ## How to walk through
 
 1. `npm run dev`
-2. Open `/` — PolicyWell landing
+2. Open `/` - PolicyWell landing
 3. `/demo` → Seed sample data
-4. `/workspace` — scores, ask “Will my policy lapse?”, leave feedback
-5. `/report` — advisor meeting prep
-6. `/onboarding` — try conversational utterances
-7. `/upload` — drop a file named with `Mutual` or `IUL`
+4. `/workspace` - scores, ask “Will my policy lapse?”, leave feedback
+5. `/report` - advisor meeting prep
+6. `/onboarding` - try conversational utterances
+7. `/upload` - drop a file named with `Mutual` or `IUL`
 
 ## Explicitly out of scope (per manual)
 

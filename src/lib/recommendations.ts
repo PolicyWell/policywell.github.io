@@ -89,7 +89,7 @@ export function generateRecommendations(
       rec(
         "rec_beneficiary",
         "Confirm beneficiary designations match household profile",
-        `Beneficiary score is ${scores.beneficiaryScore}/100 — household context is incomplete or undocumented.`,
+        `Beneficiary score is ${scores.beneficiaryScore}/100 - household context is incomplete or undocumented.`,
         [`beneficiaryScore=${scores.beneficiaryScore}`],
         0.7,
       ),
@@ -125,7 +125,7 @@ export function generateRecommendations(
       rec(
         "rec_schedule_review",
         "Schedule policy review within 30 days",
-        `Review priority is ${scores.reviewPriorityScore}/100 — elevated by funding gaps, loans, or lapse concern.`,
+        `Review priority is ${scores.reviewPriorityScore}/100 - elevated by funding gaps, loans, or lapse concern.`,
         [`reviewPriorityScore=${scores.reviewPriorityScore}`],
         0.85,
       ),

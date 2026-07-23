@@ -20,18 +20,18 @@ export interface ComparisonReport {
 }
 
 function fmtMoney(v: number | null): string {
-  return v == null ? "—" : `$${v.toLocaleString()}`;
+  return v == null ? "-" : `$${v.toLocaleString()}`;
 }
 
 function fmt(v: string | number | null): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   return typeof v === "number" ? `$${v.toLocaleString()}` : v;
 }
 
 /**
  * Deterministic side-by-side comparison of two ingested policy documents
  * (e.g. current IUL vs proposed FIA), with suitability questions and
- * 1035-exchange warnings. No LLM output — explainable rows only.
+ * 1035-exchange warnings. No LLM output - explainable rows only.
  */
 export function comparePolicies(
   current: IngestedDocument,
@@ -53,7 +53,7 @@ export function comparePolicies(
       proposed: fmt(b.productType.value),
       note:
         a.productType.value !== b.productType.value
-          ? "Different product categories — objectives differ (death benefit vs accumulation/income)."
+          ? "Different product categories - objectives differ (death benefit vs accumulation/income)."
           : undefined,
     },
     {
@@ -87,8 +87,8 @@ export function comparePolicies(
     },
     {
       label: "Riders",
-      current: (a.riders.value ?? []).join(", ") || "—",
-      proposed: (b.riders.value ?? []).join(", ") || "—",
+      current: (a.riders.value ?? []).join(", ") || "-",
+      proposed: (b.riders.value ?? []).join(", ") || "-",
     },
   ];
 
@@ -104,7 +104,7 @@ export function comparePolicies(
     );
     if (profile?.household.dependentsCount.value) {
       warnings.push(
-        `Household has ${profile.household.dependentsCount.value} dependents — confirm remaining protection covers survivor needs.`,
+        `Household has ${profile.household.dependentsCount.value} dependents - confirm remaining protection covers survivor needs.`,
       );
     }
     questions.push("What replaces the death benefit protection after the exchange?");
@@ -121,7 +121,7 @@ export function comparePolicies(
 
   if ((a.currentPremium.value ?? 0) < (a.targetPremium.value ?? 0)) {
     questions.push(
-      "Current policy is funded below target — would funding to target meet the objective without replacement?",
+      "Current policy is funded below target - would funding to target meet the objective without replacement?",
     );
   }
 
@@ -142,8 +142,8 @@ export function comparePolicies(
     "Human advisor approval is required before any recommendation is presented to the client.";
 
   return {
-    currentName: `${a.carrier.value ?? "Current"} — ${a.productName.value ?? a.productType.value ?? current.filename}`,
-    proposedName: `${b.carrier.value ?? "Proposed"} — ${b.productName.value ?? b.productType.value ?? proposed.filename}`,
+    currentName: `${a.carrier.value ?? "Current"} - ${a.productName.value ?? a.productType.value ?? current.filename}`,
+    proposedName: `${b.carrier.value ?? "Proposed"} - ${b.productName.value ?? b.productType.value ?? proposed.filename}`,
     rows,
     suitabilitySummary,
     questions,

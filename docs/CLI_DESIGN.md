@@ -1,4 +1,4 @@
-# PolicyWell CLI Design — Compliance-first producer / IMO / carrier / client tool
+# PolicyWell CLI Design - Compliance-first producer / IMO / carrier / client tool
 
 **Status:** Design (Sprint 8 candidate)  
 **Version:** 0.1  
@@ -10,7 +10,7 @@
 
 ## 1. Goal
 
-Ship a single CLI that producers, IMOs, carriers, and clients can use in terminals, scripts, and advisor workflows — while remaining **compliance-safe**:
+Ship a single CLI that producers, IMOs, carriers, and clients can use in terminals, scripts, and advisor workflows - while remaining **compliance-safe**:
 
 | Audience | Primary job in the CLI |
 |----------|------------------------|
@@ -27,14 +27,14 @@ The CLI is **not** a freestyle chatbot. It is a **role-gated command surface** o
 
 These map to engines already in the repo and must be enforced in CLI code paths, not “documented only.”
 
-1. **Context before answer** — Every analysis command rebuilds hybrid context (`buildHybridContext`) before scoring or Q&A.
-2. **Grounded outputs** — Policy answers cite document, extracted values, confidence, assumptions. Decline when evidence is missing.
-3. **Human approval gate** — Recommendations start `pending`. Client-facing exports (`report`, `meeting-prep`) include **approved only**.
-4. **Carrier pack isolation** — `pw carrier ask` uses `answerCarrierQuestion` only. Unsupported → explicit decline + compliance footer.
-5. **No auto-mutating scores from feedback** — Feedback is logged; scores stay deterministic.
-6. **Auditability** — Every mutating command writes an append-only audit event (who, role, command, inputs hash, outputs summary, timestamp).
-7. **LLM is optional & labeled** — If Gemini/OpenAI is used for phrasing, stdout marks `synthesis: llm` vs `synthesis: deterministic`. Never let LLM invent numbers or carrier claims.
-8. **Disclaimers** — Client and carrier command groups always append a short, role-appropriate disclaimer footer.
+1. **Context before answer** - Every analysis command rebuilds hybrid context (`buildHybridContext`) before scoring or Q&A.
+2. **Grounded outputs** - Policy answers cite document, extracted values, confidence, assumptions. Decline when evidence is missing.
+3. **Human approval gate** - Recommendations start `pending`. Client-facing exports (`report`, `meeting-prep`) include **approved only**.
+4. **Carrier pack isolation** - `pw carrier ask` uses `answerCarrierQuestion` only. Unsupported → explicit decline + compliance footer.
+5. **No auto-mutating scores from feedback** - Feedback is logged; scores stay deterministic.
+6. **Auditability** - Every mutating command writes an append-only audit event (who, role, command, inputs hash, outputs summary, timestamp).
+7. **LLM is optional & labeled** - If Gemini/OpenAI is used for phrasing, stdout marks `synthesis: llm` vs `synthesis: deterministic`. Never let LLM invent numbers or carrier claims.
+8. **Disclaimers** - Client and carrier command groups always append a short, role-appropriate disclaimer footer.
 
 ---
 
@@ -70,17 +70,17 @@ MVP reuses demo accounts / API tokens later. Session stores `{ userId, email, na
 
 | Command group | Client | Producer | IMO / Firm | Carrier |
 |---------------|:------:|:--------:|:----------:|:-------:|
-| `pw context` / `pw profile` | ✓ (self) | ✓ (active client) | ✓ (read books) | — |
-| `pw ingest` / `pw docs` | ✓ (own) | ✓ | read | — |
-| `pw scores` | ✓ | ✓ | ✓ | — |
-| `pw ask` (grounded policy Q&A) | ✓ | ✓ | ✓ | — |
-| `pw scenarios` | ✓ (view) | ✓ | ✓ | — |
-| `pw compare` | — | ✓ | ✓ | — |
-| `pw recs` (list / approve / reject) | view approved | ✓ | ✓ | — |
-| `pw report` / `pw meeting-prep` | ✓ (approved only) | ✓ | ✓ | — |
-| `pw tasks` / assign | view own | ✓ | ✓ | — |
-| `pw clients` / `pw imo` / `pw firm` | — | limited | ✓ | — |
-| `pw carrier` | — | ask (pack) | ask (pack) | ✓ (manage packs later) |
+| `pw context` / `pw profile` | ✓ (self) | ✓ (active client) | ✓ (read books) | - |
+| `pw ingest` / `pw docs` | ✓ (own) | ✓ | read | - |
+| `pw scores` | ✓ | ✓ | ✓ | - |
+| `pw ask` (grounded policy Q&A) | ✓ | ✓ | ✓ | - |
+| `pw scenarios` | ✓ (view) | ✓ | ✓ | - |
+| `pw compare` | - | ✓ | ✓ | - |
+| `pw recs` (list / approve / reject) | view approved | ✓ | ✓ | - |
+| `pw report` / `pw meeting-prep` | ✓ (approved only) | ✓ | ✓ | - |
+| `pw tasks` / assign | view own | ✓ | ✓ | - |
+| `pw clients` / `pw imo` / `pw firm` | - | limited | ✓ | - |
+| `pw carrier` | - | ask (pack) | ask (pack) | ✓ (manage packs later) |
 | `pw agent` | ✓ | ✓ | ✓ | pack-only ask |
 | `pw audit` | own | own book | firm | own |
 
@@ -111,7 +111,7 @@ pw client use <id>          # producer/IMO
 pw client list
 ```
 
-### 5.2 Client & producer — household intelligence
+### 5.2 Client & producer - household intelligence
 
 ```bash
 pw context show

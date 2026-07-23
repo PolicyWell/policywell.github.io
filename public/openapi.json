@@ -3,7 +3,7 @@
   "info": {
     "title": "PolicyWell API",
     "version": "1.0.0",
-    "description": "REST endpoints for PolicyWell insurance intelligence — policies, documents, analysis, recommendations, webhooks, and enterprise workflows. Status: planned contract for backend wiring."
+    "description": "REST endpoints for PolicyWell insurance intelligence - policies, documents, analysis, recommendations, webhooks, and enterprise workflows. Status: planned contract for backend wiring."
   },
   "servers": [
     {

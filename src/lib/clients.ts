@@ -112,14 +112,14 @@ export function buildAdvisorRoster(): ClientRecord[] {
     {
       id: "client_taylor",
       label: "Taylor Brooks",
-      summary: "FL · married, 2 kids · $250k term vs $410k mortgage — coverage gap review",
+      summary: "FL · married, 2 kids · $250k term vs $410k mortgage - coverage gap review",
       profile: taylorProfile,
       documents: [taylorDoc],
     },
     {
       id: "client_ruka",
       label: "Ruka Tanaka",
-      summary: "WA · pre-retiree · $1M whole life with $40k loan — estate/annual review",
+      summary: "WA · pre-retiree · $1M whole life with $40k loan - estate/annual review",
       profile: rukaProfile,
       documents: [rukaDoc],
     },

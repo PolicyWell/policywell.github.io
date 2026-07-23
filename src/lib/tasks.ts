@@ -46,7 +46,7 @@ export interface FollowUpTask {
   status: TaskStatus;
   createdAt: string;
   completedAt?: string;
-  /** Firm ownership — who is accountable for follow-through. */
+  /** Firm ownership - who is accountable for follow-through. */
   assigneeId?: string | null;
   assigneeName?: string | null;
   assignedAt?: string;

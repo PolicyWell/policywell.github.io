@@ -74,7 +74,7 @@ export default function LoginPage() {
                 >
                   alex@example.com
                 </button>{" "}
-                — policyholder
+                - policyholder
               </li>
               <li>
                 <button
@@ -84,7 +84,7 @@ export default function LoginPage() {
                 >
                   jordan@advisors.example
                 </button>{" "}
-                — advisor
+                - advisor
               </li>
               <li>
                 <button
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 >
                   morgan@carrier.example
                 </button>{" "}
-                — carrier
+                - carrier
               </li>
               <li>
                 <button
@@ -104,7 +104,7 @@ export default function LoginPage() {
                 >
                   casey@imo.example
                 </button>{" "}
-                — IMO
+                - IMO
               </li>
               <li>
                 <button
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 >
                   riley@firm.example
                 </button>{" "}
-                — broker-dealer / FI
+                - broker-dealer / FI
               </li>
             </ul>
             <button

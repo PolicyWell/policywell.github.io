@@ -127,7 +127,7 @@ function Item({ label, value }: { label: string; value: string | number | null |
   return (
     <div className="flex justify-between gap-3 text-sm">
       <span className="text-stone">{label}</span>
-      <span className="text-ink text-right">{value ?? "—"}</span>
+      <span className="text-ink text-right">{value ?? "-"}</span>
     </div>
   );
 }

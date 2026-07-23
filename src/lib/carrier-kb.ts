@@ -22,7 +22,7 @@ export interface CarrierAnswer {
 
 /**
  * Approved carrier knowledge packs. Answers are assembled ONLY from
- * approvedClaims — no generated claims — and compliance language is
+ * approvedClaims - no generated claims - and compliance language is
  * always appended verbatim.
  */
 export const CARRIER_PACKS: CarrierPack[] = [

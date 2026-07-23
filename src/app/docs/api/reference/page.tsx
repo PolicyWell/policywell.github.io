@@ -11,7 +11,7 @@ import {
 export const metadata: Metadata = {
   title: "Full API reference",
   description:
-    "Complete PolicyWell REST API reference — every endpoint on one page.",
+    "Complete PolicyWell REST API reference - every endpoint on one page.",
 };
 
 export default function FullApiReferencePage() {

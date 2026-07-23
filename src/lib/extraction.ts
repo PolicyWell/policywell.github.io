@@ -9,7 +9,7 @@ function uid(prefix: string) {
   return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-/** Simulated OCR — turns filename + optional text into searchable content. */
+/** Simulated OCR - turns filename + optional text into searchable content. */
 export function runOcr(filename: string, rawText?: string): string {
   const base = rawText?.trim() || "";
   if (base) return base;
@@ -44,7 +44,7 @@ export function runOcr(filename: string, rawText?: string): string {
     ].join("\n");
   }
 
-  return `Document: ${filename}\nOCR placeholder — no known template matched. Manual review required.`;
+  return `Document: ${filename}\nOCR placeholder - no known template matched. Manual review required.`;
 }
 
 export function detectDocumentKind(filename: string, ocrText: string): DocumentKind {

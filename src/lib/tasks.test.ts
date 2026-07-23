@@ -58,7 +58,7 @@ describe("follow-up task workflow", () => {
     expect(DUE_DAYS_BY_RULE.rec_verify_docs).toBe(7);
   });
 
-  it("is idempotent — regenerating preserves existing tasks", () => {
+  it("is idempotent - regenerating preserves existing tasks", () => {
     const { recs } = approvedRecs();
     const first = tasksFromApprovedRecommendations(recs, [], NOW);
     const second = tasksFromApprovedRecommendations(recs, first, NOW);
@@ -120,7 +120,7 @@ describe("meeting preparation pack", () => {
     const pack = generateMeetingPrep(profile, documents, recs, tasks);
     const md = meetingPrepToMarkdown(pack);
 
-    expect(md).toContain(`# Meeting preparation — ${profile.displayName}`);
+    expect(md).toContain(`# Meeting preparation - ${profile.displayName}`);
     expect(md).toContain("## Agenda");
     expect(md).toContain("## Approved recommendations");
     expect(md).toContain("- [ ] ");

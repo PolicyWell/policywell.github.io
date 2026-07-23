@@ -1,6 +1,6 @@
 # PolicyWell Engineering Manual
 
-**Version 0.1** — “Building the Intelligence Layer for Insurance.”
+**Version 0.1** - “Building the Intelligence Layer for Insurance.”
 
 This repository implements the PolicyWell Sprint 1 MVP according to the Engineering Manual.
 
@@ -89,25 +89,25 @@ Every task must:
 
 | Scope | Status |
 |-------|--------|
-| Compliance-first `pw` CLI for client / producer / IMO / carrier | Design — [web Docs](/docs/cli) · [CLI_DESIGN.md](./CLI_DESIGN.md) |
+| Compliance-first `pw` CLI for client / producer / IMO / carrier | Design - [web Docs](/docs/cli) · [CLI_DESIGN.md](./CLI_DESIGN.md) |
 
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)
-- **Demo authentication** — role-gated sessions (`policyholder` / `advisor` / `carrier`)
-- **Conversational onboarding** — utterance → structured profiles with confidence + edit
-- **Ingestion engine** — drag/drop, OCR heuristics, extraction JSON, human verification, search
-- **Hybrid context engine** — always builds context before answering
-- **Deterministic PolicyWell Score** — explainable; feedback does not auto-mutate scores
-- **localStorage workspace** — Sprint 1 persistence (no production DB)
+- **Demo authentication** - role-gated sessions (`policyholder` / `advisor` / `carrier`)
+- **Conversational onboarding** - utterance → structured profiles with confidence + edit
+- **Ingestion engine** - drag/drop, OCR heuristics, extraction JSON, human verification, search
+- **Hybrid context engine** - always builds context before answering
+- **Deterministic PolicyWell Score** - explainable; feedback does not auto-mutate scores
+- **localStorage workspace** - Sprint 1 persistence (no production DB)
 
 ## Demo accounts
 
-- `alex@example.com` — policyholder
-- `jordan@advisors.example` — advisor
-- `casey@imo.example` — IMO
-- `riley@firm.example` — broker-dealer / FI
-- `morgan@carrier.example` — carrier
+- `alex@example.com` - policyholder
+- `jordan@advisors.example` - advisor
+- `casey@imo.example` - IMO
+- `riley@firm.example` - broker-dealer / FI
+- `morgan@carrier.example` - carrier
 
 Investor path: `/demo` → Seed sample data → Workspace → Report.
 Firm path: login as `riley@firm.example` → `/firm` → Load firm demo.
