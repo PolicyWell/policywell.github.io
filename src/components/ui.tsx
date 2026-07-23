@@ -4,8 +4,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
+  const iconSize = large ? 48 : 32;
   return (
-    <Link href="/" className="inline-flex items-baseline gap-2 min-w-0">
+    <Link href="/" className="inline-flex items-center gap-2.5 min-w-0">
+      <img
+        src="/logo-64.png"
+        alt=""
+        width={iconSize}
+        height={iconSize}
+        className={`shrink-0 object-contain ${large ? "h-12 w-12" : "h-8 w-8"}`}
+        decoding="async"
+      />
       <span
         className={`font-display text-pine tracking-tight ${
           large ? "text-4xl md:text-6xl" : "text-xl"
