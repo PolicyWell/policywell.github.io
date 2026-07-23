@@ -3,20 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
-import { DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
-import { DOCS_NAV } from "@/lib/docs-nav";
+import { DOCS_USE_CASES, getUseCase, type DocsNavGroup } from "@/lib/docs-data";
+import {
+  DOCS_TABS,
+  docsTabForPath,
+  navForTab,
+} from "@/lib/docs-nav";
 import { getApiGroup } from "@/lib/api-reference-data";
 
 function NavLinks({
+  groups,
   onNavigate,
   pathname,
 }: {
+  groups: readonly DocsNavGroup[];
   onNavigate?: () => void;
   pathname: string;
 }) {
   return (
     <nav aria-label="Documentation" className="pw-docs-sidebar-nav">
-      {DOCS_NAV.map((group) => (
+      {groups.map((group) => (
         <div key={group.title} className="pw-docs-nav-group">
           <p className="pw-docs-nav-group-title">{group.title}</p>
           <ul className="pw-docs-nav-list">
@@ -73,34 +79,39 @@ function useBreadcrumbs(pathname: string) {
     const clean = pathname.replace(/\/$/, "") || "/docs";
     if (clean === "/docs") {
       return [
-        { label: "Overview", href: "/docs" },
+        { label: "Guides", href: "/docs" },
         { label: "Getting started", href: "/docs" },
       ];
     }
     if (clean === "/docs/cli") {
       return [
-        { label: "Platform", href: "/docs" },
+        { label: "Guides", href: "/docs" },
         { label: "CLI", href: "/docs/cli" },
       ];
     }
     if (clean === "/docs/engineering") {
       return [
-        { label: "Platform", href: "/docs" },
+        { label: "Guides", href: "/docs" },
         { label: "Engineering", href: "/docs/engineering" },
       ];
     }
     if (clean === "/docs/api") {
       return [
-        { label: "Platform", href: "/docs" },
-        { label: "API reference", href: "/docs/api" },
+        { label: "API Reference", href: "/docs/api" },
+        { label: "Overview", href: "/docs/api" },
+      ];
+    }
+    if (clean === "/docs/api/reference") {
+      return [
+        { label: "API Reference", href: "/docs/api" },
+        { label: "Full reference", href: "/docs/api/reference" },
       ];
     }
     const apiMatch = clean.match(/^\/docs\/api\/([^/]+)$/);
     if (apiMatch) {
       const group = getApiGroup(apiMatch[1]);
       return [
-        { label: "Platform", href: "/docs" },
-        { label: "API reference", href: "/docs/api" },
+        { label: "API Reference", href: "/docs/api" },
         {
           label: group?.title ?? apiMatch[1],
           href: `/docs/api/${apiMatch[1]}`,
@@ -111,7 +122,7 @@ function useBreadcrumbs(pathname: string) {
     if (guideMatch) {
       const useCase = getUseCase(guideMatch[1]);
       return [
-        { label: "Overview", href: "/docs" },
+        { label: "Guides", href: "/docs" },
         { label: "Common use cases", href: "/docs" },
         {
           label: useCase?.title ?? guideMatch[1],
@@ -129,6 +140,9 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
   const [askOpen, setAskOpen] = useState(false);
   const panelId = useId();
   const crumbs = useBreadcrumbs(pathname);
+  const tab = docsTabForPath(pathname);
+  const navGroups = navForTab(tab);
+  const isApiTab = tab === "api";
 
   useEffect(() => {
     setOpen(false);
@@ -143,13 +157,30 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
   }, [open]);
 
   return (
-    <div className="pw-docs-app flex-1 flex flex-col min-h-0">
+    <div
+      className={`pw-docs-app flex-1 flex flex-col min-h-0${isApiTab ? " is-api-tab" : ""}`}
+    >
       <header className="pw-docs-topbar">
         <div className="pw-docs-topbar-inner">
           <DocsLogo />
+          <nav className="pw-docs-tabs" aria-label="Documentation sections">
+            {DOCS_TABS.map((t) => {
+              const active = t.id === tab;
+              return (
+                <Link
+                  key={t.id}
+                  href={t.href}
+                  className={`pw-docs-tab${active ? " is-active" : ""}`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {t.label}
+                </Link>
+              );
+            })}
+          </nav>
           <div className="pw-docs-topbar-actions">
             <Link
-              href="/docs#ask"
+              href={isApiTab ? "/docs/api#ask" : "/docs#ask"}
               className="pw-docs-icon-btn"
               aria-label="Search docs"
               onClick={(e) => {
@@ -221,7 +252,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
 
       <div className="pw-docs-frame">
         <aside className="pw-docs-sidebar" aria-label="Docs sidebar">
-          <NavLinks pathname={pathname} />
+          <NavLinks groups={navGroups} pathname={pathname} />
         </aside>
 
         {open && (
@@ -232,7 +263,23 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
             aria-modal="true"
             aria-label="Documentation menu"
           >
-            <NavLinks pathname={pathname} onNavigate={() => setOpen(false)} />
+            <div className="pw-docs-mobile-tabs">
+              {DOCS_TABS.map((t) => (
+                <Link
+                  key={t.id}
+                  href={t.href}
+                  className={`pw-docs-tab${t.id === tab ? " is-active" : ""}`}
+                  onClick={() => setOpen(false)}
+                >
+                  {t.label}
+                </Link>
+              ))}
+            </div>
+            <NavLinks
+              groups={navGroups}
+              pathname={pathname}
+              onNavigate={() => setOpen(false)}
+            />
           </div>
         )}
 

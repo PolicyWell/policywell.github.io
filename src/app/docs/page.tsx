@@ -84,13 +84,14 @@ export default function DocsStartHerePage() {
               <li>
                 Review the{" "}
                 <Link href="/docs/api" className="pw-docs-inline-link">
-                  API reference
+                  API Reference
                 </Link>{" "}
-                and{" "}
+                tab and{" "}
                 <Link href="/docs/cli" className="pw-docs-inline-link">
                   CLI
                 </Link>{" "}
-                for batch and enterprise automation.
+                for batch and enterprise automation. Each use-case guide also
+                links the related endpoints.
               </li>
               <li>
                 See packaging on the{" "}
