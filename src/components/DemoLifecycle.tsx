@@ -524,7 +524,7 @@ export function DemoLifecycle() {
 
           <Reveal delay={100}>
             <p className="pw-demo-int-note">
-              Connect carrier APIs · Import PDFs · Fit existing enterprise workflows
+              Connect Carrier APIs · Import PDFs · Fit Existing Enterprise Workflows
             </p>
           </Reveal>
         </div>
