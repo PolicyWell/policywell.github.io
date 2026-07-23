@@ -41,7 +41,7 @@ export function authenticateDemo(email: string): SessionUser | null {
   return DEMO_USERS.find((u) => u.email.toLowerCase() === normalized) ?? null;
 }
 
-/** Investor demo: Mutual of Omaha IUL household ready for walkthrough. */
+/** Product demo: sample household ready for the live agent experience. */
 export function buildDemoSeed(user: SessionUser = DEMO_USERS[0]): {
   profile: UserProfile;
   documents: IngestedDocument[];

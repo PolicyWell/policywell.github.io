@@ -36,7 +36,7 @@ export default function DeckPage() {
           </Link>{" "}
           or{" "}
           <Link href="/demo" className="underline hover:text-pine">
-            run the investor demo
+            see the product demo
           </Link>
           .
         </p>

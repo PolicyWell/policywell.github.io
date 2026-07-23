@@ -44,7 +44,7 @@ export function SiteNav() {
     { href: "/agent", label: "Agent" },
     { href: "/deck", label: "Deck" },
     { href: "/docs", label: "Docs" },
-    { href: "/demo", label: "Investor demo" },
+    { href: "/demo", label: "Demo" },
   ];
 
   return (
