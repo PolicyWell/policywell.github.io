@@ -49,6 +49,10 @@ export default function ApiReferenceIndexPage() {
           <Link href="/openapi.json" className="pw-docs-inline-link">
             /openapi.json
           </Link>
+          . Prefer one long page? Open the{" "}
+          <Link href="/docs/api/reference" className="pw-docs-inline-link">
+            full reference
+          </Link>
           .
         </p>
       </section>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/docs/UseCaseCard";
 import { DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
+import { relatedApiForUseCase } from "@/lib/docs-nav";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -38,6 +39,7 @@ export default async function DocsGuidePage({ params }: PageProps) {
     index >= 0 && index < DOCS_USE_CASES.length - 1
       ? DOCS_USE_CASES[index + 1]
       : null;
+  const relatedApi = relatedApiForUseCase(slug);
 
   return (
     <article className="pw-docs-article">
@@ -63,6 +65,55 @@ export default async function DocsGuidePage({ params }: PageProps) {
         </ul>
       </section>
 
+      {relatedApi.length > 0 && (
+        <section className="pw-docs-section" aria-labelledby="related-api-heading">
+          <h2 id="related-api-heading">API endpoints</h2>
+          <p className="pw-docs-body">
+            Use these REST resources when wiring {useCase.title.toLowerCase()} into
+            a backend. Full contract details live in the{" "}
+            <Link href="/docs/api" className="pw-docs-inline-link">
+              API Reference
+            </Link>{" "}
+            tab.
+          </p>
+          <div className="pw-guide-api-groups">
+            {relatedApi.map((group) => (
+              <div key={group.groupSlug} className="pw-guide-api-group">
+                <div className="pw-guide-api-group-head">
+                  <Link
+                    href={`/docs/api/${group.groupSlug}`}
+                    className="pw-docs-inline-link"
+                  >
+                    {group.groupTitle}
+                  </Link>
+                  <Link
+                    href={`/docs/api/${group.groupSlug}`}
+                    className="pw-guide-api-view-all"
+                  >
+                    View reference
+                  </Link>
+                </div>
+                <ul className="pw-guide-api-list">
+                  {group.endpoints.map((ep) => (
+                    <li key={ep.id}>
+                      <Link href={`/docs/api/${group.groupSlug}#${ep.id}`}>
+                        <span
+                          className={`pw-api-method pw-api-method-${ep.method.toLowerCase()}`}
+                        >
+                          {ep.method}
+                        </span>
+                        <code>{ep.path}</code>
+                        <span className="pw-guide-api-ep-title">{ep.title}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {useCase.nextSteps && useCase.nextSteps.length > 0 && (
         <section className="pw-docs-section">
           <h2>Next steps</h2>
@@ -72,6 +123,9 @@ export default async function DocsGuidePage({ params }: PageProps) {
                 {step.label}
               </Link>
             ))}
+            <Link href="/docs/api" className="pw-docs-next-step">
+              Open API Reference
+            </Link>
           </div>
         </section>
       )}
