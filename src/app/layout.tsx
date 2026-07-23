@@ -133,7 +133,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href={`/site.webmanifest?v=${ICON_V}`} />
       </head>
-      <body className="min-h-full flex flex-col font-sans text-[15px] leading-relaxed">
+      <body className="min-h-full flex flex-col font-sans text-[15px] leading-relaxed overflow-x-clip w-full max-w-full">
         {children}
         <SiteFooter />
         <MeetOpeWidget />

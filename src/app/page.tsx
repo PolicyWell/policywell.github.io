@@ -6,9 +6,9 @@ import { SiteNav } from "@/components/ui";
 
 export default function HomePage() {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-clip">
       <SiteNav />
-      <main className="relative flex-1">
+      <main className="relative flex-1 min-w-0 w-full overflow-x-clip">
         <section className="relative overflow-hidden flex flex-col">
           <div
             aria-hidden
