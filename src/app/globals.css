@@ -1460,22 +1460,20 @@ body:has(.pw-404) > .pw-site-footer {
   margin: 1rem 0 0;
   color: rgba(245, 250, 247, 0.85);
   white-space: nowrap;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   line-height: 1.25;
-  font-size: clamp(0.8rem, calc((100vw - 2.5rem) / 36), 1.35rem);
+  /* Fit the full sentence inside .pw-shell — min must stay small on phones */
+  font-size: clamp(0.58rem, calc((100vw - 3rem) / 52), 1.2rem);
+  width: 100%;
   max-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.pw-hero-subline::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 @media (min-width: 768px) {
   .pw-hero-subline {
     margin-top: 1.25rem;
+    letter-spacing: -0.015em;
   }
 }
 
