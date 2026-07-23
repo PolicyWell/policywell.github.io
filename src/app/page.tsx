@@ -61,11 +61,6 @@ export default function HomePage() {
                 <h2 className="font-display text-3xl md:text-4xl text-pine">
                   View our deck
                 </h2>
-                <p className="text-stone mt-3 text-sm sm:text-base">
-                  The PolicyWell pitch — product thesis, market, and path for
-                  producers, IMOs, carriers, and clients. Swipe or use Prev/Next;
-                  each slide fits the screen.
-                </p>
               </div>
               <Link
                 href="/deck"
