@@ -59,7 +59,7 @@ function Cell({ value }: { value: ComparisonValue }) {
   if (value === false) {
     return (
       <span className="pw-pricing-cell-no" aria-label="Not included">
-        —
+        -
       </span>
     );
   }

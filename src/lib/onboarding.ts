@@ -236,7 +236,7 @@ export function extractFromUtterance(
 export function nextAssistantPrompt(profile: UserProfile): string {
   const missing = profile.missingFields;
   if (missing.includes("Marital status")) {
-    return "Thanks — tell me a bit about your household. Are you married, partnered, or single?";
+    return "Thanks - tell me a bit about your household. Are you married, partnered, or single?";
   }
   if (missing.includes("Dependents")) {
     return "Do you have children or other dependents? If so, how many?";
@@ -260,7 +260,7 @@ export function nextAssistantPrompt(profile: UserProfile): string {
     return "Tell me about your insurance. How many life insurance policies do you own, and with which carriers?";
   }
   if (missing.includes("Primary goals")) {
-    return "What matters most right now — retirement planning, preventing a lapse, maximizing cash value, estate planning, or protecting income?";
+    return "What matters most right now - retirement planning, preventing a lapse, maximizing cash value, estate planning, or protecting income?";
   }
   if (profile.overallConfidence >= 0.7) {
     return "I have a solid picture of your situation. You can review and edit anything I extracted, then we'll save your PolicyWell profile.";
@@ -279,7 +279,7 @@ export function createOnboardingState(
     id: uid("msg"),
     role: "assistant",
     content:
-      `Hi ${name.split(" ")[0] || "there"} — I'm your PolicyWell intelligence agent. ` +
+      `Hi ${name.split(" ")[0] || "there"} - I'm your PolicyWell intelligence agent. ` +
       `Rather than a form, I'll interview you so we can build your household, financial, and insurance context. ` +
       `Start anywhere: family, policies, goals, or what's keeping you up at night.`,
     at: new Date().toISOString(),

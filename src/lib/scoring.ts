@@ -11,7 +11,7 @@ function clamp(n: number, min = 0, max = 100) {
 
 /**
  * Deterministic PolicyWell Score engine.
- * Scores are explainable and based on documented assumptions — not LLM output.
+ * Scores are explainable and based on documented assumptions - not LLM output.
  */
 export function computePolicyWellScores(
   profile: UserProfile,
@@ -159,7 +159,7 @@ export function computePolicyWellScores(
       value: mortgageScore,
       rationale: profile.household.hasMortgage.value
         ? `Coverage vs mortgage balance $${mortgage.toLocaleString()}.`
-        : "No mortgage on file — full mortgage protection score.",
+        : "No mortgage on file - full mortgage protection score.",
       inputs: [`mortgage=${mortgage}`, `deathBenefit=${death}`],
     },
     {

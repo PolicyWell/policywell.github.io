@@ -161,7 +161,7 @@ export default function TasksPage() {
 
         {newAvailable && tasks.length > 0 && (
           <p className="text-xs text-stone">
-            New approved recommendations are available — generate again to add them (existing tasks are preserved).
+            New approved recommendations are available - generate again to add them (existing tasks are preserved).
           </p>
         )}
       </main>

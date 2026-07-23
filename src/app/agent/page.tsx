@@ -183,7 +183,7 @@ export default function AgentPage() {
           }
         }
       } catch {
-        // Keep the local grounded reply — LLM phrasing is optional.
+        // Keep the local grounded reply - LLM phrasing is optional.
       }
     } catch (err) {
       const msg =
@@ -224,7 +224,7 @@ export default function AgentPage() {
           id: `seed_${Date.now()}`,
           role: "system",
           content:
-            "Sample household loaded (illustrative demonstration): Alex Rivera — married, 3 dependents, TX mortgage, indexed universal life policy (verified). Try “Is this policy appropriately funded?”",
+            "Sample household loaded (illustrative demonstration): Alex Rivera - married, 3 dependents, TX mortgage, indexed universal life policy (verified). Try “Is this policy appropriately funded?”",
         },
       ]);
       scrollToBottom();
@@ -347,7 +347,7 @@ export default function AgentPage() {
               value={input}
               disabled={busy}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask the agent — household facts, lapse risk, scenarios, recommendations…"
+              placeholder="Ask the agent - household facts, lapse risk, scenarios, recommendations…"
             />
             <button
               type="submit"
@@ -368,7 +368,7 @@ export default function AgentPage() {
               )}
             </div>
             {!liveProfile ? (
-              <p className="text-sm text-stone">No profile yet — talk to the agent.</p>
+              <p className="text-sm text-stone">No profile yet - talk to the agent.</p>
             ) : (
               <dl className="text-sm space-y-2">
                 <Row label="Who" value={liveProfile.displayName} />
@@ -383,7 +383,7 @@ export default function AgentPage() {
                         : null,
                     ]
                       .filter(Boolean)
-                      .join(" · ") || "—"
+                      .join(" · ") || "-"
                   }
                 />
                 <Row label="State" value={liveProfile.household.state.value} />
@@ -451,7 +451,7 @@ function Row({
   return (
     <div className="flex justify-between gap-3 border-b border-pine/5 pb-1.5">
       <dt className="text-stone">{label}</dt>
-      <dd className="text-ink text-right">{value || "—"}</dd>
+      <dd className="text-ink text-right">{value || "-"}</dd>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default function DeckPage() {
           </h1>
           <p className="text-stone text-sm sm:text-base max-w-xl">
             Full 12-slide deck. On mobile, each slide scales to your screen
-            width — nothing is cropped. Use Prev/Next or scroll all slides.
+            width - nothing is cropped. Use Prev/Next or scroll all slides.
           </p>
         </header>
 

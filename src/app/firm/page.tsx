@@ -61,7 +61,7 @@ export default function FirmPage() {
             </h1>
             <p className="text-stone mt-2 max-w-2xl">
               Broker-dealer / FI view across advisor books: household coverage,
-              suitability flags, and owned follow-up tasks — all from the same
+              suitability flags, and owned follow-up tasks - all from the same
               deterministic PolicyWell engines.
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function FirmPage() {
                       <ul className="mt-3 space-y-1 text-sm text-stone">
                         {book.clients.map((c) => (
                           <li key={c.id}>
-                            <span className="text-ink">{c.label}</span> —{" "}
+                            <span className="text-ink">{c.label}</span> -{" "}
                             {c.summary}
                           </li>
                         ))}

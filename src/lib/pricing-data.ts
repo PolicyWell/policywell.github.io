@@ -350,7 +350,7 @@ export const PRICING = {
     },
     {
       q: "Do you offer API-only pricing?",
-      a: "Yes. API and usage-based pricing is available for ingestion, extraction, review, household context, scoring, comparison, recommendation generation, and report generation — or as part of an enterprise contract.",
+      a: "Yes. API and usage-based pricing is available for ingestion, extraction, review, household context, scoring, comparison, recommendation generation, and report generation - or as part of an enterprise contract.",
     },
     {
       q: "Can PolicyWell be white-labeled?",
@@ -362,7 +362,7 @@ export const PRICING = {
     },
     {
       q: "Can I pay annually?",
-      a: "Yes. Annual billing is available for Advisor and IMO / BGA plans and saves approximately 17% versus monthly billing — about two months free.",
+      a: "Yes. Annual billing is available for Advisor and IMO / BGA plans and saves approximately 17% versus monthly billing - about two months free.",
     },
   ],
   finalCta: {

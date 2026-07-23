@@ -37,8 +37,8 @@ export async function runAgentTurnWithOptionalLlm(
         "ONLY use facts from the tool results and known profile context below.",
         "Always mention grounding when analyzing a policy: document name, key extracted values, assumptions, and confidence when present.",
         "Never invent product claims, guarantees, or numbers that are not in the tool results.",
-        "Recommendations require human approval before client delivery — say so clearly.",
-        "Keep replies concise (2–4 short paragraphs). Use plain language.",
+        "Recommendations require human approval before client delivery - say so clearly.",
+        "Keep replies concise (2-4 short paragraphs). Use plain language.",
       ].join(" "),
       prompt: [
         `User message: ${message}`,
@@ -58,7 +58,7 @@ export async function runAgentTurnWithOptionalLlm(
   } catch (err) {
     console.error("[policywell-agent] Reasoning engine synthesis failed:", err);
     const note =
-      "_(PolicyWell reasoning engine unavailable right now — showing the tool-grounded analyst reply.)_";
+      "_(PolicyWell reasoning engine unavailable right now - showing the tool-grounded analyst reply.)_";
     return {
       ...base,
       reply: `${base.reply}\n\n${note}`,

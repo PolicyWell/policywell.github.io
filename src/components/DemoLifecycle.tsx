@@ -78,7 +78,7 @@ const INTEGRATIONS = [
   { name: "REST APIs", desc: "Policies, scores, recs, applications" },
   { name: "CLI", desc: "Automate ingest & batch analysis" },
   { name: "CRM", desc: "Salesforce, HubSpot, agency CRMs" },
-  { name: "Policy admin", desc: "Legacy PAS — no rip-and-replace" },
+  { name: "Policy admin", desc: "Legacy PAS - no rip-and-replace" },
 ] as const;
 
 const FLYWHEEL = [
@@ -249,7 +249,7 @@ export function DemoLifecycle() {
           </h1>
           <p className="pw-demo-lede animate-rise-delay-2">
             Upload a policy. PolicyWell builds household context, reasons across
-            the financial picture, and surfaces recommendations — with advisors
+            the financial picture, and surfaces recommendations - with advisors
             in the loop.
           </p>
           <div className="pw-demo-hero-cta animate-rise-delay-2">
@@ -298,7 +298,7 @@ export function DemoLifecycle() {
             <p className="pw-demo-eyebrow">Live AI analysis</p>
             <h2 className="pw-demo-h2">The model is working.</h2>
             <p className="pw-demo-section-copy">
-              From document to decision — visible reasoning, not a black box.
+              From document to decision - visible reasoning, not a black box.
             </p>
           </Reveal>
 
@@ -429,7 +429,7 @@ export function DemoLifecycle() {
             <p className="pw-demo-eyebrow">Recommendations</p>
             <h2 className="pw-demo-h2">Actions with receipts.</h2>
             <p className="pw-demo-section-copy">
-              Replace, upgrade, or maintain — every call is explained.
+              Replace, upgrade, or maintain - every call is explained.
             </p>
           </Reveal>
 

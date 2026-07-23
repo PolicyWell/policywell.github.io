@@ -9,7 +9,7 @@ export const DECK_SLIDES = Array.from({ length: 12 }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
   return {
     src: `/deck/slides/slide-${n}.png`,
-    alt: `PolicyWell pitch deck — slide ${i + 1} of 12`,
+    alt: `PolicyWell pitch deck - slide ${i + 1} of 12`,
   };
 });
 
@@ -85,7 +85,7 @@ export function DeckViewer({
         </div>
       </div>
 
-      {/* Full-slide stack for scroll reading — always fully visible on mobile */}
+      {/* Full-slide stack for scroll reading - always fully visible on mobile */}
       <details className="pw-deck-stack md:hidden">
         <summary className="cursor-pointer text-sm text-moss py-2">
           Scroll all slides

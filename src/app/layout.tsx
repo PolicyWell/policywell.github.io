@@ -23,7 +23,7 @@ const ICON_V = "20260723b";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
+    default: "PolicyWell - The Agentic AI Layer for the Insurance Industry",
     template: "%s · PolicyWell",
   },
   description:
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "PolicyWell",
-    title: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
+    title: "PolicyWell - The Agentic AI Layer for the Insurance Industry",
     description:
       "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
     images: [
@@ -79,13 +79,13 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1024,
         height: 1024,
-        alt: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
+        alt: "PolicyWell - The Agentic AI Layer for the Insurance Industry",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PolicyWell — The Agentic AI Layer for the Insurance Industry",
+    title: "PolicyWell - The Agentic AI Layer for the Insurance Industry",
     description:
       "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
     images: [OG_IMAGE],

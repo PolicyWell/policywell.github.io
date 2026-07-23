@@ -240,7 +240,7 @@ function collectSuitabilityFlags(books: FirmAdvisorBook[]): SuitabilityFlag[] {
           clientName: client.profile.displayName,
           advisorName: book.advisor.name,
           severity: "info",
-          message: `Review priority ${scores.reviewPriorityScore} — schedule compliance check.`,
+          message: `Review priority ${scores.reviewPriorityScore} - schedule compliance check.`,
         });
       }
       const unverified = docs.filter((d) => !d.verified).length;

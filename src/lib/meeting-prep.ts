@@ -86,7 +86,7 @@ export function generateMeetingPrep(
 
 export function meetingPrepToMarkdown(pack: MeetingPrepPack): string {
   const lines: string[] = [
-    `# Meeting preparation — ${pack.clientName}`,
+    `# Meeting preparation - ${pack.clientName}`,
     ``,
     `Generated ${new Date(pack.generatedAt).toLocaleString()} by PolicyWell.`,
     ``,
@@ -100,7 +100,7 @@ export function meetingPrepToMarkdown(pack: MeetingPrepPack): string {
   if (pack.approvedRecommendations.length) {
     lines.push(``, `## Approved recommendations`);
     for (const r of pack.approvedRecommendations) {
-      lines.push(`- **${r.title}** — ${r.rationale}`);
+      lines.push(`- **${r.title}** - ${r.rationale}`);
     }
   }
 
@@ -129,7 +129,7 @@ export function meetingPrepToMarkdown(pack: MeetingPrepPack): string {
     ...pack.assumptions.map((a) => `- ${a}`),
     ``,
     `---`,
-    `PolicyWell — recommendations require human approval; scores are deterministic and explainable.`,
+    `PolicyWell - recommendations require human approval; scores are deterministic and explainable.`,
   );
 
   return lines.join("\n");

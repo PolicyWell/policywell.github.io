@@ -65,7 +65,7 @@ export default function ImoDashboardPage() {
             <h1 className="font-display text-4xl text-pine">IMO dashboard</h1>
             <p className="text-stone mt-2 max-w-2xl">
               Advisor activity, carrier analytics, and a standardized annual
-              review pipeline — all derived from the deterministic score engine.
+              review pipeline - all derived from the deterministic score engine.
             </p>
           </div>
           <button
@@ -79,7 +79,7 @@ export default function ImoDashboardPage() {
 
         {!analytics ? (
           <p className="text-stone animate-rise-delay">
-            No advisor data loaded — load the demo data to begin.
+            No advisor data loaded - load the demo data to begin.
           </p>
         ) : (
           <>

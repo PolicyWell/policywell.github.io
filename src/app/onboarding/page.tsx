@@ -71,7 +71,7 @@ export default function OnboardingPage() {
         <section className="animate-rise">
           <h1 className="font-display text-4xl text-pine mb-2">Conversational onboarding</h1>
           <p className="text-stone mb-6 max-w-xl">
-            Not a form — an interview. Say things like “I have three kids” and PolicyWell structures your household, goals, and insurance context.
+            Not a form - an interview. Say things like “I have three kids” and PolicyWell structures your household, goals, and insurance context.
           </p>
 
           <div className="pw-panel p-4 md:p-6 min-h-[420px] flex flex-col shadow-[var(--shadow-soft)]">
@@ -256,7 +256,7 @@ function Row({
     <div className="flex items-start justify-between gap-3 border-b border-pine/5 pb-2">
       <dt className="text-stone">{label}</dt>
       <dd className="text-right">
-        <div className="text-ink">{value ?? "—"}</div>
+        <div className="text-ink">{value ?? "-"}</div>
         <div className="text-[11px] text-stone">{Math.round(conf * 100)}%</div>
       </dd>
     </div>

@@ -31,7 +31,7 @@ export const GUIDES_NAV: readonly DocsNavGroup[] = [
   },
 ];
 
-/** API Reference tab sidebar — full endpoint catalog. */
+/** API Reference tab sidebar - full endpoint catalog. */
 export const API_NAV: readonly DocsNavGroup[] = [
   {
     title: "API Reference",

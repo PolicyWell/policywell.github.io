@@ -236,7 +236,7 @@ export function runTool(
           ok: true,
           summary:
             approved.length === 0
-              ? "No approved recommendations yet — approve first."
+              ? "No approved recommendations yet - approve first."
               : `Follow-up tasks now total ${tasks.length} (${approved.length} approved source(s)).`,
           data: tasks.map((t) => ({
             id: t.id,

@@ -46,7 +46,7 @@ export default function EngineeringDocsPage() {
         <p className="pw-docs-lede">
           Architecture overview for the PolicyWell insurance intelligence
           platform. Public documentation describes product capabilities and
-          integration contracts — not internal delivery planning.
+          integration contracts - not internal delivery planning.
         </p>
       </header>
 
@@ -68,25 +68,25 @@ export default function EngineeringDocsPage() {
             <Link href="/docs/api" className="pw-docs-inline-link">
               API reference
             </Link>{" "}
-            — REST contract for backend wiring
+            - REST contract for backend wiring
           </li>
           <li>
             <Link href="/docs/cli" className="pw-docs-inline-link">
               CLI
             </Link>{" "}
-            — batch and enterprise automation (Preview)
+            - batch and enterprise automation (Preview)
           </li>
           <li>
             <Link href="/openapi.json" className="pw-docs-inline-link">
               OpenAPI
             </Link>{" "}
-            — machine-readable endpoint spec
+            - machine-readable endpoint spec
           </li>
           <li>
             <Link href="/agent" className="pw-docs-inline-link">
               Assistant
             </Link>{" "}
-            — grounded insurance intelligence chat
+            - grounded insurance intelligence chat
           </li>
         </ul>
       </section>
@@ -94,10 +94,10 @@ export default function EngineeringDocsPage() {
       <section className="pw-docs-section">
         <h2>Design principles</h2>
         <ul className="pw-docs-bullet-list">
-          <li>Context first — household and policy data before recommendations</li>
-          <li>Explainable outputs — scores and answers cite available evidence</li>
-          <li>Human approval — licensed review before client-facing delivery</li>
-          <li>Deterministic core — analysis tools remain auditable and repeatable</li>
+          <li>Context first - household and policy data before recommendations</li>
+          <li>Explainable outputs - scores and answers cite available evidence</li>
+          <li>Human approval - licensed review before client-facing delivery</li>
+          <li>Deterministic core - analysis tools remain auditable and repeatable</li>
         </ul>
         <p className="pw-docs-note">
           Internal delivery notes and planning artifacts are not published on

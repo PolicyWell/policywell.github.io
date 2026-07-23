@@ -9,7 +9,7 @@ export type ConfidenceLevel = "high" | "medium" | "low";
 
 export interface FieldConfidence<T> {
   value: T | null;
-  confidence: number; // 0–1
+  confidence: number; // 0-1
   source?: string;
   missing?: boolean;
 }

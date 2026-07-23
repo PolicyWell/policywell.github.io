@@ -47,8 +47,8 @@ Then open http://localhost:3000/agent
 | `You are using Node.js 18` / engine errors | Upgrade Node to 20.9+ |
 | `Cannot find module …` | Delete `node_modules` and `package-lock.json`, then `npm install` |
 | Port 3000 in use | `npm run dev -- -p 3001` and open that port |
-| No `/agent` route (404) | You have an old copy — use the latest bundle or pull latest commits |
-| Bundle clone looks empty | `git clone <file>.bundle PW-MVP && cd PW-MVP` — must see `src/app/agent` |
+| No `/agent` route (404) | You have an old copy - use the latest bundle or pull latest commits |
+| Bundle clone looks empty | `git clone <file>.bundle PW-MVP && cd PW-MVP` - must see `src/app/agent` |
 
 Verify the agent files exist:
 
