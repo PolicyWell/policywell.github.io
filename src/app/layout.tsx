@@ -90,6 +90,9 @@ export const metadata: Metadata = {
       "Analyze Illustrations & Policies. Recommendation Actions. Aid Human Control.",
     images: [OG_IMAGE],
   },
+  verification: {
+    google: "YWZ2M2Q486Ke411V0zJ6FkhO6ykrmZN9WYEexjrutF4",
+  },
   manifest: `/site.webmanifest?v=${ICON_V}`,
 };
 
@@ -105,6 +108,10 @@ export default function RootLayout({
     >
       <head>
         {/* Explicit tags so every static route (including 404) gets the shield mark. */}
+        <meta
+          name="google-site-verification"
+          content="YWZ2M2Q486Ke411V0zJ6FkhO6ykrmZN9WYEexjrutF4"
+        />
         <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="any" />
         <link
           rel="icon"
