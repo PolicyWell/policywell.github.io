@@ -207,7 +207,7 @@ export function QuoteRequestForm() {
             type="tel"
             name="phone"
             autoComplete="tel"
-            placeholder="(415) 738-7727"
+            placeholder="(470) 887-0449"
             value={form.phone}
             onChange={(e) => update("phone", e.target.value)}
           />
