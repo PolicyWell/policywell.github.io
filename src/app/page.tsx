@@ -5,11 +5,11 @@ import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 
 const AUDIENCES = [
-  { href: "/agent", label: "Individuals and families" },
+  { href: "/agent", label: "Individuals and Families" },
   { href: "/commercial", label: "Businesses" },
-  { href: "/login", label: "Producers and advisors" },
+  { href: "/login", label: "Producers and Advisors" },
   { href: "/pricing", label: "MGAs and IMOs" },
-  { href: "/docs/api", label: "Insurance carriers" },
+  { href: "/docs/api", label: "Insurance Carriers" },
 ] as const;
 
 const ENGINE = [
