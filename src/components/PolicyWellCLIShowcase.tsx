@@ -119,7 +119,7 @@ function CliAgentSession({
   inputId: string;
 }) {
   const readyHint: TerminalLine[] =
-    audience.theme === "commercial"
+    audience.id === "commercial"
       ? [
           { text: "", tone: "blank" },
           {
@@ -489,10 +489,19 @@ export function PolicyWellCLIShowcase({
   const tabsId = useId();
   const [activeId, setActiveId] = useState(CLI_AUDIENCES[0].id);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [appearanceByAudience, setAppearanceByAudience] = useState<
+    Record<string, "light" | "dark">
+  >(() =>
+    Object.fromEntries(
+      CLI_AUDIENCES.map((a) => [a.id, a.defaultAppearance ?? "light"]),
+    ),
+  );
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const audience =
     CLI_AUDIENCES.find((a) => a.id === activeId) ?? CLI_AUDIENCES[0];
+  const appearance = appearanceByAudience[audience.id] ?? "light";
+  const isDark = appearance === "dark";
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -505,6 +514,13 @@ export function PolicyWellCLIShowcase({
   const selectTab = useCallback((id: string) => {
     setActiveId(id);
   }, []);
+
+  const setAppearance = useCallback(
+    (mode: "light" | "dark") => {
+      setAppearanceByAudience((prev) => ({ ...prev, [activeId]: mode }));
+    },
+    [activeId],
+  );
 
   const onTabKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const idx = CLI_AUDIENCES.findIndex((a) => a.id === activeId);
@@ -546,9 +562,7 @@ export function PolicyWellCLIShowcase({
         </div>
       )}
 
-      <div
-        className={`pw-cli-window ${audience.theme === "commercial" ? "pw-cli-window-commercial" : ""}`}
-      >
+      <div className={`pw-cli-window ${isDark ? "pw-cli-window-dark" : ""}`}>
         <div className="pw-cli-chrome">
           <div className="pw-cli-traffic" aria-hidden>
             <span className="pw-cli-dot pw-cli-dot-red" />
@@ -558,7 +572,28 @@ export function PolicyWellCLIShowcase({
           <p className="pw-cli-title">
             {audience.chromeTitle ?? "PolicyWell - Insurance Intelligence Agent"}
           </p>
-          <span className="pw-cli-chrome-spacer" aria-hidden />
+          <div
+            className="pw-cli-theme-toggle"
+            role="group"
+            aria-label={`${audience.label} terminal appearance`}
+          >
+            <button
+              type="button"
+              className={`pw-cli-theme-btn ${!isDark ? "is-active" : ""}`}
+              aria-pressed={!isDark}
+              onClick={() => setAppearance("light")}
+            >
+              Light
+            </button>
+            <button
+              type="button"
+              className={`pw-cli-theme-btn ${isDark ? "is-active" : ""}`}
+              aria-pressed={isDark}
+              onClick={() => setAppearance("dark")}
+            >
+              Dark
+            </button>
+          </div>
         </div>
 
         <div
@@ -581,9 +616,7 @@ export function PolicyWellCLIShowcase({
                 aria-selected={selected}
                 aria-controls={`${tabsId}-panel-${tab.id}`}
                 tabIndex={selected ? 0 : -1}
-                className={`pw-cli-tab ${selected ? "is-active" : ""} ${
-                  tab.theme === "commercial" ? "pw-cli-tab-commercial" : ""
-                }`}
+                className={`pw-cli-tab ${selected ? "is-active" : ""}`}
                 onClick={() => selectTab(tab.id)}
               >
                 <span className="pw-cli-tab-full">{tab.label}</span>

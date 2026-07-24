@@ -20,8 +20,8 @@ export type CliAudience = {
   shortLabel: string;
   lines: TerminalLine[];
   architecture?: string[];
-  /** Visual variant - commercial uses a distinct industrial terminal theme. */
-  theme?: "default" | "commercial";
+  /** Preferred terminal appearance when this audience is first opened. */
+  defaultAppearance?: "light" | "dark";
   /** Optional chrome title override when this audience is active. */
   chromeTitle?: string;
 };
@@ -181,7 +181,7 @@ export const CLI_AUDIENCES: CliAudience[] = [
     id: "commercial",
     label: "Commercial",
     shortLabel: "Commercial",
-    theme: "commercial",
+    defaultAppearance: "dark",
     chromeTitle: "PolicyWell · Commercial Risk",
     lines: [
       { text: "$ pw commercial assess-business", tone: "command", delayMs: 70 },

@@ -1660,8 +1660,8 @@ body:has(.pw-404) > .pw-site-footer {
     0 1px 0 rgba(255, 255, 255, 0.55) inset;
 }
 
-/* Commercial Risk - industrial slate terminal (distinct from personal lines) */
-.pw-cli-window-commercial {
+/* Dark industrial terminal (available for every CLI audience) */
+.pw-cli-window-dark {
   border-color: rgba(42, 48, 56, 0.55);
   background: #151a1f;
   box-shadow:
@@ -1669,107 +1669,107 @@ body:has(.pw-404) > .pw-site-footer {
     0 1px 0 rgba(255, 255, 255, 0.04) inset;
 }
 
-.pw-cli-window-commercial .pw-cli-chrome {
+.pw-cli-window-dark .pw-cli-chrome {
   background: linear-gradient(180deg, #222830 0%, #1a1f26 100%);
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-.pw-cli-window-commercial .pw-cli-title {
+.pw-cli-window-dark .pw-cli-title {
   color: rgba(232, 236, 240, 0.88);
 }
 
-.pw-cli-window-commercial .pw-cli-tabs {
+.pw-cli-window-dark .pw-cli-tabs {
   background: #12161b;
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-.pw-cli-window-commercial .pw-cli-tab {
+.pw-cli-window-dark .pw-cli-tab {
   color: rgba(186, 196, 206, 0.72);
 }
 
-.pw-cli-window-commercial .pw-cli-tab:hover {
+.pw-cli-window-dark .pw-cli-tab:hover {
   color: #e8ecf0;
   background: rgba(255, 255, 255, 0.04);
 }
 
-.pw-cli-window-commercial .pw-cli-tab.is-active {
+.pw-cli-window-dark .pw-cli-tab.is-active {
   color: #f0d9a8;
   background: rgba(194, 161, 90, 0.14);
   box-shadow: inset 0 -2px 0 #c2a15a;
 }
 
-.pw-cli-tab-commercial:not(.is-active) {
+.pw-cli-tab-dark:not(.is-active) {
   color: inherit;
 }
 
-.pw-cli-window-commercial .pw-cli-body {
+.pw-cli-window-dark .pw-cli-body {
   background:
     linear-gradient(180deg, rgba(194, 161, 90, 0.04), transparent 28%),
     #0f1318;
   color: #d7dde4;
 }
 
-.pw-cli-window-commercial .pw-cli-pre {
+.pw-cli-window-dark .pw-cli-pre {
   color: #d7dde4;
 }
 
-.pw-cli-window-commercial .pw-cli-line-command {
+.pw-cli-window-dark .pw-cli-line-command {
   color: #f0d9a8;
 }
 
-.pw-cli-window-commercial .pw-cli-line-success {
+.pw-cli-window-dark .pw-cli-line-success {
   color: #7dcea0;
 }
 
-.pw-cli-window-commercial .pw-cli-line-muted {
+.pw-cli-window-dark .pw-cli-line-muted {
   color: rgba(186, 196, 206, 0.72);
 }
 
-.pw-cli-window-commercial .pw-cli-line-warn {
+.pw-cli-window-dark .pw-cli-line-warn {
   color: #e0b45c;
 }
 
-.pw-cli-window-commercial .pw-cli-line-accent {
+.pw-cli-window-dark .pw-cli-line-accent {
   color: #f0d9a8;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
-.pw-cli-window-commercial .pw-cli-line-dim {
+.pw-cli-window-dark .pw-cli-line-dim {
   color: rgba(186, 196, 206, 0.55);
 }
 
-.pw-cli-window-commercial .pw-cli-line-default {
+.pw-cli-window-dark .pw-cli-line-default {
   color: #d7dde4;
 }
 
-.pw-cli-window-commercial .pw-cli-prompt {
+.pw-cli-window-dark .pw-cli-prompt {
   color: #c2a15a;
 }
 
-.pw-cli-window-commercial .pw-cli-prompt-input {
+.pw-cli-window-dark .pw-cli-prompt-input {
   color: #e8ecf0;
 }
 
-.pw-cli-window-commercial .pw-cli-prompt-input::placeholder {
+.pw-cli-window-dark .pw-cli-prompt-input::placeholder {
   color: rgba(186, 196, 206, 0.45);
 }
 
-.pw-cli-window-commercial .pw-cli-skip-hint {
+.pw-cli-window-dark .pw-cli-skip-hint {
   color: rgba(186, 196, 206, 0.55);
 }
 
-.pw-cli-window-commercial .pw-cli-cursor {
+.pw-cli-window-dark .pw-cli-cursor {
   background: #c2a15a;
 }
 
-.pw-cli-window-commercial .pw-cli-arch-chip {
+.pw-cli-window-dark .pw-cli-arch-chip {
   background: rgba(194, 161, 90, 0.12);
   border-color: rgba(194, 161, 90, 0.28);
   color: #f0d9a8;
 }
 
-.pw-cli-window-commercial .pw-cli-arch-arrow {
+.pw-cli-window-dark .pw-cli-arch-arrow {
   color: rgba(186, 196, 206, 0.45);
 }
 
@@ -1837,6 +1837,72 @@ body:has(.pw-404) > .pw-site-footer {
   flex-shrink: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+.pw-cli-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 47, 40, 0.14);
+  background: rgba(255, 255, 255, 0.65);
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.pw-cli-theme-btn {
+  border: 0;
+  background: transparent;
+  color: var(--stone);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.pw-cli-theme-btn:hover {
+  color: var(--pine);
+}
+
+.pw-cli-theme-btn.is-active {
+  background: var(--pine);
+  color: var(--foam);
+}
+
+.pw-cli-window-dark .pw-cli-theme-toggle {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pw-cli-window-dark .pw-cli-theme-btn {
+  color: rgba(186, 196, 206, 0.72);
+}
+
+.pw-cli-window-dark .pw-cli-theme-btn:hover {
+  color: #e8ecf0;
+}
+
+.pw-cli-window-dark .pw-cli-theme-btn.is-active {
+  background: rgba(194, 161, 90, 0.22);
+  color: #f0d9a8;
+}
+
+@media (max-width: 640px) {
+  .pw-cli-title {
+    position: static;
+    transform: none;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    padding: 0 0.35rem;
+    max-width: none;
+  }
 }
 
 .pw-cli-tabs {
