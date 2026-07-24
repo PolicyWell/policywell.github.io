@@ -123,7 +123,6 @@ export function AppNav({ role }: { role?: string }) {
     { href: "/agent", label: "Agent" },
     { href: "/docs", label: "Docs" },
     { href: "/workspace", label: "Workspace" },
-    { href: "/commercial", label: "Commercial" },
     { href: "/onboarding", label: "Onboarding" },
     { href: "/profile", label: "Profile" },
     { href: "/upload", label: "Upload" },
