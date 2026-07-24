@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
   const iconSize = large ? 48 : 32;
