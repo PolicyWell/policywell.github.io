@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
   const iconSize = large ? 48 : 32;
@@ -31,6 +32,23 @@ export function BrandMark({ large = false }: { large?: boolean }) {
 }
 
 export function SiteNav() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    function onResize() {
+      if (window.innerWidth >= 768) setOpen(false);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   const links = [
     { href: "/agent", label: "Agent" },
     { href: "/pricing", label: "Pricing" },
@@ -41,26 +59,84 @@ export function SiteNav() {
 
   return (
     <header className="pw-shell py-4 md:py-6 animate-rise relative z-30">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center justify-between gap-3">
         <BrandMark />
-        <nav className="flex items-center gap-1 sm:gap-3 text-sm text-stone overflow-x-auto scrollbar-none -mx-1 px-1 pb-0.5">
+        {/* Desktop web: inline links only - no menu button */}
+        <nav className="hidden md:flex items-center gap-3 text-sm text-stone">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="hover:text-pine transition-colors whitespace-nowrap shrink-0 px-2 py-1.5 sm:px-0 sm:py-0"
+              className="hover:text-pine transition-colors whitespace-nowrap"
             >
               {l.label}
             </Link>
           ))}
           <Link
             href="/login"
-            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm whitespace-nowrap shrink-0 ml-1"
+            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
           >
             Sign in
           </Link>
         </nav>
+        {/* Mobile only: hamburger */}
+        <button
+          type="button"
+          className="md:hidden pw-nav-toggle"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="h-5 w-5"
+            aria-hidden
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
+            {open ? (
+              <>
+                <path d="M6 6l12 12" />
+                <path d="M18 6L6 18" />
+              </>
+            ) : (
+              <>
+                <path d="M4 7h16" />
+                <path d="M4 12h16" />
+                <path d="M4 17h16" />
+              </>
+            )}
+          </svg>
+        </button>
       </div>
+
+      {open && (
+        <nav
+          id="mobile-nav"
+          className="md:hidden mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)]"
+        >
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="px-3 py-3 rounded-xl text-stone hover:text-pine hover:bg-pine/5"
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/login"
+            className="pw-btn mt-2 text-center"
+            onClick={() => setOpen(false)}
+          >
+            Sign in
+          </Link>
+        </nav>
+      )}
     </header>
   );
 }
