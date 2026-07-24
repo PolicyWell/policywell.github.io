@@ -44,11 +44,6 @@ const HELP_LINES: TerminalLine[] = [
   { text: "  ask <question>       Grounded policy Q&A", tone: "default" },
   { text: "  clear                Clear interactive history", tone: "default" },
   { text: "  demo                 Replay the scripted audience demo", tone: "default" },
-  { text: "", tone: "blank" },
-  {
-    text: "Switch Policyholder / Carriers / IMOs anytime - the prompt stays on the bottom line.",
-    tone: "dim",
-  },
 ];
 
 function toneClass(tone: TerminalTone = "default"): string {
@@ -121,11 +116,13 @@ export function PolicyWellCLIShowcase({
   const [command, setCommand] = useState("");
   const [busy, setBusy] = useState(false);
   const [demoEpoch, setDemoEpoch] = useState(0);
+  const [simulate, setSimulate] = useState(true);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const logRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const busyRef = useRef(false);
   const seededAudienceRef = useRef<string | null>(null);
+  const firstLoadDoneRef = useRef(false);
 
   const session = useSession();
   const profile = useProfile();
@@ -167,32 +164,28 @@ export function PolicyWellCLIShowcase({
     return parsed;
   }, []);
 
-  // Animate (or instantly show) the active audience script. Prompt stays mounted below.
+  // Play the audience script. First load simulates line-by-line; later tab switches
+  // land on a ready prompt with context parsed silently.
   useEffect(() => {
     const total = audience.lines.length;
+    const shouldSimulate = simulate && !reducedMotion;
     let cancelled = false;
     let timer = 0;
 
     const finish = () => {
       if (cancelled) return;
       setDemoDone(true);
-      const parsed = applyAudienceContext(audience);
-      setHistory([
-        { text: "", tone: "blank" },
-        { text: `✓ ${parsed.statusLine}`, tone: "success" },
-        {
-          text: "Prompt stays on the bottom line. Type a question or `help`.",
-          tone: "dim",
-        },
-      ]);
+      applyAudienceContext(audience);
+      setHistory([]);
+      firstLoadDoneRef.current = true;
+      setSimulate(false);
     };
 
-    // Defer resets so this effect only schedules work (lint-safe).
     timer = window.setTimeout(() => {
       if (cancelled) return;
       setHistory([]);
 
-      if (reducedMotion) {
+      if (!shouldSimulate) {
         setVisibleCount(total);
         finish();
         return;
@@ -219,17 +212,17 @@ export function PolicyWellCLIShowcase({
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [audience, reducedMotion, demoEpoch, applyAudienceContext]);
+  }, [audience, reducedMotion, demoEpoch, simulate, applyAudienceContext]);
 
   useEffect(() => {
     const el = logRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [visibleCount, history, busy, activeId]);
+  }, [visibleCount, history, busy, activeId, demoDone]);
 
   useEffect(() => {
-    if (busy) return;
-    const t = window.setTimeout(() => inputRef.current?.focus(), 80);
+    if (!demoDone || busy) return;
+    const t = window.setTimeout(() => inputRef.current?.focus(), 60);
     return () => window.clearTimeout(t);
   }, [activeId, demoDone, busy]);
 
@@ -274,20 +267,14 @@ export function PolicyWellCLIShowcase({
     if (demoDone) return;
     setVisibleCount(audience.lines.length);
     setDemoDone(true);
-    const parsed = applyAudienceContext(audience);
-    setHistory([
-      { text: "", tone: "blank" },
-      { text: `✓ ${parsed.statusLine}`, tone: "success" },
-      {
-        text: "Prompt stays on the bottom line. Type a question or `help`.",
-        tone: "dim",
-      },
-    ]);
+    applyAudienceContext(audience);
+    setHistory([]);
+    firstLoadDoneRef.current = true;
+    setSimulate(false);
   }
 
   function selectTab(id: string) {
     if (id === activeId) return;
-    // Keep whatever the user is mid-typing on the sticky prompt.
     setActiveId(id);
   }
 
@@ -343,6 +330,7 @@ export function PolicyWellCLIShowcase({
       };
     }
     if (lower === "demo" || lower === "replay") {
+      setSimulate(true);
       return { mode: "demo", lines: [] };
     }
     if (lower === "context" || lower === "who am i") {
@@ -506,7 +494,7 @@ export function PolicyWellCLIShowcase({
           className="pw-cli-panel"
         >
           <div
-            className="pw-cli-log"
+            className="pw-cli-body"
             ref={logRef}
             role="log"
             aria-live="polite"
@@ -539,48 +527,36 @@ export function PolicyWellCLIShowcase({
                 </div>
               )}
             </pre>
-            {!demoDone && (
-              <p className="pw-cli-skip-hint">
-                Click the log to skip · prompt stays below
-              </p>
+            {demoDone && (
+              <form
+                className="pw-cli-prompt-form"
+                onSubmit={onSubmit}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <label className="sr-only" htmlFor={`${tabsId}-cmd`}>
+                  Agent command
+                </label>
+                <span className="pw-cli-prompt" aria-hidden>
+                  $
+                </span>
+                <input
+                  id={`${tabsId}-cmd`}
+                  ref={inputRef}
+                  className="pw-cli-prompt-input"
+                  value={command}
+                  onChange={(e) => setCommand(e.target.value)}
+                  disabled={busy}
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder=""
+                  aria-label="Type a PolicyWell agent command"
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") setCommand("");
+                  }}
+                />
+              </form>
             )}
           </div>
-
-          <form
-            className="pw-cli-prompt-form pw-cli-prompt-sticky"
-            onSubmit={onSubmit}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <label className="sr-only" htmlFor={`${tabsId}-cmd`}>
-              Agent command
-            </label>
-            <span className="pw-cli-prompt" aria-hidden>
-              $
-            </span>
-            <input
-              id={`${tabsId}-cmd`}
-              ref={inputRef}
-              className="pw-cli-prompt-input"
-              value={command}
-              onChange={(e) => setCommand(e.target.value)}
-              disabled={busy}
-              autoComplete="off"
-              spellCheck={false}
-              placeholder={
-                busy
-                  ? "Running…"
-                  : `ask as ${audience.shortLabel.toLowerCase()} or type help`
-              }
-              aria-label="Type a PolicyWell agent command"
-              onKeyDown={(e) => {
-                if (e.key === "Escape") setCommand("");
-              }}
-              onFocus={() => {
-                if (!demoDone) skipDemo();
-              }}
-            />
-            {busy && <span className="pw-cli-cursor" aria-hidden />}
-          </form>
         </div>
       </div>
     </section>
