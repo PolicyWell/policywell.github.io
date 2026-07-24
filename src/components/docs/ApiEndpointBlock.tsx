@@ -1,5 +1,6 @@
 import type { ApiEndpoint, HttpMethod } from "@/lib/api-reference-data";
 import { API_BASE_URL } from "@/lib/api-reference-data";
+import { CopyableCode } from "@/components/docs/CopyableCode";
 
 function methodClass(method: HttpMethod) {
   return `pw-api-method pw-api-method-${method.toLowerCase()}`;
@@ -7,6 +8,7 @@ function methodClass(method: HttpMethod) {
 
 export function ApiEndpointBlock({ endpoint }: { endpoint: ApiEndpoint }) {
   const curl = buildCurl(endpoint);
+  const fullUrl = `${API_BASE_URL}${endpoint.path}`;
 
   return (
     <section
@@ -25,6 +27,11 @@ export function ApiEndpointBlock({ endpoint }: { endpoint: ApiEndpoint }) {
         {endpoint.title}
       </h3>
       <p className="pw-api-endpoint-summary">{endpoint.summary}</p>
+
+      <div className="pw-api-block">
+        <h4>URL</h4>
+        <CopyableCode code={fullUrl} label="Copy endpoint URL" />
+      </div>
 
       {endpoint.params && endpoint.params.length > 0 && (
         <div className="pw-api-block">
@@ -65,24 +72,24 @@ export function ApiEndpointBlock({ endpoint }: { endpoint: ApiEndpoint }) {
           {endpoint.requestBody.description ? (
             <p className="pw-api-endpoint-summary">{endpoint.requestBody.description}</p>
           ) : null}
-          <pre className="pw-api-code">
-            <code>{JSON.stringify(endpoint.requestBody.example, null, 2)}</code>
-          </pre>
+          <CopyableCode
+            code={JSON.stringify(endpoint.requestBody.example, null, 2)}
+            label="Copy request body"
+          />
         </div>
       )}
 
       <div className="pw-api-block">
         <h4>Example response</h4>
-        <pre className="pw-api-code">
-          <code>{JSON.stringify(endpoint.responseExample, null, 2)}</code>
-        </pre>
+        <CopyableCode
+          code={JSON.stringify(endpoint.responseExample, null, 2)}
+          label="Copy example response"
+        />
       </div>
 
       <div className="pw-api-block">
         <h4>cURL</h4>
-        <pre className="pw-api-code">
-          <code>{curl}</code>
-        </pre>
+        <CopyableCode code={curl} label="Copy cURL" />
       </div>
 
       {endpoint.notes && endpoint.notes.length > 0 && (
@@ -106,9 +113,7 @@ function buildCurl(endpoint: ApiEndpoint): string {
   ];
   if (endpoint.requestBody) {
     lines[lines.length - 1] += " \\";
-    lines.push(
-      `  -d '${JSON.stringify(endpoint.requestBody.example)}'`,
-    );
+    lines.push(`  -d '${JSON.stringify(endpoint.requestBody.example)}'`);
   }
   return lines.join("\n");
 }

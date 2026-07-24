@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CopyableCode } from "@/components/docs/CopyableCode";
 import {
   API_BASE_URL,
   API_GROUPS,
@@ -32,9 +33,7 @@ export default function ApiReferenceIndexPage() {
 
       <section className="pw-docs-section">
         <h2>Base URL</h2>
-        <pre className="pw-api-code">
-          <code>{API_BASE_URL}</code>
-        </pre>
+        <CopyableCode code={API_BASE_URL} label="Copy base URL" />
         <p className="pw-docs-body" style={{ marginTop: "0.85rem" }}>
           Authenticate with{" "}
           <code className="pw-api-inline-code">{API_META.authHeader}</code>.
@@ -119,15 +118,16 @@ export default function ApiReferenceIndexPage() {
         <p className="pw-docs-body">
           Errors use a consistent JSON envelope:
         </p>
-        <pre className="pw-api-code">
-          <code>{`{
+        <CopyableCode
+          code={`{
   "error": {
     "code": "validation_error",
     "message": "household_id is required",
     "request_id": "req_01J8ERROR"
   }
-}`}</code>
-        </pre>
+}`}
+          label="Copy error example"
+        />
         <ul className="pw-docs-bullet-list">
           <li>
             <code className="pw-api-inline-code">400</code> validation or malformed request
