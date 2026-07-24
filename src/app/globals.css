@@ -1910,6 +1910,43 @@ body:has(.pw-404) > .pw-site-footer {
   animation-duration: 1.2s;
 }
 
+.pw-cli-prompt-form {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(0.72rem, 2.4vw, 0.84rem);
+  line-height: 1.55;
+}
+
+.pw-cli-prompt-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: rgba(231, 240, 235, 0.95);
+  font: inherit;
+  padding: 0.1rem 0;
+  caret-color: #7ddea0;
+}
+
+.pw-cli-prompt-input::placeholder {
+  color: rgba(143, 175, 160, 0.55);
+}
+
+.pw-cli-prompt-input:disabled {
+  opacity: 0.7;
+}
+
+.pw-cli-skip-hint {
+  margin: 0.65rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(143, 175, 160, 0.75);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pw-cli-cursor {
     animation: none;

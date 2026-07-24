@@ -6,15 +6,56 @@ import {
   useId,
   useRef,
   useState,
+  type FormEvent,
   type KeyboardEvent,
 } from "react";
+import { runAgentTurn, type AgentWorkspace } from "@/lib/agent";
 import {
   CLI_AUDIENCES,
   type CliAudience,
+  type TerminalLine,
   type TerminalTone,
 } from "@/lib/cli-showcase-data";
+import { createEmptyProfile } from "@/lib/profile";
+import { buildDemoSeed } from "@/lib/seed";
+import type { SessionUser } from "@/lib/types";
+import {
+  persistDocuments,
+  persistProfile,
+  persistRecommendations,
+  persistSession,
+  persistTasks,
+  useDocuments,
+  useProfile,
+  useRecommendations,
+  useSession,
+  useTasks,
+} from "@/lib/use-workspace";
 
 const LINE_MS = 48;
+
+const HELP_LINES: TerminalLine[] = [
+  { text: "Interactive PolicyWell Insurance Intelligence Agent", tone: "accent" },
+  { text: "Type a question, or try:", tone: "muted" },
+  { text: "  help                 Show this help", tone: "default" },
+  { text: "  seed                 Load sample household (Alex Rivera)", tone: "default" },
+  { text: "  context              Show live household context", tone: "default" },
+  { text: "  scores               Run deterministic PolicyWell scores", tone: "default" },
+  { text: "  recommend            Generate pending recommendations", tone: "default" },
+  { text: "  ask <question>       Grounded policy Q&A", tone: "default" },
+  { text: "  clear                Clear interactive history", tone: "default" },
+  { text: "  demo                 Replay the scripted audience demo", tone: "default" },
+  { text: "", tone: "blank" },
+  { text: "Tip: free-form questions work too - e.g. “Will my policy lapse?”", tone: "dim" },
+];
+
+const READY_HINT: TerminalLine[] = [
+  { text: "", tone: "blank" },
+  {
+    text: "Ready. Type a question or `help` - press Enter to run.",
+    tone: "dim",
+  },
+];
 
 function toneClass(tone: TerminalTone = "default"): string {
   switch (tone) {
@@ -37,6 +78,20 @@ function toneClass(tone: TerminalTone = "default"): string {
   }
 }
 
+function replyToLines(reply: string): TerminalLine[] {
+  const parts = reply.split("\n");
+  const lines: TerminalLine[] = [{ text: "", tone: "blank" }];
+  for (const part of parts) {
+    if (!part.trim()) {
+      lines.push({ text: "", tone: "blank" });
+      continue;
+    }
+    lines.push({ text: part, tone: "default" });
+  }
+  lines.push({ text: "", tone: "blank" });
+  return lines;
+}
+
 function ArchitectureStrip({ steps }: { steps: string[] }) {
   return (
     <div className="pw-cli-arch" aria-label="Integration architecture">
@@ -54,38 +109,314 @@ function ArchitectureStrip({ steps }: { steps: string[] }) {
   );
 }
 
-function TerminalBody({
+function CliAgentSession({
   audience,
-  visibleCount,
-  done,
   reducedMotion,
+  inputId,
 }: {
   audience: CliAudience;
-  visibleCount: number;
-  done: boolean;
   reducedMotion: boolean;
+  inputId: string;
 }) {
+  const [visibleCount, setVisibleCount] = useState(
+    reducedMotion ? audience.lines.length : 0,
+  );
+  const [done, setDone] = useState(reducedMotion);
+  const [history, setHistory] = useState<TerminalLine[]>(
+    reducedMotion ? READY_HINT : [],
+  );
+  const [command, setCommand] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [demoKey, setDemoKey] = useState(0);
   const bodyRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const busyRef = useRef(false);
+
+  const session = useSession();
+  const profile = useProfile();
+  const documents = useDocuments();
+  const recommendations = useRecommendations();
+  const tasks = useTasks();
+  const latest = useRef({ session, profile, documents, recommendations, tasks });
+
+  useEffect(() => {
+    latest.current = { session, profile, documents, recommendations, tasks };
+  }, [session, profile, documents, recommendations, tasks]);
+
+  // Animate scripted demo; only schedules timeouts (no sync setState on mount path beyond init).
+  useEffect(() => {
+    if (reducedMotion) return;
+    let i = visibleCount;
+    let timer = 0;
+    if (i >= audience.lines.length) return;
+    const tick = () => {
+      i += 1;
+      setVisibleCount(i);
+      if (i >= audience.lines.length) {
+        setDone(true);
+        setHistory(READY_HINT);
+        return;
+      }
+      const next = audience.lines[i];
+      timer = window.setTimeout(tick, next?.delayMs ?? LINE_MS);
+    };
+    timer = window.setTimeout(tick, i === 0 ? 120 : LINE_MS);
+    return () => window.clearTimeout(timer);
+    // Restart only when demoKey bumps (tab remount handles audience changes).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [demoKey, reducedMotion, audience.lines]);
 
   useEffect(() => {
     const el = bodyRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [visibleCount, audience.id]);
+  }, [visibleCount, history, busy, done]);
 
-  const lines = audience.lines.slice(
+  useEffect(() => {
+    if (!done || busy) return;
+    const t = window.setTimeout(() => inputRef.current?.focus(), 120);
+    return () => window.clearTimeout(t);
+  }, [done, busy, demoKey]);
+
+  function ensureSession(): SessionUser {
+    const current = latest.current.session;
+    if (current) return current;
+    const guest: SessionUser = {
+      id: "user_guest",
+      email: "guest@policywell.local",
+      name: "Guest Analyst",
+      role: "policyholder",
+    };
+    persistSession(guest);
+    if (!latest.current.profile) {
+      persistProfile(
+        createEmptyProfile(guest.id, guest.role, guest.name, guest.email),
+      );
+    }
+    return guest;
+  }
+
+  function buildWorkspace(user: SessionUser): AgentWorkspace {
+    const { profile: p, documents: docs, recommendations: recs, tasks: t } =
+      latest.current;
+    return {
+      user,
+      profile:
+        p ?? createEmptyProfile(user.id, user.role, user.name, user.email),
+      documents: docs,
+      recommendations: recs,
+      tasks: t,
+    };
+  }
+
+  function skipDemo() {
+    if (done) return;
+    setVisibleCount(audience.lines.length);
+    setDone(true);
+    setHistory(READY_HINT);
+  }
+
+  function replayDemo() {
+    setCommand("");
+    setHistory([]);
+    if (reducedMotion) {
+      setVisibleCount(audience.lines.length);
+      setDone(true);
+      setHistory(READY_HINT);
+      return;
+    }
+    setVisibleCount(0);
+    setDone(false);
+    setDemoKey((k) => k + 1);
+  }
+
+  function seedDemoHousehold(): TerminalLine[] {
+    const user = ensureSession();
+    const demoUser: SessionUser = {
+      ...user,
+      id: "user_alex",
+      email: "alex@example.com",
+      name: "Alex Rivera",
+      role: "policyholder",
+    };
+    const { profile: p, documents: docs } = buildDemoSeed(demoUser);
+    persistSession(demoUser);
+    persistProfile(p);
+    persistDocuments(docs);
+    persistRecommendations([]);
+    persistTasks([]);
+    latest.current = {
+      ...latest.current,
+      session: demoUser,
+      profile: p,
+      documents: docs,
+      recommendations: [],
+      tasks: [],
+    };
+    return [
+      { text: "✓ Sample household loaded: Alex Rivera", tone: "success" },
+      {
+        text: "✓ Indexed universal life policy ingested (illustrative)",
+        tone: "success",
+      },
+      { text: "Try: scores · recommend · Will my policy lapse?", tone: "dim" },
+      { text: "", tone: "blank" },
+    ];
+  }
+
+  function runAgent(message: string): TerminalLine[] {
+    const user = ensureSession();
+    const workspace = buildWorkspace(user);
+    const result = runAgentTurn(message, workspace);
+    persistProfile(result.workspace.profile);
+    persistRecommendations(result.workspace.recommendations);
+    persistTasks(result.workspace.tasks);
+    latest.current = {
+      ...latest.current,
+      profile: result.workspace.profile,
+      recommendations: result.workspace.recommendations,
+      tasks: result.workspace.tasks,
+    };
+    const toolLines: TerminalLine[] = result.toolResults.map((t) => ({
+      text: `${t.ok ? "✓" : "!"} ${t.tool}: ${t.summary}`,
+      tone: t.ok ? ("success" as const) : ("warn" as const),
+    }));
+    return [
+      ...toolLines,
+      ...replyToLines(result.reply),
+      {
+        text: "synthesis: deterministic · human review required for recommendations",
+        tone: "dim",
+      },
+      { text: "", tone: "blank" },
+    ];
+  }
+
+  function resolveCommand(raw: string): {
+    lines: TerminalLine[];
+    mode?: "clear" | "demo";
+  } {
+    const trimmed = raw.trim();
+    const lower = trimmed.toLowerCase();
+    if (!trimmed) return { lines: [] };
+
+    if (lower === "help" || lower === "?") {
+      return { lines: [...HELP_LINES, { text: "", tone: "blank" }] };
+    }
+    if (lower === "clear") {
+      return {
+        mode: "clear",
+        lines: [
+          {
+            text: "Interactive history cleared. Demo script kept above.",
+            tone: "muted",
+          },
+          { text: "", tone: "blank" },
+        ],
+      };
+    }
+    if (lower === "demo" || lower === "replay") {
+      return { mode: "demo", lines: [] };
+    }
+    if (lower === "seed" || lower === "seed demo" || lower === "load sample") {
+      return { lines: seedDemoHousehold() };
+    }
+    if (lower === "context" || lower === "who am i") {
+      return { lines: runAgent("What do you know about me?") };
+    }
+    if (lower === "scores" || lower === "score") {
+      return {
+        lines: runAgent("Show my PolicyWell scores and policy health."),
+      };
+    }
+    if (
+      lower === "recommend" ||
+      lower === "recs" ||
+      lower === "recommendations"
+    ) {
+      return { lines: runAgent("What do you recommend?") };
+    }
+    const askMatch = trimmed.match(/^ask\s+(.+)$/i);
+    if (askMatch) return { lines: runAgent(askMatch[1]) };
+    return { lines: runAgent(trimmed) };
+  }
+
+  async function submitCommand(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed || busyRef.current) return;
+
+    busyRef.current = true;
+    setBusy(true);
+    setCommand("");
+
+    const echo: TerminalLine[] = [
+      { text: "", tone: "blank" },
+      { text: `$ ${trimmed}`, tone: "command" },
+    ];
+
+    try {
+      await new Promise((r) => window.setTimeout(r, 10));
+      const { lines, mode } = resolveCommand(trimmed);
+      if (mode === "demo") {
+        setHistory((h) => [...h, ...echo]);
+        replayDemo();
+        return;
+      }
+      if (mode === "clear") {
+        setHistory([...echo, ...lines]);
+        return;
+      }
+      if (lines.length) setHistory((h) => [...h, ...echo, ...lines]);
+      else setHistory((h) => [...h, ...echo]);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Command failed.";
+      setHistory((h) => [
+        ...h,
+        ...echo,
+        { text: `! ${msg}`, tone: "warn" },
+        { text: "", tone: "blank" },
+      ]);
+    } finally {
+      busyRef.current = false;
+      setBusy(false);
+    }
+  }
+
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    void submitCommand(command);
+  }
+
+  const scriptLines = audience.lines.slice(
     0,
-    reducedMotion ? audience.lines.length : visibleCount,
+    reducedMotion || done ? audience.lines.length : visibleCount,
   );
 
   return (
-    <div className="pw-cli-body" ref={bodyRef} tabIndex={0} role="log" aria-live="polite">
+    <div
+      className="pw-cli-body"
+      ref={bodyRef}
+      role="log"
+      aria-live="polite"
+      onClick={() => {
+        if (!done) skipDemo();
+        else inputRef.current?.focus();
+      }}
+    >
       {audience.architecture && (
         <ArchitectureStrip steps={audience.architecture} />
       )}
       <pre className="pw-cli-pre">
-        {lines.map((line, i) => (
+        {scriptLines.map((line, i) => (
           <div key={`${audience.id}-${i}`} className={toneClass(line.tone)}>
+            {line.text || "\u00A0"}
+          </div>
+        ))}
+        {history.map((line, i) => (
+          <div
+            key={`h-${i}-${line.tone}-${line.text.slice(0, 24)}`}
+            className={toneClass(line.tone)}
+          >
             {line.text || "\u00A0"}
           </div>
         ))}
@@ -95,13 +426,40 @@ function TerminalBody({
             <span className="pw-cli-cursor" />
           </div>
         )}
-        {done && !reducedMotion && (
-          <div className="pw-cli-cursor-row" aria-hidden>
-            <span className="pw-cli-prompt">$</span>
-            <span className="pw-cli-cursor is-idle" />
-          </div>
-        )}
       </pre>
+
+      {done && (
+        <form
+          className="pw-cli-prompt-form"
+          onSubmit={onSubmit}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <label className="sr-only" htmlFor={inputId}>
+            Agent command
+          </label>
+          <span className="pw-cli-prompt" aria-hidden>
+            $
+          </span>
+          <input
+            id={inputId}
+            ref={inputRef}
+            className="pw-cli-prompt-input"
+            value={command}
+            onChange={(e) => setCommand(e.target.value)}
+            disabled={busy}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder={busy ? "Running…" : "ask a question or type help"}
+            aria-label="Type a PolicyWell agent command"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setCommand("");
+            }}
+          />
+          {busy && <span className="pw-cli-cursor" aria-hidden />}
+        </form>
+      )}
+
+      {!done && <p className="pw-cli-skip-hint">Click to skip demo and type…</p>}
     </div>
   );
 }
@@ -119,8 +477,6 @@ export function PolicyWellCLIShowcase({
 }) {
   const tabsId = useId();
   const [activeId, setActiveId] = useState(CLI_AUDIENCES[0].id);
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [done, setDone] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -134,33 +490,6 @@ export function PolicyWellCLIShowcase({
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
-
-  useEffect(() => {
-    setVisibleCount(0);
-    setDone(false);
-
-    if (reducedMotion) {
-      setVisibleCount(audience.lines.length);
-      setDone(true);
-      return;
-    }
-
-    let i = 0;
-    let timer = 0;
-    const tick = () => {
-      i += 1;
-      setVisibleCount(i);
-      if (i >= audience.lines.length) {
-        setDone(true);
-        return;
-      }
-      const next = audience.lines[i];
-      const wait = next?.delayMs ?? LINE_MS;
-      timer = window.setTimeout(tick, wait);
-    };
-    timer = window.setTimeout(tick, 120);
-    return () => window.clearTimeout(timer);
-  }, [audience, reducedMotion]);
 
   const selectTab = useCallback((id: string) => {
     setActiveId(id);
@@ -192,7 +521,7 @@ export function PolicyWellCLIShowcase({
   return (
     <section
       className={`pw-cli ${compact ? "pw-cli-compact" : ""} ${className}`}
-      aria-label="PolicyWell CLI showcase"
+      aria-label="PolicyWell Insurance Intelligence Agent"
     >
       {!(hideIntro || compact) && (
         <div className="pw-cli-intro">
@@ -253,11 +582,11 @@ export function PolicyWellCLIShowcase({
           aria-labelledby={`${tabsId}-${audience.id}`}
           className="pw-cli-panel"
         >
-          <TerminalBody
+          <CliAgentSession
+            key={`${audience.id}-${reducedMotion ? "rm" : "motion"}`}
             audience={audience}
-            visibleCount={visibleCount}
-            done={done}
             reducedMotion={reducedMotion}
+            inputId={`${tabsId}-cmd`}
           />
         </div>
       </div>
