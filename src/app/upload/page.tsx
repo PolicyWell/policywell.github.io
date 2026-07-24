@@ -110,11 +110,6 @@ export default function UploadPage() {
       <main className="pw-shell py-10 space-y-8">
         <div className="animate-rise">
           <h1 className="font-display text-4xl text-pine">Insurance ingestion</h1>
-          <p className="text-stone mt-2 max-w-2xl">
-            Upload policy PDFs, illustrations, ledgers, or 1035 forms. The document
-            ingestion engine runs OCR locally, extracts structured fields, and you
-            verify before anything is trusted.
-          </p>
         </div>
 
         <div
@@ -137,10 +132,6 @@ export default function UploadPage() {
               onChange={(e) => onFiles(e.target.files)}
             />
           </label>
-          <p className="mt-4 text-xs text-stone">
-            Tip: name a file with “IUL” to load the illustrative indexed universal
-            life extraction example.
-          </p>
         </div>
 
         <details className="pw-panel p-5 animate-rise-delay">
@@ -148,8 +139,7 @@ export default function UploadPage() {
             Email import
           </summary>
           <p className="text-sm text-stone mt-2 mb-3">
-            Paste a forwarded email (headers optional). The body is OCR-parsed and
-            extracted like any uploaded document.
+            Paste a forwarded email (headers optional).
           </p>
           <textarea
             className="pw-input min-h-[140px] font-mono text-xs"
