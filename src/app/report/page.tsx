@@ -74,12 +74,24 @@ export default function ReportPage() {
       <main className="pw-shell py-10 space-y-6">
         <div className="animate-rise flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-display text-4xl text-pine">Meeting preparation</h1>
+            <h1 className="font-display text-4xl text-pine">Intelligence reports</h1>
             <p className="text-stone mt-2">
-              Advisor receives client summary, advisor summary, questions, warnings, and recommended follow-up.
+              Personal Policy Intelligence Report from verified household facts
+              and human-approved recommendations. Commercial Risk, Coverage Gap,
+              Preliminary Underwriting, Carrier Appetite, and Renewal Readiness
+              reports are available as Preview contracts in the{" "}
+              <Link href="/docs/api" className="underline">
+                API
+              </Link>{" "}
+              and demoed in the{" "}
+              <Link href="/commercial" className="underline">
+                Commercial Risk Workspace
+              </Link>
+              .
             </p>
             <p className="text-xs text-stone mt-1">
-              Generated {new Date(report.generatedAt).toLocaleString()}
+              Generated {new Date(report.generatedAt).toLocaleString()} · Distinguishes
+              verified facts, model-derived scores, and human-approved recommendations.
             </p>
           </div>
           <button type="button" className="pw-btn" onClick={downloadMeetingPrep}>

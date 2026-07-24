@@ -8,28 +8,44 @@ export const metadata = {
 
 const LAYERS = [
   {
-    title: "Document ingestion",
-    body: "Upload and parse policies, illustrations, and statements into structured fields with verification before trust.",
+    title: "Document Intelligence",
+    body: "Personal and commercial document ingest with verification before trust.",
   },
   {
-    title: "Household and policy context",
-    body: "Combine verified document fields with household goals, dependents, income, and carrier context.",
+    title: "Personal Policy Intelligence",
+    body: "Household and life/annuity policy context with deterministic scoring.",
   },
   {
-    title: "Policy analysis engine",
-    body: "Deterministic scoring for policy health, funding adequacy, lapse risk, and related signals.",
+    title: "Illustration Intelligence",
+    body: "Illustration extraction, funding projections, and comparison support.",
   },
   {
-    title: "Recommendation and approval",
-    body: "Generate grounded recommendations that remain pending until licensed professional review.",
+    title: "Commercial Risk Intelligence",
+    body: "Business profiles, coverage gaps, loss runs, certificates, and commercial scores.",
   },
   {
-    title: "Assistant and reports",
-    body: "Grounded Q&A, client-ready reports, and follow-up tasks driven by approved recommendations.",
+    title: "Underwriting Intelligence",
+    body: "Preliminary risk tiers and evidence checklists - decision support only.",
   },
   {
-    title: "Enterprise surfaces",
-    body: "Advisor, IMO, and carrier workflows plus planned APIs, webhooks, CLI, and batch jobs.",
+    title: "Carrier Appetite Intelligence",
+    body: "Normalized appetite matches with sources, confidence, and non-fit reasons.",
+  },
+  {
+    title: "Distribution Intelligence",
+    body: "Advisor, agency, MGA/IMO, and producer workflow surfaces.",
+  },
+  {
+    title: "Claims Intelligence",
+    body: "Claims and loss-run timelines feeding risk and renewal readiness.",
+  },
+  {
+    title: "Recommendation Engine",
+    body: "Grounded recommendations that stay pending until human approval.",
+  },
+  {
+    title: "Governance and Audit Layer",
+    body: "Role-based access patterns, evidence citations, and append-only audit references in the API contract.",
   },
 ];
 
@@ -49,6 +65,27 @@ export default function EngineeringDocsPage() {
           integration contracts - not internal delivery planning.
         </p>
       </header>
+
+      <section className="pw-docs-section">
+        <h2>Insurance Intelligence Engine</h2>
+        <pre className="pw-docs-pre overflow-x-auto text-sm leading-relaxed">
+{`Insurance Intelligence Engine
+├── Document Intelligence
+├── Personal Policy Intelligence
+├── Illustration Intelligence
+├── Commercial Risk Intelligence
+├── Underwriting Intelligence
+├── Carrier Appetite Intelligence
+├── Distribution Intelligence
+├── Claims Intelligence
+├── Recommendation Engine
+└── Governance and Audit Layer`}
+        </pre>
+        <p className="pw-docs-lede mt-4">
+          Commercial and underwriting modules extend the same engine through
+          line-of-business schemas - not a separate application.
+        </p>
+      </section>
 
       <section className="pw-docs-section">
         <h2>Platform layers</h2>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { IntelligenceModes } from "@/components/IntelligenceModes";
 import { AppNav, ConfidenceBadge } from "@/components/ui";
 import {
   answerPolicyQuestion,
@@ -111,11 +112,14 @@ export default function WorkspacePage() {
     <div className="flex-1 flex flex-col">
       <AppNav role={session.role} />
       <main className="pw-shell py-10 space-y-8">
-        <div className="animate-rise">
-          <h1 className="font-display text-4xl md:text-5xl text-pine">Agent workspace</h1>
-          <p className="text-stone mt-2 max-w-2xl">
-            Hybrid contextual intelligence - every answer is grounded in who is asking, what they own, and what was uploaded.
-          </p>
+        <div className="animate-rise space-y-4">
+          <div>
+            <h1 className="font-display text-4xl md:text-5xl text-pine">Agent workspace</h1>
+            <p className="text-stone mt-2 max-w-2xl">
+              Hybrid contextual intelligence - every answer is grounded in who is asking, what they own, and what was uploaded.
+            </p>
+          </div>
+          <IntelligenceModes active="household" />
         </div>
 
         {scores && (

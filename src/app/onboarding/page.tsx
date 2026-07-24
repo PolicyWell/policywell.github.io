@@ -19,20 +19,44 @@ export default function OnboardingPage() {
   const [input, setInput] = useState("");
   const [saved, setSaved] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [entity, setEntity] = useState<
+    | "individual_household"
+    | "business"
+    | "producer_advisor"
+    | "agency"
+    | "mga_imo"
+    | "carrier"
+    | null
+  >(null);
 
   const profile = state?.profile;
 
-  const suggestions = useMemo(
-    () => [
+  const suggestions = useMemo(() => {
+    if (entity === "business") {
+      return [
+        "We are a metal fabrication shop in TX with 28 employees.",
+        "Annual revenue is about $2.4M and payroll is $780k.",
+        "We have GL and property but no workers' comp on file.",
+        "Renewal is in about 45 days.",
+        "Please flag cyber and umbrella gaps.",
+      ];
+    }
+    if (entity === "producer_advisor" || entity === "agency" || entity === "mga_imo") {
+      return [
+        "I need a commercial risk review for a machine shop client.",
+        "Which carriers may consider this risk?",
+        "What underwriting requirements are still missing?",
+      ];
+    }
+    return [
       "I'm married and have three kids.",
       "I live in TX and I have a mortgage.",
       "I own a business and make about $180k a year.",
       "I'm 42 and planning for retirement.",
       "I have a Mutual of Omaha Indexed Universal Life policy.",
       "I'm worried about my policy lapsing.",
-    ],
-    [],
-  );
+    ];
+  }, [entity]);
 
   function send(text: string) {
     if (!state || !text.trim()) return;
@@ -71,8 +95,45 @@ export default function OnboardingPage() {
         <section className="animate-rise">
           <h1 className="font-display text-4xl text-pine mb-2">Conversational onboarding</h1>
           <p className="text-stone mb-6 max-w-xl">
-            Not a form - an interview. Say things like “I have three kids” and PolicyWell structures your household, goals, and insurance context.
+            Choose who you are onboarding, then talk naturally. PolicyWell structures
+            personal or commercial context without a long form.
           </p>
+
+          <div className="mb-5 flex flex-wrap gap-2">
+            {(
+              [
+                ["individual_household", "Individual or household"],
+                ["business", "Business"],
+                ["producer_advisor", "Producer or advisor"],
+                ["agency", "Agency"],
+                ["mga_imo", "MGA or IMO"],
+                ["carrier", "Carrier"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                className={`px-3 py-1.5 rounded-full text-xs border ${
+                  entity === id
+                    ? "border-pine/40 bg-pine/10 text-pine"
+                    : "border-pine/15 text-stone hover:text-pine"
+                }`}
+                onClick={() => setEntity(id)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {entity === "business" && (
+            <p className="text-sm text-moss mb-4">
+              Business path selected. For full commercial scores open the{" "}
+              <Link href="/commercial" className="underline">
+                Commercial Risk Workspace
+              </Link>
+              .
+            </p>
+          )}
 
           <div className="pw-panel p-4 md:p-6 min-h-[420px] flex flex-col shadow-[var(--shadow-soft)]">
             <div className="flex-1 space-y-4 overflow-y-auto max-h-[52vh] pr-1">

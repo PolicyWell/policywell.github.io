@@ -9,9 +9,10 @@ export function synthesizeReply(
 ): string {
   if (!toolResults.length) {
     return (
-      "I'm your PolicyWell insurance intelligence agent. Tell me about your household, " +
-      "upload a policy, or ask things like “Will my policy lapse?”, “Run funding scenarios”, " +
-      "“Compare my policies”, or “What do you recommend?”. " +
+      "I'm your PolicyWell insurance intelligence agent. Tell me about a household, " +
+      "a business, or an underwriting case - or ask things like “Will my policy lapse?”, " +
+      "“What commercial coverage is my business missing?”, “Which carriers may consider this risk?”, " +
+      "or “What do you recommend?”. " +
       "I update context before answering, and recommendations stay pending until you approve them."
     );
   }
@@ -107,6 +108,7 @@ export function synthesizeReply(
       case "decide_recommendation":
       case "create_tasks":
       case "ask_carrier":
+      case "assess_commercial_risk":
         parts.push(t.summary);
         break;
       default:

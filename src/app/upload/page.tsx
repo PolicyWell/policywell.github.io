@@ -121,7 +121,11 @@ export default function UploadPage() {
           }}
         >
           <p className="font-display text-2xl text-pine mb-2">Drag & drop</p>
-          <p className="text-stone text-sm mb-4">PDF · Illustration · Annual statement · In-force ledger · 1035</p>
+          <p className="text-stone text-sm mb-4">
+            Personal: policies · illustrations · applications · health questionnaires
+            <br />
+            Commercial: loss runs · certificates · schedules · payroll · cyber questionnaires
+          </p>
           <label className="pw-btn cursor-pointer inline-flex">
             Choose files
             <input

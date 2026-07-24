@@ -49,8 +49,14 @@ export default function ComparePage() {
           <h1 className="font-display text-4xl text-pine">Policy comparison & scenarios</h1>
           <p className="text-stone mt-2 max-w-2xl">
             Deterministic side-by-side comparison with suitability questions,
-            1035 warnings, and funding scenario projections. Recommendations
-            remain subject to human approval.
+            1035 warnings, and funding scenario projections. Supports current vs
+            proposed policy, carrier vs carrier, and product vs product when
+            documents are present. Commercial quote and appetite comparisons
+            route through the{" "}
+            <Link href="/commercial" className="underline">
+              Commercial Risk Workspace
+            </Link>
+            . Recommendations remain subject to human approval.
           </p>
         </div>
 

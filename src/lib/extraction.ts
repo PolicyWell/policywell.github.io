@@ -49,6 +49,54 @@ export function runOcr(filename: string, rawText?: string): string {
 
 export function detectDocumentKind(filename: string, ocrText: string): DocumentKind {
   const blob = `${filename} ${ocrText}`.toLowerCase();
+  // Commercial first so "commercial auto policy" does not collapse to personal policy.
+  if (blob.includes("loss run") || blob.includes("loss_run") || blob.includes("lossrun")) {
+    return "loss_run";
+  }
+  if (blob.includes("certificate of insurance") || blob.includes("acord 25") || /\bcoi\b/.test(blob)) {
+    return "certificate";
+  }
+  if (blob.includes("schedule of values") || blob.includes("schedule_of_values")) {
+    return "schedule_of_values";
+  }
+  if (blob.includes("payroll") && (blob.includes("report") || blob.includes("audit"))) {
+    return "payroll_report";
+  }
+  if (blob.includes("vehicle schedule") || blob.includes("auto schedule")) {
+    return "vehicle_schedule";
+  }
+  if (blob.includes("property schedule") || blob.includes("location schedule")) {
+    return "property_schedule";
+  }
+  if (blob.includes("cyber questionnaire") || blob.includes("cyber security questionnaire")) {
+    return "cyber_questionnaire";
+  }
+  if (
+    blob.includes("claim") &&
+    (blob.includes("notice") || blob.includes("loss") || blob.includes("fnol"))
+  ) {
+    return "claims_document";
+  }
+  if (
+    (blob.includes("commercial") || blob.includes("business")) &&
+    (blob.includes("application") || blob.includes("app "))
+  ) {
+    return "commercial_application";
+  }
+  if (
+    blob.includes("commercial") &&
+    (blob.includes("policy") ||
+      blob.includes("declarations") ||
+      blob.includes("general liability") ||
+      blob.includes("workers comp") ||
+      blob.includes("workers' compensation"))
+  ) {
+    return "commercial_policy";
+  }
+  if (blob.includes("health questionnaire") || blob.includes("medical questionnaire")) {
+    return "health_questionnaire";
+  }
+  if (blob.includes("application") || blob.includes("app_")) return "application";
   if (blob.includes("1035")) return "1035_form";
   if (blob.includes("illustration")) return "illustration";
   if (blob.includes("annual statement") || blob.includes("annual_statement")) return "annual_statement";

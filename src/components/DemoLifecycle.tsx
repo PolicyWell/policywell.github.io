@@ -21,6 +21,25 @@ import {
 } from "@/lib/storage";
 import { clearOnboardingBoot, notifyStore } from "@/lib/use-workspace";
 
+const COMMERCIAL_FLOW = [
+  "Upload business documents",
+  "Extract risk information",
+  "Build business context",
+  "Score coverage and exposure",
+  "Identify missing information",
+  "Match carrier appetite",
+  "Route to licensed producer",
+  "Submit to carrier",
+  "Learn from the outcome",
+] as const;
+
+const COMMERCIAL_SCORES = [
+  { label: "Overall Risk", value: 61 },
+  { label: "Coverage Adequacy", value: 54 },
+  { label: "Underinsured", value: 52 },
+  { label: "Business Health", value: 68 },
+] as const;
+
 const ANALYSIS_STEPS = [
   {
     label: "Reading policy PDF · Ingestion via Secure Insurance APIs",
@@ -250,11 +269,15 @@ export function DemoLifecycle() {
           <p className="pw-demo-lede animate-rise-delay-2">
             Upload a policy. PolicyWell builds household context, reasons across
             the financial picture, and surfaces recommendations - with advisors
-            in the loop.
+            in the loop. The same intelligence engine extends to commercial
+            risk, underwriting support, and carrier appetite matching.
           </p>
           <div className="pw-demo-hero-cta animate-rise-delay-2">
             <a href="#analysis" className="pw-btn">
               See the lifecycle
+            </a>
+            <a href="#commercial" className="pw-btn pw-btn-secondary">
+              Commercial scenario
             </a>
             <button
               type="button"
@@ -417,6 +440,78 @@ export function DemoLifecycle() {
                   </span>
                 ))}
               </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Commercial scenario */}
+      <section className="pw-demo-section pw-demo-recs" id="commercial">
+        <div className="pw-shell">
+          <Reveal>
+            <p className="pw-demo-eyebrow">Commercial scenario</p>
+            <h2 className="pw-demo-h2">Same engine. Business context.</h2>
+            <p className="pw-demo-section-copy">
+              Harbor Fabrication LLC - upload loss runs and schedules, score
+              coverage, match appetite, and hand off to a licensed producer.
+              Decision support only - not a bindable underwriting decision.
+            </p>
+          </Reveal>
+
+          <Reveal delay={80} className="pw-demo-flow" aria-label="Commercial lifecycle">
+            {COMMERCIAL_FLOW.map((step, i, arr) => (
+              <span key={step} className="pw-demo-flow-item">
+                <span className="pw-demo-flow-label">{step}</span>
+                {i < arr.length - 1 && (
+                  <span className="pw-demo-flow-arrow">→</span>
+                )}
+              </span>
+            ))}
+          </Reveal>
+
+          <Reveal delay={120} className="pw-demo-dash mt-8">
+            <div className="pw-demo-dash-top">
+              <div>
+                <p className="pw-demo-dash-kicker">Business</p>
+                <h3 className="pw-demo-dash-title">Harbor Fabrication LLC</h3>
+                <p className="pw-demo-dash-meta">
+                  NAICS 332710 · TX · 28 employees · renewal in 48 days
+                </p>
+              </div>
+              <ScoreRing value={61} label="Risk" />
+            </div>
+            <div className="pw-demo-dash-grid">
+              {COMMERCIAL_SCORES.map((s) => (
+                <div key={s.label} className="pw-demo-metric">
+                  <span className="pw-demo-metric-label">{s.label}</span>
+                  <span className="pw-demo-metric-value">{s.value}</span>
+                  <div className="score-bar mt-3">
+                    <span style={{ width: `${s.value}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="pw-demo-context">
+              <p className="pw-demo-dash-kicker">Signals</p>
+              <div className="pw-demo-chips">
+                {[
+                  "Workers' comp gap",
+                  "Loss runs on file",
+                  "GL present",
+                  "Umbrella review",
+                  "Appetite: moderate",
+                  "Producer review pending",
+                ].map((c) => (
+                  <span key={c} className="pw-demo-chip">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="mt-6">
+              <Link href="/commercial" className="pw-btn">
+                Open Commercial Risk Workspace
+              </Link>
             </div>
           </Reveal>
         </div>
