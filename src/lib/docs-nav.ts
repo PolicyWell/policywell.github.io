@@ -91,6 +91,11 @@ export const USE_CASE_API_LINKS: Record<string, readonly string[]> = {
   "workflow-automation": ["workflows", "recommendations", "reports", "webhooks"],
   "white-label-platform": ["authentication", "organizations"],
   "ai-agent-sdk": ["assistant", "analyses", "recommendations", "batch"],
+  "commercial-risk-intelligence": ["businesses", "commercial", "carrier-appetite"],
+  "underwriting-intelligence": ["underwriting", "commercial", "businesses"],
+  "carrier-appetite-intelligence": ["carrier-appetite", "carrier"],
+  "commercial-document-processing": ["commercial", "documents", "batch"],
+  "embedded-carrier-experiences": ["authentication", "organizations", "carrier"],
 };
 
 export function relatedApiForUseCase(slug: string): RelatedApiLink[] {

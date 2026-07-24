@@ -32,20 +32,22 @@ const WELCOME: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "I'm your PolicyWell Insurance Intelligence Agent. " +
-    "I update your household and policy context before I answer, reason with deterministic scores and documents, " +
+    "I'm your PolicyWell Insurance Intelligence Agent - the explainable layer for personal and commercial insurance. " +
+    "I update household or business context before I answer, reason with deterministic scores and documents, " +
     "and keep every recommendation pending until you approve it.\n\n" +
-    "Click a starter below, load a sample household, or type a question.",
+    "Click a starter below, load a sample household, or open Commercial Risk for the Harbor Fab demo.",
 };
 
 const STARTERS = [
   "I'm married with three kids in TX, and I have an indexed universal life policy.",
   "Will my policy lapse?",
-  "Run funding scenarios.",
+  "What commercial coverage is my business missing?",
+  "Which carriers may consider this risk?",
+  "What underwriting requirements are still missing?",
+  "Review these loss runs.",
+  "How can this business reduce its risk before renewal?",
   "What do you recommend?",
-  "Compare my policies.",
   "What do you know about me?",
-  "Show the evidence supporting this recommendation.",
 ];
 
 export default function AgentPage() {

@@ -50,8 +50,11 @@ export default function TasksPage() {
           <div>
             <h1 className="font-display text-4xl text-pine">Follow-up tasks</h1>
             <p className="text-stone mt-2 max-w-2xl">
-              Approved recommendations become dated tasks. Assign ownership across
-              the firm roster so follow-through is accountable.
+              Approved recommendations become dated tasks. Commercial workspaces
+              also surface renewal deadlines, coverage gaps, certificate expiry,
+              compliance items, and producer/carrier follow-ups as actionable
+              tasks. Assign ownership across the firm roster so follow-through is
+              accountable.
             </p>
           </div>
           <button

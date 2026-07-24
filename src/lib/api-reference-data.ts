@@ -40,7 +40,7 @@ export const API_MCP_HINT = "mcp.policywell.ai";
 export const API_META = {
   title: "API reference",
   description:
-    "REST endpoints for PolicyWell insurance intelligence - policies, documents, analysis, recommendations, webhooks, and enterprise workflows.",
+    "REST endpoints for PolicyWell - personal and commercial insurance intelligence, underwriting decision support, carrier appetite, webhooks, and enterprise workflows.",
   version: "v1",
   authHeader: "Authorization: Bearer pw_test_...",
 } as const;
@@ -1098,6 +1098,400 @@ export const API_GROUPS: readonly ApiGroup[] = [
           id: "job_01J8BATCH",
           status: "running",
           progress: { processed: 420, failed: 3, total: 1000 },
+        },
+      },
+    ],
+  },
+  {
+    slug: "businesses",
+    title: "Businesses",
+    summary: "Commercial business profiles for risk and underwriting context.",
+    status: "Preview",
+    endpoints: [
+      {
+        id: "create-business",
+        method: "POST",
+        path: "/businesses",
+        title: "Create business",
+        summary: "Create a commercial business profile.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            legal_name: "Harbor Fabrication LLC",
+            naics: "332710",
+            state: "TX",
+            annual_revenue: 2400000,
+            employee_count: 28,
+          },
+        },
+        responseExample: {
+          id: "biz_01J8HARBOR",
+          status: "active",
+          legal_name: "Harbor Fabrication LLC",
+          confidence: 0.78,
+          missing_requirements: ["workers_compensation_policy"],
+          human_review_status: "pending",
+          created_at: "2026-07-24T12:00:00Z",
+          updated_at: "2026-07-24T12:00:00Z",
+          model_version: "commercial-risk-0.1",
+          rules_version: "commercial-rules-2026-07",
+          audit_reference: "aud_01J8BIZ",
+        },
+      },
+      {
+        id: "get-business",
+        method: "GET",
+        path: "/businesses/{businessId}",
+        title: "Retrieve business",
+        summary: "Fetch a business profile and derived commercial context.",
+        status: "Preview",
+        params: [
+          {
+            name: "businessId",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Business ID.",
+          },
+        ],
+        responseExample: {
+          id: "biz_01J8HARBOR",
+          status: "active",
+          verified_facts: { naics: "332710", state: "TX" },
+          derived_signals: { renewal_within_days: 48 },
+          confidence: 0.78,
+          assumptions: [
+            "Decision support only - not a bindable underwriting decision",
+          ],
+          missing_requirements: ["workers_compensation_policy"],
+          human_review_status: "pending",
+        },
+      },
+    ],
+  },
+  {
+    slug: "commercial",
+    title: "Commercial risk",
+    summary:
+      "Commercial document ingest, policy analysis, and risk assessment.",
+    status: "Preview",
+    endpoints: [
+      {
+        id: "create-commercial-document",
+        method: "POST",
+        path: "/commercial/documents",
+        title: "Ingest commercial document",
+        summary:
+          "Upload loss runs, certificates, schedules, payroll, or commercial policies.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            business_id: "biz_01J8HARBOR",
+            filename: "loss-runs-2021-2025.pdf",
+            content_type: "application/pdf",
+            document_kind: "loss_run",
+          },
+        },
+        responseExample: {
+          id: "doc_01J8LOSS",
+          status: "extracted",
+          source_document_ids: ["doc_01J8LOSS"],
+          confidence: 0.74,
+          missing_requirements: [],
+          human_review_status: "pending",
+          created_at: "2026-07-24T12:05:00Z",
+        },
+      },
+      {
+        id: "analyze-commercial-policy",
+        method: "POST",
+        path: "/commercial/policies/analyze",
+        title: "Analyze commercial policy",
+        summary: "Extract limits, deductibles, and coverage signals.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            business_id: "biz_01J8HARBOR",
+            document_id: "doc_01J8GL",
+          },
+        },
+        responseExample: {
+          id: "anl_01J8CGL",
+          status: "complete",
+          verified_facts: { line: "general_liability", limit: 1000000 },
+          derived_signals: { adequacy_band: "primary_present" },
+          confidence: 0.81,
+          explanations: [
+            {
+              label: "Limit present",
+              rationale: "GL occurrence limit extracted from declarations",
+            },
+          ],
+          human_review_status: "pending",
+        },
+      },
+      {
+        id: "assess-commercial-risk",
+        method: "POST",
+        path: "/commercial/risks/assess",
+        title: "Assess commercial risk",
+        summary:
+          "Compute Overall Risk, Coverage Adequacy, Underinsured, and Business Health scores.",
+        status: "Preview",
+        requestBody: {
+          example: { business_id: "biz_01J8HARBOR" },
+        },
+        responseExample: {
+          id: "risk_01J8HARBOR",
+          status: "complete",
+          overall_risk_score: 61,
+          coverage_adequacy_score: 54,
+          underinsured_score: 52,
+          business_health_score: 68,
+          confidence: 0.78,
+          missing_requirements: ["workers_compensation_policy"],
+          assumptions: [
+            "Scores are decision support, not carrier underwriting decisions",
+          ],
+          human_review_status: "pending",
+          model_version: "commercial-risk-0.1",
+          rules_version: "commercial-rules-2026-07",
+          audit_reference: "aud_01J8RISK",
+        },
+      },
+      {
+        id: "get-commercial-risk",
+        method: "GET",
+        path: "/commercial/risks/{riskId}",
+        title: "Retrieve commercial risk assessment",
+        summary: "Fetch a prior commercial risk assessment.",
+        status: "Preview",
+        params: [
+          {
+            name: "riskId",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Risk assessment ID.",
+          },
+        ],
+        responseExample: {
+          id: "risk_01J8HARBOR",
+          status: "complete",
+          overall_risk_score: 61,
+          confidence: 0.78,
+        },
+      },
+      {
+        id: "analyze-loss-runs",
+        method: "POST",
+        path: "/loss-runs/analyze",
+        title: "Analyze loss runs",
+        summary: "Structure claims frequency, severity, and open reserves.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            business_id: "biz_01J8HARBOR",
+            document_id: "doc_01J8LOSS",
+          },
+        },
+        responseExample: {
+          id: "loss_anl_01J8",
+          status: "complete",
+          verified_facts: { claim_count: 2, total_incurred: 27700 },
+          derived_signals: { frequency_band: "moderate" },
+          confidence: 0.76,
+          human_review_status: "pending",
+        },
+      },
+    ],
+  },
+  {
+    slug: "underwriting",
+    title: "Underwriting intelligence",
+    summary:
+      "Preliminary underwriting cases and evaluation - decision support only.",
+    status: "Preview",
+    endpoints: [
+      {
+        id: "create-underwriting-case",
+        method: "POST",
+        path: "/underwriting/cases",
+        title: "Create underwriting case",
+        summary: "Open a personal or commercial preliminary underwriting case.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            entity_kind: "commercial",
+            business_id: "biz_01J8HARBOR",
+          },
+        },
+        responseExample: {
+          id: "uw_01J8CASE",
+          status: "intake",
+          human_review_status: "pending",
+          confidence: 0.6,
+          created_at: "2026-07-24T12:10:00Z",
+        },
+        notes: [
+          "Not a bindable quote or final underwriting decision.",
+          "Enterprise availability may require dedicated tenant configuration.",
+        ],
+      },
+      {
+        id: "get-underwriting-case",
+        method: "GET",
+        path: "/underwriting/cases/{caseId}",
+        title: "Retrieve underwriting case",
+        summary: "Fetch case status, missing requirements, and explanations.",
+        status: "Preview",
+        params: [
+          {
+            name: "caseId",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Underwriting case ID.",
+          },
+        ],
+        responseExample: {
+          id: "uw_01J8CASE",
+          status: "needs_evidence",
+          preliminary_risk_tier: "refer",
+          missing_requirements: ["workers_compensation_policy"],
+          human_review_status: "pending",
+        },
+      },
+      {
+        id: "evaluate-underwriting-case",
+        method: "POST",
+        path: "/underwriting/cases/{caseId}/evaluate",
+        title: "Evaluate underwriting case",
+        summary:
+          "Produce preliminary risk tier, pathway, and evidence checklist.",
+        status: "Preview",
+        params: [
+          {
+            name: "caseId",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Underwriting case ID.",
+          },
+        ],
+        responseExample: {
+          id: "uw_01J8CASE",
+          status: "ready_for_review",
+          preliminary_risk_tier: "standard",
+          likely_pathway: "Producer completion → standard carrier submission",
+          confidence: 0.71,
+          assumptions: [
+            "Preliminary intelligence only - carrier underwriter decides",
+          ],
+          human_review_status: "pending",
+          model_version: "uw-intel-0.1",
+          rules_version: "uw-rules-2026-07",
+          audit_reference: "aud_01J8UW",
+        },
+      },
+    ],
+  },
+  {
+    slug: "carrier-appetite",
+    title: "Carrier appetite",
+    summary: "Appetite matching and carrier appetite profiles.",
+    status: "Preview",
+    endpoints: [
+      {
+        id: "match-carrier-appetite",
+        method: "POST",
+        path: "/carrier-appetite/match",
+        title: "Match carrier appetite",
+        summary:
+          "Return explainable appetite fits with evidence requirements and non-fit reasons.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            business_id: "biz_01J8HARBOR",
+            lines: ["general_liability", "workers_compensation"],
+          },
+        },
+        responseExample: {
+          id: "match_01J8",
+          status: "complete",
+          matches: [
+            {
+              carrier: "Harbor Mutual (illustrative)",
+              appetite_fit: "moderate",
+              confidence: 0.58,
+              estimated_premium_range: null,
+              required_evidence: ["loss_runs_5yr", "payroll_report"],
+            },
+          ],
+          human_review_status: "pending",
+        },
+        notes: [
+          "Premium ranges are omitted unless grounded rating inputs exist.",
+          "Never treat matches as guaranteed eligibility.",
+        ],
+      },
+      {
+        id: "get-carrier-appetite",
+        method: "GET",
+        path: "/carriers/{carrierId}/appetite",
+        title: "Retrieve carrier appetite profile",
+        summary: "Fetch a normalized appetite profile for a carrier.",
+        status: "Planned",
+        params: [
+          {
+            name: "carrierId",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Carrier ID.",
+          },
+        ],
+        responseExample: {
+          id: "carrier_01J8",
+          status: "planned",
+          appetite: [],
+          data_freshness: null,
+        },
+      },
+      {
+        id: "report-commercial-risk",
+        method: "POST",
+        path: "/reports/commercial-risk",
+        title: "Generate commercial risk report",
+        summary: "Produce a Commercial Risk Report with verified vs derived sections.",
+        status: "Preview",
+        requestBody: {
+          example: { business_id: "biz_01J8HARBOR", risk_id: "risk_01J8HARBOR" },
+        },
+        responseExample: {
+          id: "rpt_01J8CRISK",
+          status: "ready",
+          download_url: null,
+          human_review_status: "pending",
+        },
+      },
+      {
+        id: "report-preliminary-underwriting",
+        method: "POST",
+        path: "/reports/preliminary-underwriting",
+        title: "Generate preliminary underwriting report",
+        summary:
+          "Produce a Preliminary Underwriting Report clearly labeled as decision support.",
+        status: "Preview",
+        requestBody: {
+          example: { case_id: "uw_01J8CASE" },
+        },
+        responseExample: {
+          id: "rpt_01J8UW",
+          status: "ready",
+          disclaimer:
+            "Not a bindable quote, eligibility guarantee, or carrier decision.",
+          human_review_status: "pending",
         },
       },
     ],

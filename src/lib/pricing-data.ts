@@ -19,7 +19,7 @@ export const PRICING = {
       "Built to power the insurance ecosystem.",
     ] as const,
     supporting:
-      "PolicyWell gives consumers free access to insurance intelligence while advisors, IMOs, and carriers pay for advanced workflows, portfolio insights, APIs, and enterprise infrastructure.",
+      "PolicyWell is the Intelligence Operating System for Insurance - free for consumers, with commercial producer, agency/MGA, IMO, and carrier plans for advanced workflows, APIs, and white-label acquisition tools.",
     primaryCta: { label: "Start Free", href: "/login" },
     secondaryCta: {
       label: "Talk to Sales",
@@ -112,6 +112,79 @@ export const PRICING = {
         ],
       },
       rangeNote: null as string | null,
+    },
+    {
+      id: "commercial-producer",
+      name: "Commercial Producer",
+      audience: "For independent commercial producers",
+      tone: "featured" as PricingTone,
+      popular: false,
+      price: {
+        monthly: { display: "$179", detail: "per producer / month" },
+        annual: { display: "$1,790", detail: "per producer / year" },
+      },
+      subheading:
+        "Commercial risk workspace, gap detection, and preliminary underwriting support.",
+      features: [
+        "Commercial Risk Workspace",
+        "Loss-run and certificate tracking",
+        "Coverage-gap detection",
+        "Carrier appetite matching (illustrative)",
+        "Preliminary underwriting checklists",
+        "Personal lines tools included",
+        "Human approval gates",
+      ],
+      cta: {
+        label: "Start producer trial",
+        href: "/login",
+        variant: "primary" as const,
+      },
+      note: "Independent producers may subscribe directly.",
+      valueStatement:
+        "Prepare cleaner commercial submissions without replacing your AMS.",
+      nestedPlan: null as NestedPlan | null,
+      rangeNote: null as string | null,
+    },
+    {
+      id: "commercial-agency",
+      name: "Commercial Agency / MGA",
+      audience: "For commercial agencies and MGAs",
+      tone: "enterprise" as PricingTone,
+      popular: false,
+      price: {
+        monthly: {
+          display: "Starting at $2,200",
+          detail: "per month",
+        },
+        annual: {
+          display: "Starting at $22,000",
+          detail: "per year",
+        },
+      },
+      subheading:
+        "Seat licensing for producers plus commercial intelligence across the book.",
+      features: [
+        "Producer seat licensing",
+        "Commercial Risk Workspace",
+        "Usage-based commercial document analysis",
+        "Usage-based underwriting intelligence",
+        "Carrier appetite API (Preview)",
+        "Renewal readiness workflows",
+        "Role-based permissions",
+        "White-label options",
+      ],
+      cta: {
+        label: "Talk to Sales",
+        href: "https://www.linkedin.com/company/policywell",
+        variant: "primary" as const,
+      },
+      note:
+        "MGA and IMO customers may license seats for their producers; independents can subscribe directly.",
+      valueStatement:
+        "Scale commercial submission quality across producers without a rip-and-replace.",
+      nestedPlan: null as NestedPlan | null,
+      rangeNote:
+        "Usage-based underwriting intelligence and commercial document analysis available as add-ons.",
     },
     {
       id: "imo",

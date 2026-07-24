@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PolicyWell API",
-    "version": "1.0.0",
-    "description": "REST endpoints for PolicyWell insurance intelligence - policies, documents, analysis, recommendations, webhooks, and enterprise workflows. Status: planned contract for backend wiring."
+    "version": "1.1.0",
+    "description": "REST endpoints for PolicyWell - the Intelligence Operating System for Insurance. Personal and commercial policy, risk, underwriting, and distribution intelligence. Status markers: Live, Preview, Planned, Enterprise. Planned/Preview endpoints are contracts, not operational production APIs."
   },
   "servers": [
     {
@@ -81,6 +81,22 @@
     {
       "name": "Batch jobs",
       "description": "Enterprise batch ingestion and analysis for carriers and IMOs."
+    },
+    {
+      "name": "Businesses",
+      "description": "Commercial business profiles for risk and underwriting context."
+    },
+    {
+      "name": "Commercial",
+      "description": "Commercial document ingest, policy analysis, and risk assessment."
+    },
+    {
+      "name": "Underwriting",
+      "description": "Preliminary underwriting cases - decision support only."
+    },
+    {
+      "name": "Carrier Appetite",
+      "description": "Appetite matching and carrier appetite profiles."
     }
   ],
   "paths": {
@@ -1872,6 +1888,641 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/businesses": {
+      "post": {
+        "summary": "Create business",
+        "description": "Create a commercial business profile. Preview contract.",
+        "tags": [
+          "Businesses"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "biz_01J8HARBOR",
+                  "status": "active",
+                  "legal_name": "Harbor Fabrication LLC",
+                  "confidence": 0.78,
+                  "missing_requirements": [
+                    "workers_compensation_policy"
+                  ],
+                  "human_review_status": "pending",
+                  "created_at": "2026-07-24T12:00:00Z",
+                  "updated_at": "2026-07-24T12:00:00Z",
+                  "model_version": "commercial-risk-0.1",
+                  "rules_version": "commercial-rules-2026-07",
+                  "audit_reference": "aud_01J8BIZ"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "legal_name": "Harbor Fabrication LLC",
+                "naics": "332710",
+                "state": "TX",
+                "annual_revenue": 2400000,
+                "employee_count": 28
+              }
+            }
+          }
+        }
+      }
+    },
+    "/businesses/{businessId}": {
+      "get": {
+        "summary": "Retrieve business",
+        "description": "Fetch a business profile and derived commercial context.",
+        "tags": [
+          "Businesses"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "biz_01J8HARBOR",
+                  "status": "active",
+                  "verified_facts": {
+                    "naics": "332710",
+                    "state": "TX"
+                  },
+                  "derived_signals": {
+                    "renewal_within_days": 48
+                  },
+                  "confidence": 0.78,
+                  "assumptions": [
+                    "Decision support only - not a bindable underwriting decision"
+                  ],
+                  "missing_requirements": [
+                    "workers_compensation_policy"
+                  ],
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "businessId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Business ID."
+          }
+        ]
+      }
+    },
+    "/commercial/documents": {
+      "post": {
+        "summary": "Ingest commercial document",
+        "description": "Upload loss runs, certificates, schedules, payroll, or commercial policies.",
+        "tags": [
+          "Commercial"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "doc_01J8LOSS",
+                  "status": "extracted",
+                  "source_document_ids": [
+                    "doc_01J8LOSS"
+                  ],
+                  "confidence": 0.74,
+                  "missing_requirements": [],
+                  "human_review_status": "pending",
+                  "created_at": "2026-07-24T12:05:00Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "business_id": "biz_01J8HARBOR",
+                "filename": "loss-runs-2021-2025.pdf",
+                "content_type": "application/pdf",
+                "document_kind": "loss_run"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commercial/policies/analyze": {
+      "post": {
+        "summary": "Analyze commercial policy",
+        "description": "Extract limits, deductibles, and coverage signals.",
+        "tags": [
+          "Commercial"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "anl_01J8CGL",
+                  "status": "complete",
+                  "verified_facts": {
+                    "line": "general_liability",
+                    "limit": 1000000
+                  },
+                  "derived_signals": {
+                    "adequacy_band": "primary_present"
+                  },
+                  "confidence": 0.81,
+                  "explanations": [
+                    {
+                      "label": "Limit present",
+                      "rationale": "GL occurrence limit extracted from declarations"
+                    }
+                  ],
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "business_id": "biz_01J8HARBOR",
+                "document_id": "doc_01J8GL"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commercial/risks/assess": {
+      "post": {
+        "summary": "Assess commercial risk",
+        "description": "Compute Overall Risk, Coverage Adequacy, Underinsured, and Business Health scores.",
+        "tags": [
+          "Commercial"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "risk_01J8HARBOR",
+                  "status": "complete",
+                  "overall_risk_score": 61,
+                  "coverage_adequacy_score": 54,
+                  "underinsured_score": 52,
+                  "business_health_score": 68,
+                  "confidence": 0.78,
+                  "missing_requirements": [
+                    "workers_compensation_policy"
+                  ],
+                  "assumptions": [
+                    "Scores are decision support, not carrier underwriting decisions"
+                  ],
+                  "human_review_status": "pending",
+                  "model_version": "commercial-risk-0.1",
+                  "rules_version": "commercial-rules-2026-07",
+                  "audit_reference": "aud_01J8RISK"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "business_id": "biz_01J8HARBOR"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commercial/risks/{riskId}": {
+      "get": {
+        "summary": "Retrieve commercial risk assessment",
+        "description": "Fetch a prior commercial risk assessment.",
+        "tags": [
+          "Commercial"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "risk_01J8HARBOR",
+                  "status": "complete",
+                  "overall_risk_score": 61,
+                  "confidence": 0.78
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "riskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Risk assessment ID."
+          }
+        ]
+      }
+    },
+    "/loss-runs/analyze": {
+      "post": {
+        "summary": "Analyze loss runs",
+        "description": "Structure claims frequency, severity, and open reserves.",
+        "tags": [
+          "Commercial"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "loss_anl_01J8",
+                  "status": "complete",
+                  "verified_facts": {
+                    "claim_count": 2,
+                    "total_incurred": 27700
+                  },
+                  "derived_signals": {
+                    "frequency_band": "moderate"
+                  },
+                  "confidence": 0.76,
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "business_id": "biz_01J8HARBOR",
+                "document_id": "doc_01J8LOSS"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/underwriting/cases": {
+      "post": {
+        "summary": "Create underwriting case",
+        "description": "Open a personal or commercial preliminary underwriting case. Not a bindable quote.",
+        "tags": [
+          "Underwriting"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "uw_01J8CASE",
+                  "status": "intake",
+                  "human_review_status": "pending",
+                  "confidence": 0.6,
+                  "created_at": "2026-07-24T12:10:00Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "entity_kind": "commercial",
+                "business_id": "biz_01J8HARBOR"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/underwriting/cases/{caseId}": {
+      "get": {
+        "summary": "Retrieve underwriting case",
+        "description": "Fetch case status, missing requirements, and explanations.",
+        "tags": [
+          "Underwriting"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "uw_01J8CASE",
+                  "status": "needs_evidence",
+                  "preliminary_risk_tier": "refer",
+                  "missing_requirements": [
+                    "workers_compensation_policy"
+                  ],
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "caseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Underwriting case ID."
+          }
+        ]
+      }
+    },
+    "/underwriting/cases/{caseId}/evaluate": {
+      "post": {
+        "summary": "Evaluate underwriting case",
+        "description": "Produce preliminary risk tier, pathway, and evidence checklist.",
+        "tags": [
+          "Underwriting"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "uw_01J8CASE",
+                  "status": "ready_for_review",
+                  "preliminary_risk_tier": "standard",
+                  "likely_pathway": "Producer completion \u2192 standard carrier submission",
+                  "confidence": 0.71,
+                  "assumptions": [
+                    "Preliminary intelligence only - carrier underwriter decides"
+                  ],
+                  "human_review_status": "pending",
+                  "model_version": "uw-intel-0.1",
+                  "rules_version": "uw-rules-2026-07",
+                  "audit_reference": "aud_01J8UW"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "caseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Underwriting case ID."
+          }
+        ]
+      }
+    },
+    "/carrier-appetite/match": {
+      "post": {
+        "summary": "Match carrier appetite",
+        "description": "Return explainable appetite fits with evidence requirements and non-fit reasons. Premium ranges omitted unless grounded.",
+        "tags": [
+          "Carrier Appetite"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "match_01J8",
+                  "status": "complete",
+                  "matches": [
+                    {
+                      "carrier": "Harbor Mutual (illustrative)",
+                      "appetite_fit": "moderate",
+                      "confidence": 0.58,
+                      "estimated_premium_range": null,
+                      "required_evidence": [
+                        "loss_runs_5yr",
+                        "payroll_report"
+                      ]
+                    }
+                  ],
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "business_id": "biz_01J8HARBOR",
+                "lines": [
+                  "general_liability",
+                  "workers_compensation"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carriers/{carrierId}/appetite": {
+      "get": {
+        "summary": "Retrieve carrier appetite profile",
+        "description": "Fetch a normalized appetite profile for a carrier.",
+        "tags": [
+          "Carrier Appetite"
+        ],
+        "x-status": "Planned",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "carrier_01J8",
+                  "status": "planned",
+                  "appetite": [],
+                  "data_freshness": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "carrierId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Carrier ID."
+          }
+        ]
+      }
+    },
+    "/reports/commercial-risk": {
+      "post": {
+        "summary": "Generate commercial risk report",
+        "description": "Produce a Commercial Risk Report with verified vs derived sections.",
+        "tags": [
+          "Reports"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "rpt_01J8CRISK",
+                  "status": "ready",
+                  "download_url": null,
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "business_id": "biz_01J8HARBOR",
+                "risk_id": "risk_01J8HARBOR"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/preliminary-underwriting": {
+      "post": {
+        "summary": "Generate preliminary underwriting report",
+        "description": "Produce a Preliminary Underwriting Report clearly labeled as decision support.",
+        "tags": [
+          "Reports"
+        ],
+        "x-status": "Preview",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "rpt_01J8UW",
+                  "status": "ready",
+                  "disclaimer": "Not a bindable quote, eligibility guarantee, or carrier decision.",
+                  "human_review_status": "pending"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "case_id": "uw_01J8CASE"
+              }
+            }
           }
         }
       }

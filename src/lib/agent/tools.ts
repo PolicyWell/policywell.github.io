@@ -1,5 +1,11 @@
 import { z } from "zod";
 import { answerCarrierQuestion } from "@/lib/carrier-kb";
+import {
+  detectCoverageGaps,
+  matchCarrierAppetite,
+  buildUnderwritingPreview,
+} from "@/lib/commercial-scoring";
+import { buildCommercialWorkspaceSnapshot } from "@/lib/commercial-seed";
 import { comparePolicies } from "@/lib/comparison";
 import {
   answerPolicyQuestion,
@@ -69,6 +75,11 @@ const toolSchemas = {
   ask_carrier: z.object({
     carrier: z.string(),
     question: z.string(),
+  }),
+  assess_commercial_risk: z.object({
+    focus: z
+      .enum(["gaps", "appetite", "underwriting", "loss_runs", "overview"])
+      .optional(),
   }),
 } as const;
 
@@ -259,6 +270,80 @@ export function runTool(
           data: answer,
         };
       }
+      case "assess_commercial_risk": {
+        const { focus } = toolSchemas.assess_commercial_risk.parse(args);
+        const snap = buildCommercialWorkspaceSnapshot(workspace.user.id);
+        const gaps = detectCoverageGaps(snap.business);
+        const appetite = matchCarrierAppetite(snap.business, gaps);
+        const uw = buildUnderwritingPreview(
+          snap.business,
+          snap.scores,
+          gaps,
+        );
+        const scores = snap.scores;
+        const topic = focus ?? "overview";
+
+        if (topic === "gaps") {
+          return {
+            tool: name,
+            ok: true,
+            summary:
+              gaps.length === 0
+                ? `${snap.business.legalName}: no high-confidence coverage gaps in the demo profile.`
+                : `${snap.business.legalName} coverage gaps: ${gaps
+                    .map(
+                      (g) =>
+                        `${g.title} (${g.severity}, confidence ${Math.round(g.confidence * 100)}%)`,
+                    )
+                    .join("; ")}. Decision support only - route to a licensed producer.`,
+            data: { business: snap.business.legalName, gaps, scores },
+          };
+        }
+        if (topic === "appetite") {
+          return {
+            tool: name,
+            ok: true,
+            summary: `Illustrative appetite matches for ${snap.business.legalName}: ${appetite
+              .map(
+                (m) =>
+                  `${m.carrier} / ${m.productOrCoverage} → ${m.appetiteFit} (confidence ${Math.round(m.confidence * 100)}%; freshness ${m.dataFreshness})`,
+              )
+              .join("; ")}. Premium ranges omitted unless grounded. Not guaranteed eligibility.`,
+            data: { appetite, scores },
+          };
+        }
+        if (topic === "underwriting") {
+          return {
+            tool: name,
+            ok: true,
+            summary: `Preliminary underwriting preview for ${snap.business.legalName}: tier ${uw.preliminaryRiskTier}; pathway ${uw.likelyPathway}; missing ${uw.missingRequirements.join(", ") || "none"}; human review ${uw.humanReviewStatus}. ${uw.disclaimer}`,
+            data: { underwriting: uw, scores },
+          };
+        }
+        if (topic === "loss_runs") {
+          const losses = snap.business.lossHistory;
+          return {
+            tool: name,
+            ok: true,
+            summary:
+              losses.length === 0
+                ? `${snap.business.legalName}: no loss-run events in the demo profile.`
+                : `Loss-run summary for ${snap.business.legalName}: ${losses
+                    .map(
+                      (l) =>
+                        `${l.date} ${l.line} ${l.description} ($${l.amount ?? 0}, ${l.status})`,
+                    )
+                    .join("; ")}. Extraction confidence and verification remain human-reviewed.`,
+            data: { losses, scores },
+          };
+        }
+        return {
+          tool: name,
+          ok: true,
+          summary: `Commercial risk overview for ${snap.business.legalName}: Overall Risk ${scores.overallRiskScore}, Coverage Adequacy ${scores.coverageAdequacyScore}, Underinsured ${scores.underinsuredScore}, Business Health ${scores.businessHealthScore} (confidence ${Math.round(scores.confidence * 100)}%). Gaps: ${gaps.length}. Appetite matches: ${appetite.length}. Missing: ${scores.missingData.join(", ") || "none"}. Model ${scores.modelVersion} / rules ${scores.rulesVersion}. Decision support only.`,
+          data: { scores, gaps, appetite, underwriting: uw },
+        };
+      }
       default:
         return { tool: String(name), ok: false, summary: "Unknown tool." };
     }
@@ -282,4 +367,9 @@ export const TOOL_CATALOG: { name: ToolName; description: string }[] = [
   { name: "decide_recommendation", description: "Approve or reject a recommendation by id" },
   { name: "create_tasks", description: "Turn approved recommendations into dated follow-up tasks" },
   { name: "ask_carrier", description: "Answer from approved carrier content packs only" },
+  {
+    name: "assess_commercial_risk",
+    description:
+      "Commercial risk scores, gaps, appetite, loss runs, and preliminary underwriting (demo-backed decision support)",
+  },
 ];

@@ -118,6 +118,18 @@ export type DocumentKind =
   | "in_force_ledger"
   | "carrier_quote"
   | "1035_form"
+  | "application"
+  | "health_questionnaire"
+  | "commercial_policy"
+  | "commercial_application"
+  | "loss_run"
+  | "certificate"
+  | "schedule_of_values"
+  | "payroll_report"
+  | "vehicle_schedule"
+  | "property_schedule"
+  | "cyber_questionnaire"
+  | "claims_document"
   | "other";
 
 export interface ExtractedPolicyData {
@@ -164,11 +176,17 @@ export interface PolicyWellScores {
 }
 
 export interface ScoreExplanation {
-  scoreKey: keyof Omit<PolicyWellScores, "explanations" | "assumptions">;
+  /** Personal PolicyWellScores keys or commercial score keys (e.g. overallRiskScore). */
+  scoreKey: string;
   label: string;
   value: number;
   rationale: string;
   inputs: string[];
+  /** Optional: missing inputs, assumptions, or confidence for commercial scores. */
+  missingData?: string[];
+  assumptions?: string[];
+  confidence?: number;
+  supportingDocumentIds?: string[];
 }
 
 export type FeedbackKind = "accurate" | "needs_correction" | "not_helpful";

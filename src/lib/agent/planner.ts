@@ -88,6 +88,22 @@ export function planToolCalls(
     calls.push({ tool: "get_context", args: {} });
   }
 
+  const commercial =
+    /\b(commercial|business|loss run|workers.?comp|general liability|carrier appetite|underwriting requirement|certificate|coverage (is )?missing|reduce (its |my )?risk|renewal)\b/i.test(
+      q,
+    );
+  if (commercial) {
+    let focus: "gaps" | "appetite" | "underwriting" | "loss_runs" | "overview" =
+      "overview";
+    if (/\b(gap|missing coverage|underinsured)\b/i.test(q)) focus = "gaps";
+    else if (/\b(appetite|which carriers?|consider this risk)\b/i.test(q))
+      focus = "appetite";
+    else if (/\b(underwriting|requirements?|aps|labs?)\b/i.test(q))
+      focus = "underwriting";
+    else if (/\bloss run/i.test(q)) focus = "loss_runs";
+    calls.push({ tool: "assess_commercial_risk", args: { focus } });
+  }
+
   // Default analyst path when nothing matched except maybe update_context
   if (calls.filter((c) => c.tool !== "update_context").length === 0) {
     if (workspace.documents.length) {

@@ -212,3 +212,80 @@ export function tasksGroupedByAssignee(tasks: FollowUpTask[]): {
       return a.assigneeName.localeCompare(b.assigneeName);
     });
 }
+
+/** Build commercial follow-up tasks from gaps, renewals, and certificates. */
+export function tasksFromCommercialSignals(input: {
+  gaps: { id: string; title: string; rationale: string; severity: string }[];
+  renewalWithinDays: number | null;
+  certificatesExpiringSoon: number;
+  missingRequirements?: string[];
+  existing?: FollowUpTask[];
+}): FollowUpTask[] {
+  const existing = input.existing ?? [];
+  const existingKeys = new Set(
+    existing.map((t) => t.sourceRecommendationId || t.id),
+  );
+  const now = new Date().toISOString();
+  const created: FollowUpTask[] = [];
+
+  for (const gap of input.gaps) {
+    const key = `commercial_${gap.id}`;
+    if (existingKeys.has(key)) continue;
+    created.push({
+      id: `task_${key}`,
+      title: gap.title,
+      sourceRecommendationId: key,
+      rationale: gap.rationale,
+      dueDate: addDays(now, gap.severity === "high" ? 7 : 21),
+      status: "open",
+      createdAt: now,
+    });
+  }
+
+  if (
+    input.renewalWithinDays != null &&
+    input.renewalWithinDays <= 90 &&
+    !existingKeys.has("commercial_renewal")
+  ) {
+    created.push({
+      id: "task_commercial_renewal",
+      title: "Commercial renewal readiness review",
+      sourceRecommendationId: "commercial_renewal",
+      rationale: `Renewal appears within ${input.renewalWithinDays} days.`,
+      dueDate: addDays(now, Math.max(3, Math.min(30, input.renewalWithinDays - 14))),
+      status: "open",
+      createdAt: now,
+    });
+  }
+
+  if (
+    input.certificatesExpiringSoon > 0 &&
+    !existingKeys.has("commercial_coi")
+  ) {
+    created.push({
+      id: "task_commercial_coi",
+      title: "Refresh expiring certificates",
+      sourceRecommendationId: "commercial_coi",
+      rationale: `${input.certificatesExpiringSoon} certificate(s) flagged as expiring soon.`,
+      dueDate: addDays(now, 7),
+      status: "open",
+      createdAt: now,
+    });
+  }
+
+  for (const req of input.missingRequirements ?? []) {
+    const key = `commercial_req_${req}`;
+    if (existingKeys.has(key)) continue;
+    created.push({
+      id: `task_${key}`,
+      title: `Collect missing underwriting item: ${req}`,
+      sourceRecommendationId: key,
+      rationale: "Missing requirement flagged by commercial / underwriting intelligence.",
+      dueDate: addDays(now, 14),
+      status: "open",
+      createdAt: now,
+    });
+  }
+
+  return [...existing, ...created];
+}

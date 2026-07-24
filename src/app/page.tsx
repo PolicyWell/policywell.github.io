@@ -4,6 +4,26 @@ import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 
+const AUDIENCES = [
+  { href: "/agent", label: "Individuals and families" },
+  { href: "/commercial", label: "Businesses" },
+  { href: "/login", label: "Producers and advisors" },
+  { href: "/pricing", label: "MGAs and IMOs" },
+  { href: "/docs/api", label: "Insurance carriers" },
+] as const;
+
+const ENGINE = [
+  "Policy Intelligence",
+  "Illustration Intelligence",
+  "Underwriting Intelligence",
+  "Commercial Risk Intelligence",
+  "Carrier Intelligence",
+  "Distribution Intelligence",
+  "Claims Intelligence",
+  "Recommendation Intelligence",
+  "Document Intelligence",
+] as const;
+
 export default function HomePage() {
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-clip">
@@ -20,11 +40,15 @@ export default function HomePage() {
           />
           <div className="pw-shell flex-1 flex flex-col justify-center items-center text-center pt-10 pb-6 md:pt-14 md:pb-8 text-foam">
             <LiveAnalysisCounter className="animate-rise mb-5 md:mb-6" />
+            <p className="animate-rise text-[11px] uppercase tracking-[0.22em] text-foam/75 mb-3">
+              PolicyWell
+            </p>
             <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight">
-              The Agentic AI Layer for the Insurance Industry
+              The Intelligence Operating System for Insurance.
             </h1>
             <p className="pw-hero-subline animate-rise-delay">
-              Analyze Illustrations &amp; Policies. Recommendation Actions. Aid Human Control.
+              Policy, risk, underwriting and distribution intelligence for
+              personal and commercial insurance.
             </p>
           </div>
 
@@ -32,7 +56,7 @@ export default function HomePage() {
             <PolicyWellCLIShowcase compact />
           </div>
 
-          <div className="pw-shell pb-12 md:pb-16 flex flex-col sm:flex-row flex-wrap gap-3 animate-rise-delay-2">
+          <div className="pw-shell pb-8 md:pb-10 flex flex-col sm:flex-row flex-wrap gap-3 animate-rise-delay-2">
             <Link
               href="/agent"
               className="pw-btn !bg-foam !text-pine hover:!bg-white w-full sm:w-auto justify-center"
@@ -40,11 +64,66 @@ export default function HomePage() {
               Talk to the agent
             </Link>
             <Link
+              href="/commercial"
+              className="pw-btn pw-btn-secondary !border-foam/35 !text-foam hover:!bg-foam/10 w-full sm:w-auto justify-center"
+            >
+              Commercial risk
+            </Link>
+            <Link
               href="/demo"
               className="pw-btn pw-btn-secondary !border-foam/35 !text-foam hover:!bg-foam/10 w-full sm:w-auto justify-center"
             >
               Product demo
             </Link>
+          </div>
+        </section>
+
+        <section className="border-t border-pine/10 bg-foam/50">
+          <div className="pw-shell py-10 md:py-14 space-y-6">
+            <div className="max-w-2xl">
+              <h2 className="font-display text-2xl md:text-3xl text-pine">
+                Built for every side of the market
+              </h2>
+              <p className="text-stone mt-2 text-sm md:text-base">
+                PolicyWell sits above existing workflows - it is not a CRM,
+                brokerage portal, carrier admin system, or autonomous underwriter.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {AUDIENCES.map((a) => (
+                <Link
+                  key={a.label}
+                  href={a.href}
+                  className="px-3.5 py-2 rounded-full border border-pine/15 bg-white/70 text-sm text-pine hover:border-pine/35"
+                >
+                  {a.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-pine/10">
+          <div className="pw-shell py-10 md:py-14 space-y-5">
+            <div className="max-w-2xl">
+              <h2 className="font-display text-2xl md:text-3xl text-pine">
+                Insurance Intelligence Engine
+              </h2>
+              <p className="text-stone mt-2 text-sm md:text-base">
+                Modular intelligence across personal and commercial lines - with
+                evidence, confidence, and human approval gates.
+              </p>
+            </div>
+            <ul className="flex flex-wrap gap-2">
+              {ENGINE.map((item) => (
+                <li
+                  key={item}
+                  className="px-3 py-1.5 rounded-full bg-mist/80 text-sm text-pine border border-pine/10"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 

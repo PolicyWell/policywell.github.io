@@ -285,6 +285,109 @@ export const DOCS_USE_CASES: readonly DocsUseCase[] = [
       { label: "CLI design", href: "/docs/cli" },
     ],
   },
+  {
+    slug: "commercial-risk-intelligence",
+    title: "Commercial Risk Intelligence",
+    summary:
+      "Business profiles, coverage gaps, loss runs, and commercial risk scores",
+    status: "Preview",
+    icon: "building",
+    overview:
+      "Commercial Risk Intelligence extends the Insurance Intelligence Engine to GL, workers' compensation, property, auto, cyber, professional liability, umbrella, EPLI, and D&O - with explainable scores and human approval gates.",
+    capabilities: [
+      "Business profile and operations context",
+      "Coverage-gap detection",
+      "Overall Risk / Coverage Adequacy / Underinsured / Business Health scores",
+      "Loss-run and claims timeline",
+      "Certificate and renewal tracking",
+      "Risk-mitigation recommendations",
+    ],
+    nextSteps: [
+      { label: "Open Commercial Risk Workspace", href: "/commercial" },
+      { label: "API: commercial risks", href: "/docs/api/commercial" },
+    ],
+  },
+  {
+    slug: "underwriting-intelligence",
+    title: "Underwriting Intelligence",
+    summary:
+      "Pre-underwriting decision support for personal and commercial cases",
+    status: "Preview",
+    icon: "shield",
+    overview:
+      "Underwriting Intelligence prepares explainable preliminary risk tiers, missing requirements, and evidence checklists. Licensed producers and carrier underwriters remain responsible for final decisions - PolicyWell does not bind or issue.",
+    capabilities: [
+      "Personal health and lifestyle intake",
+      "Commercial operations and loss-run intake",
+      "Preliminary risk tier and pathway",
+      "Missing requirements and APS / lab flags",
+      "Human-review status",
+    ],
+    nextSteps: [
+      { label: "Ask the agent", href: "/agent" },
+      { label: "API: underwriting cases", href: "/docs/api/underwriting" },
+    ],
+  },
+  {
+    slug: "carrier-appetite-intelligence",
+    title: "Carrier Appetite Intelligence",
+    summary:
+      "Normalized carrier and product appetite matches with evidence and confidence",
+    status: "Preview",
+    icon: "chart",
+    overview:
+      "Carrier Appetite Intelligence surfaces fit, required evidence, financial-strength citations, and non-fit reasons. Unsupported carrier claims are refused; premium ranges appear only when grounded.",
+    capabilities: [
+      "Appetite fit scoring",
+      "Required underwriting evidence",
+      "Financial-strength with source and date",
+      "Match and non-fit reasons",
+      "Confidence and data freshness",
+    ],
+    nextSteps: [
+      { label: "Commercial workspace", href: "/commercial" },
+      { label: "API: carrier appetite", href: "/docs/api/carrier-appetite" },
+    ],
+  },
+  {
+    slug: "commercial-document-processing",
+    title: "Commercial Document Processing",
+    summary:
+      "Ingest loss runs, certificates, schedules, payroll, and cyber questionnaires",
+    status: "Preview",
+    icon: "document",
+    overview:
+      "Extends Document Intelligence to commercial artifacts with document type, extraction confidence, verification status, and missing fields.",
+    capabilities: [
+      "Loss-run analysis",
+      "Certificate tracking",
+      "Schedules of values",
+      "Payroll and vehicle/property schedules",
+      "Cyber questionnaires",
+    ],
+    nextSteps: [
+      { label: "Upload desk", href: "/upload" },
+      { label: "API: commercial documents", href: "/docs/api/commercial" },
+    ],
+  },
+  {
+    slug: "embedded-carrier-experiences",
+    title: "Embedded Carrier Experiences",
+    summary:
+      "White-label Powered by PolicyWell intake, education, and producer handoff",
+    status: "Planned",
+    icon: "brand",
+    overview:
+      "Carriers can embed needs assessment, business-risk discovery, preliminary underwriting intake, lead qualification, and application handoff - with consent, analytics, and licensed-human control.",
+    capabilities: [
+      "Needs assessment",
+      "Coverage-gap discovery",
+      "Preliminary underwriting intake",
+      "Producer and quote handoff",
+      "Consent and attribution",
+    ],
+    nextSteps: [{ label: "Enterprise pricing", href: "/pricing" }],
+  },
 ] as const;
 
 export function getUseCase(slug: string): DocsUseCase | undefined {
