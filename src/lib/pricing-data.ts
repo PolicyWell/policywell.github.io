@@ -19,7 +19,7 @@ export const PRICING = {
       "Built to power the insurance ecosystem.",
     ] as const,
     supporting:
-      "PolicyWell is the Intelligence Operating System for Insurance - free for consumers, with commercial producer, agency/MGA, IMO, and carrier plans for advanced workflows, APIs, and white-label acquisition tools.",
+      "PolicyWell is the Agentic Operating System for the Insurance & Financial Services Industry - free for consumers, with commercial producer, agency/MGA, IMO, and carrier plans for advanced workflows, APIs, and white-label acquisition tools.",
     primaryCta: { label: "Start Free", href: "/login" },
     secondaryCta: {
       label: "Talk to Sales",

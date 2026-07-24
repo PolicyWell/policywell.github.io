@@ -3,7 +3,7 @@
   "info": {
     "title": "PolicyWell API",
     "version": "1.1.0",
-    "description": "REST endpoints for PolicyWell - the Intelligence Operating System for Insurance. Personal and commercial policy, risk, underwriting, and distribution intelligence. Status markers: Live, Preview, Planned, Enterprise. Planned/Preview endpoints are contracts, not operational production APIs."
+    "description": "REST endpoints for PolicyWell - the Agentic Operating System for the Insurance & Financial Services Industry. Personal and commercial policy, risk, underwriting, and distribution intelligence. Status markers: Live, Preview, Planned, Enterprise. Planned/Preview endpoints are contracts, not operational production APIs."
   },
   "servers": [
     {
