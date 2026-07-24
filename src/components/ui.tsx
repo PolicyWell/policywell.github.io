@@ -79,10 +79,10 @@ export function SiteNav() {
             Sign in
           </Link>
         </nav>
-        {/* Mobile only: hamburger */}
+        {/* Mobile only: hamburger (also gated in CSS @media max-width 767px) */}
         <button
           type="button"
-          className="md:hidden pw-nav-toggle"
+          className="pw-nav-toggle md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
