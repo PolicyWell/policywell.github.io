@@ -177,18 +177,25 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Mobile-only hamburger - never show on desktop */
 .pw-nav-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 47, 40, 0.18);
-  background: rgba(245, 250, 247, 0.9);
-  color: var(--pine);
-  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .pw-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 47, 40, 0.18);
+    background: rgba(245, 250, 247, 0.9);
+    color: var(--pine);
+    cursor: pointer;
+  }
 }
 
 /* Pitch deck - full slide visible at any viewport width (16:9) */
