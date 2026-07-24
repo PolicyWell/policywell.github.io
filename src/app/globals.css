@@ -1792,31 +1792,6 @@ body:has(.pw-404) > .pw-site-footer {
 
 .pw-cli-panel {
   background: #0f1f1b;
-  display: flex;
-  flex-direction: column;
-  min-height: 280px;
-  max-height: min(52svh, 420px);
-}
-
-@media (min-width: 768px) {
-  .pw-cli-panel {
-    min-height: 340px;
-    max-height: min(58svh, 480px);
-  }
-}
-
-.pw-cli-log {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-  padding: 0.95rem 1rem 0.55rem;
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (min-width: 768px) {
-  .pw-cli-log {
-    padding: 1.1rem 1.2rem 0.65rem;
-  }
 }
 
 .pw-cli-body {
@@ -1943,20 +1918,6 @@ body:has(.pw-404) > .pw-site-footer {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: clamp(0.72rem, 2.4vw, 0.84rem);
   line-height: 1.55;
-}
-
-.pw-cli-prompt-sticky {
-  flex: 0 0 auto;
-  margin-top: 0;
-  padding: 0.65rem 1rem 0.85rem;
-  border-top: 1px solid rgba(143, 175, 160, 0.18);
-  background: rgba(8, 18, 15, 0.92);
-}
-
-@media (min-width: 768px) {
-  .pw-cli-prompt-sticky {
-    padding: 0.75rem 1.2rem 1rem;
-  }
 }
 
 .pw-cli-prompt-input {
