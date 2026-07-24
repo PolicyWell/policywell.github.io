@@ -67,19 +67,19 @@ export function SiteNav() {
       <div className="flex items-center justify-between gap-3">
         <BrandMark />
         {/* Desktop / computer: inline links only */}
-        <nav className="hidden md:flex items-center gap-3 text-sm text-stone">
+        <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-sm text-stone">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="hover:text-pine transition-colors whitespace-nowrap"
+              className="hover:text-pine transition-colors whitespace-nowrap px-0.5"
             >
               {l.label}
             </Link>
           ))}
           <Link
             href="/login"
-            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
+            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm ml-2 lg:ml-3"
           >
             Sign in
           </Link>
