@@ -64,12 +64,6 @@ export default function HomePage() {
               Talk to the agent
             </Link>
             <Link
-              href="/commercial"
-              className="pw-btn pw-btn-secondary !border-foam/35 !text-foam hover:!bg-foam/10 w-full sm:w-auto justify-center"
-            >
-              Commercial risk
-            </Link>
-            <Link
               href="/demo"
               className="pw-btn pw-btn-secondary !border-foam/35 !text-foam hover:!bg-foam/10 w-full sm:w-auto justify-center"
             >
