@@ -177,24 +177,25 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Mobile-only hamburger - never show on desktop */
+/* Mobile hamburger styles - button is only mounted below 768px in SiteNav */
 .pw-nav-toggle {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 47, 40, 0.18);
+  background: rgba(245, 250, 247, 0.9);
+  color: var(--pine);
+  cursor: pointer;
 }
 
-@media (max-width: 767px) {
-  .pw-nav-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    border-radius: 999px;
-    border: 1px solid rgba(15, 47, 40, 0.18);
-    background: rgba(245, 250, 247, 0.9);
-    color: var(--pine);
-    cursor: pointer;
+@media (min-width: 768px) {
+  .pw-nav-toggle,
+  #mobile-nav {
+    display: none !important;
   }
 }
 
