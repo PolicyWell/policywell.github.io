@@ -26,7 +26,7 @@ export default function QuotePage() {
                 review.
               </p>
               <div className="pw-quote-aside-actions">
-                <a className="pw-quote-ghost-btn" href="tel:+14157387727">
+                <a className="pw-quote-ghost-btn" href="tel:+14708870449">
                   <svg
                     viewBox="0 0 24 24"
                     width="16"
@@ -40,7 +40,7 @@ export default function QuotePage() {
                   >
                     <path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.9a16 16 0 0 0 6 6l1.5-1.1a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z" />
                   </svg>
-                  (415) 738-7727
+                  (470) 887-0449
                 </a>
                 <Link className="pw-quote-ghost-btn" href="/agent">
                   Or talk to the agent
