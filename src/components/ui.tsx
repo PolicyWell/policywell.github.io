@@ -33,13 +33,17 @@ export function BrandMark({ large = false }: { large?: boolean }) {
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    function onResize() {
-      if (window.innerWidth >= 768) setOpen(false);
-    }
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => {
+      setIsMobile(mq.matches);
+      if (!mq.matches) setOpen(false);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export function SiteNav() {
     <header className="pw-shell py-4 md:py-6 animate-rise relative z-30">
       <div className="flex items-center justify-between gap-3">
         <BrandMark />
-        {/* Desktop web: inline links only - no menu button */}
+        {/* Desktop / computer: inline links only */}
         <nav className="hidden md:flex items-center gap-3 text-sm text-stone">
           {links.map((l) => (
             <Link
@@ -79,44 +83,46 @@ export function SiteNav() {
             Sign in
           </Link>
         </nav>
-        {/* Mobile only: hamburger (also gated in CSS @media max-width 767px) */}
-        <button
-          type="button"
-          className="pw-nav-toggle md:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="h-5 w-5"
-            aria-hidden
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
+        {/* Mobile only - not rendered on computer viewports */}
+        {isMobile && (
+          <button
+            type="button"
+            className="pw-nav-toggle"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
           >
-            {open ? (
-              <>
-                <path d="M6 6l12 12" />
-                <path d="M18 6L6 18" />
-              </>
-            ) : (
-              <>
-                <path d="M4 7h16" />
-                <path d="M4 12h16" />
-                <path d="M4 17h16" />
-              </>
-            )}
-          </svg>
-        </button>
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              aria-hidden
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              {open ? (
+                <>
+                  <path d="M6 6l12 12" />
+                  <path d="M18 6L6 18" />
+                </>
+              ) : (
+                <>
+                  <path d="M4 7h16" />
+                  <path d="M4 12h16" />
+                  <path d="M4 17h16" />
+                </>
+              )}
+            </svg>
+          </button>
+        )}
       </div>
 
-      {open && (
+      {isMobile && open && (
         <nav
           id="mobile-nav"
-          className="md:hidden mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)]"
+          className="mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)]"
         >
           {links.map((l) => (
             <Link
