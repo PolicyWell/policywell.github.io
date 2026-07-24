@@ -18,8 +18,8 @@ const manrope = Manrope({
 
 const SITE_URL = "https://policywell.ai";
 const OG_IMAGE = `${SITE_URL}/og-image.png?v=20260723c`;
-/** Bump to force browsers/CDNs to pick up refreshed shield favicons. */
-const ICON_V = "20260723b";
+/** Bump to force browsers/CDNs/Google to pick up refreshed favicons. */
+const ICON_V = "20260724a";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -33,24 +33,20 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: `/favicon.ico?v=${ICON_V}`, sizes: "any" },
+      { url: `/favicon.svg?v=${ICON_V}`, type: "image/svg+xml" },
       {
-        url: `/favicon-16.png?v=${ICON_V}`,
-        sizes: "16x16",
+        url: `/favicon-48.png?v=${ICON_V}`,
+        sizes: "48x48",
         type: "image/png",
       },
       {
-        url: `/favicon-32.png?v=${ICON_V}`,
-        sizes: "32x32",
+        url: `/favicon-96.png?v=${ICON_V}`,
+        sizes: "96x96",
         type: "image/png",
       },
       {
         url: `/icon-192.png?v=${ICON_V}`,
         sizes: "192x192",
-        type: "image/png",
-      },
-      {
-        url: `/icon-512.png?v=${ICON_V}`,
-        sizes: "512x512",
         type: "image/png",
       },
     ],
@@ -108,7 +104,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}
     >
       <head>
-        {/* Explicit tags so every static route (including 404) gets the shield mark. */}
+        {/* Global favicons for browsers + Google Search results */}
         <meta
           name="google-site-verification"
           content="YWZ2M2Q486Ke411V0zJ6FkhO6ykrmZN9WYEexjrutF4"
@@ -116,19 +112,29 @@ export default function RootLayout({
         <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="any" />
         <link
           rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href={`/favicon-16.png?v=${ICON_V}`}
+          type="image/svg+xml"
+          href={`/favicon.svg?v=${ICON_V}`}
         />
         <link
           rel="icon"
           type="image/png"
-          sizes="32x32"
-          href={`/favicon-32.png?v=${ICON_V}`}
+          sizes="48x48"
+          href={`/favicon-48.png?v=${ICON_V}`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="96x96"
+          href={`/favicon-96.png?v=${ICON_V}`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href={`/icon-192.png?v=${ICON_V}`}
         />
         <link
           rel="apple-touch-icon"
-          sizes="180x180"
           href={`/apple-touch-icon.png?v=${ICON_V}`}
         />
         <link rel="manifest" href={`/site.webmanifest?v=${ICON_V}`} />
