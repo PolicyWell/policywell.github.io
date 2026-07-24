@@ -181,7 +181,6 @@ export const CLI_AUDIENCES: CliAudience[] = [
     id: "commercial",
     label: "Commercial",
     shortLabel: "Commercial",
-    defaultAppearance: "dark",
     chromeTitle: "PolicyWell · Commercial Risk",
     lines: [
       { text: "$ pw commercial assess-business", tone: "command", delayMs: 70 },
