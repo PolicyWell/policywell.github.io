@@ -1660,6 +1660,119 @@ body:has(.pw-404) > .pw-site-footer {
     0 1px 0 rgba(255, 255, 255, 0.55) inset;
 }
 
+/* Commercial Risk - industrial slate terminal (distinct from personal lines) */
+.pw-cli-window-commercial {
+  border-color: rgba(42, 48, 56, 0.55);
+  background: #151a1f;
+  box-shadow:
+    0 28px 70px rgba(8, 12, 16, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+.pw-cli-window-commercial .pw-cli-chrome {
+  background: linear-gradient(180deg, #222830 0%, #1a1f26 100%);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.pw-cli-window-commercial .pw-cli-title {
+  color: rgba(232, 236, 240, 0.88);
+}
+
+.pw-cli-window-commercial .pw-cli-tabs {
+  background: #12161b;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.pw-cli-window-commercial .pw-cli-tab {
+  color: rgba(186, 196, 206, 0.72);
+}
+
+.pw-cli-window-commercial .pw-cli-tab:hover {
+  color: #e8ecf0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pw-cli-window-commercial .pw-cli-tab.is-active {
+  color: #f0d9a8;
+  background: rgba(194, 161, 90, 0.14);
+  box-shadow: inset 0 -2px 0 #c2a15a;
+}
+
+.pw-cli-tab-commercial:not(.is-active) {
+  color: inherit;
+}
+
+.pw-cli-window-commercial .pw-cli-body {
+  background:
+    linear-gradient(180deg, rgba(194, 161, 90, 0.04), transparent 28%),
+    #0f1318;
+  color: #d7dde4;
+}
+
+.pw-cli-window-commercial .pw-cli-pre {
+  color: #d7dde4;
+}
+
+.pw-cli-window-commercial .pw-cli-line-command {
+  color: #f0d9a8;
+}
+
+.pw-cli-window-commercial .pw-cli-line-success {
+  color: #7dcea0;
+}
+
+.pw-cli-window-commercial .pw-cli-line-muted {
+  color: rgba(186, 196, 206, 0.72);
+}
+
+.pw-cli-window-commercial .pw-cli-line-warn {
+  color: #e0b45c;
+}
+
+.pw-cli-window-commercial .pw-cli-line-accent {
+  color: #f0d9a8;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.pw-cli-window-commercial .pw-cli-line-dim {
+  color: rgba(186, 196, 206, 0.55);
+}
+
+.pw-cli-window-commercial .pw-cli-line-default {
+  color: #d7dde4;
+}
+
+.pw-cli-window-commercial .pw-cli-prompt {
+  color: #c2a15a;
+}
+
+.pw-cli-window-commercial .pw-cli-prompt-input {
+  color: #e8ecf0;
+}
+
+.pw-cli-window-commercial .pw-cli-prompt-input::placeholder {
+  color: rgba(186, 196, 206, 0.45);
+}
+
+.pw-cli-window-commercial .pw-cli-skip-hint {
+  color: rgba(186, 196, 206, 0.55);
+}
+
+.pw-cli-window-commercial .pw-cli-cursor {
+  background: #c2a15a;
+}
+
+.pw-cli-window-commercial .pw-cli-arch-chip {
+  background: rgba(194, 161, 90, 0.12);
+  border-color: rgba(194, 161, 90, 0.28);
+  color: #f0d9a8;
+}
+
+.pw-cli-window-commercial .pw-cli-arch-arrow {
+  color: rgba(186, 196, 206, 0.45);
+}
+
 .pw-cli-chrome {
   position: relative;
   display: flex;
