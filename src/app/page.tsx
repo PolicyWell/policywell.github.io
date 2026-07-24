@@ -47,10 +47,6 @@ export default function HomePage() {
               The Agentic Operating System for the Insurance &amp; Financial
               Services Industry
             </h1>
-            <p className="pw-hero-subline animate-rise-delay">
-              Policy, risk, underwriting and distribution intelligence for
-              personal and commercial insurance.
-            </p>
           </div>
 
           <div className="pw-shell pb-4 md:pb-6 animate-rise-delay-2">
