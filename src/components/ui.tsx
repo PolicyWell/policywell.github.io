@@ -55,6 +55,7 @@ export function SiteNav() {
 
   const links = [
     { href: "/agent", label: "Agent" },
+    { href: "/quote", label: "Quote" },
     { href: "/pricing", label: "Pricing" },
     { href: "/deck", label: "Deck" },
     { href: "/docs", label: "Docs" },

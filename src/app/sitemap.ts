@@ -25,6 +25,7 @@ const STATIC_PAGES: Entry[] = [
   { path: "/demo", changeFrequency: "monthly", priority: 0.85 },
   { path: "/deck", changeFrequency: "monthly", priority: 0.8 },
   { path: "/agent", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/quote", changeFrequency: "weekly", priority: 0.85 },
   { path: "/commercial", changeFrequency: "weekly", priority: 0.85 },
   { path: "/docs", changeFrequency: "weekly", priority: 0.9 },
   { path: "/docs/cli", changeFrequency: "monthly", priority: 0.7 },
