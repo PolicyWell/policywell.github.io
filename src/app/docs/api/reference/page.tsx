@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ApiEndpointBlock } from "@/components/docs/ApiEndpointBlock";
+import { CopyableCode } from "@/components/docs/CopyableCode";
 import {
   API_BASE_URL,
   API_GROUPS,
@@ -25,10 +26,13 @@ export default function FullApiReferencePage() {
           <span className="pw-docs-status pw-docs-status-planned">Planned</span>
         </div>
         <p className="pw-docs-lede">
-          Every PolicyWell REST endpoint on one page. Base URL{" "}
-          <code className="pw-api-inline-code">{API_BASE_URL}</code>.{" "}
-          {count} endpoints across {API_GROUPS.length} resources.
+          Every PolicyWell REST endpoint on one page. {count} endpoints across{" "}
+          {API_GROUPS.length} resources.
         </p>
+        <div style={{ marginTop: "1rem" }}>
+          <h2 className="pw-api-base-label">Base URL</h2>
+          <CopyableCode code={API_BASE_URL} label="Copy base URL" />
+        </div>
         <p className="pw-docs-note" style={{ marginTop: "1rem" }}>
           Prefer browsing by resource? Start at the{" "}
           <Link href="/docs/api" className="pw-docs-inline-link">
