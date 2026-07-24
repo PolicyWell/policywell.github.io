@@ -24,7 +24,7 @@ const ICON_V = "20260724a";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "PolicyWell - The Intelligence Operating System for Insurance",
+    default: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
     template: "%s · PolicyWell",
   },
   description:
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "PolicyWell",
-    title: "PolicyWell - The Intelligence Operating System for Insurance",
+    title: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
     description:
       "Policy, risk, underwriting and distribution intelligence for personal and commercial insurance.",
     images: [
@@ -76,13 +76,13 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1536,
         height: 1024,
-        alt: "PolicyWell - The Intelligence Operating System for Insurance",
+        alt: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PolicyWell - The Intelligence Operating System for Insurance",
+    title: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
     description:
       "Policy, risk, underwriting and distribution intelligence for personal and commercial insurance.",
     images: [OG_IMAGE],

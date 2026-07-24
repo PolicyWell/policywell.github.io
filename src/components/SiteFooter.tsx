@@ -30,7 +30,8 @@ export function SiteFooter() {
             PolicyWell
           </Link>
           <p className="text-xs text-stone mt-1 max-w-sm">
-            The Intelligence Operating System for Insurance.
+            The Agentic Operating System for the Insurance &amp; Financial
+            Services Industry
           </p>
           <p className="text-xs text-moss mt-3">
             Built With <span aria-hidden="true">💚</span>

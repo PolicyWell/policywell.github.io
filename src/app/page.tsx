@@ -44,7 +44,8 @@ export default function HomePage() {
               PolicyWell
             </p>
             <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight">
-              The Intelligence Operating System for Insurance.
+              The Agentic Operating System for the Insurance &amp; Financial
+              Services Industry
             </h1>
             <p className="pw-hero-subline animate-rise-delay">
               Policy, risk, underwriting and distribution intelligence for
