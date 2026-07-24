@@ -118,12 +118,23 @@ function CliAgentSession({
   reducedMotion: boolean;
   inputId: string;
 }) {
+  const readyHint: TerminalLine[] =
+    audience.theme === "commercial"
+      ? [
+          { text: "", tone: "blank" },
+          {
+            text: "Ready. Try `pw coverage-gap`, `pw carrier-appetite`, or ask a commercial question.",
+            tone: "dim",
+          },
+        ]
+      : READY_HINT;
+
   const [visibleCount, setVisibleCount] = useState(
     reducedMotion ? audience.lines.length : 0,
   );
   const [done, setDone] = useState(reducedMotion);
   const [history, setHistory] = useState<TerminalLine[]>(
-    reducedMotion ? READY_HINT : [],
+    reducedMotion ? readyHint : [],
   );
   const [command, setCommand] = useState("");
   const [busy, setBusy] = useState(false);
@@ -154,7 +165,7 @@ function CliAgentSession({
       setVisibleCount(i);
       if (i >= audience.lines.length) {
         setDone(true);
-        setHistory(READY_HINT);
+        setHistory(readyHint);
         return;
       }
       const next = audience.lines[i];
@@ -213,7 +224,7 @@ function CliAgentSession({
     if (done) return;
     setVisibleCount(audience.lines.length);
     setDone(true);
-    setHistory(READY_HINT);
+    setHistory(readyHint);
   }
 
   function replayDemo() {
@@ -222,7 +233,7 @@ function CliAgentSession({
     if (reducedMotion) {
       setVisibleCount(audience.lines.length);
       setDone(true);
-      setHistory(READY_HINT);
+      setHistory(readyHint);
       return;
     }
     setVisibleCount(0);
@@ -535,14 +546,18 @@ export function PolicyWellCLIShowcase({
         </div>
       )}
 
-      <div className="pw-cli-window">
+      <div
+        className={`pw-cli-window ${audience.theme === "commercial" ? "pw-cli-window-commercial" : ""}`}
+      >
         <div className="pw-cli-chrome">
           <div className="pw-cli-traffic" aria-hidden>
             <span className="pw-cli-dot pw-cli-dot-red" />
             <span className="pw-cli-dot pw-cli-dot-yellow" />
             <span className="pw-cli-dot pw-cli-dot-green" />
           </div>
-          <p className="pw-cli-title">PolicyWell - Insurance Intelligence Agent</p>
+          <p className="pw-cli-title">
+            {audience.chromeTitle ?? "PolicyWell - Insurance Intelligence Agent"}
+          </p>
           <span className="pw-cli-chrome-spacer" aria-hidden />
         </div>
 
@@ -566,7 +581,9 @@ export function PolicyWellCLIShowcase({
                 aria-selected={selected}
                 aria-controls={`${tabsId}-panel-${tab.id}`}
                 tabIndex={selected ? 0 : -1}
-                className={`pw-cli-tab ${selected ? "is-active" : ""}`}
+                className={`pw-cli-tab ${selected ? "is-active" : ""} ${
+                  tab.theme === "commercial" ? "pw-cli-tab-commercial" : ""
+                }`}
                 onClick={() => selectTab(tab.id)}
               >
                 <span className="pw-cli-tab-full">{tab.label}</span>
