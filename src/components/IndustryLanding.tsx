@@ -30,6 +30,8 @@ export function IndustryLanding({ path }: { path: string }) {
   const isLeaf = children.length === 0;
   /** Standalone hubs (Retail, Bar, Catering) have no children or siblings. */
   const isStandaloneHub = children.length === 0 && !parent;
+  const isAnnuity = page.categoryId === "annuities";
+  const primaryCtaLabel = isAnnuity ? "Get Illustration" : "Get a quote";
 
   /** Hub pages browse their children; micro pages browse sibling verticals. */
   const nestItems = children.length > 0 ? children : siblings;
@@ -85,10 +87,10 @@ export function IndustryLanding({ path }: { path: string }) {
               <p className="pw-industry-support">{page.support}</p>
               <div className="pw-industry-hero-actions">
                 <Link href={industryQuoteHref(page.label)} className="pw-btn">
-                  Get a quote
+                  {primaryCtaLabel}
                 </Link>
                 {isStandaloneHub && (
-                  <Link href="/industries/" className="pw-btn-secondary">
+                  <Link href="/industries/" className="pw-btn">
                     ← All industries
                   </Link>
                 )}
