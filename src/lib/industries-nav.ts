@@ -15,6 +15,10 @@ export type EcommerceVertical = {
   colors: readonly string[];
   sizes: readonly string[];
   accent: string;
+  /** Optional secondary CTA label under the primary quote button. */
+  secondaryCta?: string;
+  /** Visual treatment for the landing stage. */
+  stage?: "laptop" | "alcohol-fulfillment";
 };
 
 export const INDUSTRY_SPECIALIST_NOTE =
@@ -136,14 +140,17 @@ export const ECOMMERCE_VERTICALS: readonly EcommerceVertical[] = [
   {
     slug: "alcoholic-beverage",
     label: "Alcoholic Beverage",
-    headline: "Coverage built for DTC beverage brands",
+    headline:
+      "Alcoholic beverage insurance built for DTC alcohol brands shipping across state lines",
     support:
-      "Protect inventory, fulfillment, and tasting rooms while you scale DTC and wholesale channels.",
+      "Your general liability policy excludes alcohol sales. Alcoholic beverage insurance fills that gap with liquor liability, product liability, and multi-state shipping compliance for DTC wine, spirits, beer, and RTD brands.",
     productName: "Reserve Cabernet 2022",
     price: "$48.00",
     colors: ["#4a1c2f", "#6b2d45", "#c4a574"],
     sizes: ["750ml", "1.5L", "3L"],
     accent: "#4a1c2f",
+    secondaryCta: "Free coverage review",
+    stage: "alcohol-fulfillment",
   },
   {
     slug: "beauty-and-cosmetics",
