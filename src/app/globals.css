@@ -4952,10 +4952,11 @@ body:has(.pw-docs-app) .pw-ope {
 }
 
 .pw-industries-panel {
-  position: absolute;
-  top: calc(100% + 0.85rem);
+  position: fixed;
+  top: 5rem;
+  left: 0;
   right: 0;
-  left: auto;
+  margin-inline: auto;
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(280px, 420px);
   width: min(720px, calc(100vw - 2rem));
@@ -4964,7 +4965,7 @@ body:has(.pw-docs-app) .pw-ope {
   border-radius: 18px;
   box-shadow: 0 24px 60px rgba(15, 47, 40, 0.12);
   overflow: hidden;
-  z-index: 50;
+  z-index: 60;
   animation: rise 0.22s ease both;
 }
 
@@ -5122,7 +5123,7 @@ body:has(.pw-docs-app) .pw-ope {
 
 @media (max-width: 900px) {
   .pw-industries-panel {
-    right: -1rem;
+    top: 4.5rem;
     grid-template-columns: minmax(200px, 240px) minmax(220px, 1fr);
   }
 }
