@@ -133,8 +133,11 @@ export function IndustryLanding({ path }: { path: string }) {
                         className={`pw-industry-child-link${active ? " is-active" : ""}`}
                         aria-current={active ? "page" : undefined}
                       >
-                        <span>{item.label}</span>
-                        <span aria-hidden>→</span>
+                        <span className="pw-industry-child-circle" aria-hidden />
+                        <span className="pw-industry-child-label">{item.label}</span>
+                        <span className="pw-industry-child-arrow" aria-hidden>
+                          →
+                        </span>
                       </Link>
                     </li>
                   );
@@ -156,8 +159,11 @@ export function IndustryLanding({ path }: { path: string }) {
               <ul className="pw-industry-child-list">
                 <li>
                   <Link href="/industries/" className="pw-industry-child-link">
-                    <span>All industries</span>
-                    <span aria-hidden>→</span>
+                    <span className="pw-industry-child-circle" aria-hidden />
+                    <span className="pw-industry-child-label">All industries</span>
+                    <span className="pw-industry-child-arrow" aria-hidden>
+                      →
+                    </span>
                   </Link>
                 </li>
                 {industryCatalog.map((item) => (
@@ -167,8 +173,11 @@ export function IndustryLanding({ path }: { path: string }) {
                       className={`pw-industry-child-link${item.active ? " is-active" : ""}`}
                       aria-current={item.active ? "page" : undefined}
                     >
-                      <span>{item.label}</span>
-                      <span aria-hidden>→</span>
+                      <span className="pw-industry-child-circle" aria-hidden />
+                      <span className="pw-industry-child-label">{item.label}</span>
+                      <span className="pw-industry-child-arrow" aria-hidden>
+                        →
+                      </span>
                     </Link>
                   </li>
                 ))}
