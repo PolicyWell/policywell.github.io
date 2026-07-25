@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { AlcoholFulfillmentScene } from "@/components/AlcoholFulfillmentScene";
-import { EcommerceVerticalScene } from "@/components/EcommerceVerticalScene";
+import { IndustryPhotoStage } from "@/components/IndustryPhotoStage";
 import { IndustryLaptopFrame } from "@/components/IndustryLaptopFrame";
 import { EcommerceStorefrontDemo } from "@/components/EcommerceStorefrontDemo";
 import { SiteNav } from "@/components/ui";
@@ -14,14 +13,10 @@ const PHONE_DISPLAY = "(470) 887-0449";
 const PHONE_HREF = "tel:+14708870449";
 
 function StageVisual({ vertical }: { vertical: EcommerceVertical }) {
-  const stage = vertical.stage ?? "laptop";
-
-  if (stage === "alcohol-fulfillment") {
-    return <AlcoholFulfillmentScene />;
-  }
-
-  if (stage !== "laptop") {
-    return <EcommerceVerticalScene stage={stage} />;
+  if (isEcommerceSceneStage(vertical.stage)) {
+    return (
+      <IndustryPhotoStage slug={vertical.slug} label={vertical.label} />
+    );
   }
 
   return (
