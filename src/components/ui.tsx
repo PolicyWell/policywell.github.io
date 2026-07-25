@@ -283,17 +283,17 @@ export function SiteNav() {
           id="mobile-nav"
           className="mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)] max-h-[min(80vh,640px)] overflow-y-auto"
         >
+          <PlatformMenu
+            open
+            onOpenChange={() => {}}
+            onNavigate={() => setOpen(false)}
+            variant="mobile"
+          />
           <IndustriesMegaMenu
             open
             onOpenChange={(next) => {
               if (!next) setOpen(false);
             }}
-            variant="mobile"
-          />
-          <PlatformMenu
-            open
-            onOpenChange={() => {}}
-            onNavigate={() => setOpen(false)}
             variant="mobile"
           />
           {links.map((l) => (
