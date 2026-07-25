@@ -71,14 +71,6 @@ export function EcommerceLanding({
                 >
                   Get a quote
                 </Link>
-                {!isScene && (
-                  <Link
-                    href="/docs/api/quotes/"
-                    className="pw-btn pw-btn-secondary"
-                  >
-                    Quotes API
-                  </Link>
-                )}
               </div>
               {isScene && (
                 <p className="pw-industry-hero-meta">
