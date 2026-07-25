@@ -5653,16 +5653,27 @@ body:has(.pw-docs-app) .pw-ope {
 }
 
 .pw-industry-hero-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .pw-industry-hero-scene .pw-industry-hero-stack,
+  .pw-industry-hero-alcohol .pw-industry-hero-stack {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 2rem 2.5rem;
+    align-items: center;
+  }
 }
 
 .pw-industry-hero-scene .pw-industry-hero-copy,
 .pw-industry-hero-alcohol .pw-industry-hero-copy {
   max-width: 38rem;
   text-align: left;
+  position: relative;
+  z-index: 2;
 }
 
 .pw-industry-hero-scene .pw-industry-hero-copy h1,
@@ -5700,26 +5711,36 @@ body:has(.pw-docs-app) .pw-ope {
 
 .pw-industry-hero-scene .pw-industry-hero-stage,
 .pw-industry-hero-alcohol .pw-industry-hero-stage {
-  min-height: 320px;
-  margin: 0 -0.5rem;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
 }
 
-@media (min-width: 768px) {
-  .pw-industry-hero-scene .pw-industry-hero-stage,
-  .pw-industry-hero-alcohol .pw-industry-hero-stage {
-    min-height: 460px;
-  }
+.pw-industry-hero-stage-frame {
+  border-radius: 12px;
+  background: transparent;
 }
 
 .pw-photo-stage {
   position: relative;
   width: 100%;
-  height: min(78vw, 540px);
-  min-height: 300px;
+  aspect-ratio: 5 / 4;
+  max-height: min(52vh, 480px);
+  height: auto;
+  min-height: 240px;
+  margin: 0 auto;
   background: transparent;
   cursor: grab;
   touch-action: none;
   perspective: 1200px;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
 .pw-photo-stage:active {
@@ -5728,43 +5749,52 @@ body:has(.pw-docs-app) .pw-ope {
 
 .pw-photo-stage-media {
   position: absolute;
-  inset: 0;
+  inset: 6% 4%;
   display: grid;
   place-items: center;
   transform-style: preserve-3d;
   will-change: transform;
+  overflow: hidden;
 }
 
 .pw-photo-stage-bob {
   position: relative;
-  width: min(100%, 720px);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
   animation: pw-photo-bob 5.5s ease-in-out infinite;
-  transform-origin: 50% 70%;
+  transform-origin: 50% 60%;
+  overflow: hidden;
 }
 
 .pw-photo-stage-img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
   user-select: none;
   pointer-events: none;
-  filter: drop-shadow(0 28px 40px rgba(15, 47, 40, 0.14));
+  filter: drop-shadow(0 18px 28px rgba(15, 47, 40, 0.1));
 }
 
 .pw-photo-stage-fx {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  overflow: visible;
+  overflow: hidden;
 }
 
 @keyframes pw-photo-bob {
   0%,
   100% {
-    transform: translateY(0) rotate(-0.4deg);
+    transform: translateY(0) rotate(-0.2deg);
   }
   50% {
-    transform: translateY(-10px) rotate(0.5deg);
+    transform: translateY(-4px) rotate(0.25deg);
   }
 }
 

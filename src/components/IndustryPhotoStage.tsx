@@ -70,9 +70,9 @@ export function IndustryPhotoStage({
     const tick = () => {
       cx += (tx - cx) * 0.08;
       cy += (ty - cy) * 0.08;
-      const rotY = cx * 8;
-      const rotX = -cy * 6;
-      media.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${cx * 10}px, ${cy * 8}px, 0)`;
+      const rotY = cx * 4;
+      const rotX = -cy * 3;
+      media.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${cx * 4}px, ${cy * 3}px, 0)`;
       raf = window.requestAnimationFrame(tick);
     };
 
