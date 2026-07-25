@@ -68,8 +68,20 @@ ls src/app/agent/page.tsx src/app/api/agent/route.ts src/lib/agent/index.ts
 
 Optional LLM phrasing: set `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local`, then restart `npm run dev`. Without a key the agent still runs (tool planner + synthesizer).
 
+## Supabase
+
+Client helpers live in `src/lib/supabase`. Copy `.env.example` → `.env.local` and
+set the **dev** project URL + anon key. Production keys go in GitHub Actions
+secrets for the Pages build. See [`docs/SUPABASE.md`](./docs/SUPABASE.md).
+
+Git branches:
+
+- `production` — production-ready line (pair with prod Supabase)
+- `dev` — integration / local work (pair with dev Supabase)
+
 ## Docs
 
 - Public product docs: `/docs`
 - Internal architecture notes: `./docs/ENGINEERING_MANUAL.md`
 - Internal morning reports: `./docs/MORNING_REPORT.md`
+- Supabase prod/dev: `./docs/SUPABASE.md`
