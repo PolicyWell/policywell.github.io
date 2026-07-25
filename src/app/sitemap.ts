@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { API_GROUPS } from "@/lib/api-reference-data";
 import { DOCS_USE_CASES } from "@/lib/docs-data";
+import { ECOMMERCE_VERTICALS } from "@/lib/industries-nav";
 
 export const dynamic = "force-static";
 
@@ -27,6 +28,7 @@ const STATIC_PAGES: Entry[] = [
   { path: "/agent", changeFrequency: "weekly", priority: 0.85 },
   { path: "/quote", changeFrequency: "weekly", priority: 0.85 },
   { path: "/commercial", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/industries/ecommerce", changeFrequency: "weekly", priority: 0.8 },
   { path: "/docs", changeFrequency: "weekly", priority: 0.9 },
   { path: "/docs/cli", changeFrequency: "monthly", priority: 0.7 },
   { path: "/docs/engineering", changeFrequency: "monthly", priority: 0.7 },
@@ -51,10 +53,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.65,
   }));
 
-  return [...STATIC_PAGES, ...guidePages, ...apiPages].map((entry) => ({
-    url: url(entry.path),
-    lastModified,
-    changeFrequency: entry.changeFrequency,
-    priority: entry.priority,
+  const ecommercePages: Entry[] = ECOMMERCE_VERTICALS.map((vertical) => ({
+    path: `/industries/ecommerce/${vertical.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
+
+  return [...STATIC_PAGES, ...guidePages, ...apiPages, ...ecommercePages].map(
+    (entry) => ({
+      url: url(entry.path),
+      lastModified,
+      changeFrequency: entry.changeFrequency,
+      priority: entry.priority,
+    }),
+  );
 }

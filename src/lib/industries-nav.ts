@@ -5,6 +5,18 @@ export type IndustryCategory = {
   children: string[];
 };
 
+export type EcommerceVertical = {
+  slug: string;
+  label: string;
+  headline: string;
+  support: string;
+  productName: string;
+  price: string;
+  colors: readonly string[];
+  sizes: readonly string[];
+  accent: string;
+};
+
 export const INDUSTRY_SPECIALIST_NOTE =
   "Specialist coverage placed across 60+ carriers. Open the page for details.";
 
@@ -119,12 +131,124 @@ export const INDUSTRY_CATEGORIES: IndustryCategory[] = [
   },
 ];
 
+/** Landing-page content for nested Ecommerce verticals (Coverwatch-style). */
+export const ECOMMERCE_VERTICALS: readonly EcommerceVertical[] = [
+  {
+    slug: "alcoholic-beverage",
+    label: "Alcoholic Beverage",
+    headline: "Coverage built for DTC beverage brands",
+    support:
+      "Protect inventory, fulfillment, and tasting rooms while you scale DTC and wholesale channels.",
+    productName: "Reserve Cabernet 2022",
+    price: "$48.00",
+    colors: ["#4a1c2f", "#6b2d45", "#c4a574"],
+    sizes: ["750ml", "1.5L", "3L"],
+    accent: "#4a1c2f",
+  },
+  {
+    slug: "beauty-and-cosmetics",
+    label: "Beauty & Cosmetics",
+    headline: "Protect every SKU from formula to fulfillment",
+    support:
+      "Product liability, cargo, and recall-ready programs for modern beauty brands.",
+    productName: "Essential Serum",
+    price: "$62.00",
+    colors: ["#f3e6df", "#d8b4a6", "#2c2420"],
+    sizes: ["15ml", "30ml", "50ml"],
+    accent: "#d8b4a6",
+  },
+  {
+    slug: "clothing-store",
+    label: "Clothing Store",
+    headline: "Built to scale with your brand",
+    support:
+      "From first Shopify sale to international fulfillment. One broker, every policy, every channel.",
+    productName: "Essential Knit Sweater",
+    price: "$189.00",
+    colors: ["#d4c4b0", "#8a9aa8", "#2b2b2b"],
+    sizes: ["S", "M", "L", "XL"],
+    accent: "#1a1a1a",
+  },
+  {
+    slug: "cpg",
+    label: "CPG",
+    headline: "Coverage for product lines that move fast",
+    support:
+      "Shelf to subscription — protect manufacturing, inventory, and nationwide distribution.",
+    productName: "Everyday Staple Pack",
+    price: "$24.00",
+    colors: ["#e8f0e9", "#7a9e7e", "#1f3d2a"],
+    sizes: ["Trial", "Standard", "Family"],
+    accent: "#1f3d2a",
+  },
+  {
+    slug: "food-and-beverage",
+    label: "Food & Beverage",
+    headline: "Insurance for makers who ship freshness",
+    support:
+      "Cold-chain, product liability, and contingent business income for food brands.",
+    productName: "Artisan Trail Mix",
+    price: "$16.00",
+    colors: ["#f0e2c8", "#c4783a", "#5c3a1e"],
+    sizes: ["4oz", "12oz", "2lb"],
+    accent: "#c4783a",
+  },
+  {
+    slug: "pet-business",
+    label: "Pet Business",
+    headline: "Protect the brands pet parents trust",
+    support:
+      "Product liability and inventory coverage tailored to pet food, toys, and accessories.",
+    productName: "Everyday Chew Toy",
+    price: "$22.00",
+    colors: ["#f5d76e", "#7eb8da", "#e89a9a"],
+    sizes: ["S", "M", "L"],
+    accent: "#7eb8da",
+  },
+  {
+    slug: "supplement",
+    label: "Supplement",
+    headline: "Coverage for wellness brands that ship nationally",
+    support:
+      "Formulation liability, recall readiness, and fulfillment protection for supplement DTC.",
+    productName: "Daily Focus Capsules",
+    price: "$54.00",
+    colors: ["#eef4f1", "#5a8f7b", "#1c3d32"],
+    sizes: ["30ct", "60ct", "90ct"],
+    accent: "#5a8f7b",
+  },
+];
+
 export function getIndustryCategory(id: string): IndustryCategory | undefined {
   return INDUSTRY_CATEGORIES.find((c) => c.id === id);
 }
 
+export function getEcommerceVertical(
+  slug: string,
+): EcommerceVertical | undefined {
+  return ECOMMERCE_VERTICALS.find((v) => v.slug === slug);
+}
+
 export function industryQuoteHref(industry: string): string {
   return `/quote/?industry=${encodeURIComponent(industry)}`;
+}
+
+export function industryCategoryHref(categoryId: string): string {
+  if (categoryId === "ecommerce") return "/industries/ecommerce/";
+  return industryQuoteHref(
+    getIndustryCategory(categoryId)?.label ?? categoryId,
+  );
+}
+
+export function industryChildHref(
+  categoryId: string,
+  childLabel: string,
+): string {
+  if (categoryId === "ecommerce") {
+    const vertical = ECOMMERCE_VERTICALS.find((v) => v.label === childLabel);
+    if (vertical) return `/industries/ecommerce/${vertical.slug}/`;
+  }
+  return industryQuoteHref(childLabel);
 }
 
 /** Flat list for quote form selects (categories + subcategories). */
