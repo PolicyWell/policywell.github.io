@@ -5691,12 +5691,19 @@ body:has(.pw-docs-app) .pw-ope {
   color: var(--pine);
 }
 
-/* Alcoholic beverage fulfillment scene */
+/* Ecommerce vertical Three.js scenes */
+.pw-industry-hero-scene,
 .pw-industry-hero-alcohol {
   background:
-    radial-gradient(900px 480px at 50% 100%, rgba(107, 31, 58, 0.06), transparent 55%),
+    radial-gradient(900px 480px at 50% 100%, rgba(15, 47, 40, 0.05), transparent 55%),
     linear-gradient(180deg, #f7f5f1 0%, #ffffff 70%);
   padding-bottom: 0.5rem;
+}
+
+.pw-industry-hero-scene-light {
+  background:
+    radial-gradient(900px 520px at 70% 0%, rgba(216, 180, 166, 0.12), transparent 50%),
+    linear-gradient(180deg, #faf7f2 0%, #ffffff 72%);
 }
 
 .pw-industry-hero-stack {
@@ -5706,17 +5713,20 @@ body:has(.pw-docs-app) .pw-ope {
   align-items: stretch;
 }
 
+.pw-industry-hero-scene .pw-industry-hero-copy,
 .pw-industry-hero-alcohol .pw-industry-hero-copy {
   max-width: 38rem;
   text-align: left;
 }
 
+.pw-industry-hero-scene .pw-industry-hero-copy h1,
 .pw-industry-hero-alcohol .pw-industry-hero-copy h1 {
   max-width: 16ch;
   font-size: clamp(2.1rem, 6vw, 3.6rem);
   line-height: 1.05;
 }
 
+.pw-industry-hero-scene .pw-industry-support,
 .pw-industry-hero-alcohol .pw-industry-support {
   max-width: 36rem;
   font-size: 1.02rem;
@@ -5742,17 +5752,20 @@ body:has(.pw-docs-app) .pw-ope {
   color: var(--pine);
 }
 
+.pw-industry-hero-scene .pw-industry-hero-stage,
 .pw-industry-hero-alcohol .pw-industry-hero-stage {
   min-height: 320px;
   margin: 0 -0.5rem;
 }
 
 @media (min-width: 768px) {
+  .pw-industry-hero-scene .pw-industry-hero-stage,
   .pw-industry-hero-alcohol .pw-industry-hero-stage {
     min-height: 460px;
   }
 }
 
+.pw-orbit-scene,
 .pw-alcohol-scene {
   position: relative;
   width: 100%;
@@ -5766,10 +5779,18 @@ body:has(.pw-docs-app) .pw-ope {
   touch-action: none;
 }
 
+.pw-orbit-scene-light {
+  background:
+    radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f3ebe3 72%);
+  box-shadow: inset 0 0 0 1px rgba(15, 47, 40, 0.06);
+}
+
+.pw-orbit-scene:active,
 .pw-alcohol-scene:active {
   cursor: grabbing;
 }
 
+.pw-orbit-scene-canvas,
 .pw-alcohol-scene-canvas {
   position: absolute;
   inset: 0;
