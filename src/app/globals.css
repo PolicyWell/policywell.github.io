@@ -7675,6 +7675,72 @@ body:has(.pw-docs-app) .pw-ope {
   animation-duration: 5s;
 }
 
+/* Crypto company */
+.pw-fx-coin-orbit {
+  position: absolute;
+  left: 48%;
+  top: 36%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe7a0 0%, #d4a017 70%);
+  box-shadow: 0 0 12px rgba(212, 160, 23, 0.45);
+  animation: pw-coin-orbit 2.8s ease-in-out infinite;
+}
+
+@keyframes pw-coin-orbit {
+  0%,
+  100% {
+    transform: translate(-10px, 4px) rotateY(0deg);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate(12px, -8px) rotateY(180deg);
+    opacity: 1;
+  }
+}
+
+.pw-fx-chain-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(80, 200, 220, 0.75);
+  box-shadow: 0 0 10px rgba(80, 200, 220, 0.55);
+  animation: pw-chain-node 2.2s ease-in-out infinite;
+}
+
+.pw-fx-chain-node-a {
+  left: 34%;
+  top: 32%;
+}
+.pw-fx-chain-node-b {
+  left: 62%;
+  top: 28%;
+  animation-delay: 0.4s;
+}
+.pw-fx-chain-node-c {
+  left: 56%;
+  top: 58%;
+  animation-delay: 0.85s;
+}
+
+@keyframes pw-chain-node {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+.pw-photo-stage-crypto .pw-photo-stage-bob {
+  animation-duration: 5.2s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pw-photo-stage-bob,
   .pw-photo-stage-fx * {
