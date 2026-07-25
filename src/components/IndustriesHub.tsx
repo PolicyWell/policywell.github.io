@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { SiteNav } from "@/components/ui";
 import {
-  INDUSTRY_HUB_PATHS,
+  INDUSTRY_CATEGORIES,
+  industryCategoryHref,
+} from "@/lib/industries-nav";
+import {
   getIndustryChildren,
   getIndustryPage,
-  industryHref,
 } from "@/lib/industry-pages-data";
 
 export function IndustriesHub() {
@@ -29,18 +31,16 @@ export function IndustriesHub() {
         <section className="pw-industries-hub-grid-wrap">
           <div className="pw-shell">
             <ul className="pw-industries-hub-grid">
-              {INDUSTRY_HUB_PATHS.map((path) => {
+              {INDUSTRY_CATEGORIES.map((category) => {
+                const href = industryCategoryHref(category.id);
+                const path = href.replace(/\/$/, "") || href;
                 const page = getIndustryPage(path);
-                if (!page) return null;
                 const nested = getIndustryChildren(path);
                 return (
-                  <li key={path}>
-                    <Link
-                      href={industryHref(path)}
-                      className="pw-industries-hub-card"
-                    >
+                  <li key={category.id}>
+                    <Link href={href} className="pw-industries-hub-card">
                       <span className="pw-industries-hub-card-label">
-                        {page.label}
+                        {page?.label ?? category.label}
                       </span>
                       <span className="pw-industries-hub-card-meta">
                         {nested.length > 0

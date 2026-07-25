@@ -592,18 +592,18 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
 ];
 
 export const INDUSTRY_HUB_PATHS = [
-  "/bar-insurance",
-  "/catering-insurance",
-  "/contractors",
   "/ecommerce",
-  "/garages",
-  "/grocery-stores",
   "/homeowners-association-insurance",
   "/property-management",
   "/restaurants",
-  "/retail",
-  "/technology",
+  "/grocery-stores",
   "/trucking",
+  "/garages",
+  "/contractors",
+  "/technology",
+  "/retail",
+  "/bar-insurance",
+  "/catering-insurance",
 ] as const;
 
 const byPath = new Map(INDUSTRY_PAGES.map((p) => [p.path, p]));
