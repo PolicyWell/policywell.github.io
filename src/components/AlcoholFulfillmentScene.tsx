@@ -283,7 +283,7 @@ function buildScene(): THREE.Group {
       roughness: 1,
       metalness: 0,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.08,
     }),
   );
   ground.rotation.x = -Math.PI / 2;

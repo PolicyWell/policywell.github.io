@@ -53,7 +53,7 @@ export function addShadowDisc(root: THREE.Group, radius = 3.2) {
       color: 0x0a0a0a,
       roughness: 1,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.08,
     }),
   );
   ground.rotation.x = -Math.PI / 2;
