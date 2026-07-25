@@ -28,7 +28,12 @@ type MotionKind =
   | "restaurant-group"
   | "small-grocery"
   | "supercenter"
-  | "supermarket";
+  | "supermarket"
+  | "auto-dealer"
+  | "auto-repair"
+  | "body-shop"
+  | "mechanic"
+  | "used-car-dealer";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -57,6 +62,11 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "small-grocery-store": "small-grocery",
   supercenter: "supercenter",
   supermarket: "supermarket",
+  "auto-dealer": "auto-dealer",
+  "auto-repair": "auto-repair",
+  "body-shop": "body-shop",
+  mechanic: "mechanic",
+  "used-car-dealer": "used-car-dealer",
 };
 
 type IndustryPhotoStageProps = {
@@ -304,6 +314,38 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-aisle-glow pw-fx-aisle-glow-a" />
                 <span className="pw-fx-aisle-glow pw-fx-aisle-glow-b" />
                 <span className="pw-fx-cart-line" />
+              </>
+            )}
+            {motion === "auto-dealer" && (
+              <>
+                <span className="pw-fx-showroom-glow" />
+                <span className="pw-fx-lot-shine pw-fx-lot-shine-a" />
+                <span className="pw-fx-lot-shine pw-fx-lot-shine-b" />
+              </>
+            )}
+            {motion === "auto-repair" && (
+              <>
+                <span className="pw-fx-lift-rise" />
+                <span className="pw-fx-tool-spin" />
+              </>
+            )}
+            {motion === "body-shop" && (
+              <>
+                <span className="pw-fx-spray-mist" />
+                <span className="pw-fx-paint-swatch" />
+              </>
+            )}
+            {motion === "mechanic" && (
+              <>
+                <span className="pw-fx-wrench-turn" />
+                <span className="pw-fx-diag-blink" />
+              </>
+            )}
+            {motion === "used-car-dealer" && (
+              <>
+                <span className="pw-fx-string-light pw-fx-string-light-a" />
+                <span className="pw-fx-string-light pw-fx-string-light-b" />
+                <span className="pw-fx-string-light pw-fx-string-light-c" />
               </>
             )}
             {motion === "float" && (
