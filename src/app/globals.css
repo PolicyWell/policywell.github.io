@@ -6854,6 +6854,98 @@ body:has(.pw-docs-app) .pw-ope {
   animation-duration: 5.2s;
 }
 
+/* Fine dining restaurant */
+.pw-fx-candle-flame {
+  position: absolute;
+  left: 46%;
+  top: 28%;
+  width: 8px;
+  height: 14px;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(circle at 50% 70%, #fff6c8 0%, #ffb347 45%, #e86a1a 100%);
+  box-shadow: 0 0 14px rgba(255, 170, 60, 0.65);
+  animation: pw-candle-flicker 1.4s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+@keyframes pw-candle-flicker {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1) rotate(-2deg);
+    opacity: 0.75;
+  }
+  35% {
+    transform: scaleY(1.18) scaleX(0.85) rotate(3deg);
+    opacity: 1;
+  }
+  70% {
+    transform: scaleY(0.92) scaleX(1.08) rotate(-1deg);
+    opacity: 0.85;
+  }
+}
+
+.pw-fx-wine-shimmer {
+  position: absolute;
+  left: 58%;
+  top: 30%;
+  width: 10px;
+  height: 18px;
+  border-radius: 40%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(140, 20, 40, 0.15) 100%
+  );
+  animation: pw-wine-shimmer 2.6s ease-in-out infinite;
+}
+
+@keyframes pw-wine-shimmer {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(2px) skewX(-4deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(-4px) skewX(4deg);
+  }
+}
+
+.pw-fx-plate-steam {
+  position: absolute;
+  left: 48%;
+  top: 42%;
+  width: 6px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  filter: blur(2px);
+  animation: pw-plate-steam 2.8s ease-in infinite;
+}
+
+@keyframes pw-plate-steam {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scaleX(0.8);
+  }
+  30% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scaleX(1.3);
+  }
+}
+
+.pw-photo-stage-fine-dining .pw-photo-stage-bob {
+  animation-duration: 5s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pw-photo-stage-bob,
   .pw-photo-stage-fx * {
