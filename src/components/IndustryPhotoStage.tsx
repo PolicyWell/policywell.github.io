@@ -37,7 +37,16 @@ type MotionKind =
   | "cybersecurity"
   | "fintech"
   | "bar"
-  | "crypto";
+  | "crypto"
+  | "hoa-hub"
+  | "hoa-management"
+  | "hoa-condo"
+  | "hoa-coop"
+  | "hoa-board"
+  | "hoa-pud"
+  | "hoa-self-managed"
+  | "hoa-single-family"
+  | "hoa-townhome";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -75,6 +84,15 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   fintech: "fintech",
   bar: "bar",
   "crypto-company": "crypto",
+  "homeowners-association": "hoa-hub",
+  "community-association-management": "hoa-management",
+  "condominium-association": "hoa-condo",
+  "co-op-association": "hoa-coop",
+  "hoa-board": "hoa-board",
+  "planned-unit-development": "hoa-pud",
+  "self-managed-hoa": "hoa-self-managed",
+  "single-family-hoa": "hoa-single-family",
+  "townhome-association": "hoa-townhome",
 };
 
 type IndustryPhotoStageProps = {
@@ -384,6 +402,65 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-chain-node pw-fx-chain-node-a" />
                 <span className="pw-fx-chain-node pw-fx-chain-node-b" />
                 <span className="pw-fx-chain-node pw-fx-chain-node-c" />
+              </>
+            )}
+            {motion === "hoa-hub" && (
+              <>
+                <span className="pw-fx-hoa-glow pw-fx-hoa-glow-a" />
+                <span className="pw-fx-hoa-glow pw-fx-hoa-glow-b" />
+                <span className="pw-fx-hoa-tree" />
+              </>
+            )}
+            {motion === "hoa-management" && (
+              <>
+                <span className="pw-fx-hoa-keys" />
+                <span className="pw-fx-hoa-tablet" />
+              </>
+            )}
+            {motion === "hoa-condo" && (
+              <>
+                <span className="pw-fx-hoa-window pw-fx-hoa-window-a" />
+                <span className="pw-fx-hoa-window pw-fx-hoa-window-b" />
+                <span className="pw-fx-hoa-window pw-fx-hoa-window-c" />
+              </>
+            )}
+            {motion === "hoa-coop" && (
+              <>
+                <span className="pw-fx-hoa-stoop" />
+                <span className="pw-fx-hoa-window pw-fx-hoa-window-a" />
+              </>
+            )}
+            {motion === "hoa-board" && (
+              <>
+                <span className="pw-fx-hoa-gavel" />
+                <span className="pw-fx-hoa-shield" />
+              </>
+            )}
+            {motion === "hoa-pud" && (
+              <>
+                <span className="pw-fx-hoa-path" />
+                <span className="pw-fx-hoa-tree" />
+                <span className="pw-fx-hoa-glow pw-fx-hoa-glow-a" />
+              </>
+            )}
+            {motion === "hoa-self-managed" && (
+              <>
+                <span className="pw-fx-hoa-keys" />
+                <span className="pw-fx-hoa-board" />
+              </>
+            )}
+            {motion === "hoa-single-family" && (
+              <>
+                <span className="pw-fx-hoa-glow pw-fx-hoa-glow-a" />
+                <span className="pw-fx-hoa-glow pw-fx-hoa-glow-b" />
+                <span className="pw-fx-hoa-glow pw-fx-hoa-glow-c" />
+              </>
+            )}
+            {motion === "hoa-townhome" && (
+              <>
+                <span className="pw-fx-hoa-row pw-fx-hoa-row-a" />
+                <span className="pw-fx-hoa-row pw-fx-hoa-row-b" />
+                <span className="pw-fx-hoa-stoop" />
               </>
             )}
             {motion === "float" && (
