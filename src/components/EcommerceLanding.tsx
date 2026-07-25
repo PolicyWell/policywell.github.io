@@ -5,7 +5,6 @@ import { IndustryLaptopFrame } from "@/components/IndustryLaptopFrame";
 import { EcommerceStorefrontDemo } from "@/components/EcommerceStorefrontDemo";
 import { SiteNav } from "@/components/ui";
 import {
-  ECOMMERCE_VERTICALS,
   industryQuoteHref,
   isEcommerceSceneStage,
   type EcommerceVertical,
@@ -86,36 +85,6 @@ export function EcommerceLanding({
             <div className="pw-industry-hero-stage animate-rise-delay-2">
               <StageVisual vertical={vertical} />
             </div>
-          </div>
-        </section>
-
-        <section className="pw-industry-verticals">
-          <div className="pw-shell">
-            <div className="pw-industry-verticals-head">
-              <h2 className="font-display text-pine">
-                {isHub ? "Ecommerce verticals" : "More ecommerce verticals"}
-              </h2>
-              <p>
-                Nested coverage programs for DTC and omnichannel brands —
-                open a vertical to explore the interactive scene.
-              </p>
-            </div>
-            <ul className="pw-industry-vertical-list">
-              {ECOMMERCE_VERTICALS.map((item) => {
-                const active = item.slug === vertical.slug && !isHub;
-                return (
-                  <li key={item.slug}>
-                    <Link
-                      href={`/industries/ecommerce/${item.slug}/`}
-                      className={`pw-industry-vertical-link${active ? " is-active" : ""}`}
-                    >
-                      <span>{item.label}</span>
-                      <span aria-hidden>→</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
         </section>
       </main>

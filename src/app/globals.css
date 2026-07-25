@@ -5568,60 +5568,6 @@ body:has(.pw-docs-app) .pw-ope {
   color: #2f6f55;
 }
 
-.pw-industry-verticals {
-  padding: 2rem 0 3.5rem;
-  border-top: 1px solid rgba(15, 47, 40, 0.08);
-  background: rgba(255, 255, 255, 0.55);
-}
-
-.pw-industry-verticals-head {
-  max-width: 36rem;
-  margin-bottom: 1.25rem;
-}
-
-.pw-industry-verticals-head h2 {
-  margin: 0 0 0.4rem;
-  font-size: 1.65rem;
-}
-
-.pw-industry-verticals-head p {
-  margin: 0;
-  color: var(--stone);
-}
-
-.pw-industry-vertical-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.35rem;
-}
-
-@media (min-width: 720px) {
-  .pw-industry-vertical-list {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.pw-industry-vertical-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.95rem 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(15, 47, 40, 0.08);
-  background: #fff;
-  color: var(--pine);
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.pw-industry-vertical-link:hover,
-.pw-industry-vertical-link.is-active {
-  background: rgba(15, 47, 40, 0.04);
-  border-color: rgba(15, 47, 40, 0.16);
-}
-
 .pw-industries-hub-link {
   display: flex;
   align-items: center;
@@ -5771,18 +5717,16 @@ body:has(.pw-docs-app) .pw-ope {
   width: 100%;
   height: min(72vw, 520px);
   min-height: 300px;
-  border-radius: 18px;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse at center, #1a1a1a 0%, #050505 70%);
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
   cursor: grab;
   touch-action: none;
 }
 
 .pw-orbit-scene-light {
-  background:
-    radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f3ebe3 72%);
-  box-shadow: inset 0 0 0 1px rgba(15, 47, 40, 0.06);
+  background: transparent;
+  box-shadow: none;
 }
 
 .pw-orbit-scene:active,
