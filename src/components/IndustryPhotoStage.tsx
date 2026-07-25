@@ -24,7 +24,8 @@ type MotionKind =
   | "multifamily-property"
   | "residential-property"
   | "short-term-rental"
-  | "fine-dining";
+  | "fine-dining"
+  | "restaurant-group";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -49,6 +50,7 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "residential-property-management": "residential-property",
   "short-term-rental-management": "short-term-rental",
   "fine-dining-restaurant": "fine-dining",
+  "restaurant-group": "restaurant-group",
 };
 
 type IndustryPhotoStageProps = {
@@ -267,6 +269,14 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-candle-flame" />
                 <span className="pw-fx-wine-shimmer" />
                 <span className="pw-fx-plate-steam" />
+              </>
+            )}
+            {motion === "restaurant-group" && (
+              <>
+                <span className="pw-fx-storefront-glow pw-fx-storefront-glow-a" />
+                <span className="pw-fx-storefront-glow pw-fx-storefront-glow-b" />
+                <span className="pw-fx-storefront-glow pw-fx-storefront-glow-c" />
+                <span className="pw-fx-umbrella-sway" />
               </>
             )}
             {motion === "float" && (
