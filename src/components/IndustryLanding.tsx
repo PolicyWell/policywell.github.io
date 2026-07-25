@@ -23,6 +23,9 @@ export function IndustryLanding({ path }: { path: string }) {
 
   const children = getIndustryChildren(page.path);
   const parent = page.parentPath ? getIndustryPage(page.parentPath) : null;
+  const grandparent = parent?.parentPath
+    ? getIndustryPage(parent.parentPath)
+    : null;
   const siblings = parent ? getIndustryChildren(parent.path) : [];
   const isLeaf = children.length === 0;
   /** Standalone hubs (Retail, Bar, Catering) have no children or siblings. */
@@ -56,6 +59,14 @@ export function IndustryLanding({ path }: { path: string }) {
             <div className="pw-industry-hero-copy animate-rise">
               <p className="pw-industry-eyebrow">
                 <Link href="/industries/">Industries</Link>
+                {grandparent ? (
+                  <>
+                    <span aria-hidden> / </span>
+                    <Link href={industryHref(grandparent.path)}>
+                      {grandparent.label}
+                    </Link>
+                  </>
+                ) : null}
                 {parent ? (
                   <>
                     <span aria-hidden> / </span>

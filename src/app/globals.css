@@ -8068,6 +8068,111 @@ body:has(.pw-docs-app) .pw-ope {
   animation-duration: 5.2s;
 }
 
+/* Life insurance + annuities */
+.pw-fx-life-shield {
+  position: absolute;
+  left: 46%;
+  top: 38%;
+  width: 22px;
+  height: 26px;
+  border-radius: 40% 40% 45% 45%;
+  background: rgba(40, 100, 160, 0.4);
+  box-shadow: 0 0 14px rgba(40, 120, 180, 0.4);
+  animation: pw-life-shield 2.6s ease-in-out infinite;
+}
+
+@keyframes pw-life-shield {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.12);
+  }
+}
+
+.pw-fx-life-pulse {
+  position: absolute;
+  left: 52%;
+  top: 44%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(200, 70, 90, 0.55);
+  animation: pw-life-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pw-life-pulse {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
+.pw-fx-annuity-flow {
+  position: absolute;
+  left: 48%;
+  top: 36%;
+  width: 6px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(80, 180, 160, 0.85) 0%,
+    rgba(80, 180, 160, 0.05) 100%
+  );
+  animation: pw-annuity-flow 2.2s ease-in infinite;
+}
+
+@keyframes pw-annuity-flow {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scaleY(0.5);
+  }
+  40% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(18px) scaleY(1.2);
+  }
+}
+
+.pw-fx-annuity-coin {
+  position: absolute;
+  left: 58%;
+  top: 58%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe7a0 0%, #d4a017 70%);
+  animation: pw-annuity-coin 2.4s ease-in-out infinite;
+}
+
+@keyframes pw-annuity-coin {
+  0%,
+  100% {
+    transform: translateY(0) rotateY(0deg);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateY(-10px) rotateY(180deg);
+    opacity: 1;
+  }
+}
+
+.pw-photo-stage-life .pw-photo-stage-bob,
+.pw-photo-stage-annuity .pw-photo-stage-bob {
+  animation-duration: 5.2s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pw-photo-stage-bob,
   .pw-photo-stage-fx * {

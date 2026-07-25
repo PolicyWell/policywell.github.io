@@ -13,6 +13,125 @@ export type IndustryPage = {
 
 export const INDUSTRY_PAGES: readonly IndustryPage[] = [
   {
+    path: "/life-insurance",
+    label: "Life Insurance",
+    headline: "Life insurance coverage built around the policy — not a generic package",
+    support:
+      "PolicyWell helps households and advisors compare term, whole life, and indexed universal life with explainable funding and coverage recommendations across carriers.",
+    title: "Life Insurance",
+    hero: "life-insurance-hero",
+    categoryId: "life-insurance",
+  },
+  {
+    path: "/life-insurance/term-insurance",
+    label: "Term Life",
+    headline: "Term life insurance with clear duration, conversion, and cash-back options",
+    support:
+      "Compare regular term and cash-back offer term side by side — death benefit design, conversion privileges, and rider fit — with human-reviewed recommendations.",
+    title: "Term Life Insurance",
+    hero: "term-insurance-hero",
+    categoryId: "life-insurance",
+    parentPath: "/life-insurance",
+  },
+  {
+    path: "/life-insurance/cash-back-offer-term-insurance",
+    label: "Cash Back Offer Term",
+    headline: "Cash-back offer term life when the marketing pitch needs a second look",
+    support:
+      "Cash-back / return-of-premium style term can look attractive on a brochure. We unpack the real cost, lapse risk, and whether a regular term or permanent design fits better.",
+    title: "Cash Back Offer Term Life Insurance",
+    hero: "cash-back-offer-term-insurance-hero",
+    categoryId: "life-insurance",
+    parentPath: "/life-insurance/term-insurance",
+  },
+  {
+    path: "/life-insurance/regular-term-insurance",
+    label: "Regular Term",
+    headline: "Regular term life insurance sized to the years you actually need coverage",
+    support:
+      "Level term designed around income replacement, mortgage years, and conversion options — without cash-back marketing complexity.",
+    title: "Regular Term Life Insurance",
+    hero: "regular-term-insurance-hero",
+    categoryId: "life-insurance",
+    parentPath: "/life-insurance/term-insurance",
+  },
+  {
+    path: "/life-insurance/whole-life-insurance",
+    label: "Whole Life",
+    headline: "Whole life insurance with dividend and guaranteed-value clarity",
+    support:
+      "Permanent coverage, cash value, and dividend mechanics explained in plain language — so funding decisions are grounded in the contract, not the illustration alone.",
+    title: "Whole Life Insurance",
+    hero: "whole-life-insurance-hero",
+    categoryId: "life-insurance",
+    parentPath: "/life-insurance",
+  },
+  {
+    path: "/life-insurance/indexed-universal-life-insurance",
+    label: "Indexed Universal Life",
+    headline: "Indexed universal life insurance when the index story needs underwriting discipline",
+    support:
+      "IUL illustrations can outrun reality. We stress-cap assumptions, cost of insurance, and funding floors so the policy design matches the household goal.",
+    title: "Indexed Universal Life (IUL) Insurance",
+    hero: "indexed-universal-life-insurance-hero",
+    categoryId: "life-insurance",
+    parentPath: "/life-insurance",
+  },
+  {
+    path: "/annuities",
+    label: "Annuities",
+    headline: "Annuity coverage and product fit across accumulation and income designs",
+    support:
+      "Variable, fixed indexed, fixed, and immediate annuities — compared on fees, guarantees, surrender schedules, and income riders with advisor-ready explanations.",
+    title: "Annuities",
+    hero: "annuities-hero",
+    categoryId: "annuities",
+  },
+  {
+    path: "/annuities/variable-annuity-insurance",
+    label: "Variable Annuity",
+    headline: "Variable annuity analysis when subaccounts and living benefits collide",
+    support:
+      "Separate-account risk, rider fees, and guaranteed living benefit tradeoffs — reviewed so accumulation and income claims stay tied to the contract.",
+    title: "Variable Annuity",
+    hero: "variable-annuity-insurance-hero",
+    categoryId: "annuities",
+    parentPath: "/annuities",
+  },
+  {
+    path: "/annuities/fixed-indexed-annuity-insurance",
+    label: "Fixed Indexed Annuity (FIA)",
+    headline: "Fixed indexed annuity (FIA) clarity on caps, participation, and income riders",
+    support:
+      "Index-linked crediting is not market participation. We unpack caps, spreads, participation rates, and rider cost before the illustration becomes the plan.",
+    title: "Fixed Indexed Annuity (FIA)",
+    hero: "fixed-indexed-annuity-insurance-hero",
+    categoryId: "annuities",
+    parentPath: "/annuities",
+  },
+  {
+    path: "/annuities/fixed-annuity-insurance",
+    label: "Fixed Annuity",
+    headline: "Fixed annuity and MYGA-style designs for rate certainty",
+    support:
+      "Multi-year guaranteed and traditional fixed annuities compared on declared rates, MVA, surrender windows, and liquidity needs.",
+    title: "Fixed Annuity",
+    hero: "fixed-annuity-insurance-hero",
+    categoryId: "annuities",
+    parentPath: "/annuities",
+  },
+  {
+    path: "/annuities/immediate-annuity-insurance",
+    label: "Immediate Annuity (SPIA)",
+    headline: "Immediate annuity (SPIA) income when the paycheck needs to be contractual",
+    support:
+      "Single-premium immediate annuity structuring for lifetime or period-certain income — with clear treatment of refund features and survivor options.",
+    title: "Immediate Annuity (SPIA)",
+    hero: "immediate-annuity-insurance-hero",
+    categoryId: "annuities",
+    parentPath: "/annuities",
+  },
+  {
     path: "/bar-insurance",
     label: "Bar",
     headline: "Bar insurance built for late-night venues",
@@ -593,6 +712,8 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
 ];
 
 export const INDUSTRY_HUB_PATHS = [
+  "/life-insurance",
+  "/annuities",
   "/ecommerce",
   "/homeowners-association-insurance",
   "/property-management",
@@ -627,4 +748,18 @@ export function industryHref(path: string): string {
 /** Nested slug segments under a category hub (without leading path). */
 export function industryChildSlugs(hubPath: string): string[] {
   return getIndustryChildren(hubPath).map((p) => p.path.split("/").pop()!);
+}
+
+/**
+ * All single-segment slugs under a hub, including pages whose parent is an
+ * intermediate hub (e.g. term leaves under /life-insurance/term-insurance).
+ */
+export function industrySegmentSlugs(hubPath: string): string[] {
+  const clean =
+    hubPath.endsWith("/") && hubPath !== "/" ? hubPath.slice(0, -1) : hubPath;
+  return INDUSTRY_PAGES.filter((p) => {
+    if (!p.path.startsWith(`${clean}/`)) return false;
+    const rest = p.path.slice(clean.length + 1);
+    return rest.length > 0 && !rest.includes("/");
+  }).map((p) => p.path.split("/").pop()!);
 }
