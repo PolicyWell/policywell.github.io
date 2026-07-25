@@ -8,7 +8,11 @@ import {
   getIndustryPage,
   industryHref,
 } from "@/lib/industry-pages-data";
-import { industryQuoteHref } from "@/lib/industries-nav";
+import {
+  INDUSTRY_CATEGORIES,
+  industryCategoryHref,
+  industryQuoteHref,
+} from "@/lib/industries-nav";
 
 const PHONE_DISPLAY = "(470) 887-0449";
 const PHONE_HREF = "tel:+14708870449";
@@ -21,6 +25,8 @@ export function IndustryLanding({ path }: { path: string }) {
   const parent = page.parentPath ? getIndustryPage(page.parentPath) : null;
   const siblings = parent ? getIndustryChildren(parent.path) : [];
   const isLeaf = children.length === 0;
+  /** Standalone hubs (Retail, Bar, Catering) have no children or siblings. */
+  const isStandaloneHub = children.length === 0 && !parent;
 
   /** Hub pages browse their children; micro pages browse sibling verticals. */
   const nestItems = children.length > 0 ? children : siblings;
@@ -29,6 +35,13 @@ export function IndustryLanding({ path }: { path: string }) {
     children.length > 0
       ? "Open a nested vertical for coverage built around that niche."
       : `More ${nestLabel.toLowerCase()} verticals in this industry.`;
+
+  const industryCatalog = INDUSTRY_CATEGORIES.map((category) => ({
+    id: category.id,
+    label: category.label,
+    href: industryCategoryHref(category.id),
+    active: category.id === page.categoryId,
+  }));
 
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full overflow-x-clip">
@@ -63,6 +76,11 @@ export function IndustryLanding({ path }: { path: string }) {
                 <Link href={industryQuoteHref(page.label)} className="pw-btn">
                   Get a quote
                 </Link>
+                {isStandaloneHub && (
+                  <Link href="/industries/" className="pw-btn-secondary">
+                    ← All industries
+                  </Link>
+                )}
               </div>
               {isLeaf && (
                 <p className="pw-industry-hero-meta">
@@ -110,6 +128,39 @@ export function IndustryLanding({ path }: { path: string }) {
                     </li>
                   );
                 })}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {isStandaloneHub && (
+          <section className="pw-industry-child-grid">
+            <div className="pw-shell">
+              <div className="pw-industry-child-grid-head">
+                <h2 className="font-display text-pine">Browse Industries</h2>
+                <p>
+                  Back to the main Industries tab — open any vertical we cover.
+                </p>
+              </div>
+              <ul className="pw-industry-child-list">
+                <li>
+                  <Link href="/industries/" className="pw-industry-child-link">
+                    <span>All industries</span>
+                    <span aria-hidden>→</span>
+                  </Link>
+                </li>
+                {industryCatalog.map((item) => (
+                  <li key={item.id}>
+                    <Link
+                      href={item.href}
+                      className={`pw-industry-child-link${item.active ? " is-active" : ""}`}
+                      aria-current={item.active ? "page" : undefined}
+                    >
+                      <span>{item.label}</span>
+                      <span aria-hidden>→</span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </section>

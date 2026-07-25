@@ -167,6 +167,13 @@ function PanelBody({
         >
           Open {category.label} landing
         </Link>
+        <Link
+          href="/industries/"
+          className="pw-industries-note-link"
+          onClick={onNavigate}
+        >
+          ← Back to all industries
+        </Link>
       </div>
     );
   }
