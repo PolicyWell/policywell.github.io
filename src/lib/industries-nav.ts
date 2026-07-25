@@ -40,6 +40,27 @@ export const INDUSTRY_SPECIALIST_NOTE =
 /** Industries mega-menu - structure matches the Industries Tab screenshots. */
 export const INDUSTRY_CATEGORIES: IndustryCategory[] = [
   {
+    id: "life-insurance",
+    label: "Life Insurance",
+    children: [
+      "Term Life",
+      "Cash Back Offer Term",
+      "Regular Term",
+      "Whole Life",
+      "Indexed Universal Life",
+    ],
+  },
+  {
+    id: "annuities",
+    label: "Annuities",
+    children: [
+      "Variable Annuity",
+      "Fixed Indexed Annuity (FIA)",
+      "Fixed Annuity",
+      "Immediate Annuity (SPIA)",
+    ],
+  },
+  {
     id: "ecommerce",
     label: "Ecommerce",
     children: [
@@ -275,6 +296,8 @@ export function industryQuoteHref(industry: string): string {
 
 /** Coverwatch-style category hub paths on PolicyWell. */
 const CATEGORY_HUB_PATH: Record<string, string> = {
+  "life-insurance": "/life-insurance/",
+  annuities: "/annuities/",
   ecommerce: "/ecommerce/",
   "home-owners-associations": "/homeowners-association-insurance/",
   "property-management": "/property-management/",

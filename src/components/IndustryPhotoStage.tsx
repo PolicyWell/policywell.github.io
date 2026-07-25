@@ -46,7 +46,9 @@ type MotionKind =
   | "hoa-pud"
   | "hoa-self-managed"
   | "hoa-single-family"
-  | "hoa-townhome";
+  | "hoa-townhome"
+  | "life"
+  | "annuity";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -93,6 +95,17 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "self-managed-hoa": "hoa-self-managed",
   "single-family-hoa": "hoa-single-family",
   "townhome-association": "hoa-townhome",
+  life: "life",
+  term: "life",
+  "cash-back-offer-term": "life",
+  "regular-term": "life",
+  "whole-life": "life",
+  "indexed-universal-life": "life",
+  annuities: "annuity",
+  "variable-annuity": "annuity",
+  "fixed-indexed-annuity": "annuity",
+  "fixed-annuity": "annuity",
+  "immediate-annuity": "annuity",
 };
 
 type IndustryPhotoStageProps = {
@@ -461,6 +474,18 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-hoa-row pw-fx-hoa-row-a" />
                 <span className="pw-fx-hoa-row pw-fx-hoa-row-b" />
                 <span className="pw-fx-hoa-stoop" />
+              </>
+            )}
+            {motion === "life" && (
+              <>
+                <span className="pw-fx-life-shield" />
+                <span className="pw-fx-life-pulse" />
+              </>
+            )}
+            {motion === "annuity" && (
+              <>
+                <span className="pw-fx-annuity-flow" />
+                <span className="pw-fx-annuity-coin" />
               </>
             )}
             {motion === "float" && (
