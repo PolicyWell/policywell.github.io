@@ -10,7 +10,10 @@ type MotionKind =
   | "rack"
   | "pallet"
   | "shop"
-  | "computer";
+  | "computer"
+  | "box-truck"
+  | "dump-truck"
+  | "tow-truck";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -21,6 +24,9 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "pet-business": "float",
   supplement: "pills",
   "alcoholic-beverage": "pour",
+  "box-truck": "box-truck",
+  "dump-truck": "dump-truck",
+  "tow-truck": "tow-truck",
 };
 
 type IndustryPhotoStageProps = {
@@ -148,6 +154,27 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-cart" />
                 <span className="pw-fx-package" />
                 <span className="pw-fx-cursor" />
+              </>
+            )}
+            {motion === "box-truck" && (
+              <>
+                <span className="pw-fx-wheel pw-fx-wheel-a" />
+                <span className="pw-fx-wheel pw-fx-wheel-b" />
+                <span className="pw-fx-road-dash" />
+              </>
+            )}
+            {motion === "dump-truck" && (
+              <>
+                <span className="pw-fx-dump-bed" />
+                <span className="pw-fx-wheel pw-fx-wheel-a" />
+                <span className="pw-fx-wheel pw-fx-wheel-b" />
+              </>
+            )}
+            {motion === "tow-truck" && (
+              <>
+                <span className="pw-fx-tow-boom" />
+                <span className="pw-fx-tow-hook" />
+                <span className="pw-fx-wheel pw-fx-wheel-a" />
               </>
             )}
             {motion === "float" && (
