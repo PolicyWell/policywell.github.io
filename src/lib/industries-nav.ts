@@ -1,3 +1,5 @@
+import { INDUSTRY_PAGES } from "@/lib/industry-pages-data";
+
 export type IndustryCategory = {
   id: string;
   label: string;
@@ -271,9 +273,24 @@ export function industryQuoteHref(industry: string): string {
   return `/quote/?industry=${encodeURIComponent(industry)}`;
 }
 
+/** Coverwatch-style category hub paths on PolicyWell. */
+const CATEGORY_HUB_PATH: Record<string, string> = {
+  ecommerce: "/ecommerce/",
+  "home-owners-associations": "/homeowners-association-insurance/",
+  "property-management": "/property-management/",
+  restaurant: "/restaurants/",
+  "grocery-store": "/grocery-stores/",
+  trucking: "/trucking/",
+  "garage-auto": "/garages/",
+  contractor: "/contractors/",
+  technology: "/technology/",
+  "retail-store": "/retail/",
+  bar: "/bar-insurance/",
+  catering: "/catering-insurance/",
+};
+
 export function industryCategoryHref(categoryId: string): string {
-  if (categoryId === "ecommerce") return "/industries/ecommerce/";
-  return industryQuoteHref(
+  return CATEGORY_HUB_PATH[categoryId] ?? industryQuoteHref(
     getIndustryCategory(categoryId)?.label ?? categoryId,
   );
 }
@@ -282,9 +299,13 @@ export function industryChildHref(
   categoryId: string,
   childLabel: string,
 ): string {
-  if (categoryId === "ecommerce") {
-    const vertical = ECOMMERCE_VERTICALS.find((v) => v.label === childLabel);
-    if (vertical) return `/industries/ecommerce/${vertical.slug}/`;
+  const hub = CATEGORY_HUB_PATH[categoryId];
+  if (hub) {
+    const children = INDUSTRY_PAGES.filter(
+      (p) => p.categoryId === categoryId && p.parentPath,
+    );
+    const match = children.find((p) => p.label === childLabel);
+    if (match) return `${match.path}/`;
   }
   return industryQuoteHref(childLabel);
 }

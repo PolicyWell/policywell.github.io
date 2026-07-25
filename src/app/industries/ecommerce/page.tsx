@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { EcommerceLanding } from "@/components/EcommerceLanding";
-import { ECOMMERCE_VERTICALS } from "@/lib/industries-nav";
+import { IndustryLanding } from "@/components/IndustryLanding";
 
 export const metadata: Metadata = {
   title: "Ecommerce Insurance",
   description:
-    "Nested ecommerce coverage for DTC brands — clothing, beauty, CPG, beverage, pet, and supplements. Interactive storefront previews inside PolicyWell.",
+    "Ecommerce insurance for DTC and consumer brands — product liability, recall coverage, and channel compliance across Amazon, Shopify, and retail.",
   openGraph: {
     title: "Ecommerce Insurance · PolicyWell",
     description:
@@ -14,11 +13,7 @@ export const metadata: Metadata = {
   },
 };
 
-/** Hub uses Clothing Store as the default framed demo (Coverwatch-style). */
-const HUB_VERTICAL =
-  ECOMMERCE_VERTICALS.find((v) => v.slug === "clothing-store") ??
-  ECOMMERCE_VERTICALS[0];
-
+/** Legacy path alias — canonical hub is /ecommerce/. */
 export default function EcommerceIndustryPage() {
-  return <EcommerceLanding vertical={HUB_VERTICAL} isHub />;
+  return <IndustryLanding path="/ecommerce" />;
 }

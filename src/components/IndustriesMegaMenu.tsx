@@ -7,7 +7,6 @@ import {
   INDUSTRY_SPECIALIST_NOTE,
   industryCategoryHref,
   industryChildHref,
-  industryQuoteHref,
   type IndustryCategory,
 } from "@/lib/industries-nav";
 
@@ -156,16 +155,17 @@ function PanelBody({
   category: IndustryCategory;
   onNavigate?: () => void;
 }) {
+  // Empty children still have a dedicated Coverwatch-style landing page.
   if (category.children.length === 0) {
     return (
       <div className="pw-industries-note">
         <p>{INDUSTRY_SPECIALIST_NOTE}</p>
         <Link
-          href={industryQuoteHref(category.label)}
+          href={industryCategoryHref(category.id)}
           className="pw-industries-note-link"
           onClick={onNavigate}
         >
-          Get a quote for {category.label}
+          Open {category.label} landing
         </Link>
       </div>
     );
@@ -173,16 +173,14 @@ function PanelBody({
 
   return (
     <div className="pw-industries-detail-stack">
-      {category.id === "ecommerce" && (
-        <Link
-          href={industryCategoryHref("ecommerce")}
-          className="pw-industries-hub-link"
-          onClick={onNavigate}
-        >
-          Open Ecommerce landing
-          <span aria-hidden>→</span>
-        </Link>
-      )}
+      <Link
+        href={industryCategoryHref(category.id)}
+        className="pw-industries-hub-link"
+        onClick={onNavigate}
+      >
+        Open {category.label} landing
+        <span aria-hidden>→</span>
+      </Link>
       <ul className="pw-industries-subs">
         {category.children.map((child) => (
           <li key={child}>
@@ -292,16 +290,14 @@ export function IndustriesMegaMenu({
               </button>
               <p className="pw-industries-nested-title">{nested.label}</p>
             </div>
-            {nested.id === "ecommerce" && (
-              <Link
-                href={industryCategoryHref("ecommerce")}
-                className="pw-industries-hub-link"
-                onClick={closeAll}
-              >
-                Ecommerce overview
-                <span aria-hidden>→</span>
-              </Link>
-            )}
+            <Link
+              href={industryCategoryHref(nested.id)}
+              className="pw-industries-hub-link"
+              onClick={closeAll}
+            >
+              {nested.label} overview
+              <span aria-hidden>→</span>
+            </Link>
             <ul className="pw-industries-nested-list">
               {nested.children.map((child) => (
                 <li key={child}>
@@ -365,7 +361,7 @@ export function IndustriesMegaMenu({
                 </button>
               ) : (
                 <Link
-                  href={industryQuoteHref(cat.label)}
+                  href={industryCategoryHref(cat.id)}
                   className="pw-industries-rail-item"
                   onClick={closeAll}
                 >

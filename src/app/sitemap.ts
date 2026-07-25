@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { API_GROUPS } from "@/lib/api-reference-data";
 import { DOCS_USE_CASES } from "@/lib/docs-data";
 import { ECOMMERCE_VERTICALS } from "@/lib/industries-nav";
+import { INDUSTRY_PAGES } from "@/lib/industry-pages-data";
 
 export const dynamic = "force-static";
 
@@ -28,7 +29,20 @@ const STATIC_PAGES: Entry[] = [
   { path: "/agent", changeFrequency: "weekly", priority: 0.85 },
   { path: "/quote", changeFrequency: "weekly", priority: 0.85 },
   { path: "/commercial", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/industries/ecommerce", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/industries", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/ecommerce", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/contractors", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/restaurants", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/trucking", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/garages", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/grocery-stores", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/property-management", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/homeowners-association-insurance", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/technology", changeFrequency: "weekly", priority: 0.75 },
+  { path: "/retail", changeFrequency: "weekly", priority: 0.7 },
+  { path: "/bar-insurance", changeFrequency: "weekly", priority: 0.7 },
+  { path: "/catering-insurance", changeFrequency: "weekly", priority: 0.7 },
+  { path: "/industries/ecommerce", changeFrequency: "monthly", priority: 0.5 },
   { path: "/docs", changeFrequency: "weekly", priority: 0.9 },
   { path: "/docs/cli", changeFrequency: "monthly", priority: 0.7 },
   { path: "/docs/engineering", changeFrequency: "monthly", priority: 0.7 },
@@ -56,15 +70,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const ecommercePages: Entry[] = ECOMMERCE_VERTICALS.map((vertical) => ({
     path: `/industries/ecommerce/${vertical.slug}`,
     changeFrequency: "monthly" as const,
-    priority: 0.7,
+    priority: 0.45,
   }));
 
-  return [...STATIC_PAGES, ...guidePages, ...apiPages, ...ecommercePages].map(
-    (entry) => ({
-      url: url(entry.path),
-      lastModified,
-      changeFrequency: entry.changeFrequency,
-      priority: entry.priority,
-    }),
-  );
+  const industryPages: Entry[] = INDUSTRY_PAGES.map((page) => ({
+    path: page.path,
+    changeFrequency: "monthly" as const,
+    priority: page.parentPath ? 0.65 : 0.75,
+  }));
+
+  return [
+    ...STATIC_PAGES,
+    ...guidePages,
+    ...apiPages,
+    ...industryPages,
+    ...ecommercePages,
+  ].map((entry) => ({
+    url: url(entry.path),
+    lastModified,
+    changeFrequency: entry.changeFrequency,
+    priority: entry.priority,
+  }));
 }
