@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { UseCaseCard } from "@/components/docs/UseCaseCard";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { DOCS_META, DOCS_USE_CASES } from "@/lib/docs-data";
+import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = marketingMetadata({
   title: DOCS_META.title,
   description: DOCS_META.description,
-  openGraph: {
-    title: `${DOCS_META.title} · PolicyWell Docs`,
-    description: DOCS_META.description,
-    url: "https://policywell.ai/docs",
-  },
-};
+  path: "/docs",
+  ogTitle: `${DOCS_META.title} · PolicyWell Docs`,
+});
 
 export default function DocsStartHerePage() {
   return (
     <article className="pw-docs-article">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Docs", path: "/docs" },
+        ])}
+      />
       <header className="pw-docs-article-header">
         <div className="pw-docs-title-row">
           <h1>{DOCS_META.title}</h1>

@@ -60,6 +60,8 @@ export function IndustryLanding({ path }: { path: string }) {
           >
             <div className="pw-industry-hero-copy animate-rise">
               <p className="pw-industry-eyebrow">
+                <Link href="/">PolicyWell</Link>
+                <span aria-hidden> / </span>
                 <Link href="/industries/">Industries</Link>
                 {grandparent ? (
                   <>

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { IndustryLanding } from "@/components/IndustryLanding";
+import { IndustrySeo } from "@/components/seo/IndustrySeo";
 import {
   getIndustryPage,
   industryChildSlugs,
 } from "@/lib/industry-pages-data";
+import { industryPageMetadata } from "@/lib/seo";
 
 const HUB = "/grocery-stores";
 
@@ -18,20 +20,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const page = getIndustryPage(`${HUB}/${slug}`);
   if (!page) return { title: "Industry" };
-  return {
-    title: page.title,
-    description: page.support,
-    openGraph: {
-      title: `${page.title} · PolicyWell`,
-      description: page.support,
-      url: `https://policywell.ai${HUB}/${slug}`,
-    },
-  };
+  return industryPageMetadata(page);
 }
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
   const path = `${HUB}/${slug}`;
   if (!getIndustryPage(path)) notFound();
-  return <IndustryLanding path={path} />;
+  return (
+    <>
+      <IndustrySeo path={path} />
+      <IndustryLanding path={path} />
+    </>
+  );
 }

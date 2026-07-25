@@ -8,12 +8,14 @@ import {
   API_META,
   allApiEndpoints,
 } from "@/lib/api-reference-data";
+import { marketingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = marketingMetadata({
   title: "Full API reference",
   description:
     "Complete PolicyWell REST API reference - every endpoint on one page.",
-};
+  path: "/docs/api/reference",
+});
 
 export default function FullApiReferencePage() {
   const count = allApiEndpoints().length;

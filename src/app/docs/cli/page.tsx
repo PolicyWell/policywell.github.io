@@ -1,14 +1,17 @@
 import { readFile } from "fs/promises";
 import path from "path";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { markdownToHtml } from "@/lib/markdown";
 import { sanitizePublicDocsMarkdown } from "@/lib/sanitize-public-docs";
+import { marketingMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = marketingMetadata({
   title: "CLI",
   description:
     "Compliance-first PolicyWell CLI (pw) for producers, IMOs, carriers, and clients.",
-};
+  path: "/docs/cli",
+});
 
 export default async function CliDocsPage() {
   const mdPath = path.join(process.cwd(), "docs", "CLI_DESIGN.md");

@@ -4,7 +4,8 @@ export const dynamic = "force-static";
 
 /**
  * Crawl rules + sitemap discovery for Google Search Console and other bots.
- * App/workspace surfaces stay out of the index; marketing + docs stay open.
+ * Narrow disallow list for private/application surfaces only.
+ * Rendering assets (CSS/JS/images) stay crawlable.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -25,6 +26,9 @@ export default function robots(): MetadataRoute.Robots {
           "/carrier",
           "/firm",
           "/imo",
+          "/agent",
+          "/commercial",
+          "/deck",
           "/api/",
         ],
       },

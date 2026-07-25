@@ -38,9 +38,9 @@ export const API_BASE_URL = "https://api.policywell.ai/v1";
 export const API_MCP_HINT = "mcp.policywell.ai";
 
 export const API_META = {
-  title: "API reference",
+  title: "PolicyWell API Documentation",
   description:
-    "REST endpoints for PolicyWell - personal and commercial insurance intelligence, underwriting decision support, carrier appetite, webhooks, and enterprise workflows.",
+    "REST endpoints for PolicyWell — personal and commercial insurance intelligence, underwriting decision support, carrier appetite, webhooks, and enterprise workflows.",
   version: "v1",
   authHeader: "Authorization: Bearer pw_test_...",
 } as const;

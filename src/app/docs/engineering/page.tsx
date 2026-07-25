@@ -1,10 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { marketingMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = marketingMetadata({
   title: "Engineering",
   description:
     "Architecture overview for the PolicyWell insurance intelligence platform.",
-};
+  path: "/docs/engineering",
+});
 
 const LAYERS = [
   {

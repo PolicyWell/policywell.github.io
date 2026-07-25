@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/docs/UseCaseCard";
 import { DOCS_USE_CASES, getUseCase } from "@/lib/docs-data";
 import { relatedApiForUseCase } from "@/lib/docs-nav";
+import { marketingMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -17,15 +18,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const useCase = getUseCase(slug);
   if (!useCase) return { title: "Not found" };
-  return {
+  return marketingMetadata({
     title: useCase.title,
     description: useCase.summary,
-    openGraph: {
-      title: `${useCase.title} · PolicyWell Docs`,
-      description: useCase.summary,
-      url: `https://policywell.ai/docs/guides/${useCase.slug}`,
-    },
-  };
+    path: `/docs/guides/${useCase.slug}`,
+    ogTitle: `${useCase.title} · PolicyWell Docs`,
+    // Planned guides stay out of the index until content is production-ready.
+    robots:
+      useCase.status === "Planned"
+        ? { index: false, follow: true }
+        : undefined,
+  });
 }
 
 export default async function DocsGuidePage({ params }: PageProps) {

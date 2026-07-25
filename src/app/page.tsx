@@ -1,8 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DeckViewer } from "@/components/DeckViewer";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteNav } from "@/components/ui";
+import {
+  marketingMetadata,
+  organizationJsonLd,
+  webSiteJsonLd,
+} from "@/lib/seo";
+
+export const metadata: Metadata = marketingMetadata({
+  title: "PolicyWell | AI Infrastructure for Insurance",
+  description:
+    "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
+  path: "/",
+  absoluteTitle: true,
+  ogTitle: "PolicyWell | AI Infrastructure for Insurance",
+});
 
 const AUDIENCES = [
   { href: "/agent", label: "Individuals and Families" },
@@ -27,6 +43,7 @@ const ENGINE = [
 export default function HomePage() {
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-clip">
+      <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
       <SiteNav />
       <main className="relative flex-1 min-w-0 w-full overflow-x-clip">
         <section className="relative overflow-hidden flex flex-col pw-home-hero">
