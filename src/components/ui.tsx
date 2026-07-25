@@ -185,18 +185,18 @@ export function SiteNav() {
         <BrandMark />
         {/* Desktop / computer: inline links + Industries mega-menu */}
         <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm text-stone">
-          <IndustriesMegaMenu
-            open={industriesOpen}
-            onOpenChange={(next) => {
-              setIndustriesOpen(next);
-              if (next) setPlatformOpen(false);
-            }}
-          />
           <PlatformMenu
             open={platformOpen}
             onOpenChange={(next) => {
               setPlatformOpen(next);
               if (next) setIndustriesOpen(false);
+            }}
+          />
+          <IndustriesMegaMenu
+            open={industriesOpen}
+            onOpenChange={(next) => {
+              setIndustriesOpen(next);
+              if (next) setPlatformOpen(false);
             }}
           />
           {links.map((l) => (
