@@ -312,6 +312,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
     headline: "Homeowners association insurance built around your community",
     support: "Homeowners association insurance for boards, self-managed HOAs, and management companies. Master policies, D&O, fidelity bonds, and liability for condos, townhomes, single-family, co-ops, and planned communities. Shop 60+ carriers.",
     title: "HOA Insurance",
+    hero: "homeowners-association-insurance-hero",
     categoryId: "home-owners-associations",
   },
   {

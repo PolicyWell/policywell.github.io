@@ -7741,6 +7741,333 @@ body:has(.pw-docs-app) .pw-ope {
   animation-duration: 5.2s;
 }
 
+/* HOA verticals */
+.pw-fx-hoa-glow {
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 210, 130, 0.45);
+  box-shadow: 0 0 12px rgba(255, 190, 90, 0.4);
+  animation: pw-hoa-glow 2.6s ease-in-out infinite;
+}
+
+.pw-fx-hoa-glow-a {
+  left: 36%;
+  top: 42%;
+}
+.pw-fx-hoa-glow-b {
+  left: 52%;
+  top: 38%;
+  animation-delay: 0.5s;
+}
+.pw-fx-hoa-glow-c {
+  left: 64%;
+  top: 44%;
+  animation-delay: 1s;
+}
+
+@keyframes pw-hoa-glow {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.15);
+  }
+}
+
+.pw-fx-hoa-tree {
+  position: absolute;
+  left: 44%;
+  top: 30%;
+  width: 10px;
+  height: 14px;
+  border-radius: 50% 50% 40% 40%;
+  background: rgba(80, 140, 90, 0.55);
+  animation: pw-hoa-tree 3s ease-in-out infinite;
+}
+
+@keyframes pw-hoa-tree {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(4deg);
+  }
+}
+
+.pw-fx-hoa-keys {
+  position: absolute;
+  left: 58%;
+  top: 62%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(196, 160, 70, 0.75);
+  border-radius: 50%;
+  transform-origin: 50% 0%;
+  animation: pw-hoa-keys 2.6s ease-in-out infinite;
+}
+
+.pw-fx-hoa-keys::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 12px;
+  width: 4px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(196, 160, 70, 0.8);
+}
+
+@keyframes pw-hoa-keys {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
+}
+
+.pw-fx-hoa-tablet {
+  position: absolute;
+  left: 34%;
+  top: 48%;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(60, 90, 120, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(120, 180, 220, 0.35);
+  animation: pw-hoa-tablet 2.4s ease-in-out infinite;
+}
+
+@keyframes pw-hoa-tablet {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(-6px);
+  }
+}
+
+.pw-fx-hoa-window {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(255, 214, 140, 0.55);
+  box-shadow: 0 0 10px rgba(255, 200, 100, 0.4);
+  animation: pw-hoa-window 2.5s ease-in-out infinite;
+}
+
+.pw-fx-hoa-window-a {
+  left: 42%;
+  top: 36%;
+}
+.pw-fx-hoa-window-b {
+  left: 50%;
+  top: 40%;
+  animation-delay: 0.45s;
+}
+.pw-fx-hoa-window-c {
+  left: 58%;
+  top: 34%;
+  animation-delay: 0.9s;
+}
+
+@keyframes pw-hoa-window {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.pw-fx-hoa-stoop {
+  position: absolute;
+  left: 46%;
+  top: 64%;
+  width: 22px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(180, 170, 150, 0.45);
+  animation: pw-hoa-stoop 2.8s ease-in-out infinite;
+}
+
+@keyframes pw-hoa-stoop {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleX(0.95);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scaleX(1.08);
+  }
+}
+
+.pw-fx-hoa-gavel {
+  position: absolute;
+  left: 48%;
+  top: 42%;
+  width: 22px;
+  height: 6px;
+  border-radius: 999px;
+  background: #8a6a40;
+  transform-origin: 80% 50%;
+  animation: pw-hoa-gavel 2.2s ease-in-out infinite;
+}
+
+.pw-fx-hoa-gavel::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: -4px;
+  width: 10px;
+  height: 14px;
+  border-radius: 3px;
+  background: #6b5232;
+}
+
+@keyframes pw-hoa-gavel {
+  0%,
+  100% {
+    transform: rotate(-18deg);
+  }
+  50% {
+    transform: rotate(22deg);
+  }
+}
+
+.pw-fx-hoa-shield {
+  position: absolute;
+  left: 62%;
+  top: 36%;
+  width: 14px;
+  height: 16px;
+  border-radius: 40% 40% 45% 45%;
+  background: rgba(50, 110, 180, 0.45);
+  box-shadow: 0 0 12px rgba(50, 140, 200, 0.4);
+  animation: pw-hoa-shield 2.6s ease-in-out infinite;
+}
+
+@keyframes pw-hoa-shield {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.15);
+  }
+}
+
+.pw-fx-hoa-path {
+  position: absolute;
+  left: 40%;
+  top: 58%;
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(180, 170, 150, 0.2),
+    rgba(180, 170, 150, 0.7),
+    rgba(180, 170, 150, 0.2)
+  );
+  animation: pw-hoa-path 2.8s ease-in-out infinite;
+}
+
+@keyframes pw-hoa-path {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateX(-4px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateX(4px);
+  }
+}
+
+.pw-fx-hoa-board {
+  position: absolute;
+  left: 34%;
+  top: 48%;
+  width: 16px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(120, 90, 50, 0.45);
+  animation: pw-hoa-board 2.4s ease-in-out infinite;
+}
+
+@keyframes pw-hoa-board {
+  0%,
+  100% {
+    transform: rotate(-6deg) translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: rotate(6deg) translateY(-6px);
+    opacity: 0.9;
+  }
+}
+
+.pw-fx-hoa-row {
+  position: absolute;
+  width: 12px;
+  height: 16px;
+  border-radius: 2px;
+  background: rgba(90, 130, 170, 0.4);
+  animation: pw-hoa-row 2.6s ease-in-out infinite;
+}
+
+.pw-fx-hoa-row-a {
+  left: 38%;
+  top: 44%;
+}
+.pw-fx-hoa-row-b {
+  left: 56%;
+  top: 44%;
+  animation-delay: 0.55s;
+}
+
+@keyframes pw-hoa-row {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-8px);
+  }
+}
+
+.pw-photo-stage-hoa-hub .pw-photo-stage-bob,
+.pw-photo-stage-hoa-management .pw-photo-stage-bob,
+.pw-photo-stage-hoa-condo .pw-photo-stage-bob,
+.pw-photo-stage-hoa-coop .pw-photo-stage-bob,
+.pw-photo-stage-hoa-board .pw-photo-stage-bob,
+.pw-photo-stage-hoa-pud .pw-photo-stage-bob,
+.pw-photo-stage-hoa-self-managed .pw-photo-stage-bob,
+.pw-photo-stage-hoa-single-family .pw-photo-stage-bob,
+.pw-photo-stage-hoa-townhome .pw-photo-stage-bob {
+  animation-duration: 5.2s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pw-photo-stage-bob,
   .pw-photo-stage-fx * {
