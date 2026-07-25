@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { IndustriesMegaMenu } from "@/components/IndustriesMegaMenu";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
   const iconSize = large ? 48 : 32;
@@ -31,15 +32,20 @@ export function BrandMark({ large = false }: { large?: boolean }) {
   );
 }
 
+const PHONE_DISPLAY = "(470) 887-0449";
+const PHONE_HREF = "tel:+14708870449";
+
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [industriesOpen, setIndustriesOpen] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const sync = () => {
       setIsMobile(mq.matches);
       if (!mq.matches) setOpen(false);
+      else setIndustriesOpen(false);
     };
     sync();
     mq.addEventListener("change", sync);
@@ -55,7 +61,6 @@ export function SiteNav() {
 
   const links = [
     { href: "/agent", label: "Agent" },
-    { href: "/quote", label: "Quote" },
     { href: "/pricing", label: "Pricing" },
     { href: "/deck", label: "Deck" },
     { href: "/docs", label: "Docs" },
@@ -63,23 +68,54 @@ export function SiteNav() {
   ];
 
   return (
-    <header className="pw-shell py-4 md:py-6 animate-rise relative z-30">
+    <header className="pw-shell py-4 md:py-6 animate-rise relative z-40">
       <div className="flex items-center justify-between gap-3">
         <BrandMark />
-        {/* Desktop / computer: inline links only */}
-        <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-sm text-stone">
+        {/* Desktop / computer: inline links + Industries mega-menu */}
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm text-stone">
+          <IndustriesMegaMenu
+            open={industriesOpen}
+            onOpenChange={setIndustriesOpen}
+          />
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className="hover:text-pine transition-colors whitespace-nowrap px-0.5"
+              onClick={() => setIndustriesOpen(false)}
             >
               {l.label}
             </Link>
           ))}
+          <a
+            href={PHONE_HREF}
+            className="pw-nav-phone whitespace-nowrap hover:text-pine transition-colors"
+          >
+            <svg
+              className="pw-nav-phone-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M6.5 4.5h3l1.5 4-2 1.2a12 12 0 0 0 5.3 5.3l1.2-2 4 1.5v3A2 2 0 0 1 17.5 19 13.5 13.5 0 0 1 4 5.5a2 2 0 0 1 2.5-1z" />
+            </svg>
+            {PHONE_DISPLAY}
+          </a>
+          <Link
+            href="/quote/"
+            className="pw-btn !py-2 !px-4 text-sm ml-1 lg:ml-2"
+            onClick={() => setIndustriesOpen(false)}
+          >
+            Get a Quote
+          </Link>
           <Link
             href="/login"
-            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm ml-2 lg:ml-3"
+            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
+            onClick={() => setIndustriesOpen(false)}
           >
             Sign in
           </Link>
@@ -123,8 +159,15 @@ export function SiteNav() {
       {isMobile && open && (
         <nav
           id="mobile-nav"
-          className="mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)]"
+          className="mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)] max-h-[min(80vh,640px)] overflow-y-auto"
         >
+          <IndustriesMegaMenu
+            open
+            onOpenChange={(next) => {
+              if (!next) setOpen(false);
+            }}
+            variant="mobile"
+          />
           {links.map((l) => (
             <Link
               key={l.href}
@@ -135,9 +178,22 @@ export function SiteNav() {
               {l.label}
             </Link>
           ))}
+          <a
+            href={PHONE_HREF}
+            className="px-3 py-3 rounded-xl text-stone hover:text-pine hover:bg-pine/5"
+          >
+            {PHONE_DISPLAY}
+          </a>
+          <Link
+            href="/quote/"
+            className="pw-btn mt-2 text-center"
+            onClick={() => setOpen(false)}
+          >
+            Get a Quote
+          </Link>
           <Link
             href="/login"
-            className="pw-btn mt-2 text-center"
+            className="pw-btn pw-btn-secondary mt-2 text-center"
             onClick={() => setOpen(false)}
           >
             Sign in
@@ -203,9 +259,15 @@ export function AppNav({ role }: { role?: string }) {
 export function ConfidenceBadge({ value }: { value: number }) {
   const pct = Math.round(value * 100);
   const tone =
-    pct >= 80 ? "text-ok bg-ok/10" : pct >= 50 ? "text-amber bg-amber/15" : "text-danger bg-danger/10";
+    pct >= 80
+      ? "text-ok bg-ok/10"
+      : pct >= 50
+        ? "text-amber bg-amber/15"
+        : "text-danger bg-danger/10";
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${tone}`}>
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${tone}`}
+    >
       Confidence {pct}%
     </span>
   );
@@ -213,9 +275,7 @@ export function ConfidenceBadge({ value }: { value: number }) {
 
 export function MissingList({ fields }: { fields: string[] }) {
   if (!fields.length) {
-    return (
-      <p className="text-sm text-ok">No critical gaps highlighted.</p>
-    );
+    return <p className="text-sm text-ok">No critical gaps highlighted.</p>;
   }
   return (
     <ul className="flex flex-wrap gap-2">

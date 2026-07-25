@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { allIndustryLabels } from "@/lib/industries-nav";
 
 const US_STATES = [
   "Alabama",
@@ -57,19 +58,6 @@ const US_STATES = [
   "Wyoming",
 ] as const;
 
-const INDUSTRIES = [
-  "Individuals & families",
-  "Precision manufacturing",
-  "Professional services",
-  "Technology / SaaS",
-  "Healthcare",
-  "Construction",
-  "Retail / hospitality",
-  "Financial services",
-  "Transportation / logistics",
-  "Other",
-] as const;
-
 type QuoteFormState = {
   name: string;
   company: string;
@@ -94,6 +82,15 @@ export function QuoteRequestForm() {
   const [error, setError] = useState("");
 
   const stateOptions = useMemo(() => US_STATES, []);
+  const industryOptions = useMemo(() => allIndustryLabels(), []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const industry = params.get("industry")?.trim();
+    if (!industry) return;
+    setForm((prev) => (prev.industry ? prev : { ...prev, industry }));
+  }, []);
 
   function update<K extends keyof QuoteFormState>(key: K, value: QuoteFormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -246,11 +243,12 @@ export function QuoteRequestForm() {
           onChange={(e) => update("industry", e.target.value)}
         >
           <option value="">Select your industry</option>
-          {INDUSTRIES.map((industry) => (
+          {industryOptions.map((industry) => (
             <option key={industry} value={industry}>
               {industry}
             </option>
           ))}
+          <option value="Other">Other</option>
         </select>
       </label>
       <p className="pw-quote-help">
