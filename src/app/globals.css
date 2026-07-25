@@ -6378,6 +6378,289 @@ body:has(.pw-docs-app) .pw-ope {
   animation-duration: 4.6s;
 }
 
+/* Contractor verticals */
+.pw-fx-plank {
+  position: absolute;
+  height: 6px;
+  border-radius: 2px;
+  background: #c4a574;
+  animation: pw-plank-lay 2.6s ease-in-out infinite;
+}
+
+.pw-fx-plank-a {
+  left: 34%;
+  top: 58%;
+  width: 22%;
+}
+.pw-fx-plank-b {
+  left: 42%;
+  top: 64%;
+  width: 18%;
+  animation-delay: 0.5s;
+  background: #a8885a;
+}
+
+@keyframes pw-plank-lay {
+  0%,
+  100% {
+    transform: translateY(-8px) rotate(-2deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.9;
+  }
+}
+
+.pw-fx-hardhat {
+  position: absolute;
+  left: 48%;
+  top: 22%;
+  width: 22px;
+  height: 12px;
+  border-radius: 12px 12px 4px 4px;
+  background: #d4a017;
+  animation: pw-hardhat-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes pw-hardhat-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.pw-fx-blueprint {
+  position: absolute;
+  left: 28%;
+  top: 48%;
+  width: 28px;
+  height: 20px;
+  background: rgba(120, 160, 200, 0.45);
+  border-radius: 2px;
+  animation: pw-blueprint-flip 3s ease-in-out infinite;
+}
+
+@keyframes pw-blueprint-flip {
+  0%,
+  100% {
+    transform: rotate(-4deg) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: rotate(4deg) scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+.pw-fx-wrench {
+  position: absolute;
+  left: 55%;
+  top: 40%;
+  width: 26px;
+  height: 6px;
+  border-radius: 999px;
+  background: #8a9098;
+  transform-origin: 20% 50%;
+  animation: pw-wrench-turn 2.2s ease-in-out infinite;
+}
+
+.pw-fx-wrench::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #8a9098;
+  border-radius: 50%;
+}
+
+@keyframes pw-wrench-turn {
+  0%,
+  100% {
+    transform: rotate(-25deg);
+  }
+  50% {
+    transform: rotate(35deg);
+  }
+}
+
+.pw-fx-tool-bob {
+  position: absolute;
+  left: 30%;
+  top: 52%;
+  width: 10px;
+  height: 22px;
+  border-radius: 2px;
+  background: #5a8f7b;
+  animation: pw-tool-bob 2s ease-in-out infinite;
+}
+
+@keyframes pw-tool-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.pw-fx-leaf {
+  position: absolute;
+  width: 12px;
+  height: 8px;
+  border-radius: 0 70% 0 70%;
+  background: #5f8f6a;
+  animation: pw-leaf-fall 3s ease-in infinite;
+}
+
+.pw-fx-leaf-a {
+  left: 40%;
+  top: 28%;
+}
+.pw-fx-leaf-b {
+  left: 52%;
+  top: 24%;
+  animation-delay: 0.7s;
+  background: #7a9e5a;
+}
+.pw-fx-leaf-c {
+  left: 46%;
+  top: 32%;
+  animation-delay: 1.4s;
+  background: #3d6b4a;
+}
+
+@keyframes pw-leaf-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(48px) rotate(120deg);
+  }
+}
+
+.pw-fx-roller {
+  position: absolute;
+  left: 44%;
+  top: 36%;
+  width: 18px;
+  height: 10px;
+  border-radius: 4px;
+  background: #6b8cae;
+  animation: pw-roller 2.4s ease-in-out infinite;
+}
+
+.pw-fx-roller::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 10px;
+  width: 3px;
+  height: 18px;
+  background: #8a9098;
+}
+
+@keyframes pw-roller {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(14px) rotate(8deg);
+  }
+}
+
+.pw-fx-paint-drip {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 5px;
+  height: 12px;
+  border-radius: 0 0 4px 4px;
+  background: rgba(107, 140, 174, 0.7);
+  animation: pw-paint-drip 2.4s ease-in infinite;
+}
+
+@keyframes pw-paint-drip {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.4);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(18px) scaleY(1.2);
+  }
+}
+
+.pw-fx-shingle {
+  position: absolute;
+  left: 48%;
+  top: 18%;
+  width: 16px;
+  height: 10px;
+  border-radius: 2px;
+  background: #6b5a4a;
+  animation: pw-shingle-place 2.8s ease-in-out infinite;
+}
+
+@keyframes pw-shingle-place {
+  0%,
+  100% {
+    transform: translate(-10px, -12px);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(0, 0);
+    opacity: 0.9;
+  }
+}
+
+.pw-fx-ladder-rung {
+  position: absolute;
+  left: 28%;
+  top: 42%;
+  width: 18px;
+  height: 3px;
+  background: rgba(140, 110, 70, 0.55);
+  box-shadow: 0 8px 0 rgba(140, 110, 70, 0.45), 0 16px 0 rgba(140, 110, 70, 0.35);
+  animation: pw-ladder-climb 2.6s ease-in-out infinite;
+}
+
+@keyframes pw-ladder-climb {
+  0%,
+  100% {
+    transform: translateY(6px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 0.85;
+  }
+}
+
+.pw-photo-stage-flooring .pw-photo-stage-bob,
+.pw-photo-stage-general-contractor .pw-photo-stage-bob,
+.pw-photo-stage-handyman .pw-photo-stage-bob,
+.pw-photo-stage-landscaping .pw-photo-stage-bob,
+.pw-photo-stage-painter .pw-photo-stage-bob,
+.pw-photo-stage-roofing .pw-photo-stage-bob {
+  animation-duration: 5s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pw-photo-stage-bob,
   .pw-photo-stage-fx * {
