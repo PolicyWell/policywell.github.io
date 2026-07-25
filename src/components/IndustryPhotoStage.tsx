@@ -24,19 +24,22 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
 type IndustryPhotoStageProps = {
   slug: string;
   label: string;
+  /** Optional explicit image URL. Defaults to legacy ecommerce asset path. */
+  src?: string;
   className?: string;
 };
 
 export function IndustryPhotoStage({
   slug,
   label,
+  src,
   className = "",
 }: IndustryPhotoStageProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const labelId = useId();
   const motion = MOTION_BY_SLUG[slug] ?? "float";
-  const src = `/industries/ecommerce/${slug}.webp`;
+  const imageSrc = src ?? `/industries/ecommerce/${slug}.webp`;
 
   useEffect(() => {
     const root = rootRef.current;
@@ -99,7 +102,7 @@ export function IndustryPhotoStage({
         <div className="pw-photo-stage-bob">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={src}
+            src={imageSrc}
             alt=""
             className="pw-photo-stage-img"
             draggable={false}

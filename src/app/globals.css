@@ -6077,3 +6077,130 @@ body:has(.pw-docs-app) .pw-ope {
     animation: none !important;
   }
 }
+
+/* Industries hub + nested browse lists */
+.pw-industries-hub-hero {
+  padding: 2.5rem 0 1.25rem;
+}
+
+.pw-industries-hub-hero h1 {
+  max-width: 16ch;
+  font-size: clamp(2.1rem, 6vw, 3.4rem);
+  line-height: 1.05;
+  margin: 0.35rem 0 0.75rem;
+}
+
+.pw-industries-hub-grid-wrap {
+  padding: 0.5rem 0 3.5rem;
+}
+
+.pw-industries-hub-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+@media (min-width: 720px) {
+  .pw-industries-hub-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pw-industries-hub-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.pw-industries-hub-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 0.75rem;
+  padding: 1rem 0.15rem;
+  border-bottom: 1px solid rgba(15, 47, 40, 0.1);
+  color: var(--pine);
+  background: transparent;
+  transition: color 0.15s ease;
+}
+
+.pw-industries-hub-card-label {
+  grid-column: 1;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.pw-industries-hub-card-meta {
+  grid-column: 1;
+  color: var(--stone);
+  font-size: 0.88rem;
+}
+
+.pw-industries-hub-card-arrow {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: var(--stone);
+}
+
+.pw-industries-hub-card:hover {
+  color: var(--pine);
+}
+
+.pw-industries-hub-card:hover .pw-industries-hub-card-arrow {
+  color: var(--pine);
+}
+
+.pw-industry-child-grid {
+  padding: 0.5rem 0 3rem;
+}
+
+.pw-industry-child-grid-head {
+  max-width: 36rem;
+  margin-bottom: 1rem;
+}
+
+.pw-industry-child-grid-head h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.45rem;
+}
+
+.pw-industry-child-grid-head p {
+  margin: 0;
+  color: var(--stone);
+}
+
+.pw-industry-child-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+@media (min-width: 720px) {
+  .pw-industry-child-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pw-industry-child-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0.1rem;
+  border-bottom: 1px solid rgba(15, 47, 40, 0.08);
+  color: var(--pine);
+  background: transparent;
+}
+
+.pw-industry-child-link:hover {
+  color: var(--pine);
+}
+
+.pw-industry-hero-no-photo .pw-industry-hero-copy {
+  max-width: 40rem;
+}
