@@ -70,9 +70,14 @@ Optional LLM phrasing: set `GOOGLE_GENERATIVE_AI_API_KEY` in `.env.local`, then 
 
 ## Supabase
 
-Client helpers live in `src/lib/supabase`. Copy `.env.example` → `.env.local` and
-set the **dev** project URL + anon key. Production keys go in GitHub Actions
-secrets for the Pages build. See [`docs/SUPABASE.md`](./docs/SUPABASE.md).
+SSR helpers: `utils/supabase/{client,server,middleware}.ts` plus root `middleware.ts`.
+Copy `.env.example` → `.env.local` and set:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Production keys go in GitHub Actions secrets for the Pages build. See
+[`docs/SUPABASE.md`](./docs/SUPABASE.md).
 
 Git branches:
 
