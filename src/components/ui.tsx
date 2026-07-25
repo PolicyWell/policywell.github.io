@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IndustriesMegaMenu } from "@/components/IndustriesMegaMenu";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
@@ -35,17 +35,126 @@ export function BrandMark({ large = false }: { large?: boolean }) {
 const PHONE_DISPLAY = "(470) 887-0449";
 const PHONE_HREF = "tel:+14708870449";
 
+const PLATFORM_LINKS = [
+  { href: "/agent", label: "Agent", blurb: "Insurance intelligence workspace" },
+  { href: "/demo", label: "Demo", blurb: "Walk through the product lifecycle" },
+] as const;
+
+function NavCaret({ open }: { open: boolean }) {
+  return (
+    <svg
+      className={`pw-industries-caret${open ? " is-flipped" : ""}`}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
+function PlatformMenu({
+  open,
+  onOpenChange,
+  onNavigate,
+  variant = "desktop",
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onNavigate?: () => void;
+  variant?: "desktop" | "mobile";
+}) {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || variant !== "desktop") return;
+    function onPointerDown(e: PointerEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) onOpenChange(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onOpenChange(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, onOpenChange, variant]);
+
+  if (variant === "mobile") {
+    return (
+      <div className="pw-platform-mobile">
+        <p className="pw-industries-mobile-label">Platform</p>
+        {PLATFORM_LINKS.map((l) => (
+          <Link
+            key={l.href}
+            href={l.href}
+            className="px-3 py-3 rounded-xl text-stone hover:text-pine hover:bg-pine/5"
+            onClick={onNavigate}
+          >
+            <span className="block font-medium text-pine">{l.label}</span>
+            <span className="block text-xs text-stone mt-0.5">{l.blurb}</span>
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="pw-platform-root" ref={rootRef}>
+      <button
+        type="button"
+        className={`pw-industries-trigger${open ? " is-open" : ""}`}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => onOpenChange(!open)}
+      >
+        Platform
+        <NavCaret open={open} />
+      </button>
+      {open && (
+        <div className="pw-platform-panel" role="menu" aria-label="Platform">
+          {PLATFORM_LINKS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              role="menuitem"
+              className="pw-platform-item"
+              onClick={() => {
+                onOpenChange(false);
+                onNavigate?.();
+              }}
+            >
+              <span className="pw-platform-item-label">{l.label}</span>
+              <span className="pw-platform-item-blurb">{l.blurb}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
+  const [platformOpen, setPlatformOpen] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const sync = () => {
       setIsMobile(mq.matches);
       if (!mq.matches) setOpen(false);
-      else setIndustriesOpen(false);
+      else {
+        setIndustriesOpen(false);
+        setPlatformOpen(false);
+      }
     };
     sync();
     mq.addEventListener("change", sync);
@@ -60,12 +169,15 @@ export function SiteNav() {
   }, [open]);
 
   const links = [
-    { href: "/agent", label: "Agent" },
     { href: "/pricing", label: "Pricing" },
     { href: "/deck", label: "Deck" },
     { href: "/docs", label: "Docs" },
-    { href: "/demo", label: "Demo" },
   ];
+
+  function closeMenus() {
+    setIndustriesOpen(false);
+    setPlatformOpen(false);
+  }
 
   return (
     <header className="pw-shell py-4 md:py-6 animate-rise relative z-40">
@@ -75,14 +187,24 @@ export function SiteNav() {
         <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm text-stone">
           <IndustriesMegaMenu
             open={industriesOpen}
-            onOpenChange={setIndustriesOpen}
+            onOpenChange={(next) => {
+              setIndustriesOpen(next);
+              if (next) setPlatformOpen(false);
+            }}
+          />
+          <PlatformMenu
+            open={platformOpen}
+            onOpenChange={(next) => {
+              setPlatformOpen(next);
+              if (next) setIndustriesOpen(false);
+            }}
           />
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className="hover:text-pine transition-colors whitespace-nowrap px-0.5"
-              onClick={() => setIndustriesOpen(false)}
+              onClick={closeMenus}
             >
               {l.label}
             </Link>
@@ -108,14 +230,14 @@ export function SiteNav() {
           <Link
             href="/quote/"
             className="pw-btn !py-2 !px-4 text-sm ml-1 lg:ml-2"
-            onClick={() => setIndustriesOpen(false)}
+            onClick={closeMenus}
           >
             Get a Quote
           </Link>
           <Link
             href="/login"
             className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
-            onClick={() => setIndustriesOpen(false)}
+            onClick={closeMenus}
           >
             Sign in
           </Link>
@@ -166,6 +288,12 @@ export function SiteNav() {
             onOpenChange={(next) => {
               if (!next) setOpen(false);
             }}
+            variant="mobile"
+          />
+          <PlatformMenu
+            open
+            onOpenChange={() => {}}
+            onNavigate={() => setOpen(false)}
             variant="mobile"
           />
           {links.map((l) => (

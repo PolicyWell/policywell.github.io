@@ -4946,7 +4946,8 @@ body:has(.pw-docs-app) .pw-ope {
   transition: transform 0.18s ease;
 }
 
-.pw-industries-trigger.is-open .pw-industries-caret {
+.pw-industries-trigger.is-open .pw-industries-caret,
+.pw-industries-caret.is-flipped {
   transform: rotate(180deg);
 }
 
