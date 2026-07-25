@@ -6376,6 +6376,11 @@ body:has(.pw-docs-app) .pw-ope {
   color: var(--pine);
 }
 
+.pw-industry-child-link.is-active {
+  font-weight: 600;
+  border-bottom-color: rgba(15, 47, 40, 0.22);
+}
+
 .pw-industry-hero-no-photo .pw-industry-hero-copy {
   max-width: 40rem;
 }

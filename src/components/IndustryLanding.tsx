@@ -19,7 +19,16 @@ export function IndustryLanding({ path }: { path: string }) {
 
   const children = getIndustryChildren(page.path);
   const parent = page.parentPath ? getIndustryPage(page.parentPath) : null;
+  const siblings = parent ? getIndustryChildren(parent.path) : [];
   const isLeaf = children.length === 0;
+
+  /** Hub pages browse their children; micro pages browse sibling verticals. */
+  const nestItems = children.length > 0 ? children : siblings;
+  const nestLabel = children.length > 0 ? page.label : (parent?.label ?? page.label);
+  const nestIntro =
+    children.length > 0
+      ? "Open a nested vertical for coverage built around that niche."
+      : `More ${nestLabel.toLowerCase()} verticals in this industry.`;
 
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full overflow-x-clip">
@@ -78,25 +87,29 @@ export function IndustryLanding({ path }: { path: string }) {
           </div>
         </section>
 
-        {children.length > 0 && (
+        {nestItems.length > 0 && (
           <section className="pw-industry-child-grid">
             <div className="pw-shell">
               <div className="pw-industry-child-grid-head">
-                <h2 className="font-display text-pine">Browse {page.label}</h2>
-                <p>Open a nested vertical for coverage built around that niche.</p>
+                <h2 className="font-display text-pine">Browse {nestLabel}</h2>
+                <p>{nestIntro}</p>
               </div>
               <ul className="pw-industry-child-list">
-                {children.map((child) => (
-                  <li key={child.path}>
-                    <Link
-                      href={industryHref(child.path)}
-                      className="pw-industry-child-link"
-                    >
-                      <span>{child.label}</span>
-                      <span aria-hidden>→</span>
-                    </Link>
-                  </li>
-                ))}
+                {nestItems.map((item) => {
+                  const active = item.path === page.path;
+                  return (
+                    <li key={item.path}>
+                      <Link
+                        href={industryHref(item.path)}
+                        className={`pw-industry-child-link${active ? " is-active" : ""}`}
+                        aria-current={active ? "page" : undefined}
+                      >
+                        <span>{item.label}</span>
+                        <span aria-hidden>→</span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </section>
