@@ -36,7 +36,8 @@ type MotionKind =
   | "used-car-dealer"
   | "cybersecurity"
   | "fintech"
-  | "bar";
+  | "bar"
+  | "crypto";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -73,6 +74,7 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "cybersecurity-company": "cybersecurity",
   fintech: "fintech",
   bar: "bar",
+  "crypto-company": "crypto",
 };
 
 type IndustryPhotoStageProps = {
@@ -374,6 +376,14 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-neon-glow" />
                 <span className="pw-fx-tap-pour" />
                 <span className="pw-fx-glass-clink" />
+              </>
+            )}
+            {motion === "crypto" && (
+              <>
+                <span className="pw-fx-coin-orbit" />
+                <span className="pw-fx-chain-node pw-fx-chain-node-a" />
+                <span className="pw-fx-chain-node pw-fx-chain-node-b" />
+                <span className="pw-fx-chain-node pw-fx-chain-node-c" />
               </>
             )}
             {motion === "float" && (
