@@ -169,9 +169,9 @@ export function SiteNav() {
   }, [open]);
 
   const links = [
+    { href: "/docs", label: "Docs" },
     { href: "/pricing", label: "Pricing" },
     { href: "/deck", label: "Deck" },
-    { href: "/docs", label: "Docs" },
   ];
 
   function closeMenus() {
