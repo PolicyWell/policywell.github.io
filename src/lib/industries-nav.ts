@@ -5,6 +5,17 @@ export type IndustryCategory = {
   children: string[];
 };
 
+/** Visual treatment for ecommerce landing stages. */
+export type EcommerceSceneStage =
+  | "laptop"
+  | "alcohol-fulfillment"
+  | "beauty-studio"
+  | "clothing-boutique"
+  | "cpg-pallet"
+  | "food-shop"
+  | "pet-table"
+  | "supplement-lab";
+
 export type EcommerceVertical = {
   slug: string;
   label: string;
@@ -18,7 +29,7 @@ export type EcommerceVertical = {
   /** Optional secondary CTA label under the primary quote button. */
   secondaryCta?: string;
   /** Visual treatment for the landing stage. */
-  stage?: "laptop" | "alcohol-fulfillment";
+  stage?: EcommerceSceneStage;
 };
 
 export const INDUSTRY_SPECIALIST_NOTE =
@@ -155,76 +166,96 @@ export const ECOMMERCE_VERTICALS: readonly EcommerceVertical[] = [
   {
     slug: "beauty-and-cosmetics",
     label: "Beauty & Cosmetics",
-    headline: "Protect every SKU from formula to fulfillment",
+    headline: "Beauty & cosmetics insurance formulated for product brands",
     support:
-      "Product liability, cargo, and recall-ready programs for modern beauty brands.",
+      "Product liability for skincare and cosmetics, product recall coverage, MoCRA compliance support, and the lines most beauty programs leave out. Coverage review in 24 to 48 hours.",
     productName: "Essential Serum",
     price: "$62.00",
     colors: ["#f3e6df", "#d8b4a6", "#2c2420"],
     sizes: ["15ml", "30ml", "50ml"],
     accent: "#d8b4a6",
+    secondaryCta: "Free coverage review",
+    stage: "beauty-studio",
   },
   {
     slug: "clothing-store",
     label: "Clothing Store",
-    headline: "Built to scale with your brand",
+    headline: "Clothing store insurance tailored for online and retail sellers",
     support:
-      "From first Shopify sale to international fulfillment. One broker, every policy, every channel.",
+      "Product liability, commercial property, cyber coverage, and Workers Comp for fashion retailers selling through Amazon, Shopify, and brick-and-mortar locations. Quotes across 60+ carriers.",
     productName: "Essential Knit Sweater",
     price: "$189.00",
     colors: ["#d4c4b0", "#8a9aa8", "#2b2b2b"],
     sizes: ["S", "M", "L", "XL"],
     accent: "#1a1a1a",
+    secondaryCta: "Free coverage review",
+    stage: "clothing-boutique",
   },
   {
     slug: "cpg",
     label: "CPG",
-    headline: "Coverage for product lines that move fast",
+    headline:
+      "Consumer packaged goods insurance built for retail and DTC brands",
     support:
-      "Shelf to subscription — protect manufacturing, inventory, and nationwide distribution.",
+      "Product liability, recall coverage, contamination protection, and retailer compliance for consumer packaged goods brands selling through Amazon, Walmart, Target, Costco, and DTC channels. Coverage review in 24 to 48 hours.",
     productName: "Everyday Staple Pack",
     price: "$24.00",
     colors: ["#e8f0e9", "#7a9e7e", "#1f3d2a"],
     sizes: ["Trial", "Standard", "Family"],
     accent: "#1f3d2a",
+    secondaryCta: "Free coverage review",
+    stage: "cpg-pallet",
   },
   {
     slug: "food-and-beverage",
     label: "Food & Beverage",
-    headline: "Insurance for makers who ship freshness",
+    headline: "Food & beverage insurance built for DTC and retail brands",
     support:
-      "Cold-chain, product liability, and contingent business income for food brands.",
+      "Product liability, recall coverage, contamination protection, and the retailer compliance endorsements your brand needs before the next PO ships.",
     productName: "Artisan Trail Mix",
     price: "$16.00",
     colors: ["#f0e2c8", "#c4783a", "#5c3a1e"],
     sizes: ["4oz", "12oz", "2lb"],
     accent: "#c4783a",
+    secondaryCta: "Free coverage review",
+    stage: "food-shop",
   },
   {
     slug: "pet-business",
     label: "Pet Business",
-    headline: "Protect the brands pet parents trust",
+    headline:
+      "Pet business insurance crafted for treats, food, and supplement brands",
     support:
-      "Product liability and inventory coverage tailored to pet food, toys, and accessories.",
+      "Product liability that responds to pet injury claims, recall coverage for contamination events, and marketplace compliance for Chewy, Amazon, and retail channels.",
     productName: "Everyday Chew Toy",
     price: "$22.00",
     colors: ["#f5d76e", "#7eb8da", "#e89a9a"],
     sizes: ["S", "M", "L"],
     accent: "#7eb8da",
+    secondaryCta: "Free coverage review",
+    stage: "pet-table",
   },
   {
     slug: "supplement",
     label: "Supplement",
-    headline: "Coverage for wellness brands that ship nationally",
+    headline: "Supplement insurance designed for brands navigating FDA risk",
     support:
-      "Formulation liability, recall readiness, and fulfillment protection for supplement DTC.",
+      "Product liability without experimental exclusions, product recall coverage, and the lines most supplement programs are missing. Coverage review in 24 to 48 hours.",
     productName: "Daily Focus Capsules",
     price: "$54.00",
     colors: ["#eef4f1", "#5a8f7b", "#1c3d32"],
     sizes: ["30ct", "60ct", "90ct"],
     accent: "#5a8f7b",
+    secondaryCta: "Free coverage review",
+    stage: "supplement-lab",
   },
 ];
+
+export function isEcommerceSceneStage(
+  stage: EcommerceSceneStage | undefined,
+): stage is Exclude<EcommerceSceneStage, "laptop"> {
+  return Boolean(stage && stage !== "laptop");
+}
 
 export function getIndustryCategory(id: string): IndustryCategory | undefined {
   return INDUSTRY_CATEGORIES.find((c) => c.id === id);
