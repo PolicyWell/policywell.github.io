@@ -181,10 +181,10 @@ export function SiteNav() {
   }, [open]);
 
   useEffect(() => {
-    if (!open) {
-      setPlatformOpen(false);
-      setIndustriesOpen(false);
-    }
+    // Always reset nested accordions when the drawer opens or closes so
+    // Industries/Platform never auto-expand on mobile.
+    setPlatformOpen(false);
+    setIndustriesOpen(false);
   }, [open]);
 
   const links = [
@@ -203,64 +203,66 @@ export function SiteNav() {
       <div className="flex items-center justify-between gap-3">
         <BrandMark />
         {/* Desktop / computer: inline links + Industries mega-menu */}
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm text-stone">
-          <PlatformMenu
-            open={platformOpen}
-            onOpenChange={(next) => {
-              setPlatformOpen(next);
-              if (next) setIndustriesOpen(false);
-            }}
-          />
-          <IndustriesMegaMenu
-            open={industriesOpen}
-            onOpenChange={(next) => {
-              setIndustriesOpen(next);
-              if (next) setPlatformOpen(false);
-            }}
-          />
-          {links.map((l) => (
+        {!isMobile && (
+          <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm text-stone">
+            <PlatformMenu
+              open={platformOpen}
+              onOpenChange={(next) => {
+                setPlatformOpen(next);
+                if (next) setIndustriesOpen(false);
+              }}
+            />
+            <IndustriesMegaMenu
+              open={industriesOpen}
+              onOpenChange={(next) => {
+                setIndustriesOpen(next);
+                if (next) setPlatformOpen(false);
+              }}
+            />
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="hover:text-pine transition-colors whitespace-nowrap px-0.5"
+                onClick={closeMenus}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <a
+              href={PHONE_HREF}
+              className="pw-nav-phone whitespace-nowrap hover:text-pine transition-colors"
+            >
+              <svg
+                className="pw-nav-phone-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M6.5 4.5h3l1.5 4-2 1.2a12 12 0 0 0 5.3 5.3l1.2-2 4 1.5v3A2 2 0 0 1 17.5 19 13.5 13.5 0 0 1 4 5.5a2 2 0 0 1 2.5-1z" />
+              </svg>
+              {PHONE_DISPLAY}
+            </a>
             <Link
-              key={l.href}
-              href={l.href}
-              className="hover:text-pine transition-colors whitespace-nowrap px-0.5"
+              href="/quote/"
+              className="pw-btn !py-2 !px-4 text-sm ml-1 lg:ml-2"
               onClick={closeMenus}
             >
-              {l.label}
+              Get a Quote
             </Link>
-          ))}
-          <a
-            href={PHONE_HREF}
-            className="pw-nav-phone whitespace-nowrap hover:text-pine transition-colors"
-          >
-            <svg
-              className="pw-nav-phone-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
+            <Link
+              href="/login"
+              className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
+              onClick={closeMenus}
             >
-              <path d="M6.5 4.5h3l1.5 4-2 1.2a12 12 0 0 0 5.3 5.3l1.2-2 4 1.5v3A2 2 0 0 1 17.5 19 13.5 13.5 0 0 1 4 5.5a2 2 0 0 1 2.5-1z" />
-            </svg>
-            {PHONE_DISPLAY}
-          </a>
-          <Link
-            href="/quote/"
-            className="pw-btn !py-2 !px-4 text-sm ml-1 lg:ml-2"
-            onClick={closeMenus}
-          >
-            Get a Quote
-          </Link>
-          <Link
-            href="/login"
-            className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
-            onClick={closeMenus}
-          >
-            Sign in
-          </Link>
-        </nav>
+              Sign in
+            </Link>
+          </nav>
+        )}
         {/* Mobile only - not rendered on computer viewports */}
         {isMobile && (
           <button
@@ -317,6 +319,7 @@ export function SiteNav() {
               setIndustriesOpen(next);
               if (next) setPlatformOpen(false);
             }}
+            onNavigate={() => setOpen(false)}
             variant="mobile"
           />
           {links.map((l) => (

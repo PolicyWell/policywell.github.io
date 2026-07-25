@@ -203,6 +203,8 @@ function PanelBody({
 type IndustriesMegaMenuProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Close the full mobile drawer after navigating. */
+  onNavigate?: () => void;
   /** Compact accordion for the mobile drawer. */
   variant?: "desktop" | "mobile";
 };
@@ -210,6 +212,7 @@ type IndustriesMegaMenuProps = {
 export function IndustriesMegaMenu({
   open,
   onOpenChange,
+  onNavigate,
   variant = "desktop",
 }: IndustriesMegaMenuProps) {
   const panelId = useId();
@@ -221,6 +224,12 @@ export function IndustriesMegaMenu({
   useEffect(() => {
     if (!open) setActiveId("");
   }, [open]);
+
+  function closeAll() {
+    setActiveId("");
+    onOpenChange(false);
+    onNavigate?.();
+  }
 
   useEffect(() => {
     if (!open || variant !== "desktop") return;
@@ -241,7 +250,7 @@ export function IndustriesMegaMenu({
 
   if (variant === "mobile") {
     const nested =
-      activeId !== ""
+      open && activeId !== ""
         ? INDUSTRY_CATEGORIES.find((c) => c.id === activeId)
         : undefined;
 
@@ -251,13 +260,16 @@ export function IndustriesMegaMenu({
         <div className="pw-industries-mobile">
           <button
             type="button"
-            className="pw-mobile-tab"
-            aria-expanded={open}
-            onClick={() => onOpenChange(!open)}
+            className="pw-mobile-tab is-open"
+            aria-expanded
+            onClick={() => {
+              setActiveId("");
+              onOpenChange(false);
+            }}
           >
             <span>Industries</span>
             <svg
-              className={`pw-industries-caret${open ? " is-flipped" : ""}`}
+              className="pw-industries-caret is-flipped"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -269,42 +281,40 @@ export function IndustriesMegaMenu({
               <path d="M6 9l6 6 6-6" />
             </svg>
           </button>
-          {open && (
-            <div className="pw-industries-nested">
-              <div className="pw-industries-nested-bar">
-                <button
-                  type="button"
-                  className="pw-industries-back"
-                  onClick={() => setActiveId("")}
-                >
-                  <span aria-hidden>←</span> Back
-                </button>
-                <p className="pw-industries-nested-title">{nested.label}</p>
-              </div>
-              {nested.id === "ecommerce" && (
-                <Link
-                  href={industryCategoryHref("ecommerce")}
-                  className="pw-industries-hub-link"
-                  onClick={() => onOpenChange(false)}
-                >
-                  Ecommerce overview
-                  <span aria-hidden>→</span>
-                </Link>
-              )}
-              <ul className="pw-industries-nested-list">
-                {nested.children.map((child) => (
-                  <li key={child}>
-                    <Link
-                      href={industryChildHref(nested.id, child)}
-                      onClick={() => onOpenChange(false)}
-                    >
-                      {child}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+          <div className="pw-industries-nested">
+            <div className="pw-industries-nested-bar">
+              <button
+                type="button"
+                className="pw-industries-back"
+                onClick={() => setActiveId("")}
+              >
+                <span aria-hidden>←</span> Back
+              </button>
+              <p className="pw-industries-nested-title">{nested.label}</p>
             </div>
-          )}
+            {nested.id === "ecommerce" && (
+              <Link
+                href={industryCategoryHref("ecommerce")}
+                className="pw-industries-hub-link"
+                onClick={closeAll}
+              >
+                Ecommerce overview
+                <span aria-hidden>→</span>
+              </Link>
+            )}
+            <ul className="pw-industries-nested-list">
+              {nested.children.map((child) => (
+                <li key={child}>
+                  <Link
+                    href={industryChildHref(nested.id, child)}
+                    onClick={closeAll}
+                  >
+                    {child}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       );
     }
@@ -315,7 +325,14 @@ export function IndustriesMegaMenu({
           type="button"
           className={`pw-mobile-tab${open ? " is-open" : ""}`}
           aria-expanded={open}
-          onClick={() => onOpenChange(!open)}
+          onClick={() => {
+            if (open) {
+              setActiveId("");
+              onOpenChange(false);
+            } else {
+              onOpenChange(true);
+            }
+          }}
         >
           <span>Industries</span>
           <svg
@@ -350,7 +367,7 @@ export function IndustriesMegaMenu({
                 <Link
                   href={industryQuoteHref(cat.label)}
                   className="pw-industries-rail-item"
-                  onClick={() => onOpenChange(false)}
+                  onClick={closeAll}
                 >
                   <span className="pw-industries-rail-main">
                     <IndustryIcon id={cat.id} />
