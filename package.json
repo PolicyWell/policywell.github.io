@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run typecheck && npm test && npm run build"
+    "seo:check": "node scripts/seo-check.mjs",
+    "verify": "npm run typecheck && npm test && npm run build && npm run build:pages && SEO_CHECK_DIR=out npm run seo:check"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.20",

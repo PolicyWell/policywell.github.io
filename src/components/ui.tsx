@@ -188,9 +188,10 @@ export function SiteNav() {
   }, [open]);
 
   const links = [
-    { href: "/docs", label: "Docs" },
-    { href: "/pricing", label: "Pricing" },
-    { href: "/deck", label: "Deck" },
+    { href: "/life-insurance/", label: "Life Insurance" },
+    { href: "/annuities/", label: "Annuities" },
+    { href: "/docs/", label: "Documentation" },
+    { href: "/pricing/", label: "Pricing" },
   ];
 
   function closeMenus() {

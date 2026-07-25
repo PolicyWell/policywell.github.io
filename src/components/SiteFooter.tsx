@@ -18,48 +18,74 @@ const SOCIALS = [
   },
 ] as const;
 
+const FOOTER_LINKS = [
+  { href: "/industries/", label: "Industries" },
+  { href: "/life-insurance/", label: "Life Insurance" },
+  { href: "/annuities/", label: "Annuities" },
+  { href: "/pricing/", label: "Pricing" },
+  { href: "/docs/", label: "Documentation" },
+  { href: "/quote/", label: "Request a Quote" },
+] as const;
+
 export function SiteFooter() {
   return (
     <footer className="pw-site-footer mt-auto border-t border-pine/10 bg-foam/50 backdrop-blur-sm">
-      <div className="pw-shell py-8 md:py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-        <div className="min-w-0">
-          <Link
-            href="/"
-            className="font-display text-lg text-pine tracking-tight"
-          >
-            PolicyWell
-          </Link>
-          <p className="text-xs text-stone mt-1 max-w-sm">
-            The Agentic Operating System for the Insurance &amp; Financial
-            Services Industry
-          </p>
-          <p className="text-xs text-moss mt-3">
-            Built With <span aria-hidden="true">💚</span>
-            <span className="sr-only">love</span> in Boston
-          </p>
+      <div className="pw-shell py-8 md:py-10 flex flex-col gap-8">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+          <div className="min-w-0">
+            <Link
+              href="/"
+              className="font-display text-lg text-pine tracking-tight"
+            >
+              PolicyWell
+            </Link>
+            <p className="text-xs text-stone mt-1 max-w-sm">
+              The Agentic Operating System for the Insurance &amp; Financial
+              Services Industry
+            </p>
+            <p className="text-xs text-moss mt-3">
+              Built With <span aria-hidden="true">💚</span>
+              <span className="sr-only">love</span> in Boston
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start sm:items-end gap-3">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-moss">
+              Follow us
+            </p>
+            <ul className="flex items-center gap-2">
+              {SOCIALS.map(({ href, label, icon: Icon }) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Follow PolicyWell on ${label}`}
+                    title={label}
+                    className="pw-social-link"
+                  >
+                    <Icon />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="flex flex-col items-start sm:items-end gap-3">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-moss">
-            Follow us
-          </p>
-          <ul className="flex items-center gap-2">
-            {SOCIALS.map(({ href, label, icon: Icon }) => (
-              <li key={href}>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Follow PolicyWell on ${label}`}
-                  title={label}
-                  className="pw-social-link"
+        <nav aria-label="Footer">
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-stone">
+            {FOOTER_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="hover:text-pine transition-colors"
                 >
-                  <Icon />
-                </a>
+                  {link.label}
+                </Link>
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
       </div>
     </footer>
   );

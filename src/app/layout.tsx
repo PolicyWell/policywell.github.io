@@ -24,11 +24,11 @@ const ICON_V = "20260724a";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
+    default: "PolicyWell | AI Infrastructure for Insurance",
     template: "%s · PolicyWell",
   },
   description:
-    "Policy, risk, underwriting and distribution intelligence for personal and commercial insurance.",
+    "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
   applicationName: "PolicyWell",
   icons: {
     icon: [
@@ -66,25 +66,25 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: SITE_URL,
+    url: `${SITE_URL}/`,
     siteName: "PolicyWell",
-    title: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
+    title: "PolicyWell | AI Infrastructure for Insurance",
     description:
-      "Policy, risk, underwriting and distribution intelligence for personal and commercial insurance.",
+      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
     images: [
       {
         url: OG_IMAGE,
         width: 1536,
         height: 1024,
-        alt: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
+        alt: "PolicyWell | AI Infrastructure for Insurance",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PolicyWell - The Agentic Operating System for the Insurance & Financial Services Industry",
+    title: "PolicyWell | AI Infrastructure for Insurance",
     description:
-      "Policy, risk, underwriting and distribution intelligence for personal and commercial insurance.",
+      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
     images: [OG_IMAGE],
   },
   verification: {

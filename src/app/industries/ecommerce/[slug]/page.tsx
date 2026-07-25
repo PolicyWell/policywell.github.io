@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { IndustryLanding } from "@/components/IndustryLanding";
-import {
-  ECOMMERCE_VERTICALS,
-  getEcommerceVertical,
-} from "@/lib/industries-nav";
+import { PermanentRedirect } from "@/components/seo/PermanentRedirect";
+import { ECOMMERCE_VERTICALS } from "@/lib/industries-nav";
 import { getIndustryPage } from "@/lib/industry-pages-data";
+import { absoluteUrl, industryPageMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -31,23 +29,25 @@ export async function generateMetadata({
   const { slug } = await params;
   const path = LEGACY_TO_PATH[slug];
   const page = path ? getIndustryPage(path) : undefined;
-  const vertical = getEcommerceVertical(slug);
-  if (!page && !vertical) return { title: "Ecommerce" };
+  if (!page) {
+    return { title: "Ecommerce", robots: { index: false, follow: true } };
+  }
   return {
-    title: page?.title ?? `${vertical!.label} Insurance`,
-    description: page?.support ?? vertical!.support,
-    openGraph: {
-      title: `${page?.label ?? vertical!.label} · PolicyWell Ecommerce`,
-      description: page?.headline ?? vertical!.headline,
-      url: `https://policywell.ai/industries/ecommerce/${slug}`,
+    ...industryPageMetadata(page),
+    robots: { index: false, follow: true },
+    other: {
+      refresh: `0;url=${absoluteUrl(page.path)}`,
     },
   };
 }
 
-/** Legacy path alias — canonical pages live under /ecommerce/*-insurance/. */
-export default async function EcommerceVerticalPage({ params }: PageProps) {
+/** Legacy alias — permanently redirected to /ecommerce/*-insurance/. */
+export default async function EcommerceVerticalRedirectPage({
+  params,
+}: PageProps) {
   const { slug } = await params;
   const path = LEGACY_TO_PATH[slug];
-  if (!path || !getIndustryPage(path)) notFound();
-  return <IndustryLanding path={path} />;
+  const page = path ? getIndustryPage(path) : undefined;
+  if (!page) notFound();
+  return <PermanentRedirect to={page.path} label={page.title} />;
 }

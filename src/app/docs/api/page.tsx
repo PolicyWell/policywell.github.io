@@ -7,16 +7,14 @@ import {
   API_META,
   allApiEndpoints,
 } from "@/lib/api-reference-data";
+import { marketingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = marketingMetadata({
   title: API_META.title,
   description: API_META.description,
-  openGraph: {
-    title: `${API_META.title} · PolicyWell Docs`,
-    description: API_META.description,
-    url: "https://policywell.ai/docs/api",
-  },
-};
+  path: "/docs/api",
+  ogTitle: `${API_META.title} · PolicyWell Docs`,
+});
 
 export default function ApiReferenceIndexPage() {
   const endpoints = allApiEndpoints();

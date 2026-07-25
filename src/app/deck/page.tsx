@@ -1,11 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DeckViewer } from "@/components/DeckViewer";
 import { SiteNav } from "@/components/ui";
+import { noindexMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = noindexMetadata({
   title: "Pitch deck",
   description: "PolicyWell investor pitch deck.",
-};
+  path: "/deck",
+});
 
 export default function DeckPage() {
   return (
@@ -27,11 +30,7 @@ export default function DeckPage() {
 
         <p className="text-sm text-stone animate-rise-delay-2">
           Prefer the product?{" "}
-          <Link href="/agent" className="underline hover:text-pine">
-            Talk to the agent
-          </Link>{" "}
-          or{" "}
-          <Link href="/demo" className="underline hover:text-pine">
+          <Link href="/demo/" className="underline hover:text-pine">
             see the product demo
           </Link>
           .

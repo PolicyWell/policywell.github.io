@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
 import { IndustryLanding } from "@/components/IndustryLanding";
+import { IndustrySeo } from "@/components/seo/IndustrySeo";
 import { getIndustryPage } from "@/lib/industry-pages-data";
+import { industryPageMetadata } from "@/lib/seo";
 
 const PATH = "/annuities";
 
 const page = getIndustryPage(PATH)!;
 
-export const metadata: Metadata = {
-  title: page.title,
-  description: page.support,
-  openGraph: {
-    title: `${page.title} · PolicyWell`,
-    description: page.support,
-    url: `https://policywell.ai/annuities`,
-  },
-};
+export const metadata: Metadata = industryPageMetadata(page);
 
 export default function Page() {
-  return <IndustryLanding path={PATH} />;
+  return (
+    <>
+      <IndustrySeo path={PATH} />
+      <IndustryLanding path={PATH} />
+    </>
+  );
 }

@@ -1,18 +1,28 @@
 import type { Metadata } from "next";
 import { IndustriesHub } from "@/components/IndustriesHub";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, marketingMetadata, organizationJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Industries We Cover",
+export const metadata: Metadata = marketingMetadata({
+  title: "Insurance Solutions by Industry",
   description:
-    "PolicyWell serves businesses across dozens of industries, from ecommerce to trucking, property management to contractors. Browse every vertical we cover.",
-  openGraph: {
-    title: "Industries We Cover · PolicyWell",
-    description:
-      "Browse every industry vertical PolicyWell supports — ecommerce, contractors, restaurants, trucking, and more.",
-    url: "https://policywell.ai/industries",
-  },
-};
+    "Browse PolicyWell industry coverage for life insurance, annuities, ecommerce, contractors, restaurants, trucking, property management, and more.",
+  path: "/industries",
+  ogTitle: "Insurance Solutions by Industry · PolicyWell",
+});
 
 export default function IndustriesPage() {
-  return <IndustriesHub />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          organizationJsonLd(),
+          breadcrumbJsonLd([
+            { name: "Industries", path: "/industries" },
+          ]),
+        ]}
+      />
+      <IndustriesHub />
+    </>
+  );
 }
