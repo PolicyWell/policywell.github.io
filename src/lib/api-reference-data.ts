@@ -885,6 +885,334 @@ export const API_GROUPS: readonly ApiGroup[] = [
     ],
   },
   {
+    slug: "quotes",
+    title: "Quotes",
+    summary:
+      "Create and track personal or commercial quote requests. Decision support only — not bindable premiums.",
+    status: "Preview",
+    endpoints: [
+      {
+        id: "create-quote",
+        method: "POST",
+        path: "/quotes",
+        title: "Create quote request",
+        summary:
+          "Open a quote intake for a household or commercial business. Routes to advisor review and optional carrier workflows.",
+        status: "Preview",
+        requestBody: {
+          description:
+            "Provide contact details plus either household_id (personal) or business/industry context (commercial).",
+          example: {
+            line: "commercial",
+            name: "Jordan Lee",
+            company: "Harbor Fabrication LLC",
+            email: "jordan@harborfab.example",
+            phone: "+14708870449",
+            state: "TX",
+            industry: "Contractor",
+            business_id: "biz_01J8HARBOR",
+            coverages: ["general_liability", "workers_compensation"],
+            notes: "Renewal in 45 days; need GL + WC indicative ranges.",
+          },
+        },
+        responseExample: {
+          id: "qt_01J8QUOTE",
+          status: "received",
+          line: "commercial",
+          industry: "Contractor",
+          state: "TX",
+          coverages: ["general_liability", "workers_compensation"],
+          assignee: null,
+          human_review_status: "pending",
+          disclaimer:
+            "Indicative decision support only — not a bindable quote or underwriting decision.",
+          created_at: "2026-07-25T12:00:00Z",
+          updated_at: "2026-07-25T12:00:00Z",
+        },
+        notes: [
+          "Email or phone is required.",
+          "Public site /quote maps to this intake shape.",
+          "Does not return carrier-bound premiums.",
+        ],
+      },
+      {
+        id: "create-personal-quote",
+        method: "POST",
+        path: "/quotes/personal",
+        title: "Create personal / life quote request",
+        summary:
+          "Open a personal lines or life quote request tied to a household.",
+        status: "Preview",
+        requestBody: {
+          example: {
+            household_id: "hh_01J8HOUSEHOLD",
+            product_type: "IUL",
+            face_amount: 500000,
+            issue_age: 40,
+            state: "TX",
+            contact: {
+              name: "Alex Rivera",
+              email: "alex@example.com",
+              phone: "+14155550100",
+            },
+          },
+        },
+        responseExample: {
+          id: "qt_01J8LIFE",
+          status: "received",
+          line: "personal",
+          product_type: "IUL",
+          household_id: "hh_01J8HOUSEHOLD",
+          human_review_status: "pending",
+          disclaimer:
+            "Indicative decision support only — not a bindable quote or underwriting decision.",
+          created_at: "2026-07-25T12:05:00Z",
+        },
+      },
+      {
+        id: "list-quotes",
+        method: "GET",
+        path: "/quotes",
+        title: "List quote requests",
+        summary: "List quote intakes for an organization, filtered by status or line.",
+        status: "Preview",
+        params: [
+          {
+            name: "status",
+            in: "query",
+            type: "string",
+            description:
+              "Filter: received | in_review | options_ready | submitted_to_carrier | closed | cancelled.",
+          },
+          {
+            name: "line",
+            in: "query",
+            type: "string",
+            description: "personal | commercial",
+          },
+          {
+            name: "limit",
+            in: "query",
+            type: "integer",
+            description: "Page size (default 25, max 100).",
+          },
+        ],
+        responseExample: {
+          data: [
+            {
+              id: "qt_01J8QUOTE",
+              status: "in_review",
+              line: "commercial",
+              industry: "Contractor",
+              created_at: "2026-07-25T12:00:00Z",
+            },
+            {
+              id: "qt_01J8LIFE",
+              status: "received",
+              line: "personal",
+              product_type: "IUL",
+              created_at: "2026-07-25T12:05:00Z",
+            },
+          ],
+          has_more: false,
+        },
+      },
+      {
+        id: "get-quote",
+        method: "GET",
+        path: "/quotes/{quote_id}",
+        title: "Retrieve quote request",
+        summary: "Fetch a quote intake, review status, and any indicative options.",
+        status: "Preview",
+        params: [
+          {
+            name: "quote_id",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Quote ID (`qt_...`).",
+          },
+        ],
+        responseExample: {
+          id: "qt_01J8QUOTE",
+          status: "options_ready",
+          line: "commercial",
+          name: "Jordan Lee",
+          company: "Harbor Fabrication LLC",
+          email: "jordan@harborfab.example",
+          phone: "+14708870449",
+          state: "TX",
+          industry: "Contractor",
+          business_id: "biz_01J8HARBOR",
+          coverages: ["general_liability", "workers_compensation"],
+          human_review_status: "approved",
+          options: [
+            {
+              id: "qto_01J8A",
+              carrier: "Example Specialty",
+              coverage: "general_liability",
+              indicative_premium_annual: 4200,
+              confidence: 0.72,
+            },
+          ],
+          disclaimer:
+            "Indicative ranges only — not bindable premiums or carrier commitments.",
+          created_at: "2026-07-25T12:00:00Z",
+          updated_at: "2026-07-25T13:10:00Z",
+        },
+      },
+      {
+        id: "update-quote",
+        method: "PATCH",
+        path: "/quotes/{quote_id}",
+        title: "Update quote request",
+        summary: "Update contact details, industry, coverages, or notes before submission.",
+        status: "Preview",
+        params: [
+          {
+            name: "quote_id",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Quote ID (`qt_...`).",
+          },
+        ],
+        requestBody: {
+          example: {
+            phone: "+14708870449",
+            coverages: [
+              "general_liability",
+              "workers_compensation",
+              "commercial_auto",
+            ],
+            notes: "Also need hired/non-owned auto.",
+          },
+        },
+        responseExample: {
+          id: "qt_01J8QUOTE",
+          status: "in_review",
+          coverages: [
+            "general_liability",
+            "workers_compensation",
+            "commercial_auto",
+          ],
+          updated_at: "2026-07-25T12:20:00Z",
+        },
+      },
+      {
+        id: "get-quote-options",
+        method: "GET",
+        path: "/quotes/{quote_id}/options",
+        title: "List indicative quote options",
+        summary:
+          "Return advisor-reviewed indicative options for a quote. Never treated as bindable.",
+        status: "Preview",
+        params: [
+          {
+            name: "quote_id",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Quote ID (`qt_...`).",
+          },
+        ],
+        responseExample: {
+          quote_id: "qt_01J8QUOTE",
+          status: "options_ready",
+          options: [
+            {
+              id: "qto_01J8A",
+              carrier: "Example Specialty",
+              coverage: "general_liability",
+              limit: 1000000,
+              indicative_premium_annual: 4200,
+              confidence: 0.72,
+            },
+            {
+              id: "qto_01J8B",
+              carrier: "Example Mutual",
+              coverage: "workers_compensation",
+              indicative_premium_annual: 9800,
+              confidence: 0.68,
+            },
+          ],
+          disclaimer:
+            "Indicative decision support only — not a bindable quote, eligibility guarantee, or carrier decision.",
+          human_review_status: "approved",
+        },
+        notes: [
+          "Options require human review before status becomes options_ready.",
+          "For direct carrier submission workflows see POST /carrier/quotes.",
+        ],
+      },
+      {
+        id: "submit-quote",
+        method: "POST",
+        path: "/quotes/{quote_id}/submit",
+        title: "Submit quote to carrier workflow",
+        summary:
+          "Hand an approved quote request to connected carrier or MGA workflows.",
+        status: "Planned",
+        params: [
+          {
+            name: "quote_id",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Quote ID (`qt_...`).",
+          },
+        ],
+        requestBody: {
+          example: {
+            carrier_ids: ["car_example_specialty"],
+            option_ids: ["qto_01J8A", "qto_01J8B"],
+          },
+        },
+        responseExample: {
+          id: "qt_01J8QUOTE",
+          status: "submitted_to_carrier",
+          submissions: [
+            {
+              carrier_id: "car_example_specialty",
+              carrier_ref: "carrier_quote_8891",
+              status: "pending",
+            },
+          ],
+          updated_at: "2026-07-25T14:00:00Z",
+        },
+        notes: [
+          "Requires human_review_status approved.",
+          "Related carrier endpoint: POST /carrier/quotes.",
+        ],
+      },
+      {
+        id: "cancel-quote",
+        method: "POST",
+        path: "/quotes/{quote_id}/cancel",
+        title: "Cancel quote request",
+        summary: "Cancel an open quote intake that has not been bound.",
+        status: "Preview",
+        params: [
+          {
+            name: "quote_id",
+            in: "path",
+            type: "string",
+            required: true,
+            description: "Quote ID (`qt_...`).",
+          },
+        ],
+        requestBody: {
+          example: { reason: "client_withdrew" },
+        },
+        responseExample: {
+          id: "qt_01J8QUOTE",
+          status: "cancelled",
+          cancelled_at: "2026-07-25T15:00:00Z",
+        },
+      },
+    ],
+  },
+  {
     slug: "webhooks",
     title: "Webhooks",
     summary: "Subscribe to PolicyWell lifecycle events.",

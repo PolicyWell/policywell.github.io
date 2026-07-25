@@ -177,6 +177,12 @@ export default function ApiReferenceIndexPage() {
           <li>
             <code className="pw-api-inline-code">job_</code> batch job
           </li>
+          <li>
+            <code className="pw-api-inline-code">qt_</code> quote request
+          </li>
+          <li>
+            <code className="pw-api-inline-code">biz_</code> business
+          </li>
         </ul>
       </section>
     </article>

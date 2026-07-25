@@ -85,7 +85,7 @@ export const USE_CASE_API_LINKS: Record<string, readonly string[]> = {
   "document-processing": ["documents", "policies", "batch"],
   "recommendation-engine": ["recommendations", "analyses", "reports"],
   "advisor-crm-integration": ["households", "workflows", "organizations"],
-  "carrier-apis": ["carrier", "policies", "documents", "batch"],
+  "carrier-apis": ["quotes", "carrier", "policies", "documents", "batch"],
   "imo-platform": ["organizations", "workflows", "analyses", "webhooks"],
   webhooks: ["webhooks", "workflows"],
   "workflow-automation": ["workflows", "recommendations", "reports", "webhooks"],
@@ -95,7 +95,7 @@ export const USE_CASE_API_LINKS: Record<string, readonly string[]> = {
   "underwriting-intelligence": ["underwriting", "commercial", "businesses"],
   "carrier-appetite-intelligence": ["carrier-appetite", "carrier"],
   "commercial-document-processing": ["commercial", "documents", "batch"],
-  "embedded-carrier-experiences": ["authentication", "organizations", "carrier"],
+  "embedded-carrier-experiences": ["authentication", "organizations", "quotes", "carrier"],
 };
 
 export function relatedApiForUseCase(slug: string): RelatedApiLink[] {
