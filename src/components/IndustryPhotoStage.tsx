@@ -9,9 +9,11 @@ type MotionKind =
   | "float"
   | "rack"
   | "pallet"
-  | "shop";
+  | "shop"
+  | "computer";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
+  ecommerce: "computer",
   "beauty-and-cosmetics": "shelf",
   "clothing-store": "rack",
   cpg: "pallet",
@@ -140,6 +142,14 @@ export function IndustryPhotoStage({
             )}
             {motion === "rack" && <span className="pw-fx-sway" />}
             {motion === "pallet" && <span className="pw-fx-roll" />}
+            {motion === "computer" && (
+              <>
+                <span className="pw-fx-screen" />
+                <span className="pw-fx-cart" />
+                <span className="pw-fx-package" />
+                <span className="pw-fx-cursor" />
+              </>
+            )}
             {motion === "float" && (
               <>
                 <span className="pw-fx-treat pw-fx-treat-a" />
