@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PolicyWell API",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "REST endpoints for PolicyWell - the Agentic Operating System for the Insurance & Financial Services Industry. Personal and commercial policy, risk, underwriting, and distribution intelligence. Status markers: Live, Preview, Planned, Enterprise. Planned/Preview endpoints are contracts, not operational production APIs."
   },
   "servers": [
@@ -65,6 +65,10 @@
     {
       "name": "Carrier",
       "description": "Carrier-facing ingestion, status, and servicing endpoints."
+    },
+    {
+      "name": "Quotes",
+      "description": "Create and track personal or commercial quote requests. Decision support only \u2014 not bindable premiums."
     },
     {
       "name": "Webhooks",
@@ -2521,6 +2525,489 @@
             "application/json": {
               "example": {
                 "case_id": "uw_01J8CASE"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quotes": {
+      "post": {
+        "operationId": "create-quote",
+        "summary": "Create quote request",
+        "description": "Open a quote intake for a household or commercial business. Routes to advisor review and optional carrier workflows.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8QUOTE",
+                  "status": "received",
+                  "line": "commercial",
+                  "industry": "Contractor",
+                  "state": "TX",
+                  "coverages": [
+                    "general_liability",
+                    "workers_compensation"
+                  ],
+                  "assignee": null,
+                  "human_review_status": "pending",
+                  "disclaimer": "Indicative decision support only \u2014 not a bindable quote or underwriting decision.",
+                  "created_at": "2026-07-25T12:00:00Z",
+                  "updated_at": "2026-07-25T12:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "line": "commercial",
+                "name": "Jordan Lee",
+                "company": "Harbor Fabrication LLC",
+                "email": "jordan@harborfab.example",
+                "phone": "+14708870449",
+                "state": "TX",
+                "industry": "Contractor",
+                "business_id": "biz_01J8HARBOR",
+                "coverages": [
+                  "general_liability",
+                  "workers_compensation"
+                ],
+                "notes": "Renewal in 45 days; need GL + WC indicative ranges."
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "list-quotes",
+        "summary": "List quote requests",
+        "description": "List quote intakes for an organization, filtered by status or line.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Filter: received | in_review | options_ready | submitted_to_carrier | closed | cancelled.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "line",
+            "in": "query",
+            "required": false,
+            "description": "personal | commercial",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size (default 25, max 100).",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": "qt_01J8QUOTE",
+                      "status": "in_review",
+                      "line": "commercial",
+                      "industry": "Contractor",
+                      "created_at": "2026-07-25T12:00:00Z"
+                    }
+                  ],
+                  "has_more": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/quotes/personal": {
+      "post": {
+        "operationId": "create-personal-quote",
+        "summary": "Create personal / life quote request",
+        "description": "Open a personal lines or life quote request tied to a household.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8LIFE",
+                  "status": "received",
+                  "line": "personal",
+                  "product_type": "IUL",
+                  "household_id": "hh_01J8HOUSEHOLD",
+                  "human_review_status": "pending",
+                  "disclaimer": "Indicative decision support only \u2014 not a bindable quote or underwriting decision.",
+                  "created_at": "2026-07-25T12:05:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "household_id": "hh_01J8HOUSEHOLD",
+                "product_type": "IUL",
+                "face_amount": 500000,
+                "issue_age": 40,
+                "state": "TX",
+                "contact": {
+                  "name": "Alex Rivera",
+                  "email": "alex@example.com",
+                  "phone": "+14155550100"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quotes/{quote_id}": {
+      "get": {
+        "operationId": "get-quote",
+        "summary": "Retrieve quote request",
+        "description": "Fetch a quote intake, review status, and any indicative options.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [
+          {
+            "name": "quote_id",
+            "in": "path",
+            "required": true,
+            "description": "Quote ID (`qt_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8QUOTE",
+                  "status": "options_ready",
+                  "line": "commercial",
+                  "name": "Jordan Lee",
+                  "company": "Harbor Fabrication LLC",
+                  "email": "jordan@harborfab.example",
+                  "phone": "+14708870449",
+                  "state": "TX",
+                  "industry": "Contractor",
+                  "business_id": "biz_01J8HARBOR",
+                  "coverages": [
+                    "general_liability",
+                    "workers_compensation"
+                  ],
+                  "human_review_status": "approved",
+                  "options": [
+                    {
+                      "id": "qto_01J8A",
+                      "carrier": "Example Specialty",
+                      "coverage": "general_liability",
+                      "indicative_premium_annual": 4200,
+                      "confidence": 0.72
+                    }
+                  ],
+                  "disclaimer": "Indicative ranges only \u2014 not bindable premiums or carrier commitments.",
+                  "created_at": "2026-07-25T12:00:00Z",
+                  "updated_at": "2026-07-25T13:10:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update-quote",
+        "summary": "Update quote request",
+        "description": "Update contact details, industry, coverages, or notes before submission.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [
+          {
+            "name": "quote_id",
+            "in": "path",
+            "required": true,
+            "description": "Quote ID (`qt_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8QUOTE",
+                  "status": "in_review",
+                  "coverages": [
+                    "general_liability",
+                    "workers_compensation",
+                    "commercial_auto"
+                  ],
+                  "updated_at": "2026-07-25T12:20:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "phone": "+14708870449",
+                "coverages": [
+                  "general_liability",
+                  "workers_compensation",
+                  "commercial_auto"
+                ],
+                "notes": "Also need hired/non-owned auto."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quotes/{quote_id}/options": {
+      "get": {
+        "operationId": "get-quote-options",
+        "summary": "List indicative quote options",
+        "description": "Return advisor-reviewed indicative options for a quote. Never treated as bindable.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [
+          {
+            "name": "quote_id",
+            "in": "path",
+            "required": true,
+            "description": "Quote ID (`qt_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "quote_id": "qt_01J8QUOTE",
+                  "status": "options_ready",
+                  "options": [
+                    {
+                      "id": "qto_01J8A",
+                      "carrier": "Example Specialty",
+                      "coverage": "general_liability",
+                      "limit": 1000000,
+                      "indicative_premium_annual": 4200,
+                      "confidence": 0.72
+                    }
+                  ],
+                  "disclaimer": "Indicative decision support only \u2014 not a bindable quote, eligibility guarantee, or carrier decision.",
+                  "human_review_status": "approved"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/quotes/{quote_id}/submit": {
+      "post": {
+        "operationId": "submit-quote",
+        "summary": "Submit quote to carrier workflow",
+        "description": "Hand an approved quote request to connected carrier or MGA workflows.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Planned",
+        "parameters": [
+          {
+            "name": "quote_id",
+            "in": "path",
+            "required": true,
+            "description": "Quote ID (`qt_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8QUOTE",
+                  "status": "submitted_to_carrier",
+                  "submissions": [
+                    {
+                      "carrier_id": "car_example_specialty",
+                      "carrier_ref": "carrier_quote_8891",
+                      "status": "pending"
+                    }
+                  ],
+                  "updated_at": "2026-07-25T14:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "carrier_ids": [
+                  "car_example_specialty"
+                ],
+                "option_ids": [
+                  "qto_01J8A",
+                  "qto_01J8B"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quotes/{quote_id}/cancel": {
+      "post": {
+        "operationId": "cancel-quote",
+        "summary": "Cancel quote request",
+        "description": "Cancel an open quote intake that has not been bound.",
+        "tags": [
+          "Quotes"
+        ],
+        "x-status": "Preview",
+        "parameters": [
+          {
+            "name": "quote_id",
+            "in": "path",
+            "required": true,
+            "description": "Quote ID (`qt_...`).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "qt_01J8QUOTE",
+                  "status": "cancelled",
+                  "cancelled_at": "2026-07-25T15:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "reason": "client_withdrew"
               }
             }
           }
