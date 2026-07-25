@@ -113,10 +113,13 @@ function CliAgentSession({
   audience,
   reducedMotion,
   inputId,
+  autoFocusOnReady = false,
 }: {
   audience: CliAudience;
   reducedMotion: boolean;
   inputId: string;
+  /** When true, focus the command input after the scripted demo finishes. */
+  autoFocusOnReady?: boolean;
 }) {
   const readyHint: TerminalLine[] =
     audience.id === "commercial"
@@ -184,10 +187,13 @@ function CliAgentSession({
   }, [visibleCount, history, busy, done]);
 
   useEffect(() => {
-    if (!done || busy) return;
-    const t = window.setTimeout(() => inputRef.current?.focus(), 120);
+    // Homepage compact CLI must not steal focus / scroll the page to the prompt.
+    if (!autoFocusOnReady || !done || busy) return;
+    const t = window.setTimeout(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    }, 120);
     return () => window.clearTimeout(t);
-  }, [done, busy, demoKey]);
+  }, [autoFocusOnReady, done, busy, demoKey]);
 
   function ensureSession(): SessionUser {
     const current = latest.current.session;
@@ -411,7 +417,7 @@ function CliAgentSession({
       aria-live="polite"
       onClick={() => {
         if (!done) skipDemo();
-        else inputRef.current?.focus();
+        else inputRef.current?.focus({ preventScroll: true });
       }}
     >
       {audience.architecture && (
@@ -542,7 +548,7 @@ export function PolicyWellCLIShowcase({
       return;
     }
     selectTab(CLI_AUDIENCES[next].id);
-    tabRefs.current[next]?.focus();
+    tabRefs.current[next]?.focus({ preventScroll: true });
   };
 
   return (
@@ -637,6 +643,7 @@ export function PolicyWellCLIShowcase({
             audience={audience}
             reducedMotion={reducedMotion}
             inputId={`${tabsId}-cmd`}
+            autoFocusOnReady={!compact}
           />
         </div>
       </div>
