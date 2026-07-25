@@ -4915,3 +4915,219 @@ body:has(.pw-docs-app) .pw-ope {
   color: var(--stone);
   line-height: 1.45;
 }
+
+/* ── Industries mega-menu (SiteNav) ── */
+.pw-industries-root {
+  position: relative;
+}
+
+.pw-industries-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.35rem;
+  border: 0;
+  background: transparent;
+  color: var(--stone);
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.pw-industries-trigger:hover,
+.pw-industries-trigger.is-open {
+  color: var(--pine);
+}
+
+.pw-industries-caret {
+  width: 0.95rem;
+  height: 0.95rem;
+  transition: transform 0.18s ease;
+}
+
+.pw-industries-trigger.is-open .pw-industries-caret {
+  transform: rotate(180deg);
+}
+
+.pw-industries-panel {
+  position: absolute;
+  top: calc(100% + 0.85rem);
+  right: 0;
+  left: auto;
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(280px, 420px);
+  width: min(720px, calc(100vw - 2rem));
+  background: #fff;
+  border: 1px solid rgba(15, 47, 40, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(15, 47, 40, 0.12);
+  overflow: hidden;
+  z-index: 50;
+  animation: rise 0.22s ease both;
+}
+
+.pw-industries-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.65rem;
+  border-right: 1px solid rgba(15, 47, 40, 0.07);
+  background: #fbfbfc;
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+}
+
+.pw-industries-rail-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #5c6460;
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.pw-industries-rail-item:hover {
+  background: rgba(15, 47, 40, 0.04);
+  color: var(--pine);
+}
+
+.pw-industries-rail-item.is-active {
+  background: rgba(15, 47, 40, 0.08);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.pw-industries-rail-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.pw-industries-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  color: #7a8580;
+}
+
+.pw-industries-rail-item.is-active .pw-industries-icon {
+  color: var(--pine);
+}
+
+.pw-industries-chevron {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+  color: #a0a8a4;
+}
+
+.pw-industries-detail {
+  padding: 1.15rem 1.25rem 1.25rem;
+  min-height: 220px;
+}
+
+.pw-industries-subs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.15rem 1.5rem;
+}
+
+.pw-industries-sub {
+  display: block;
+  padding: 0.55rem 0.15rem;
+  color: #6b736f;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  border-radius: 6px;
+  transition: color 0.15s ease;
+}
+
+.pw-industries-sub:hover {
+  color: var(--pine);
+}
+
+.pw-industries-note {
+  max-width: 22rem;
+  color: #8a928e;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.pw-industries-note p {
+  margin: 0 0 1rem;
+}
+
+.pw-industries-note-link {
+  display: inline-flex;
+  color: var(--pine);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pw-nav-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pw-industries-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(15, 47, 40, 0.08);
+}
+
+.pw-industries-mobile-label {
+  margin: 0.25rem 0.75rem 0.35rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.pw-industries-mobile-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.pw-industries-mobile-panel {
+  padding: 0.15rem 0.75rem 0.75rem 2.4rem;
+}
+
+.pw-industries-mobile .pw-industries-subs {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (max-width: 900px) {
+  .pw-industries-panel {
+    right: -1rem;
+    grid-template-columns: minmax(200px, 240px) minmax(220px, 1fr);
+  }
+}
+
+.pw-nav-phone-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
