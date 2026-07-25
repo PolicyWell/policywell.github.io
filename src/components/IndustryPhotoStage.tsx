@@ -19,7 +19,11 @@ type MotionKind =
   | "handyman"
   | "landscaping"
   | "painter"
-  | "roofing";
+  | "roofing"
+  | "commercial-property"
+  | "multifamily-property"
+  | "residential-property"
+  | "short-term-rental";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -39,6 +43,10 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   landscaping: "landscaping",
   painter: "painter",
   roofing: "roofing",
+  "commercial-property-management": "commercial-property",
+  "multifamily-property-management": "multifamily-property",
+  "residential-property-management": "residential-property",
+  "short-term-rental-management": "short-term-rental",
 };
 
 type IndustryPhotoStageProps = {
@@ -224,6 +232,32 @@ export function IndustryPhotoStage({
               <>
                 <span className="pw-fx-shingle" />
                 <span className="pw-fx-ladder-rung" />
+              </>
+            )}
+            {motion === "commercial-property" && (
+              <>
+                <span className="pw-fx-window-glow pw-fx-window-glow-a" />
+                <span className="pw-fx-window-glow pw-fx-window-glow-b" />
+                <span className="pw-fx-window-glow pw-fx-window-glow-c" />
+              </>
+            )}
+            {motion === "multifamily-property" && (
+              <>
+                <span className="pw-fx-balcony-light pw-fx-balcony-light-a" />
+                <span className="pw-fx-balcony-light pw-fx-balcony-light-b" />
+                <span className="pw-fx-balcony-light pw-fx-balcony-light-c" />
+              </>
+            )}
+            {motion === "residential-property" && (
+              <>
+                <span className="pw-fx-key-ring" />
+                <span className="pw-fx-porch-glow" />
+              </>
+            )}
+            {motion === "short-term-rental" && (
+              <>
+                <span className="pw-fx-suitcase-roll" />
+                <span className="pw-fx-key-tag" />
               </>
             )}
             {motion === "float" && (
