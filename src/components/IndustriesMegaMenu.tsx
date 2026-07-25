@@ -200,9 +200,13 @@ export function IndustriesMegaMenu({
 }: IndustriesMegaMenuProps) {
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
-  const [activeId, setActiveId] = useState(INDUSTRY_CATEGORIES[0].id);
+  const [activeId, setActiveId] = useState("");
   const active =
     INDUSTRY_CATEGORIES.find((c) => c.id === activeId) ?? INDUSTRY_CATEGORIES[0];
+
+  useEffect(() => {
+    if (!open) setActiveId("");
+  }, [open]);
 
   useEffect(() => {
     if (!open || variant !== "desktop") return;
@@ -224,34 +228,54 @@ export function IndustriesMegaMenu({
   if (variant === "mobile") {
     return (
       <div className="pw-industries-mobile">
-        <p className="pw-industries-mobile-label">Industries</p>
-        {INDUSTRY_CATEGORIES.map((cat) => {
-          const expanded = activeId === cat.id;
-          return (
-            <div key={cat.id} className="pw-industries-mobile-block">
-              <button
-                type="button"
-                className={`pw-industries-rail-item${expanded ? " is-active" : ""}`}
-                aria-expanded={expanded}
-                onClick={() => setActiveId(expanded ? "" : cat.id)}
-              >
-                <span className="pw-industries-rail-main">
-                  <IndustryIcon id={cat.id} />
-                  <span>{cat.label}</span>
-                </span>
-                {cat.children.length > 0 && <Chevron />}
-              </button>
-              {expanded && (
-                <div className="pw-industries-mobile-panel">
-                  <PanelBody
-                    category={cat}
-                    onNavigate={() => onOpenChange(false)}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
+        <button
+          type="button"
+          className={`pw-mobile-tab${open ? " is-open" : ""}`}
+          aria-expanded={open}
+          onClick={() => onOpenChange(!open)}
+        >
+          <span>Industries</span>
+          <svg
+            className={`pw-industries-caret${open ? " is-flipped" : ""}`}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+        {open &&
+          INDUSTRY_CATEGORIES.map((cat) => {
+            const expanded = activeId === cat.id;
+            return (
+              <div key={cat.id} className="pw-industries-mobile-block">
+                <button
+                  type="button"
+                  className={`pw-industries-rail-item${expanded ? " is-active" : ""}`}
+                  aria-expanded={expanded}
+                  onClick={() => setActiveId(expanded ? "" : cat.id)}
+                >
+                  <span className="pw-industries-rail-main">
+                    <IndustryIcon id={cat.id} />
+                    <span>{cat.label}</span>
+                  </span>
+                  {cat.children.length > 0 && <Chevron />}
+                </button>
+                {expanded && (
+                  <div className="pw-industries-mobile-panel">
+                    <PanelBody
+                      category={cat}
+                      onNavigate={() => onOpenChange(false)}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
       </div>
     );
   }

@@ -89,18 +89,30 @@ function PlatformMenu({
   if (variant === "mobile") {
     return (
       <div className="pw-platform-mobile">
-        <p className="pw-industries-mobile-label">Platform</p>
-        {PLATFORM_LINKS.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className="px-3 py-3 rounded-xl text-stone hover:text-pine hover:bg-pine/5"
-            onClick={onNavigate}
-          >
-            <span className="block font-medium text-pine">{l.label}</span>
-            <span className="block text-xs text-stone mt-0.5">{l.blurb}</span>
-          </Link>
-        ))}
+        <button
+          type="button"
+          className={`pw-mobile-tab${open ? " is-open" : ""}`}
+          aria-expanded={open}
+          onClick={() => onOpenChange(!open)}
+        >
+          <span>Platform</span>
+          <NavCaret open={open} />
+        </button>
+        {open && (
+          <div className="pw-mobile-tab-panel">
+            {PLATFORM_LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="pw-mobile-tab-link"
+                onClick={onNavigate}
+              >
+                <span className="block font-medium text-pine">{l.label}</span>
+                <span className="block text-xs text-stone mt-0.5">{l.blurb}</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -166,6 +178,13 @@ export function SiteNav() {
     return () => {
       document.body.style.overflow = "";
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      setPlatformOpen(false);
+      setIndustriesOpen(false);
+    }
   }, [open]);
 
   const links = [
@@ -284,15 +303,19 @@ export function SiteNav() {
           className="mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)] max-h-[min(80vh,640px)] overflow-y-auto"
         >
           <PlatformMenu
-            open
-            onOpenChange={() => {}}
+            open={platformOpen}
+            onOpenChange={(next) => {
+              setPlatformOpen(next);
+              if (next) setIndustriesOpen(false);
+            }}
             onNavigate={() => setOpen(false)}
             variant="mobile"
           />
           <IndustriesMegaMenu
-            open
+            open={industriesOpen}
             onOpenChange={(next) => {
-              if (!next) setOpen(false);
+              setIndustriesOpen(next);
+              if (next) setPlatformOpen(false);
             }}
             variant="mobile"
           />
