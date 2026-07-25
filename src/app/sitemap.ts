@@ -9,51 +9,71 @@ export const dynamic = "force-static";
 const SITE_URL = "https://policywell.ai";
 
 /** Prefer trailing slashes to match GitHub Pages static export. */
-function url(pathname: string): string {
+function loc(pathname: string): string {
   if (pathname === "/") return `${SITE_URL}/`;
   const clean = pathname.replace(/\/+$/, "");
-  return `${SITE_URL}${clean}/`;
+  return `${SITE_URL}${clean.startsWith("/") ? clean : `/${clean}`}/`;
 }
 
 type Entry = {
   path: string;
-  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+  changeFrequency: NonNullable<
+    MetadataRoute.Sitemap[number]["changeFrequency"]
+  >;
   priority: number;
 };
 
-const STATIC_PAGES: Entry[] = [
+/** Core marketing / product pages (not already covered by INDUSTRY_PAGES). */
+const CORE_PAGES: Entry[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
-  { path: "/pricing", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/pricing", changeFrequency: "weekly", priority: 0.95 },
+  { path: "/quote", changeFrequency: "weekly", priority: 0.95 },
+  { path: "/industries", changeFrequency: "weekly", priority: 0.95 },
+  { path: "/docs", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/docs/api", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/docs/api/reference", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/docs/cli", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/docs/engineering", changeFrequency: "monthly", priority: 0.7 },
   { path: "/demo", changeFrequency: "monthly", priority: 0.85 },
   { path: "/deck", changeFrequency: "monthly", priority: 0.8 },
   { path: "/agent", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/quote", changeFrequency: "weekly", priority: 0.85 },
   { path: "/commercial", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/industries", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/ecommerce", changeFrequency: "weekly", priority: 0.8 },
-  { path: "/contractors", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/restaurants", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/trucking", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/garages", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/grocery-stores", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/property-management", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/homeowners-association-insurance", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/technology", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/retail", changeFrequency: "weekly", priority: 0.7 },
-  { path: "/bar-insurance", changeFrequency: "weekly", priority: 0.7 },
-  { path: "/catering-insurance", changeFrequency: "weekly", priority: 0.7 },
-  { path: "/industries/ecommerce", changeFrequency: "monthly", priority: 0.5 },
-  { path: "/docs", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/docs/cli", changeFrequency: "monthly", priority: 0.7 },
-  { path: "/docs/engineering", changeFrequency: "monthly", priority: 0.7 },
-  { path: "/docs/api", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/docs/api/reference", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/login", changeFrequency: "yearly", priority: 0.4 },
-  { path: "/onboarding", changeFrequency: "monthly", priority: 0.5 },
 ];
 
+/** Legacy Coverwatch-style aliases that still resolve. */
+const LEGACY_ALIAS_PAGES: Entry[] = [
+  { path: "/industries/ecommerce", changeFrequency: "monthly", priority: 0.4 },
+  ...ECOMMERCE_VERTICALS.map((vertical) => ({
+    path: `/industries/ecommerce/${vertical.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.35,
+  })),
+];
+
+function dedupe(entries: Entry[]): Entry[] {
+  const seen = new Map<string, Entry>();
+  for (const entry of entries) {
+    const key = loc(entry.path);
+    const prev = seen.get(key);
+    if (!prev || entry.priority > prev.priority) {
+      seen.set(key, entry);
+    }
+  }
+  return [...seen.values()].sort((a, b) => {
+    if (b.priority !== a.priority) return b.priority - a.priority;
+    return a.path.localeCompare(b.path);
+  });
+}
+
+/** Full public XML sitemap for Google Search Console / crawlers. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
+
+  const industryPages: Entry[] = INDUSTRY_PAGES.map((page) => ({
+    path: page.path,
+    changeFrequency: "weekly" as const,
+    priority: page.parentPath ? 0.7 : 0.85,
+  }));
 
   const guidePages: Entry[] = DOCS_USE_CASES.map((useCase) => ({
     path: `/docs/guides/${useCase.slug}`,
@@ -67,26 +87,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.65,
   }));
 
-  const ecommercePages: Entry[] = ECOMMERCE_VERTICALS.map((vertical) => ({
-    path: `/industries/ecommerce/${vertical.slug}`,
-    changeFrequency: "monthly" as const,
-    priority: 0.45,
-  }));
-
-  const industryPages: Entry[] = INDUSTRY_PAGES.map((page) => ({
-    path: page.path,
-    changeFrequency: "monthly" as const,
-    priority: page.parentPath ? 0.65 : 0.75,
-  }));
-
-  return [
-    ...STATIC_PAGES,
+  const entries = dedupe([
+    ...CORE_PAGES,
+    ...industryPages,
     ...guidePages,
     ...apiPages,
-    ...industryPages,
-    ...ecommercePages,
-  ].map((entry) => ({
-    url: url(entry.path),
+    ...LEGACY_ALIAS_PAGES,
+  ]);
+
+  return entries.map((entry) => ({
+    url: loc(entry.path),
     lastModified,
     changeFrequency: entry.changeFrequency,
     priority: entry.priority,
