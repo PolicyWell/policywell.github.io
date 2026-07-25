@@ -5188,3 +5188,52 @@ body:has(.pw-docs-app) .pw-ope {
   margin-bottom: 0.35rem;
   border-bottom: 1px solid rgba(15, 47, 40, 0.08);
 }
+
+/* Mobile nav top-level accordion tabs */
+.pw-mobile-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.85rem 0.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--pine);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pw-mobile-tab:hover,
+.pw-mobile-tab.is-open {
+  background: rgba(15, 47, 40, 0.05);
+}
+
+.pw-mobile-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0 0.25rem 0.5rem 0.5rem;
+}
+
+.pw-mobile-tab-link {
+  display: block;
+  padding: 0.7rem 0.75rem;
+  border-radius: 10px;
+  color: var(--stone);
+}
+
+.pw-mobile-tab-link:hover {
+  background: rgba(15, 47, 40, 0.05);
+  color: var(--pine);
+}
+
+.pw-platform-mobile,
+.pw-industries-mobile {
+  border-bottom: 1px solid rgba(15, 47, 40, 0.08);
+  margin-bottom: 0.15rem;
+  padding-bottom: 0.15rem;
+}
