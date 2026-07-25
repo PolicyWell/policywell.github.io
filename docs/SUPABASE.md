@@ -1,67 +1,56 @@
 # Supabase setup (prod + dev)
 
-PolicyWell ships as a static GitHub Pages export. Browser code uses the
-**anon** key via `src/lib/supabase`. Never ship the service role key to Pages.
-
-## Environments
-
-| Environment | Git branch | Supabase project | Env source |
-|-------------|------------|------------------|------------|
-| Production | `production` (and `main` deploy) | Production project | GitHub Actions secrets |
-| Development | `dev` | Dev project (or Supabase branch) | `.env.local` |
-
-Recommended: **two Supabase projects** (or one project + a Supabase git branch
-for preview) so local work never touches live data.
-
-## 1. Create / pick projects
-
-1. In [Supabase Dashboard](https://supabase.com/dashboard), create (or open):
-   - `policywell-prod`
-   - `policywell-dev`
-2. For each: **Project Settings → API** copy:
-   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
-   - `anon` `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-
-## 2. Local / `dev` branch
+## Packages
 
 ```bash
-cp .env.example .env.local
-# paste DEV url + anon key
-npm run dev
+npm install @supabase/supabase-js @supabase/ssr
 ```
 
-Use helpers:
+## Clients (official SSR layout)
+
+| File | Use |
+|------|-----|
+| `utils/supabase/client.ts` | Client Components / browser |
+| `utils/supabase/server.ts` | Server Components, Route Handlers, Server Actions |
+| `utils/supabase/middleware.ts` | Session refresh helper |
+| `middleware.ts` | Calls `updateSession` (skipped on static Pages export) |
 
 ```ts
-import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
+// Client Component
+import { createClient } from "../../utils/supabase/client";
 
-const supabase = getSupabase();
-if (supabase) {
-  // query / auth
-}
+// Server Component / Route Handler
+import { createClient } from "../../utils/supabase/server";
 ```
 
-## 3. Production (GitHub Pages)
+Convenience helpers also exist at `src/lib/supabase` (`getSupabase()`, etc.).
 
-In the GitHub repo: **Settings → Secrets and variables → Actions**, add:
-
-- `NEXT_PUBLIC_SUPABASE_URL` = prod project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` = prod anon key
-
-The Pages workflow injects these at build time (`STATIC_EXPORT=1`).
-
-## 4. Link CLI (optional)
+## Environment variables
 
 ```bash
-npx supabase login
-npx supabase link --project-ref <prod-or-dev-ref>
-npx supabase db pull   # when you start using migrations
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-Supabase **database branches** (preview DBs) can map to the git `dev` branch
-once the project is linked; keep `production` pointed at the primary DB.
+| Environment | Git branch | Env source |
+|-------------|------------|------------|
+| Development | `dev` | `.env.local` |
+| Production | `production` / `main` (Pages) | GitHub Actions secrets |
+
+### Local
+
+Keys belong in `.env.local` (gitignored). Restart `npm run dev` after edits.
+
+### Production (GitHub Pages)
+
+Repo → **Settings → Secrets and variables → Actions**:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Static export cannot run middleware; `scripts/build-pages.mjs` parks `middleware.ts` for that build. Browser client + publishable key still work when baked in at build time.
 
 ## Notes
 
-- Login is still the demo/localStorage flow until auth is migrated.
-- `createServerSupabaseClient()` is for non-static hosts only (`server-only`).
+- Demo login remains localStorage until Auth is migrated.
+- Never commit the service role key.

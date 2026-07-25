@@ -12,6 +12,8 @@ import { fileURLToPath } from "node:url";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const apiDir = path.join(root, "src", "app", "api");
 const parkDir = path.join(root, ".pages-api-park");
+const middlewareFile = path.join(root, "middleware.ts");
+const middlewarePark = path.join(root, ".pages-middleware-park.ts");
 
 function run(cmd, args, env = {}) {
   const res = spawnSync(cmd, args, {
@@ -40,11 +42,29 @@ function restoreApi(parked) {
   fs.renameSync(parkDir, apiDir);
 }
 
-const parked = parkApi();
+/** Middleware is unsupported with `output: "export"` (GitHub Pages). */
+function parkMiddleware() {
+  if (!fs.existsSync(middlewareFile)) return false;
+  fs.rmSync(middlewarePark, { force: true });
+  fs.renameSync(middlewareFile, middlewarePark);
+  return true;
+}
+
+function restoreMiddleware(parked) {
+  if (!parked) return;
+  if (fs.existsSync(middlewareFile)) {
+    fs.rmSync(middlewareFile, { force: true });
+  }
+  fs.renameSync(middlewarePark, middlewareFile);
+}
+
+const parkedApi = parkApi();
+const parkedMiddleware = parkMiddleware();
 try {
   run("npx", ["next", "build"], { STATIC_EXPORT: "1" });
 } finally {
-  restoreApi(parked);
+  restoreMiddleware(parkedMiddleware);
+  restoreApi(parkedApi);
 }
 
 if (!fs.existsSync(path.join(root, "out", "index.html"))) {
