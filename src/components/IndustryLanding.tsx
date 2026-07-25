@@ -67,7 +67,7 @@ export function IndustryLanding({ path }: { path: string }) {
             </div>
 
             {page.hero && (
-              <div className="pw-industry-hero-stage animate-rise-delay-2">
+              <div className="pw-industry-hero-stage pw-industry-hero-stage-frame animate-rise-delay-2">
                 <IndustryPhotoStage
                   slug={page.path.split("/").pop()!.replace(/-insurance$/, "")}
                   label={page.label}
