@@ -13,7 +13,13 @@ type MotionKind =
   | "computer"
   | "box-truck"
   | "dump-truck"
-  | "tow-truck";
+  | "tow-truck"
+  | "flooring"
+  | "general-contractor"
+  | "handyman"
+  | "landscaping"
+  | "painter"
+  | "roofing";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -27,6 +33,12 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "box-truck": "box-truck",
   "dump-truck": "dump-truck",
   "tow-truck": "tow-truck",
+  "flooring-contractor": "flooring",
+  "general-contractor": "general-contractor",
+  handyman: "handyman",
+  landscaping: "landscaping",
+  painter: "painter",
+  roofing: "roofing",
 };
 
 type IndustryPhotoStageProps = {
@@ -175,6 +187,43 @@ export function IndustryPhotoStage({
                 <span className="pw-fx-tow-boom" />
                 <span className="pw-fx-tow-hook" />
                 <span className="pw-fx-wheel pw-fx-wheel-a" />
+              </>
+            )}
+            {motion === "flooring" && (
+              <>
+                <span className="pw-fx-plank pw-fx-plank-a" />
+                <span className="pw-fx-plank pw-fx-plank-b" />
+              </>
+            )}
+            {motion === "general-contractor" && (
+              <>
+                <span className="pw-fx-hardhat" />
+                <span className="pw-fx-blueprint" />
+              </>
+            )}
+            {motion === "handyman" && (
+              <>
+                <span className="pw-fx-wrench" />
+                <span className="pw-fx-tool-bob" />
+              </>
+            )}
+            {motion === "landscaping" && (
+              <>
+                <span className="pw-fx-leaf pw-fx-leaf-a" />
+                <span className="pw-fx-leaf pw-fx-leaf-b" />
+                <span className="pw-fx-leaf pw-fx-leaf-c" />
+              </>
+            )}
+            {motion === "painter" && (
+              <>
+                <span className="pw-fx-roller" />
+                <span className="pw-fx-paint-drip" />
+              </>
+            )}
+            {motion === "roofing" && (
+              <>
+                <span className="pw-fx-shingle" />
+                <span className="pw-fx-ladder-rung" />
               </>
             )}
             {motion === "float" && (
