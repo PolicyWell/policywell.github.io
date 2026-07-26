@@ -482,6 +482,10 @@ select {
   color: var(--pine);
 }
 
+span.pw-footer-group-title {
+  display: inline-block;
+}
+
 .pw-footer-sublinks {
   list-style: none;
   margin: 0;

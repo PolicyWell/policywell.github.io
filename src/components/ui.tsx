@@ -53,6 +53,24 @@ const FINANCIAL_PRODUCT_LINKS = [
   },
 ] as const;
 
+const COMPANY_LINKS = [
+  {
+    href: "/docs/",
+    label: "Documentation",
+    blurb: "Guides, API reference, and engineering notes",
+  },
+  {
+    href: "/press/",
+    label: "Press",
+    blurb: "News, media kit, and press contact",
+  },
+  {
+    href: "/careers/",
+    label: "Careers",
+    blurb: "Open roles and how we hire",
+  },
+] as const;
+
 function NavCaret({ open }: { open: boolean }) {
   return (
     <svg
@@ -264,12 +282,108 @@ function FinancialProductsMenu({
   );
 }
 
+function CompanyMenu({
+  open,
+  onOpenChange,
+  onNavigate,
+  variant = "desktop",
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onNavigate?: () => void;
+  variant?: "desktop" | "mobile";
+}) {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || variant !== "desktop") return;
+    function onPointerDown(e: PointerEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) onOpenChange(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onOpenChange(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, onOpenChange, variant]);
+
+  if (variant === "mobile") {
+    return (
+      <div className="pw-platform-mobile">
+        <button
+          type="button"
+          className={`pw-mobile-tab${open ? " is-open" : ""}`}
+          aria-expanded={open}
+          onClick={() => onOpenChange(!open)}
+        >
+          <span>Company</span>
+          <NavCaret open={open} />
+        </button>
+        {open && (
+          <div className="pw-mobile-tab-panel">
+            {COMPANY_LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="pw-mobile-tab-link"
+                onClick={onNavigate}
+              >
+                <span className="block font-medium text-pine">{l.label}</span>
+                <span className="block text-xs text-stone mt-0.5">{l.blurb}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="pw-platform-root" ref={rootRef}>
+      <button
+        type="button"
+        className={`pw-industries-trigger${open ? " is-open" : ""}`}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => onOpenChange(!open)}
+      >
+        Company
+        <NavCaret open={open} />
+      </button>
+      {open && (
+        <div className="pw-platform-panel" role="menu" aria-label="Company">
+          {COMPANY_LINKS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              role="menuitem"
+              className="pw-platform-item"
+              onClick={() => {
+                onOpenChange(false);
+                onNavigate?.();
+              }}
+            >
+              <span className="pw-platform-item-label">{l.label}</span>
+              <span className="pw-platform-item-blurb">{l.blurb}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
   const [platformOpen, setPlatformOpen] = useState(false);
   const [financialOpen, setFinancialOpen] = useState(false);
+  const [companyOpen, setCompanyOpen] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -280,6 +394,7 @@ export function SiteNav() {
         setIndustriesOpen(false);
         setPlatformOpen(false);
         setFinancialOpen(false);
+        setCompanyOpen(false);
       }
     };
     sync();
@@ -300,26 +415,26 @@ export function SiteNav() {
     setPlatformOpen(false);
     setIndustriesOpen(false);
     setFinancialOpen(false);
+    setCompanyOpen(false);
   }, [open]);
 
-  const links = [
-    { href: "/docs/", label: "Documentation" },
-    { href: "/pricing/", label: "Pricing" },
-  ];
+  const links = [{ href: "/pricing/", label: "Pricing" }];
 
   function closeMenus() {
     setIndustriesOpen(false);
     setPlatformOpen(false);
     setFinancialOpen(false);
+    setCompanyOpen(false);
   }
 
   function openOnly(
-    which: "platform" | "industries" | "financial",
+    which: "platform" | "industries" | "financial" | "company",
     next: boolean,
   ) {
     setPlatformOpen(which === "platform" ? next : false);
     setIndustriesOpen(which === "industries" ? next : false);
     setFinancialOpen(which === "financial" ? next : false);
+    setCompanyOpen(which === "company" ? next : false);
   }
 
   return (
@@ -343,6 +458,10 @@ export function SiteNav() {
               <FinancialProductsMenu
                 open={financialOpen}
                 onOpenChange={(next) => openOnly("financial", next)}
+              />
+              <CompanyMenu
+                open={companyOpen}
+                onOpenChange={(next) => openOnly("company", next)}
               />
               {links.map((l) => (
                 <Link
@@ -447,6 +566,12 @@ export function SiteNav() {
           <FinancialProductsMenu
             open={financialOpen}
             onOpenChange={(next) => openOnly("financial", next)}
+            onNavigate={() => setOpen(false)}
+            variant="mobile"
+          />
+          <CompanyMenu
+            open={companyOpen}
+            onOpenChange={(next) => openOnly("company", next)}
             onNavigate={() => setOpen(false)}
             variant="mobile"
           />
