@@ -14,7 +14,6 @@ import {
   industryCategoryHref,
   industryQuoteHref,
 } from "@/lib/industries-nav";
-import { BOOK_A_CALL_PATH } from "@/lib/book-a-call";
 
 const PHONE_DISPLAY = "(470) 887-0449";
 const PHONE_HREF = "tel:+14708870449";
@@ -179,26 +178,7 @@ export function IndustryLanding({ path }: { path: string }) {
 
         <section id="contact" className="pw-industry-contact">
           <div className="pw-shell">
-            <div className="pw-industry-contact-grid">
-              <div className="pw-industry-contact-copy">
-                <p className="pw-industry-eyebrow">Contact</p>
-                <h2 className="font-display text-pine">
-                  {isAnnuity ? "Request an illustration" : "Get a coverage quote"}
-                </h2>
-                <p>
-                  Tell us about {page.label.toLowerCase()} needs and a PolicyWell
-                  advisor will follow up — usually within the next hour.
-                </p>
-                <p className="pw-industry-hero-meta">
-                  <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
-                  {" · "}
-                  <Link href={BOOK_A_CALL_PATH}>Or book a call</Link>
-                </p>
-              </div>
-              <div className="pw-industry-contact-form">
-                <QuoteRequestForm defaultIndustry={page.label} />
-              </div>
-            </div>
+            <QuoteRequestForm defaultIndustry={page.label} />
           </div>
         </section>
       </main>
