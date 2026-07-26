@@ -11,21 +11,6 @@ export const metadata: Metadata = marketingMetadata({
   path: "/careers",
 });
 
-const OPEN_ROLES = [
-  {
-    title: "Forward Deployed Engineer",
-    focus: "Carrier and MGA integrations, policy workflows, production reliability",
-  },
-  {
-    title: "Insurance Product Specialist",
-    focus: "Coverage design, advisor workflows, and explainable recommendation UX",
-  },
-  {
-    title: "Go-to-Market Associate",
-    focus: "Agency partnerships, onboarding, and customer discovery",
-  },
-] as const;
-
 export default function CareersPage() {
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-clip">
@@ -52,22 +37,7 @@ export default function CareersPage() {
           </p>
         </header>
 
-        <section className="animate-rise-delay space-y-3">
-          <h2 className="font-display text-2xl text-pine">Open roles</h2>
-          <ul className="space-y-3">
-            {OPEN_ROLES.map((role) => (
-              <li
-                key={role.title}
-                className="rounded-[var(--radius)] border border-pine/10 bg-foam/70 p-5"
-              >
-                <p className="font-medium text-pine">{role.title}</p>
-                <p className="text-sm text-stone mt-1">{role.focus}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="animate-rise-delay-2 max-w-xl space-y-3">
+        <section className="animate-rise-delay max-w-xl space-y-3">
           <h2 className="font-display text-2xl text-pine">How to apply</h2>
           <p className="text-sm text-stone leading-relaxed">
             Send a short note on the role you want, relevant work, and why

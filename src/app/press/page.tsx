@@ -37,15 +37,7 @@ export default function PressPage() {
           </p>
         </header>
 
-        <section className="animate-rise-delay grid gap-4 md:grid-cols-2">
-          <article className="rounded-[var(--radius)] border border-pine/10 bg-foam/70 p-5 md:p-6">
-            <h2 className="font-display text-xl text-pine">Boilerplate</h2>
-            <p className="text-sm text-stone mt-2 leading-relaxed">
-              PolicyWell helps insurers, agencies, advisors, and policyholders
-              analyze policies, automate insurance workflows, improve
-              underwriting decisions, and act on insurance intelligence.
-            </p>
-          </article>
+        <section className="animate-rise-delay max-w-xl">
           <article className="rounded-[var(--radius)] border border-pine/10 bg-foam/70 p-5 md:p-6">
             <h2 className="font-display text-xl text-pine">Media contact</h2>
             <p className="text-sm text-stone mt-2 leading-relaxed">
