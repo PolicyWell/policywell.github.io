@@ -23,7 +23,7 @@ export default function QuotePage() {
       />
       <SiteNav />
       <main className="pw-shell py-8 md:py-12 min-w-0 w-full">
-        <section className="pw-quote-shell animate-rise">
+        <section id="contact" className="pw-quote-shell animate-rise">
           <aside className="pw-quote-aside">
             <div className="pw-quote-aside-inner">
               <p className="pw-quote-aside-kicker">PolicyWell Quotes</p>

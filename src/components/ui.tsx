@@ -372,7 +372,7 @@ export function SiteNav() {
                 {PHONE_DISPLAY}
               </a>
               <Link
-                href="/quote/"
+                href="/quote/#contact"
                 className="pw-btn pw-nav-cta"
                 onClick={closeMenus}
               >
@@ -467,7 +467,7 @@ export function SiteNav() {
             {PHONE_DISPLAY}
           </a>
           <Link
-            href="/quote/"
+            href="/quote/#contact"
             className="pw-btn mt-2 text-center"
             onClick={() => setOpen(false)}
           >

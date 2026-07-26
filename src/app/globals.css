@@ -4963,6 +4963,57 @@ body:has(.pw-docs-app) .pw-ope {
   line-height: 1.45;
 }
 
+.pw-industry-contact {
+  padding: 2.5rem 0 3.5rem;
+  border-top: 1px solid rgba(15, 47, 40, 0.08);
+  background:
+    linear-gradient(180deg, rgba(245, 250, 247, 0.55), transparent 40%),
+    rgba(255, 255, 255, 0.35);
+  scroll-margin-top: 5.5rem;
+}
+
+.pw-industry-contact-grid {
+  display: grid;
+  gap: 1.75rem;
+}
+
+@media (min-width: 900px) {
+  .pw-industry-contact-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 2.5rem;
+    align-items: start;
+  }
+}
+
+.pw-industry-contact-copy {
+  max-width: 28rem;
+}
+
+.pw-industry-contact-copy h2 {
+  margin: 0.35rem 0 0.75rem;
+  font-size: clamp(1.6rem, 2.4vw, 2.15rem);
+  line-height: 1.15;
+}
+
+.pw-industry-contact-copy > p {
+  margin: 0;
+  color: var(--stone);
+}
+
+.pw-industry-contact-form {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 47, 40, 0.08);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow-soft);
+  padding: 1.15rem 1.15rem 1.35rem;
+}
+
+@media (min-width: 720px) {
+  .pw-industry-contact-form {
+    padding: 1.35rem 1.5rem 1.55rem;
+  }
+}
+
 /* ── Industries mega-menu (SiteNav) ── */
 .pw-industries-root {
   position: relative;

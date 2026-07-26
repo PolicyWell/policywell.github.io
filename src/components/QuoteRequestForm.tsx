@@ -76,8 +76,18 @@ const INITIAL: QuoteFormState = {
   industry: "",
 };
 
-export function QuoteRequestForm() {
-  const [form, setForm] = useState<QuoteFormState>(INITIAL);
+type QuoteRequestFormProps = {
+  /** Pre-select industry when embedded on an industry landing. */
+  defaultIndustry?: string;
+};
+
+export function QuoteRequestForm({
+  defaultIndustry = "",
+}: QuoteRequestFormProps) {
+  const [form, setForm] = useState<QuoteFormState>({
+    ...INITIAL,
+    industry: defaultIndustry,
+  });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
@@ -85,7 +95,16 @@ export function QuoteRequestForm() {
   const industryOptions = useMemo(() => allIndustryLabels(), []);
 
   useEffect(() => {
+    if (defaultIndustry) {
+      setForm((prev) =>
+        prev.industry ? prev : { ...prev, industry: defaultIndustry },
+      );
+    }
+  }, [defaultIndustry]);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
+    // Legacy query support + optional future deep links.
     const params = new URLSearchParams(window.location.search);
     const industry = params.get("industry")?.trim();
     if (!industry) return;
@@ -128,15 +147,15 @@ export function QuoteRequestForm() {
           <Link href="/agent" className="pw-btn">
             Talk to the agent
           </Link>
-          <Link href="/commercial" className="pw-btn pw-btn-secondary">
-            Commercial risk
+          <Link href="/demo" className="pw-btn pw-btn-secondary">
+            Product demo
           </Link>
           <button
             type="button"
             className="pw-btn pw-btn-secondary"
             onClick={() => {
               setSubmitted(false);
-              setForm(INITIAL);
+              setForm({ ...INITIAL, industry: defaultIndustry });
             }}
           >
             Submit another
@@ -150,9 +169,15 @@ export function QuoteRequestForm() {
     <form className="pw-quote-form" onSubmit={onSubmit} noValidate>
       <header className="pw-quote-form-header">
         <p className="pw-quote-eyebrow">Your quote</p>
-        <h1 className="font-display text-3xl md:text-4xl text-pine">
-          Get your free quote
-        </h1>
+        {defaultIndustry ? (
+          <h2 className="font-display text-3xl md:text-4xl text-pine">
+            Get your free quote
+          </h2>
+        ) : (
+          <h1 className="font-display text-3xl md:text-4xl text-pine">
+            Get your free quote
+          </h1>
+        )}
       </header>
 
       <div className="pw-quote-grid">
@@ -164,7 +189,7 @@ export function QuoteRequestForm() {
             className="pw-input"
             name="name"
             autoComplete="name"
-            placeholder="Jordan Lee"
+            placeholder="Shawn White"
             value={form.name}
             onChange={(e) => update("name", e.target.value)}
             required
@@ -176,7 +201,7 @@ export function QuoteRequestForm() {
             className="pw-input"
             name="company"
             autoComplete="organization"
-            placeholder="Acme Inc."
+            placeholder="Maverick Trucking Inc."
             value={form.company}
             onChange={(e) => update("company", e.target.value)}
           />

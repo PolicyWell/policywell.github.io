@@ -22,7 +22,7 @@ const FOOTER_LINKS = [
   { href: "/industries/", label: "Industries" },
   { href: "/pricing/", label: "Pricing" },
   { href: "/docs/", label: "Documentation" },
-  { href: "/quote/", label: "Request a Quote" },
+  { href: "/quote/#contact", label: "Request a Quote" },
 ] as const;
 
 const FINANCIAL_PRODUCT_LINKS = [

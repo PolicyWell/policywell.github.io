@@ -74,7 +74,7 @@ export default function HomePage() {
               Talk to the agent
             </Link>
             <Link
-              href="/quote"
+              href="/quote/#contact"
               className="pw-btn pw-btn-secondary w-full sm:w-auto justify-center"
             >
               Get a Quote

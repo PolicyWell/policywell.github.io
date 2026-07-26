@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { IndustryPhotoStage } from "@/components/IndustryPhotoStage";
+import { QuoteRequestForm } from "@/components/QuoteRequestForm";
 import { SiteNav } from "@/components/ui";
 import {
   getIndustryChildren,
@@ -82,7 +83,7 @@ export function IndustryLanding({ path }: { path: string }) {
               <h1 className="font-display text-pine">{page.headline}</h1>
               <p className="pw-industry-support">{page.support}</p>
               <div className="pw-industry-hero-actions">
-                <Link href={industryQuoteHref(page.label)} className="pw-btn">
+                <Link href={industryQuoteHref(page.path)} className="pw-btn">
                   {primaryCtaLabel}
                 </Link>
                 {isStandaloneHub && (
@@ -93,7 +94,7 @@ export function IndustryLanding({ path }: { path: string }) {
               </div>
               {isLeaf && (
                 <p className="pw-industry-hero-meta">
-                  <Link href={industryQuoteHref(page.label)}>
+                  <Link href={industryQuoteHref(page.path)}>
                     Free coverage review
                   </Link>
                   <span aria-hidden> · </span>
@@ -174,6 +175,29 @@ export function IndustryLanding({ path }: { path: string }) {
             </div>
           </section>
         )}
+
+        <section id="contact" className="pw-industry-contact">
+          <div className="pw-shell">
+            <div className="pw-industry-contact-grid">
+              <div className="pw-industry-contact-copy">
+                <p className="pw-industry-eyebrow">Contact</p>
+                <h2 className="font-display text-pine">
+                  {isAnnuity ? "Request an illustration" : "Get a coverage quote"}
+                </h2>
+                <p>
+                  Tell us about {page.label.toLowerCase()} needs and a PolicyWell
+                  advisor will follow up — usually within the next hour.
+                </p>
+                <p className="pw-industry-hero-meta">
+                  <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+                </p>
+              </div>
+              <div className="pw-industry-contact-form">
+                <QuoteRequestForm defaultIndustry={page.label} />
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
