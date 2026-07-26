@@ -5130,49 +5130,125 @@ body:has(.pw-docs-app) .pw-ope {
   text-underline-offset: 3px;
 }
 
-/* Desktop SiteNav layout — brand never overlaps nav items. */
+/* Full-bleed site header — brand pinned top-left, nav evenly spaced. */
+.pw-site-header {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.9rem 1rem 0.75rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .pw-site-header {
+    padding: 1rem 1.25rem 0.85rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pw-site-header {
+    padding: 1.1rem 1.75rem 0.95rem;
+  }
+}
+
 .pw-site-nav-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  width: 100%;
   min-width: 0;
 }
 
-.pw-site-nav-desktop {
+.pw-site-nav-brand {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+}
+
+.pw-site-nav-links {
   display: none;
   align-items: center;
-  justify-content: flex-end;
-  flex-wrap: nowrap;
-  gap: 0.55rem 0.85rem;
+  justify-content: space-evenly;
+  flex: 1 1 auto;
+  gap: 0.35rem 0.75rem;
   min-width: 0;
-  margin-left: auto;
-  font-size: 0.875rem;
+  padding: 0 0.5rem;
+  font-size: 0.9rem;
   color: var(--stone);
 }
 
+.pw-site-nav-actions {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  gap: 0.55rem;
+}
+
+.pw-site-nav-link {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 0.35rem 0.45rem;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.pw-site-nav-link:hover {
+  color: var(--pine);
+}
+
+.pw-site-nav-links > * {
+  flex: 0 0 auto;
+}
+
+.pw-site-nav-mobile {
+  margin-inline: 0;
+}
+
 @media (min-width: 768px) {
-  .pw-site-nav-desktop {
+  .pw-site-nav-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 1.25rem;
+  }
+
+  .pw-site-nav-links,
+  .pw-site-nav-actions {
     display: flex;
   }
 }
 
 @media (min-width: 1100px) {
-  .pw-site-nav-desktop {
-    gap: 0.65rem 1.1rem;
+  .pw-site-nav-links {
+    gap: 0.45rem 1.15rem;
+    font-size: 0.9375rem;
+  }
+
+  .pw-site-nav-actions {
+    gap: 0.7rem;
   }
 }
 
-/* Keep brand clear on mid-width desktops — phone moves to drawer-less priority. */
+/* Keep mid-width desktop readable without crowding the brand. */
 @media (min-width: 768px) and (max-width: 1099px) {
-  .pw-site-nav-desktop .pw-nav-phone {
+  .pw-site-nav-actions .pw-nav-phone {
     display: none;
   }
 
-  .pw-site-nav-desktop .pw-nav-cta {
-    min-height: 2.45rem;
-    padding: 0.7rem 1.2rem;
-    font-size: 0.9rem;
+  .pw-site-nav-actions .pw-nav-version {
+    display: none;
+  }
+
+  .pw-site-nav-actions .pw-nav-cta {
+    min-height: 2.4rem;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.875rem;
+  }
+
+  .pw-site-nav-links {
+    justify-content: space-between;
+    gap: 0.25rem 0.45rem;
+    font-size: 0.82rem;
   }
 }
 
@@ -5184,12 +5260,13 @@ body:has(.pw-docs-app) .pw-ope {
   font-weight: 600;
   letter-spacing: 0.01em;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .pw-nav-version {
   display: inline-flex;
   align-items: center;
-  margin-left: 0.15rem;
+  margin-left: 0.1rem;
   padding: 0.2rem 0.45rem;
   border-radius: 999px;
   border: 1px solid rgba(15, 47, 40, 0.12);
@@ -5213,6 +5290,14 @@ body:has(.pw-docs-app) .pw-ope {
   align-items: center;
   gap: 0.35rem;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--stone);
+  transition: color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.pw-nav-phone:hover {
+  color: var(--pine);
 }
 
 .pw-industries-mobile {
