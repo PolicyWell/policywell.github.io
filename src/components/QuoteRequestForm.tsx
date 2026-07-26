@@ -8,13 +8,13 @@ import { isUsState, StateTypeahead } from "@/components/StateTypeahead";
 const BOOK_A_CALL_HREF = BOOK_A_CALL_PATH;
 
 const PRIMARY_COVERAGES = [
+  "Life Insurance",
+  "Annuity",
   "General Liability",
   "Commercial Property",
   "Directors & Officers (D&O)",
   "Umbrella / Excess",
   "Workers' Compensation",
-  "Life Insurance",
-  "Annuity",
 ] as const;
 
 const MORE_COVERAGES = [
