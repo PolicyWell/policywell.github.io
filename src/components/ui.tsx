@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type RefObject,
+} from "react";
 import { IndustriesMegaMenu } from "@/components/IndustriesMegaMenu";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
@@ -88,21 +95,65 @@ function NavCaret({ open }: { open: boolean }) {
   );
 }
 
-function PlatformMenu({
-  open,
-  onOpenChange,
-  onNavigate,
-  variant = "desktop",
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onNavigate?: () => void;
-  variant?: "desktop" | "mobile";
-}) {
-  const rootRef = useRef<HTMLDivElement>(null);
+/**
+ * Viewport-fixed menu placement so panels aren't clipped by overflow-x-clip
+ * ancestors (html/body/page shells) the way absolute panels were.
+ */
+function useFixedMenuStyle(
+  open: boolean,
+  rootRef: RefObject<HTMLElement | null>,
+  alignEnd: boolean,
+): CSSProperties | undefined {
+  const [style, setStyle] = useState<CSSProperties | undefined>(undefined);
 
+  useLayoutEffect(() => {
+    if (!open) {
+      setStyle(undefined);
+      return;
+    }
+
+    function place() {
+      const el = rootRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const gap = 10;
+      const width = Math.max(240, rect.width);
+      const next: CSSProperties = {
+        position: "fixed",
+        top: Math.round(rect.bottom + gap),
+        minWidth: width,
+        zIndex: 80,
+      };
+      if (alignEnd) {
+        next.right = Math.max(8, Math.round(window.innerWidth - rect.right));
+        next.left = "auto";
+      } else {
+        next.left = Math.max(8, Math.round(rect.left));
+        next.right = "auto";
+      }
+      setStyle(next);
+    }
+
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open, rootRef, alignEnd]);
+
+  return style;
+}
+
+function useOutsideDismiss(
+  open: boolean,
+  rootRef: RefObject<HTMLElement | null>,
+  onOpenChange: (open: boolean) => void,
+  enabled: boolean,
+) {
   useEffect(() => {
-    if (!open || variant !== "desktop") return;
+    if (!open || !enabled) return;
     function onPointerDown(e: PointerEvent) {
       if (!rootRef.current?.contains(e.target as Node)) onOpenChange(false);
     }
@@ -115,7 +166,23 @@ function PlatformMenu({
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open, onOpenChange, variant]);
+  }, [open, onOpenChange, rootRef, enabled]);
+}
+
+function PlatformMenu({
+  open,
+  onOpenChange,
+  onNavigate,
+  variant = "desktop",
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onNavigate?: () => void;
+  variant?: "desktop" | "mobile";
+}) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelStyle = useFixedMenuStyle(open, rootRef, false);
+  useOutsideDismiss(open, rootRef, onOpenChange, variant === "desktop");
 
   if (variant === "mobile") {
     return (
@@ -160,8 +227,13 @@ function PlatformMenu({
         Platform
         <NavCaret open={open} />
       </button>
-      {open && (
-        <div className="pw-platform-panel" role="menu" aria-label="Platform">
+      {open && panelStyle ? (
+        <div
+          className="pw-platform-panel"
+          role="menu"
+          aria-label="Platform"
+          style={panelStyle}
+        >
           {PLATFORM_LINKS.map((l) => (
             <Link
               key={l.href}
@@ -178,7 +250,7 @@ function PlatformMenu({
             </Link>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -195,22 +267,8 @@ function FinancialProductsMenu({
   variant?: "desktop" | "mobile";
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open || variant !== "desktop") return;
-    function onPointerDown(e: PointerEvent) {
-      if (!rootRef.current?.contains(e.target as Node)) onOpenChange(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onOpenChange(false);
-    }
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open, onOpenChange, variant]);
+  const panelStyle = useFixedMenuStyle(open, rootRef, true);
+  useOutsideDismiss(open, rootRef, onOpenChange, variant === "desktop");
 
   if (variant === "mobile") {
     return (
@@ -255,11 +313,12 @@ function FinancialProductsMenu({
         Financial Products
         <NavCaret open={open} />
       </button>
-      {open && (
+      {open && panelStyle ? (
         <div
           className="pw-platform-panel"
           role="menu"
           aria-label="Financial Products"
+          style={panelStyle}
         >
           {FINANCIAL_PRODUCT_LINKS.map((l) => (
             <Link
@@ -277,7 +336,7 @@ function FinancialProductsMenu({
             </Link>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -294,22 +353,8 @@ function CompanyMenu({
   variant?: "desktop" | "mobile";
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open || variant !== "desktop") return;
-    function onPointerDown(e: PointerEvent) {
-      if (!rootRef.current?.contains(e.target as Node)) onOpenChange(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onOpenChange(false);
-    }
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open, onOpenChange, variant]);
+  const panelStyle = useFixedMenuStyle(open, rootRef, true);
+  useOutsideDismiss(open, rootRef, onOpenChange, variant === "desktop");
 
   if (variant === "mobile") {
     return (
@@ -354,8 +399,13 @@ function CompanyMenu({
         Company
         <NavCaret open={open} />
       </button>
-      {open && (
-        <div className="pw-platform-panel" role="menu" aria-label="Company">
+      {open && panelStyle ? (
+        <div
+          className="pw-platform-panel"
+          role="menu"
+          aria-label="Company"
+          style={panelStyle}
+        >
           {COMPANY_LINKS.map((l) => (
             <Link
               key={l.href}
@@ -372,7 +422,7 @@ function CompanyMenu({
             </Link>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -438,7 +488,7 @@ export function SiteNav() {
   }
 
   return (
-    <header className="pw-site-header animate-rise relative z-40">
+    <header className="pw-site-header relative z-40">
       <div className="pw-site-nav-row">
         <div className="pw-site-nav-brand">
           <BrandMark />
