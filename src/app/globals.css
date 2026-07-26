@@ -5452,7 +5452,8 @@ body:has(.pw-docs-app) .pw-ope {
   padding: 0 0.5rem;
   font-size: 0.9rem;
   color: var(--stone);
-  overflow: hidden;
+  /* Keep visible so Platform / Financial Products / Company dropdowns are not clipped */
+  overflow: visible;
 }
 
 .pw-site-nav-actions {
@@ -5639,8 +5640,15 @@ body:has(.pw-docs-app) .pw-ope {
   border: 1px solid rgba(15, 47, 40, 0.08);
   border-radius: 14px;
   box-shadow: 0 18px 44px rgba(15, 47, 40, 0.12);
-  z-index: 50;
+  z-index: 70;
   animation: rise 0.18s ease both;
+}
+
+/* Prefer right alignment when the trigger sits near the trailing edge of the nav. */
+.pw-platform-root:last-of-type .pw-platform-panel,
+.pw-site-nav-links > .pw-platform-root:nth-last-child(2) .pw-platform-panel {
+  left: auto;
+  right: 0;
 }
 
 .pw-platform-item {
