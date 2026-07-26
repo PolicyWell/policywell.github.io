@@ -5226,13 +5226,15 @@ body:has(.pw-docs-app) .pw-ope {
 .pw-site-nav-links {
   display: none;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   flex: 1 1 auto;
+  flex-wrap: nowrap;
   gap: 0.35rem 0.75rem;
   min-width: 0;
   padding: 0 0.5rem;
   font-size: 0.9rem;
   color: var(--stone);
+  overflow: hidden;
 }
 
 .pw-site-nav-actions {
@@ -5241,6 +5243,8 @@ body:has(.pw-docs-app) .pw-ope {
   justify-content: flex-end;
   flex: 0 0 auto;
   gap: 0.55rem;
+  position: relative;
+  z-index: 1;
 }
 
 .pw-site-nav-link {
@@ -5277,7 +5281,7 @@ body:has(.pw-docs-app) .pw-ope {
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1320px) {
   .pw-site-nav-links {
     gap: 0.45rem 1.15rem;
     font-size: 0.9375rem;
@@ -5288,8 +5292,8 @@ body:has(.pw-docs-app) .pw-ope {
   }
 }
 
-/* Keep mid-width desktop readable without crowding the brand. */
-@media (min-width: 768px) and (max-width: 1099px) {
+/* Keep mid-width desktop readable: Pricing must not collide with the phone. */
+@media (min-width: 768px) and (max-width: 1319px) {
   .pw-site-nav-actions .pw-nav-phone {
     display: none;
   }
@@ -5305,7 +5309,6 @@ body:has(.pw-docs-app) .pw-ope {
   }
 
   .pw-site-nav-links {
-    justify-content: space-between;
     gap: 0.25rem 0.45rem;
     font-size: 0.82rem;
   }
