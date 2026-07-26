@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { allIndustryLabels } from "@/lib/industries-nav";
+import { BOOK_A_CALL_PATH } from "@/lib/book-a-call";
 
-const BOOK_A_CALL_HREF = "https://cal.com/policywell";
+const BOOK_A_CALL_HREF = BOOK_A_CALL_PATH;
 
 const US_STATES = [
   "Alabama",
@@ -146,12 +147,7 @@ export function QuoteRequestForm({
           not a bindable quote or underwriting decision.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a
-            href={BOOK_A_CALL_HREF}
-            className="pw-btn"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={BOOK_A_CALL_HREF} className="pw-btn">
             Book a call
           </a>
           <Link href="/agent" className="pw-btn pw-btn-secondary">
@@ -297,11 +293,7 @@ export function QuoteRequestForm({
       </button>
       <p className="pw-quote-alt">
         or{" "}
-        <a
-          href={BOOK_A_CALL_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={BOOK_A_CALL_HREF}>
           book a call
         </a>
       </p>

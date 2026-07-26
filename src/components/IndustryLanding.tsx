@@ -14,6 +14,7 @@ import {
   industryCategoryHref,
   industryQuoteHref,
 } from "@/lib/industries-nav";
+import { BOOK_A_CALL_PATH } from "@/lib/book-a-call";
 
 const PHONE_DISPLAY = "(470) 887-0449";
 const PHONE_HREF = "tel:+14708870449";
@@ -191,13 +192,7 @@ export function IndustryLanding({ path }: { path: string }) {
                 <p className="pw-industry-hero-meta">
                   <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
                   {" · "}
-                  <a
-                    href="https://cal.com/policywell"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Or book a call
-                  </a>
+                  <Link href={BOOK_A_CALL_PATH}>Or book a call</Link>
                 </p>
               </div>
               <div className="pw-industry-contact-form">
