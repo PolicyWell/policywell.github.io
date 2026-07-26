@@ -4963,6 +4963,24 @@ body:has(.pw-docs-app) .pw-ope {
   justify-content: center;
 }
 
+.pw-quote-alt {
+  margin: 0.35rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--stone);
+  line-height: 1.45;
+}
+
+.pw-quote-alt a {
+  color: var(--pine);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pw-quote-alt a:hover {
+  color: var(--ok);
+}
+
 .pw-quote-footnote {
   margin: 0.15rem 0 0;
   text-align: center;

@@ -52,6 +52,14 @@ export default function QuotePage() {
                   </svg>
                   (470) 887-0449
                 </a>
+                <a
+                  className="pw-quote-ghost-btn"
+                  href="https://cal.com/policywell"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Or book a call
+                </a>
                 <Link className="pw-quote-ghost-btn" href="/agent">
                   Or talk to the agent
                 </Link>
