@@ -249,14 +249,14 @@ export function SiteNav() {
             </a>
             <Link
               href="/quote/"
-              className="pw-btn !py-2 !px-4 text-sm ml-1 lg:ml-2"
+              className="pw-btn pw-nav-cta ml-1 lg:ml-2"
               onClick={closeMenus}
             >
               Get a Quote
             </Link>
             <Link
               href="/login"
-              className="pw-btn pw-btn-secondary !py-2 !px-4 text-sm"
+              className="pw-btn pw-btn-secondary pw-nav-cta"
               onClick={closeMenus}
             >
               Sign in
