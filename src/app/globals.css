@@ -5645,8 +5645,7 @@ body:has(.pw-docs-app) .pw-ope {
 }
 
 /* Prefer right alignment when the trigger sits near the trailing edge of the nav. */
-.pw-platform-root:last-of-type .pw-platform-panel,
-.pw-site-nav-links > .pw-platform-root:nth-last-child(2) .pw-platform-panel {
+.pw-platform-root.is-align-end .pw-platform-panel {
   left: auto;
   right: 0;
 }
