@@ -66,6 +66,8 @@ const PRIMARY_COVERAGES = [
   "Directors & Officers (D&O)",
   "Umbrella / Excess",
   "Workers' Compensation",
+  "Life Insurance",
+  "Annuity",
 ] as const;
 
 const MORE_COVERAGES = [
