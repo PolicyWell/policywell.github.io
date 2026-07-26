@@ -5163,6 +5163,19 @@ body:has(.pw-docs-app) .pw-ope {
   }
 }
 
+/* Keep brand clear on mid-width desktops — phone moves to drawer-less priority. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .pw-site-nav-desktop .pw-nav-phone {
+    display: none;
+  }
+
+  .pw-site-nav-desktop .pw-nav-cta {
+    min-height: 2.45rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
 /* Desktop SiteNav CTAs — full button scale (not compact pills). */
 .pw-nav-cta {
   min-height: 2.75rem;
