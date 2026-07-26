@@ -21,9 +21,10 @@ export function IndustriesHub() {
               Insurance for every business we understand
             </h1>
             <p className="pw-industry-support">
-              PolicyWell covers life insurance, annuities, ecommerce brands,
-              contractors, restaurants, trucking fleets, property managers, and
-              more — browse a vertical to start a coverage review.
+              PolicyWell covers financial products (life insurance and
+              annuities), ecommerce brands, contractors, restaurants, trucking
+              fleets, property managers, and more — browse a vertical to start a
+              coverage review.
             </p>
           </div>
         </section>

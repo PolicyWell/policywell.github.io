@@ -133,9 +133,17 @@ export function webSiteJsonLd() {
   };
 }
 
-function serviceTypeForCategory(categoryId: string): string {
-  if (categoryId === "life-insurance") return "Life insurance analysis";
-  if (categoryId === "annuities") return "Annuity analysis";
+function serviceTypeForCategory(categoryId: string, path: string): string {
+  if (path === "/annuities" || path.startsWith("/annuities/")) {
+    return "Annuity analysis";
+  }
+  if (
+    categoryId === "financial-products" ||
+    path === "/life-insurance" ||
+    path.startsWith("/life-insurance/")
+  ) {
+    return "Life insurance and annuity analysis";
+  }
   return "Commercial insurance coverage review";
 }
 
@@ -156,7 +164,7 @@ export function industryServiceJsonLd(page: IndustryPage) {
       "@type": "Country",
       name: "United States",
     },
-    serviceType: serviceTypeForCategory(page.categoryId),
+    serviceType: serviceTypeForCategory(page.categoryId, page.path),
   };
 }
 

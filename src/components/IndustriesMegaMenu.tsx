@@ -29,18 +29,12 @@ function IndustryIcon({
   };
 
   switch (id) {
-    case "life-insurance":
+    case "financial-products":
       return (
         <svg {...common}>
           <path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.6-7 10-7 10z" />
-        </svg>
-      );
-    case "annuities":
-      return (
-        <svg {...common}>
           <path d="M4 19V5" />
-          <path d="M4 19h16" />
-          <path d="M8 16v-5M12 16V8M16 16v-3" />
+          <path d="M4 19h7" />
         </svg>
       );
     case "ecommerce":

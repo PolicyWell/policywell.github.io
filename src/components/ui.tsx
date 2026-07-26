@@ -188,8 +188,7 @@ export function SiteNav() {
   }, [open]);
 
   const links = [
-    { href: "/life-insurance/", label: "Life Insurance" },
-    { href: "/annuities/", label: "Annuities" },
+    { href: "/financial-products/", label: "Financial Products" },
     { href: "/docs/", label: "Documentation" },
     { href: "/pricing/", label: "Pricing" },
   ];

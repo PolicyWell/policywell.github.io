@@ -33,22 +33,15 @@ function industryPaths(): string[] {
   return INDUSTRY_PAGES.map((page) => page.path);
 }
 
-function lifeInsurancePaths(): string[] {
-  return INDUSTRY_PAGES.filter((p) => p.categoryId === "life-insurance").map(
-    (p) => p.path,
-  );
-}
-
-function annuityPaths(): string[] {
-  return INDUSTRY_PAGES.filter((p) => p.categoryId === "annuities").map(
+function financialProductPaths(): string[] {
+  return INDUSTRY_PAGES.filter((p) => p.categoryId === "financial-products").map(
     (p) => p.path,
   );
 }
 
 function commercialIndustryPaths(): string[] {
   return INDUSTRY_PAGES.filter(
-    (p) =>
-      p.categoryId !== "life-insurance" && p.categoryId !== "annuities",
+    (p) => p.categoryId !== "financial-products",
   ).map((p) => p.path);
 }
 
@@ -85,8 +78,7 @@ function dedupe(paths: string[]): string[] {
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   // Keep segmented builders referenced so future split stays trivial.
-  void lifeInsurancePaths;
-  void annuityPaths;
+  void financialProductPaths;
   void commercialIndustryPaths;
 
   const paths = dedupe([

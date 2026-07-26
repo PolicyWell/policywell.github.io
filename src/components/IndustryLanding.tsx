@@ -22,15 +22,22 @@ export function IndustryLanding({ path }: { path: string }) {
   if (!page) return null;
 
   const children = getIndustryChildren(page.path);
-  const parent = page.parentPath ? getIndustryPage(page.parentPath) : null;
-  const grandparent = parent?.parentPath
-    ? getIndustryPage(parent.parentPath)
-    : null;
+  const ancestors: NonNullable<ReturnType<typeof getIndustryPage>>[] = [];
+  let cursor = page.parentPath ? getIndustryPage(page.parentPath) : undefined;
+  const seen = new Set<string>();
+  while (cursor && !seen.has(cursor.path)) {
+    seen.add(cursor.path);
+    ancestors.unshift(cursor);
+    cursor = cursor.parentPath
+      ? getIndustryPage(cursor.parentPath)
+      : undefined;
+  }
+  const parent = ancestors[ancestors.length - 1] ?? null;
   const siblings = parent ? getIndustryChildren(parent.path) : [];
   const isLeaf = children.length === 0;
   /** Standalone hubs (Retail, Bar, Catering) have no children or siblings. */
   const isStandaloneHub = children.length === 0 && !parent;
-  const isAnnuity = page.categoryId === "annuities";
+  const isAnnuity = page.path === "/annuities" || page.path.startsWith("/annuities/");
   const primaryCtaLabel = isAnnuity ? "Get Illustration" : "Get a quote";
 
   /** Hub pages browse their children; micro pages browse sibling verticals. */
@@ -63,27 +70,14 @@ export function IndustryLanding({ path }: { path: string }) {
                 <Link href="/">PolicyWell</Link>
                 <span aria-hidden> / </span>
                 <Link href="/industries/">Industries</Link>
-                {grandparent ? (
-                  <>
+                {ancestors.map((entry) => (
+                  <span key={entry.path}>
                     <span aria-hidden> / </span>
-                    <Link href={industryHref(grandparent.path)}>
-                      {grandparent.label}
-                    </Link>
-                  </>
-                ) : null}
-                {parent ? (
-                  <>
-                    <span aria-hidden> / </span>
-                    <Link href={industryHref(parent.path)}>{parent.label}</Link>
-                    <span aria-hidden> / </span>
-                    <span>{page.label}</span>
-                  </>
-                ) : (
-                  <>
-                    <span aria-hidden> / </span>
-                    <span>{page.label}</span>
-                  </>
-                )}
+                    <Link href={industryHref(entry.path)}>{entry.label}</Link>
+                  </span>
+                ))}
+                <span aria-hidden> / </span>
+                <span>{page.label}</span>
               </p>
               <h1 className="font-display text-pine">{page.headline}</h1>
               <p className="pw-industry-support">{page.support}</p>
