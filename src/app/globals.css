@@ -4956,12 +4956,60 @@ body:has(.pw-docs-app) .pw-ope {
   border-color: rgba(15, 47, 40, 0.12);
 }
 
-.pw-quote-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235c6b64' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.9rem center;
-  padding-right: 2.4rem;
+.pw-state-typeahead {
+  position: relative;
+}
+
+.pw-state-suggestions {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid rgba(15, 47, 40, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(15, 47, 40, 0.12);
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.pw-state-suggestion {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--pine);
+  font: inherit;
+  font-size: 0.92rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.pw-state-suggestion:hover,
+.pw-state-suggestion.is-active {
+  background: rgba(15, 47, 40, 0.07);
+}
+
+.pw-state-empty {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  background: #fff;
+  border: 1px solid rgba(15, 47, 40, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(15, 47, 40, 0.12);
+  font-size: 0.82rem;
+  color: var(--stone);
 }
 
 .pw-quote-help {
