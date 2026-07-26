@@ -46,7 +46,7 @@ export function SiteFooter() {
               The Agentic Operating System for the Insurance &amp; Financial
               Services Industry
             </p>
-            <p className="text-xs text-moss mt-3">
+            <p className="text-xs text-moss mt-3 font-semibold">
               Built With <span aria-hidden="true">💚</span>
               <span className="sr-only">love</span> in Boston
             </p>
