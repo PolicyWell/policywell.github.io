@@ -1,64 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { BOOK_A_CALL_PATH } from "@/lib/book-a-call";
+import { isUsState, StateTypeahead } from "@/components/StateTypeahead";
 
 const BOOK_A_CALL_HREF = BOOK_A_CALL_PATH;
-
-const US_STATES = [
-  "Alabama",
-  "Alaska",
-  "Arizona",
-  "Arkansas",
-  "California",
-  "Colorado",
-  "Connecticut",
-  "Delaware",
-  "District of Columbia",
-  "Florida",
-  "Georgia",
-  "Hawaii",
-  "Idaho",
-  "Illinois",
-  "Indiana",
-  "Iowa",
-  "Kansas",
-  "Kentucky",
-  "Louisiana",
-  "Maine",
-  "Maryland",
-  "Massachusetts",
-  "Michigan",
-  "Minnesota",
-  "Mississippi",
-  "Missouri",
-  "Montana",
-  "Nebraska",
-  "Nevada",
-  "New Hampshire",
-  "New Jersey",
-  "New Mexico",
-  "New York",
-  "North Carolina",
-  "North Dakota",
-  "Ohio",
-  "Oklahoma",
-  "Oregon",
-  "Pennsylvania",
-  "Rhode Island",
-  "South Carolina",
-  "South Dakota",
-  "Tennessee",
-  "Texas",
-  "Utah",
-  "Vermont",
-  "Virginia",
-  "Washington",
-  "West Virginia",
-  "Wisconsin",
-  "Wyoming",
-] as const;
 
 const PRIMARY_COVERAGES = [
   "General Liability",
@@ -113,7 +60,6 @@ export function QuoteRequestForm({
   const [error, setError] = useState("");
   const [showMoreCoverage, setShowMoreCoverage] = useState(false);
 
-  const stateOptions = useMemo(() => US_STATES, []);
   const industryLabel = defaultIndustry.trim() || "your program";
 
   useEffect(() => {
@@ -159,8 +105,8 @@ export function QuoteRequestForm({
       setError("Email or phone is required so we can send your quote.");
       return;
     }
-    if (!form.state) {
-      setError("Select the state of headquarters.");
+    if (!form.state || !isUsState(form.state)) {
+      setError("Select a US state of headquarters from the suggestions.");
       return;
     }
     if (!form.helpMeDecide && form.coverages.length === 0) {
@@ -316,20 +262,11 @@ export function QuoteRequestForm({
             <span>
               State of headquarters <abbr title="required">*</abbr>
             </span>
-            <select
-              className="pw-input pw-quote-select"
-              name="state"
+            <StateTypeahead
               value={form.state}
-              onChange={(e) => update("state", e.target.value)}
+              onChange={(state) => update("state", state)}
               required
-            >
-              <option value="">Start typing your state…</option>
-              {stateOptions.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
+            />
           </label>
           <p className="pw-quote-help">
             Email or phone is required, so add at least one and we can send your
