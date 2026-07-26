@@ -5186,6 +5186,28 @@ body:has(.pw-docs-app) .pw-ope {
   white-space: nowrap;
 }
 
+.pw-nav-version {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.15rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 47, 40, 0.12);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pw-nav-version-mobile {
+  justify-content: center;
+  margin: 0.75rem auto 0;
+  width: fit-content;
+}
+
 .pw-nav-phone {
   display: inline-flex;
   align-items: center;
