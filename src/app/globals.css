@@ -5130,6 +5130,39 @@ body:has(.pw-docs-app) .pw-ope {
   text-underline-offset: 3px;
 }
 
+/* Desktop SiteNav layout — brand never overlaps nav items. */
+.pw-site-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.pw-site-nav-desktop {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 0.55rem 0.85rem;
+  min-width: 0;
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--stone);
+}
+
+@media (min-width: 768px) {
+  .pw-site-nav-desktop {
+    display: flex;
+  }
+}
+
+@media (min-width: 1100px) {
+  .pw-site-nav-desktop {
+    gap: 0.65rem 1.1rem;
+  }
+}
+
 /* Desktop SiteNav CTAs — full button scale (not compact pills). */
 .pw-nav-cta {
   min-height: 2.75rem;

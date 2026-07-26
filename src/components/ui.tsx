@@ -7,7 +7,7 @@ import { IndustriesMegaMenu } from "@/components/IndustriesMegaMenu";
 export function BrandMark({ large = false }: { large?: boolean }) {
   const iconSize = large ? 48 : 32;
   return (
-    <Link href="/" className="inline-flex items-center gap-2.5 min-w-0">
+    <Link href="/" className="inline-flex items-center gap-2.5 shrink-0">
       <img
         src="/logo-64.png"
         alt=""
@@ -24,7 +24,7 @@ export function BrandMark({ large = false }: { large?: boolean }) {
         PolicyWell
       </span>
       {!large && (
-        <span className="hidden sm:inline text-[10px] uppercase tracking-[0.18em] text-stone">
+        <span className="hidden xl:inline text-[10px] uppercase tracking-[0.18em] text-stone">
           v0.1
         </span>
       )}
@@ -38,6 +38,24 @@ const PHONE_HREF = "tel:+14708870449";
 const PLATFORM_LINKS = [
   { href: "/agent", label: "Agent", blurb: "Insurance intelligence workspace" },
   { href: "/demo", label: "Demo", blurb: "Walk through the product lifecycle" },
+] as const;
+
+const FINANCIAL_PRODUCT_LINKS = [
+  {
+    href: "/financial-products/",
+    label: "Overview",
+    blurb: "Life insurance and annuity products",
+  },
+  {
+    href: "/life-insurance/",
+    label: "Life Insurance",
+    blurb: "Term, whole life, and indexed universal life",
+  },
+  {
+    href: "/annuities/",
+    label: "Annuities",
+    blurb: "Variable, FIA, fixed, and immediate designs",
+  },
 ] as const;
 
 function NavCaret({ open }: { open: boolean }) {
@@ -152,11 +170,111 @@ function PlatformMenu({
   );
 }
 
+function FinancialProductsMenu({
+  open,
+  onOpenChange,
+  onNavigate,
+  variant = "desktop",
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onNavigate?: () => void;
+  variant?: "desktop" | "mobile";
+}) {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || variant !== "desktop") return;
+    function onPointerDown(e: PointerEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) onOpenChange(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onOpenChange(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, onOpenChange, variant]);
+
+  if (variant === "mobile") {
+    return (
+      <div className="pw-platform-mobile">
+        <button
+          type="button"
+          className={`pw-mobile-tab${open ? " is-open" : ""}`}
+          aria-expanded={open}
+          onClick={() => onOpenChange(!open)}
+        >
+          <span>Financial Products</span>
+          <NavCaret open={open} />
+        </button>
+        {open && (
+          <div className="pw-mobile-tab-panel">
+            {FINANCIAL_PRODUCT_LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="pw-mobile-tab-link"
+                onClick={onNavigate}
+              >
+                <span className="block font-medium text-pine">{l.label}</span>
+                <span className="block text-xs text-stone mt-0.5">{l.blurb}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="pw-platform-root" ref={rootRef}>
+      <button
+        type="button"
+        className={`pw-industries-trigger${open ? " is-open" : ""}`}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => onOpenChange(!open)}
+      >
+        Financial Products
+        <NavCaret open={open} />
+      </button>
+      {open && (
+        <div
+          className="pw-platform-panel"
+          role="menu"
+          aria-label="Financial Products"
+        >
+          {FINANCIAL_PRODUCT_LINKS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              role="menuitem"
+              className="pw-platform-item"
+              onClick={() => {
+                onOpenChange(false);
+                onNavigate?.();
+              }}
+            >
+              <span className="pw-platform-item-label">{l.label}</span>
+              <span className="pw-platform-item-blurb">{l.blurb}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
   const [platformOpen, setPlatformOpen] = useState(false);
+  const [financialOpen, setFinancialOpen] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -166,6 +284,7 @@ export function SiteNav() {
       else {
         setIndustriesOpen(false);
         setPlatformOpen(false);
+        setFinancialOpen(false);
       }
     };
     sync();
@@ -182,13 +301,13 @@ export function SiteNav() {
 
   useEffect(() => {
     // Always reset nested accordions when the drawer opens or closes so
-    // Industries/Platform never auto-expand on mobile.
+    // dropdowns never auto-expand on mobile.
     setPlatformOpen(false);
     setIndustriesOpen(false);
+    setFinancialOpen(false);
   }, [open]);
 
   const links = [
-    { href: "/financial-products/", label: "Financial Products" },
     { href: "/docs/", label: "Documentation" },
     { href: "/pricing/", label: "Pricing" },
   ];
@@ -196,34 +315,42 @@ export function SiteNav() {
   function closeMenus() {
     setIndustriesOpen(false);
     setPlatformOpen(false);
+    setFinancialOpen(false);
+  }
+
+  function openOnly(
+    which: "platform" | "industries" | "financial",
+    next: boolean,
+  ) {
+    setPlatformOpen(which === "platform" ? next : false);
+    setIndustriesOpen(which === "industries" ? next : false);
+    setFinancialOpen(which === "financial" ? next : false);
   }
 
   return (
     <header className="pw-shell py-4 md:py-6 animate-rise relative z-40">
-      <div className="flex items-center justify-between gap-3">
+      <div className="pw-site-nav-row">
         <BrandMark />
         {/* Desktop / computer: inline links + Industries mega-menu */}
         {!isMobile && (
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm text-stone">
+          <nav className="pw-site-nav-desktop hidden md:flex">
             <PlatformMenu
               open={platformOpen}
-              onOpenChange={(next) => {
-                setPlatformOpen(next);
-                if (next) setIndustriesOpen(false);
-              }}
+              onOpenChange={(next) => openOnly("platform", next)}
             />
             <IndustriesMegaMenu
               open={industriesOpen}
-              onOpenChange={(next) => {
-                setIndustriesOpen(next);
-                if (next) setPlatformOpen(false);
-              }}
+              onOpenChange={(next) => openOnly("industries", next)}
+            />
+            <FinancialProductsMenu
+              open={financialOpen}
+              onOpenChange={(next) => openOnly("financial", next)}
             />
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="hover:text-pine transition-colors whitespace-nowrap px-0.5"
+                className="hover:text-pine transition-colors whitespace-nowrap px-0.5 shrink-0"
                 onClick={closeMenus}
               >
                 {l.label}
@@ -231,7 +358,7 @@ export function SiteNav() {
             ))}
             <a
               href={PHONE_HREF}
-              className="pw-nav-phone whitespace-nowrap hover:text-pine transition-colors"
+              className="pw-nav-phone whitespace-nowrap hover:text-pine transition-colors shrink-0"
             >
               <svg
                 className="pw-nav-phone-icon"
@@ -249,14 +376,14 @@ export function SiteNav() {
             </a>
             <Link
               href="/quote/"
-              className="pw-btn pw-nav-cta ml-1 lg:ml-2"
+              className="pw-btn pw-nav-cta shrink-0"
               onClick={closeMenus}
             >
               Get a Quote
             </Link>
             <Link
               href="/login"
-              className="pw-btn pw-btn-secondary pw-nav-cta"
+              className="pw-btn pw-btn-secondary pw-nav-cta shrink-0"
               onClick={closeMenus}
             >
               Sign in
@@ -306,19 +433,19 @@ export function SiteNav() {
         >
           <PlatformMenu
             open={platformOpen}
-            onOpenChange={(next) => {
-              setPlatformOpen(next);
-              if (next) setIndustriesOpen(false);
-            }}
+            onOpenChange={(next) => openOnly("platform", next)}
             onNavigate={() => setOpen(false)}
             variant="mobile"
           />
           <IndustriesMegaMenu
             open={industriesOpen}
-            onOpenChange={(next) => {
-              setIndustriesOpen(next);
-              if (next) setPlatformOpen(false);
-            }}
+            onOpenChange={(next) => openOnly("industries", next)}
+            onNavigate={() => setOpen(false)}
+            variant="mobile"
+          />
+          <FinancialProductsMenu
+            open={financialOpen}
+            onOpenChange={(next) => openOnly("financial", next)}
             onNavigate={() => setOpen(false)}
             variant="mobile"
           />
