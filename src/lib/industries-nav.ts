@@ -40,20 +40,16 @@ export const INDUSTRY_SPECIALIST_NOTE =
 /** Industries mega-menu - structure matches the Industries Tab screenshots. */
 export const INDUSTRY_CATEGORIES: IndustryCategory[] = [
   {
-    id: "life-insurance",
-    label: "Life Insurance",
+    id: "financial-products",
+    label: "Financial Products",
     children: [
+      "Life Insurance",
       "Term Life",
       "Cash Back Offer Term",
       "Regular Term",
       "Whole Life",
       "Indexed Universal Life",
-    ],
-  },
-  {
-    id: "annuities",
-    label: "Annuities",
-    children: [
+      "Annuities",
       "Variable Annuity",
       "Fixed Indexed Annuity (FIA)",
       "Fixed Annuity",
@@ -296,8 +292,7 @@ export function industryQuoteHref(industry: string): string {
 
 /** Coverwatch-style category hub paths on PolicyWell. */
 const CATEGORY_HUB_PATH: Record<string, string> = {
-  "life-insurance": "/life-insurance/",
-  annuities: "/annuities/",
+  "financial-products": "/financial-products/",
   ecommerce: "/ecommerce/",
   "home-owners-associations": "/homeowners-association-insurance/",
   "property-management": "/property-management/",
@@ -324,10 +319,14 @@ export function industryChildHref(
 ): string {
   const hub = CATEGORY_HUB_PATH[categoryId];
   if (hub) {
-    const children = INDUSTRY_PAGES.filter(
-      (p) => p.categoryId === categoryId && p.parentPath,
+    // Match nested hubs + leaves under this category (e.g. Life Insurance
+    // and Annuities nested under Financial Products).
+    const inCategory = INDUSTRY_PAGES.filter(
+      (p) => p.categoryId === categoryId && p.path !== hub.replace(/\/$/, ""),
     );
-    const match = children.find((p) => p.label === childLabel);
+    const match =
+      inCategory.find((p) => p.label === childLabel) ??
+      INDUSTRY_PAGES.find((p) => p.label === childLabel);
     if (match) return `${match.path}/`;
   }
   return industryQuoteHref(childLabel);

@@ -13,6 +13,16 @@ export type IndustryPage = {
 
 export const INDUSTRY_PAGES: readonly IndustryPage[] = [
   {
+    path: "/financial-products",
+    label: "Financial Products",
+    headline: "Life insurance and annuity products analyzed with policy-level clarity",
+    support:
+      "Compare term, whole life, indexed universal life, and annuity designs — funding, guarantees, riders, and illustration assumptions — with explainable recommendations.",
+    title: "Financial Products | Life Insurance and Annuities",
+    hero: "financial-products-hero",
+    categoryId: "financial-products",
+  },
+  {
     path: "/life-insurance",
     label: "Life Insurance",
     headline: "Life insurance coverage built around the policy — not a generic package",
@@ -20,7 +30,8 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "PolicyWell helps households and advisors compare term, whole life, and indexed universal life with explainable funding and coverage recommendations across carriers.",
     title: "Life Insurance Analysis and Intelligence",
     hero: "life-insurance-hero",
-    categoryId: "life-insurance",
+    categoryId: "financial-products",
+    parentPath: "/financial-products",
   },
   {
     path: "/life-insurance/term-insurance",
@@ -30,7 +41,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Compare regular term and cash-back offer term side by side — death benefit design, conversion privileges, and rider fit — with human-reviewed recommendations.",
     title: "Term Life Insurance",
     hero: "term-insurance-hero",
-    categoryId: "life-insurance",
+    categoryId: "financial-products",
     parentPath: "/life-insurance",
   },
   {
@@ -41,7 +52,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Cash-back / return-of-premium style term can look attractive on a brochure. We unpack the real cost, lapse risk, and whether a regular term or permanent design fits better.",
     title: "Cash Back Offer Term Life Insurance",
     hero: "cash-back-offer-term-insurance-hero",
-    categoryId: "life-insurance",
+    categoryId: "financial-products",
     parentPath: "/life-insurance/term-insurance",
   },
   {
@@ -52,7 +63,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Level term designed around income replacement, mortgage years, and conversion options — without cash-back marketing complexity.",
     title: "Regular Term Life Insurance",
     hero: "regular-term-insurance-hero",
-    categoryId: "life-insurance",
+    categoryId: "financial-products",
     parentPath: "/life-insurance/term-insurance",
   },
   {
@@ -63,7 +74,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Permanent coverage, cash value, and dividend mechanics explained in plain language — so funding decisions are grounded in the contract, not the illustration alone.",
     title: "Whole Life Insurance",
     hero: "whole-life-insurance-hero",
-    categoryId: "life-insurance",
+    categoryId: "financial-products",
     parentPath: "/life-insurance",
   },
   {
@@ -74,7 +85,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "IUL illustrations can outrun reality. We stress-cap assumptions, cost of insurance, and funding floors so the policy design matches the household goal.",
     title: "Indexed Universal Life (IUL) Insurance",
     hero: "indexed-universal-life-insurance-hero",
-    categoryId: "life-insurance",
+    categoryId: "financial-products",
     parentPath: "/life-insurance",
   },
   {
@@ -85,7 +96,8 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Variable, fixed indexed, fixed, and immediate annuities — compared on fees, guarantees, surrender schedules, and income riders with advisor-ready explanations.",
     title: "Annuity Analysis and Intelligence",
     hero: "annuities-hero",
-    categoryId: "annuities",
+    categoryId: "financial-products",
+    parentPath: "/financial-products",
   },
   {
     path: "/annuities/variable-annuity-insurance",
@@ -95,7 +107,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Separate-account risk, rider fees, and guaranteed living benefit tradeoffs — reviewed so accumulation and income claims stay tied to the contract.",
     title: "Variable Annuity",
     hero: "variable-annuity-insurance-hero",
-    categoryId: "annuities",
+    categoryId: "financial-products",
     parentPath: "/annuities",
   },
   {
@@ -106,7 +118,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Index-linked crediting is not market participation. We unpack caps, spreads, participation rates, and rider cost before the illustration becomes the plan.",
     title: "Fixed Indexed Annuity (FIA)",
     hero: "fixed-indexed-annuity-insurance-hero",
-    categoryId: "annuities",
+    categoryId: "financial-products",
     parentPath: "/annuities",
   },
   {
@@ -117,7 +129,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Multi-year guaranteed and traditional fixed annuities compared on declared rates, MVA, surrender windows, and liquidity needs.",
     title: "Fixed Annuity",
     hero: "fixed-annuity-insurance-hero",
-    categoryId: "annuities",
+    categoryId: "financial-products",
     parentPath: "/annuities",
   },
   {
@@ -128,7 +140,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
       "Single-premium immediate annuity structuring for lifetime or period-certain income — with clear treatment of refund features and survivor options.",
     title: "Immediate Annuity (SPIA)",
     hero: "immediate-annuity-insurance-hero",
-    categoryId: "annuities",
+    categoryId: "financial-products",
     parentPath: "/annuities",
   },
   {
@@ -712,8 +724,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
 ];
 
 export const INDUSTRY_HUB_PATHS = [
-  "/life-insurance",
-  "/annuities",
+  "/financial-products",
   "/ecommerce",
   "/homeowners-association-insurance",
   "/property-management",

@@ -6,7 +6,7 @@ import { breadcrumbJsonLd, marketingMetadata, organizationJsonLd } from "@/lib/s
 export const metadata: Metadata = marketingMetadata({
   title: "Insurance Solutions by Industry",
   description:
-    "Browse PolicyWell industry coverage for life insurance, annuities, ecommerce, contractors, restaurants, trucking, property management, and more.",
+    "Browse PolicyWell industry coverage for financial products, ecommerce, contractors, restaurants, trucking, property management, and more.",
   path: "/industries",
   ogTitle: "Insurance Solutions by Industry · PolicyWell",
 });

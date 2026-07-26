@@ -95,6 +95,7 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "self-managed-hoa": "hoa-self-managed",
   "single-family-hoa": "hoa-single-family",
   "townhome-association": "hoa-townhome",
+  "financial-products": "life",
   life: "life",
   term: "life",
   "cash-back-offer-term": "life",

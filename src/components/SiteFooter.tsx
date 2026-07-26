@@ -20,6 +20,7 @@ const SOCIALS = [
 
 const FOOTER_LINKS = [
   { href: "/industries/", label: "Industries" },
+  { href: "/financial-products/", label: "Financial Products" },
   { href: "/life-insurance/", label: "Life Insurance" },
   { href: "/annuities/", label: "Annuities" },
   { href: "/pricing/", label: "Pricing" },
