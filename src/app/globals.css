@@ -5083,6 +5083,16 @@ body:has(.pw-docs-app) .pw-ope {
   text-underline-offset: 3px;
 }
 
+/* Desktop SiteNav CTAs — full button scale (not compact pills). */
+.pw-nav-cta {
+  min-height: 2.75rem;
+  padding: 0.85rem 1.55rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
 .pw-nav-phone {
   display: inline-flex;
   align-items: center;
