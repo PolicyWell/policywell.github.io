@@ -21,13 +21,18 @@ const SOCIALS = [
 const FOOTER_LINKS = [
   { href: "/industries/", label: "Industries" },
   { href: "/pricing/", label: "Pricing" },
-  { href: "/docs/", label: "Documentation" },
   { href: "/quote/#contact", label: "Request a Quote" },
 ] as const;
 
 const FINANCIAL_PRODUCT_LINKS = [
   { href: "/life-insurance/", label: "Life Insurance" },
   { href: "/annuities/", label: "Annuities" },
+] as const;
+
+const COMPANY_LINKS = [
+  { href: "/docs/", label: "Documentation" },
+  { href: "/press/", label: "Press" },
+  { href: "/careers/", label: "Careers" },
 ] as const;
 
 export function SiteFooter() {
@@ -91,6 +96,16 @@ export function SiteFooter() {
               </Link>
               <ul className="pw-footer-sublinks">
                 {FINANCIAL_PRODUCT_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li className="pw-footer-group">
+              <span className="pw-footer-group-title">Company</span>
+              <ul className="pw-footer-sublinks">
+                {COMPANY_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href}>{link.label}</Link>
                   </li>
