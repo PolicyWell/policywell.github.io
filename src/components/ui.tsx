@@ -67,7 +67,7 @@ const COMPANY_LINKS = [
   {
     href: "/careers/",
     label: "Careers",
-    blurb: "Open roles and how we hire",
+    blurb: "How we hire and how to apply",
   },
 ] as const;
 
