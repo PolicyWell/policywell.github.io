@@ -190,6 +190,14 @@ export function IndustryLanding({ path }: { path: string }) {
                 </p>
                 <p className="pw-industry-hero-meta">
                   <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+                  {" · "}
+                  <a
+                    href="https://cal.com/policywell"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Or book a call
+                  </a>
                 </p>
               </div>
               <div className="pw-industry-contact-form">

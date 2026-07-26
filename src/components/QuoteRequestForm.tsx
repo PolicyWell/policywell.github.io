@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { allIndustryLabels } from "@/lib/industries-nav";
 
+const BOOK_A_CALL_HREF = "https://cal.com/policywell";
+
 const US_STATES = [
   "Alabama",
   "Alaska",
@@ -144,7 +146,15 @@ export function QuoteRequestForm({
           not a bindable quote or underwriting decision.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href="/agent" className="pw-btn">
+          <a
+            href={BOOK_A_CALL_HREF}
+            className="pw-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Book a call
+          </a>
+          <Link href="/agent" className="pw-btn pw-btn-secondary">
             Talk to the agent
           </Link>
           <Link href="/demo" className="pw-btn pw-btn-secondary">
@@ -285,6 +295,16 @@ export function QuoteRequestForm({
       <button type="submit" className="pw-btn pw-quote-submit">
         Get my quote
       </button>
+      <p className="pw-quote-alt">
+        or{" "}
+        <a
+          href={BOOK_A_CALL_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          book a call
+        </a>
+      </p>
       <p className="pw-quote-footnote">
         A licensed advisor reviews every request, usually a reply within the next
         hour.
