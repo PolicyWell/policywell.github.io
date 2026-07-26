@@ -343,7 +343,7 @@ function CompanyMenu({
   }
 
   return (
-    <div className="pw-platform-root" ref={rootRef}>
+    <div className="pw-platform-root is-align-end" ref={rootRef}>
       <button
         type="button"
         className={`pw-industries-trigger${open ? " is-open" : ""}`}
