@@ -23,11 +23,6 @@ export function BrandMark({ large = false }: { large?: boolean }) {
       >
         PolicyWell
       </span>
-      {!large && (
-        <span className="hidden xl:inline text-[10px] uppercase tracking-[0.18em] text-stone">
-          v0.1
-        </span>
-      )}
     </Link>
   );
 }
@@ -388,6 +383,9 @@ export function SiteNav() {
             >
               Sign in
             </Link>
+            <span className="pw-nav-version" aria-label="Version 0.1">
+              v0.1
+            </span>
           </nav>
         )}
         {/* Mobile only - not rendered on computer viewports */}
@@ -479,6 +477,7 @@ export function SiteNav() {
           >
             Sign in
           </Link>
+          <p className="pw-nav-version pw-nav-version-mobile">v0.1</p>
         </nav>
       )}
     </header>
