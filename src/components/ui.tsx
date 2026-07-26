@@ -323,70 +323,73 @@ export function SiteNav() {
   }
 
   return (
-    <header className="pw-shell py-4 md:py-6 animate-rise relative z-40">
+    <header className="pw-site-header animate-rise relative z-40">
       <div className="pw-site-nav-row">
-        <BrandMark />
+        <div className="pw-site-nav-brand">
+          <BrandMark />
+        </div>
         {/* Desktop / computer: inline links + Industries mega-menu */}
         {!isMobile && (
-          <nav className="pw-site-nav-desktop hidden md:flex">
-            <PlatformMenu
-              open={platformOpen}
-              onOpenChange={(next) => openOnly("platform", next)}
-            />
-            <IndustriesMegaMenu
-              open={industriesOpen}
-              onOpenChange={(next) => openOnly("industries", next)}
-            />
-            <FinancialProductsMenu
-              open={financialOpen}
-              onOpenChange={(next) => openOnly("financial", next)}
-            />
-            {links.map((l) => (
+          <>
+            <nav className="pw-site-nav-links" aria-label="Primary">
+              <PlatformMenu
+                open={platformOpen}
+                onOpenChange={(next) => openOnly("platform", next)}
+              />
+              <IndustriesMegaMenu
+                open={industriesOpen}
+                onOpenChange={(next) => openOnly("industries", next)}
+              />
+              <FinancialProductsMenu
+                open={financialOpen}
+                onOpenChange={(next) => openOnly("financial", next)}
+              />
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="pw-site-nav-link"
+                  onClick={closeMenus}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="pw-site-nav-actions">
+              <a href={PHONE_HREF} className="pw-nav-phone">
+                <svg
+                  className="pw-nav-phone-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M6.5 4.5h3l1.5 4-2 1.2a12 12 0 0 0 5.3 5.3l1.2-2 4 1.5v3A2 2 0 0 1 17.5 19 13.5 13.5 0 0 1 4 5.5a2 2 0 0 1 2.5-1z" />
+                </svg>
+                {PHONE_DISPLAY}
+              </a>
               <Link
-                key={l.href}
-                href={l.href}
-                className="hover:text-pine transition-colors whitespace-nowrap px-0.5 shrink-0"
+                href="/quote/"
+                className="pw-btn pw-nav-cta"
                 onClick={closeMenus}
               >
-                {l.label}
+                Get a Quote
               </Link>
-            ))}
-            <a
-              href={PHONE_HREF}
-              className="pw-nav-phone whitespace-nowrap hover:text-pine transition-colors shrink-0"
-            >
-              <svg
-                className="pw-nav-phone-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
+              <Link
+                href="/login"
+                className="pw-btn pw-btn-secondary pw-nav-cta"
+                onClick={closeMenus}
               >
-                <path d="M6.5 4.5h3l1.5 4-2 1.2a12 12 0 0 0 5.3 5.3l1.2-2 4 1.5v3A2 2 0 0 1 17.5 19 13.5 13.5 0 0 1 4 5.5a2 2 0 0 1 2.5-1z" />
-              </svg>
-              {PHONE_DISPLAY}
-            </a>
-            <Link
-              href="/quote/"
-              className="pw-btn pw-nav-cta shrink-0"
-              onClick={closeMenus}
-            >
-              Get a Quote
-            </Link>
-            <Link
-              href="/login"
-              className="pw-btn pw-btn-secondary pw-nav-cta shrink-0"
-              onClick={closeMenus}
-            >
-              Sign in
-            </Link>
-            <span className="pw-nav-version" aria-label="Version 0.1">
-              v0.1
-            </span>
-          </nav>
+                Sign in
+              </Link>
+              <span className="pw-nav-version" aria-label="Version 0.1">
+                v0.1
+              </span>
+            </div>
+          </>
         )}
         {/* Mobile only - not rendered on computer viewports */}
         {isMobile && (
@@ -427,7 +430,7 @@ export function SiteNav() {
       {isMobile && open && (
         <nav
           id="mobile-nav"
-          className="mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)] max-h-[min(80vh,640px)] overflow-y-auto"
+          className="pw-site-nav-mobile mt-4 flex flex-col gap-1 rounded-[var(--radius)] border border-pine/10 bg-foam/95 p-3 shadow-[var(--shadow-soft)] max-h-[min(80vh,640px)] overflow-y-auto"
         >
           <PlatformMenu
             open={platformOpen}
