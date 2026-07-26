@@ -20,12 +20,14 @@ const SOCIALS = [
 
 const FOOTER_LINKS = [
   { href: "/industries/", label: "Industries" },
-  { href: "/financial-products/", label: "Financial Products" },
-  { href: "/life-insurance/", label: "Life Insurance" },
-  { href: "/annuities/", label: "Annuities" },
   { href: "/pricing/", label: "Pricing" },
   { href: "/docs/", label: "Documentation" },
   { href: "/quote/", label: "Request a Quote" },
+] as const;
+
+const FINANCIAL_PRODUCT_LINKS = [
+  { href: "/life-insurance/", label: "Life Insurance" },
+  { href: "/annuities/", label: "Annuities" },
 ] as const;
 
 export function SiteFooter() {
@@ -74,15 +76,30 @@ export function SiteFooter() {
         </div>
 
         <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-stone">
-            {FOOTER_LINKS.map((link) => (
+          <ul className="pw-footer-links">
+            {FOOTER_LINKS.slice(0, 1).map((link) => (
               <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="hover:text-pine transition-colors"
-                >
-                  {link.label}
-                </Link>
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
+            <li className="pw-footer-group">
+              <Link
+                href="/financial-products/"
+                className="pw-footer-group-title"
+              >
+                Financial Products
+              </Link>
+              <ul className="pw-footer-sublinks">
+                {FINANCIAL_PRODUCT_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {FOOTER_LINKS.slice(1).map((link) => (
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
               </li>
             ))}
           </ul>
