@@ -54,9 +54,7 @@ export default function QuotePage() {
                 </a>
                 <a
                   className="pw-quote-ghost-btn"
-                  href="https://cal.com/policywell"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/book-a-call/"
                 >
                   Or book a call
                 </a>
