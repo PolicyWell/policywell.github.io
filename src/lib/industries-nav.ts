@@ -286,8 +286,20 @@ export function getEcommerceVertical(
   return ECOMMERCE_VERTICALS.find((v) => v.slug === slug);
 }
 
-export function industryQuoteHref(industry: string): string {
-  return `/quote/?industry=${encodeURIComponent(industry)}`;
+/**
+ * Coverwatch-style contact deep link on an industry (or quote) page.
+ * Example: `/retail/#contact` or
+ * `/property-management/short-term-rental-management-insurance/#contact`
+ */
+export function industryQuoteHref(pathOrLabel: string): string {
+  const byLabel = INDUSTRY_PAGES.find((p) => p.label === pathOrLabel);
+  const raw = byLabel?.path ?? pathOrLabel;
+  if (!raw || raw === "/") return "/quote/#contact";
+  const clean = raw.replace(/\/+$/, "");
+  const path = clean.startsWith("/") ? clean : `/${clean}`;
+  // Preserve dedicated quote route as /quote/#contact
+  if (path === "/quote") return "/quote/#contact";
+  return `${path}/#contact`;
 }
 
 /** Coverwatch-style category hub paths on PolicyWell. */
@@ -308,8 +320,9 @@ const CATEGORY_HUB_PATH: Record<string, string> = {
 };
 
 export function industryCategoryHref(categoryId: string): string {
-  return CATEGORY_HUB_PATH[categoryId] ?? industryQuoteHref(
-    getIndustryCategory(categoryId)?.label ?? categoryId,
+  return (
+    CATEGORY_HUB_PATH[categoryId] ??
+    industryQuoteHref("/quote")
   );
 }
 
@@ -329,7 +342,7 @@ export function industryChildHref(
       INDUSTRY_PAGES.find((p) => p.label === childLabel);
     if (match) return `${match.path}/`;
   }
-  return industryQuoteHref(childLabel);
+  return industryQuoteHref("/quote");
 }
 
 /** Flat list for quote form selects (categories + subcategories). */
