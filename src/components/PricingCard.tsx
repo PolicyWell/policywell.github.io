@@ -47,9 +47,11 @@ export function PricingCard({
 
   return (
     <article className={`pw-pricing-card tone-${tone}${popular ? " is-popular" : ""}`}>
-      {popular && <p className="pw-pricing-badge">Most Popular</p>}
       <header className="pw-pricing-card-head">
-        <p className="pw-pricing-audience">{audience}</p>
+        <div className="pw-pricing-card-top">
+          <p className="pw-pricing-audience">{audience}</p>
+          {popular ? <p className="pw-pricing-badge">Most Popular</p> : null}
+        </div>
         <h3 className="pw-pricing-name">{name}</h3>
         <div className="pw-pricing-amount">
           <span className="pw-pricing-figure">{price.display}</span>

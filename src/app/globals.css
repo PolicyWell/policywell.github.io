@@ -2474,9 +2474,6 @@ body:has(.pw-404) > .pw-site-footer {
 }
 
 .pw-pricing-badge {
-  position: absolute;
-  top: 0.9rem;
-  right: 0.9rem;
   margin: 0;
   padding: 0.28rem 0.65rem;
   border-radius: 999px;
@@ -2486,17 +2483,22 @@ body:has(.pw-404) > .pw-site-footer {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 600;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .pw-pricing-card-head {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  padding-right: 4.5rem;
 }
 
-.pw-pricing-card:not(.is-popular) .pw-pricing-card-head {
-  padding-right: 0;
+.pw-pricing-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
 }
 
 .pw-pricing-audience {
@@ -2505,6 +2507,8 @@ body:has(.pw-404) > .pw-site-footer {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--moss);
+  flex: 1;
+  min-width: 0;
 }
 
 .pw-pricing-name {
