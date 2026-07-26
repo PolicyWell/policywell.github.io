@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { allIndustryLabels } from "@/lib/industries-nav";
 import { BOOK_A_CALL_PATH } from "@/lib/book-a-call";
 
 const BOOK_A_CALL_HREF = BOOK_A_CALL_PATH;
@@ -61,13 +60,31 @@ const US_STATES = [
   "Wyoming",
 ] as const;
 
+const PRIMARY_COVERAGES = [
+  "General Liability",
+  "Commercial Property",
+  "Directors & Officers (D&O)",
+  "Umbrella / Excess",
+  "Workers' Compensation",
+] as const;
+
+const MORE_COVERAGES = [
+  "Cyber Liability",
+  "Professional Liability (E&O)",
+  "Commercial Auto",
+  "Crime / Fidelity",
+  "Employment Practices (EPLI)",
+] as const;
+
 type QuoteFormState = {
   name: string;
   company: string;
   email: string;
   phone: string;
   state: string;
-  industry: string;
+  revenue: string;
+  coverages: string[];
+  helpMeDecide: boolean;
 };
 
 const INITIAL: QuoteFormState = {
@@ -76,46 +93,57 @@ const INITIAL: QuoteFormState = {
   email: "",
   phone: "",
   state: "",
-  industry: "",
+  revenue: "",
+  coverages: [],
+  helpMeDecide: false,
 };
 
 type QuoteRequestFormProps = {
-  /** Pre-select industry when embedded on an industry landing. */
+  /** Pre-select / contextualize when embedded on an industry landing. */
   defaultIndustry?: string;
 };
 
 export function QuoteRequestForm({
   defaultIndustry = "",
 }: QuoteRequestFormProps) {
-  const [form, setForm] = useState<QuoteFormState>({
-    ...INITIAL,
-    industry: defaultIndustry,
-  });
+  const [form, setForm] = useState<QuoteFormState>(INITIAL);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [showMoreCoverage, setShowMoreCoverage] = useState(false);
 
   const stateOptions = useMemo(() => US_STATES, []);
-  const industryOptions = useMemo(() => allIndustryLabels(), []);
-
-  useEffect(() => {
-    if (defaultIndustry) {
-      setForm((prev) =>
-        prev.industry ? prev : { ...prev, industry: defaultIndustry },
-      );
-    }
-  }, [defaultIndustry]);
+  const industryLabel = defaultIndustry.trim() || "your program";
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Legacy query support + optional future deep links.
     const params = new URLSearchParams(window.location.search);
-    const industry = params.get("industry")?.trim();
-    if (!industry) return;
-    setForm((prev) => (prev.industry ? prev : { ...prev, industry }));
+    const revenue = params.get("revenue")?.trim();
+    if (revenue) {
+      setForm((prev) => (prev.revenue ? prev : { ...prev, revenue }));
+    }
   }, []);
 
   function update<K extends keyof QuoteFormState>(key: K, value: QuoteFormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setError("");
+  }
+
+  function toggleCoverage(label: string) {
+    setForm((prev) => {
+      const next = prev.coverages.includes(label)
+        ? prev.coverages.filter((c) => c !== label)
+        : [...prev.coverages, label];
+      return { ...prev, coverages: next, helpMeDecide: false };
+    });
+    setError("");
+  }
+
+  function onHelpMeDecide() {
+    setForm((prev) => ({
+      ...prev,
+      helpMeDecide: !prev.helpMeDecide,
+      coverages: prev.helpMeDecide ? prev.coverages : [],
+    }));
     setError("");
   }
 
@@ -133,174 +161,254 @@ export function QuoteRequestForm({
       setError("Select the state of headquarters.");
       return;
     }
+    if (!form.helpMeDecide && form.coverages.length === 0) {
+      setError("Select at least one coverage, or choose Help me decide.");
+      return;
+    }
+    if (!form.revenue.trim()) {
+      setError("Enter your annual revenue estimate.");
+      return;
+    }
     setSubmitted(true);
   }
 
+  const asideCopy = defaultIndustry
+    ? `Send us your policy and a licensed advisor benchmarks your ${industryLabel.toLowerCase()} insurance across 60+ carriers, showing the gaps and the savings. If your program is already solid, we'll tell you.`
+    : "Send us your policy and a licensed advisor benchmarks your coverage across 60+ carriers, showing the gaps and the savings. If your program is already solid, we'll tell you.";
+
   if (submitted) {
     return (
-      <div className="pw-quote-success animate-rise">
-        <p className="pw-quote-eyebrow">Quote requested</p>
-        <h2 className="font-display text-3xl text-pine">We received your request.</h2>
-        <p className="text-stone mt-3 max-w-md">
-          A licensed PolicyWell advisor will review your details and follow up,
-          usually within the next hour. This is decision support for coverage -
-          not a bindable quote or underwriting decision.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href={BOOK_A_CALL_HREF} className="pw-btn">
-            Book a call
-          </a>
-          <Link href="/agent" className="pw-btn pw-btn-secondary">
-            Talk to the agent
-          </Link>
-          <Link href="/demo" className="pw-btn pw-btn-secondary">
-            Product demo
-          </Link>
-          <button
-            type="button"
-            className="pw-btn pw-btn-secondary"
-            onClick={() => {
-              setSubmitted(false);
-              setForm({ ...INITIAL, industry: defaultIndustry });
-            }}
-          >
-            Submit another
-          </button>
+      <div className="pw-quote-shell pw-quote-shell-success animate-rise">
+        <aside className="pw-quote-aside">
+          <div className="pw-quote-aside-inner">
+            <h2 className="pw-quote-aside-title">
+              Focus on the work.
+              <br />
+              We&apos;ll be your risk team.
+            </h2>
+            <p className="pw-quote-aside-copy">
+              A licensed PolicyWell advisor has your request and will follow up
+              — usually within the next hour.
+            </p>
+          </div>
+        </aside>
+        <div className="pw-quote-panel">
+          <div className="pw-quote-success">
+            <p className="pw-quote-eyebrow">Quote requested</p>
+            <h2 className="font-display text-3xl text-pine">
+              We received your request.
+            </h2>
+            <p className="text-stone mt-3 max-w-md">
+              This is decision support for coverage — not a bindable quote or
+              underwriting decision.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href={BOOK_A_CALL_HREF} className="pw-btn">
+                Book a call
+              </Link>
+              <Link href="/agent" className="pw-btn pw-btn-secondary">
+                Talk to the agent
+              </Link>
+              <button
+                type="button"
+                className="pw-btn pw-btn-secondary"
+                onClick={() => {
+                  setSubmitted(false);
+                  setForm(INITIAL);
+                  setShowMoreCoverage(false);
+                }}
+              >
+                Submit another
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  const coverageOptions = showMoreCoverage
+    ? [...PRIMARY_COVERAGES, ...MORE_COVERAGES]
+    : [...PRIMARY_COVERAGES];
+
   return (
-    <form className="pw-quote-form" onSubmit={onSubmit} noValidate>
-      <header className="pw-quote-form-header">
-        <p className="pw-quote-eyebrow">Your quote</p>
-        {defaultIndustry ? (
-          <h2 className="font-display text-3xl md:text-4xl text-pine">
-            Get your free quote
+    <div className="pw-quote-shell animate-rise">
+      <aside className="pw-quote-aside">
+        <div className="pw-quote-aside-inner">
+          <h2 className="pw-quote-aside-title">
+            Focus on the work.
+            <br />
+            We&apos;ll be your risk team.
           </h2>
-        ) : (
-          <h1 className="font-display text-3xl md:text-4xl text-pine">
-            Get your free quote
-          </h1>
-        )}
-      </header>
+          <p className="pw-quote-aside-copy">{asideCopy}</p>
+          <Link href={BOOK_A_CALL_HREF} className="pw-quote-aside-cta">
+            Or book a call instead
+          </Link>
+        </div>
+      </aside>
 
-      <div className="pw-quote-grid">
-        <label className="pw-quote-field">
-          <span>
-            Name <abbr title="required">*</abbr>
-          </span>
-          <input
-            className="pw-input"
-            name="name"
-            autoComplete="name"
-            placeholder="Shawn White"
-            value={form.name}
-            onChange={(e) => update("name", e.target.value)}
-            required
-          />
-        </label>
-        <label className="pw-quote-field">
-          <span>Company</span>
-          <input
-            className="pw-input"
-            name="company"
-            autoComplete="organization"
-            placeholder="Maverick Trucking Inc."
-            value={form.company}
-            onChange={(e) => update("company", e.target.value)}
-          />
-        </label>
-        <label className="pw-quote-field">
-          <span>
-            Email <abbr title="required">*</abbr>
-          </span>
-          <input
-            className="pw-input"
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="you@company.com"
-            value={form.email}
-            onChange={(e) => update("email", e.target.value)}
-          />
-        </label>
-        <label className="pw-quote-field">
-          <span>
-            Phone <abbr title="required">*</abbr>
-          </span>
-          <input
-            className="pw-input"
-            type="tel"
-            name="phone"
-            autoComplete="tel"
-            placeholder="(470) 887-0449"
-            value={form.phone}
-            onChange={(e) => update("phone", e.target.value)}
-          />
-        </label>
+      <div className="pw-quote-panel">
+        <form className="pw-quote-form" onSubmit={onSubmit} noValidate>
+          <header className="pw-quote-form-header">
+            <p className="pw-quote-eyebrow">Your quote</p>
+            <h1 className="pw-quote-form-title">Get your free quote</h1>
+          </header>
+
+          <div className="pw-quote-grid">
+            <label className="pw-quote-field">
+              <span>
+                Name <abbr title="required">*</abbr>
+              </span>
+              <input
+                className="pw-input"
+                name="name"
+                autoComplete="name"
+                placeholder="Shawn White"
+                value={form.name}
+                onChange={(e) => update("name", e.target.value)}
+                required
+              />
+            </label>
+            <label className="pw-quote-field">
+              <span>Company</span>
+              <input
+                className="pw-input"
+                name="company"
+                autoComplete="organization"
+                placeholder="Maverick Trucking Inc."
+                value={form.company}
+                onChange={(e) => update("company", e.target.value)}
+              />
+            </label>
+            <label className="pw-quote-field">
+              <span>
+                Email <abbr title="required">*</abbr>
+              </span>
+              <input
+                className="pw-input"
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder="you@company.com"
+                value={form.email}
+                onChange={(e) => update("email", e.target.value)}
+              />
+            </label>
+            <label className="pw-quote-field">
+              <span>
+                Phone <abbr title="required">*</abbr>
+              </span>
+              <input
+                className="pw-input"
+                type="tel"
+                name="phone"
+                autoComplete="tel"
+                placeholder="(470) 887-0449"
+                value={form.phone}
+                onChange={(e) => update("phone", e.target.value)}
+              />
+            </label>
+          </div>
+
+          <label className="pw-quote-field">
+            <span>
+              State of headquarters <abbr title="required">*</abbr>
+            </span>
+            <select
+              className="pw-input pw-quote-select"
+              name="state"
+              value={form.state}
+              onChange={(e) => update("state", e.target.value)}
+              required
+            >
+              <option value="">Start typing your state…</option>
+              {stateOptions.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+          <p className="pw-quote-help">
+            Email or phone is required, so add at least one and we can send your
+            quote.
+          </p>
+
+          <fieldset className="pw-quote-coverage">
+            <legend>
+              Coverage <abbr title="required">*</abbr>
+            </legend>
+            <p className="pw-quote-coverage-hint">Select all that apply.</p>
+            <div className="pw-quote-pills" role="group" aria-label="Coverage">
+              {coverageOptions.map((label) => {
+                const active = form.coverages.includes(label);
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    className={`pw-quote-pill${active ? " is-active" : ""}`}
+                    aria-pressed={active}
+                    onClick={() => toggleCoverage(label)}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+              {!showMoreCoverage ? (
+                <button
+                  type="button"
+                  className="pw-quote-pill is-more"
+                  onClick={() => setShowMoreCoverage(true)}
+                >
+                  + More coverage
+                </button>
+              ) : null}
+            </div>
+            <div className="pw-quote-decide-row">
+              <span className="pw-quote-decide-label">Not sure what you need?</span>
+              <button
+                type="button"
+                className={`pw-quote-pill${form.helpMeDecide ? " is-active" : ""}`}
+                aria-pressed={form.helpMeDecide}
+                onClick={onHelpMeDecide}
+              >
+                Help me decide
+              </button>
+            </div>
+          </fieldset>
+
+          <label className="pw-quote-field">
+            <span>
+              Annual revenue <abbr title="required">*</abbr>
+            </span>
+            <div className="pw-quote-revenue">
+              <span aria-hidden>$</span>
+              <input
+                className="pw-input"
+                name="revenue"
+                inputMode="decimal"
+                placeholder="e.g. 2,000,000"
+                value={form.revenue}
+                onChange={(e) => update("revenue", e.target.value)}
+                required
+              />
+            </div>
+            <p className="pw-quote-help pw-quote-help-tight">
+              Your best estimate is fine. We quote businesses at every stage.
+            </p>
+          </label>
+
+          {error ? <p className="pw-quote-error">{error}</p> : null}
+
+          <button type="submit" className="pw-btn pw-quote-submit">
+            Get my quote
+          </button>
+          <p className="pw-quote-footnote">
+            A licensed advisor reviews every request, usually a reply within the
+            next hour.
+          </p>
+        </form>
       </div>
-
-      <label className="pw-quote-field">
-        <span>
-          State of headquarters <abbr title="required">*</abbr>
-        </span>
-        <select
-          className="pw-input pw-quote-select"
-          name="state"
-          value={form.state}
-          onChange={(e) => update("state", e.target.value)}
-          required
-        >
-          <option value="">Start typing your state…</option>
-          {stateOptions.map((state) => (
-            <option key={state} value={state}>
-              {state}
-            </option>
-          ))}
-        </select>
-      </label>
-      <p className="pw-quote-help">
-        Email or phone is required, so add at least one and we can send your quote.
-      </p>
-
-      <label className="pw-quote-field">
-        <span>What industry are you in?</span>
-        <select
-          className="pw-input pw-quote-select"
-          name="industry"
-          value={form.industry}
-          onChange={(e) => update("industry", e.target.value)}
-        >
-          <option value="">Select your industry</option>
-          {industryOptions.map((industry) => (
-            <option key={industry} value={industry}>
-              {industry}
-            </option>
-          ))}
-          <option value="Other">Other</option>
-        </select>
-      </label>
-      <p className="pw-quote-help">
-        We&apos;ll tailor the coverage options and questions below to your industry.
-      </p>
-
-      {error && <p className="pw-quote-error">{error}</p>}
-
-      <button type="submit" className="pw-btn pw-quote-submit">
-        Get my quote
-      </button>
-      <p className="pw-quote-alt">
-        or{" "}
-        <a href={BOOK_A_CALL_HREF}>
-          book a call
-        </a>
-      </p>
-      <p className="pw-quote-footnote">
-        A licensed advisor reviews every request, usually a reply within the next
-        hour.
-      </p>
-    </form>
+    </div>
   );
 }
