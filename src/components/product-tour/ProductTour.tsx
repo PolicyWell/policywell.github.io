@@ -356,7 +356,7 @@ function ModuleView({
         <div className="pw-pt-scene">
           <CrmMock />
           <p className="pw-pt-caption">
-            Follow-up CRM for policyholders, gap seekers, and producers.
+            Messaging: email + SMS channels for producers and consumers.
           </p>
         </div>
       );
