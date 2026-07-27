@@ -2,7 +2,11 @@
 
 /**
  * Honest running total. Starts at zero until real analysis volume is wired in.
+ * Temporarily hidden until the database ingests policies/illustrations and
+ * powers a live count — flip this to true when that lands.
  */
+const SHOW_LIVE_ANALYSIS_COUNTER = false;
+
 const ANALYZED_COUNT = 0;
 
 function formatCount(n: number) {
@@ -14,6 +18,8 @@ export function LiveAnalysisCounter({
 }: {
   className?: string;
 }) {
+  if (!SHOW_LIVE_ANALYSIS_COUNTER) return null;
+
   return (
     <div
       className={`pw-live-counter is-ready ${className}`.trim()}
