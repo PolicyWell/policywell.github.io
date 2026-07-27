@@ -1,10 +1,10 @@
 PolicyWell YC demo media (swift)
 ================================
-MP4: PolicyWell-YC-Demo-3min.mp4 (0.57 MB, ~50s)
-GIF: PolicyWell-YC-Demo-preview.gif (0.19 MB)
-Pace: 9 modules × 5.5s @ 10 fps
-Source: https://policywell.ai/product/
-Generated: 2026-07-27T09:35:51.081Z
+MP4: PolicyWell-YC-Demo-3min.mp4 (~0.57 MB, ~50s)
+GIF: PolicyWell-YC-Demo-preview.gif (~1.0 MB, full ~50s walkthrough)
+Pace: 9 modules × 5.5s @ 10 fps (GIF encoded at 6 fps / 720px)
+Generated: 2026-07-27T09:38:00.000Z
 
 Swift cut through every feature — Dashboard → Risk → Market → Claims →
 CLI → CRM → Analyzer → iOS → Voice. Under 100MB for YC uploads.
+Both MP4 and GIF cover the full feature pass.

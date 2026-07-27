@@ -186,6 +186,13 @@ export function ProductTour() {
             >
               Download MP4
             </a>
+            <a
+              className="pw-pt-ctrl pw-pt-ctrl-download"
+              href={PRODUCT_DEMO_GIF_HREF}
+              download="PolicyWell-YC-Demo-preview.gif"
+            >
+              Download GIF
+            </a>
           </div>
         </header>
 
