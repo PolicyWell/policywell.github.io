@@ -153,7 +153,7 @@ export function ProductTour() {
           <div>
             <p className="pw-pt-kicker">
               YC application demo · exactly {formatTime(PRODUCT_AUTOPLAY_TOTAL_MS)}{" "}
-              · {totalSteps} interactive steps · under 100MB download
+              · {totalSteps} interactive steps · MP4 download under 100MB
             </p>
             <h1 className="pw-pt-banner-title">PolicyWell product demo</h1>
           </div>
@@ -182,9 +182,9 @@ export function ProductTour() {
             <a
               className="pw-pt-ctrl pw-pt-ctrl-download"
               href={PRODUCT_DEMO_DOWNLOAD_HREF}
-              download="PolicyWell-YC-Demo-3min.zip"
+              download="PolicyWell-YC-Demo-3min.mp4"
             >
-              Download
+              Download MP4
             </a>
           </div>
         </header>
@@ -244,8 +244,8 @@ export function ProductTour() {
               ))}
             </nav>
             <div className="pw-pt-rail-foot">
-              <a href={PRODUCT_DEMO_DOWNLOAD_HREF} download="PolicyWell-YC-Demo-3min.zip">
-                Download YC ZIP
+              <a href={PRODUCT_DEMO_DOWNLOAD_HREF} download="PolicyWell-YC-Demo-3min.mp4">
+                Download YC MP4
               </a>
               <Link href="/book-a-call/">Book a call</Link>
             </div>
@@ -308,7 +308,7 @@ export function ProductTour() {
           <a
             href={PRODUCT_DEMO_DOWNLOAD_HREF}
             className="pw-btn"
-            download="PolicyWell-YC-Demo-3min.zip"
+            download="PolicyWell-YC-Demo-3min.mp4"
           >
             {PRODUCT_DEMO_DOWNLOAD_LABEL}
           </a>

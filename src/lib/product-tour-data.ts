@@ -190,12 +190,16 @@ export const PRODUCT_AUTOPLAY_TOTAL_MS = PRODUCT_MODULES.reduce(
   0,
 );
 
-/** Public path for the downloadable YC demo package (zip, CSS/HTML, ≪100MB). */
+/** Public path for the downloadable YC demo MP4 (≪100MB). */
 export const PRODUCT_DEMO_DOWNLOAD_HREF =
-  "/downloads/PolicyWell-YC-Demo-3min.zip";
+  "/downloads/PolicyWell-YC-Demo-3min.mp4";
 
 export const PRODUCT_DEMO_DOWNLOAD_LABEL =
-  "Download 3-min YC demo (ZIP · under 100MB)";
+  "Download 3-min YC demo (MP4 · under 100MB)";
+
+/** Optional short GIF preview of the walkthrough. */
+export const PRODUCT_DEMO_GIF_HREF =
+  "/downloads/PolicyWell-YC-Demo-preview.gif";
 
 if (PRODUCT_AUTOPLAY_TOTAL_MS !== PRODUCT_DEMO_MAX_MS) {
   // Keep the walkthrough exactly 3:00 for YC submissions.
