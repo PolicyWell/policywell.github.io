@@ -6,8 +6,12 @@ import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 import {
   PRODUCT_AUTOPLAY_TOTAL_MS,
+  PRODUCT_DEMO_DOWNLOAD_HREF,
+  PRODUCT_DEMO_DOWNLOAD_LABEL,
   PRODUCT_MODULES,
   PRODUCT_TOP_TABS,
+  activeDemoStep,
+  demoStepIndex,
   type ProductModuleId,
   type ProductTopTab,
 } from "@/lib/product-tour-data";
@@ -47,6 +51,15 @@ export function ProductTour() {
     globalElapsed / PRODUCT_AUTOPLAY_TOTAL_MS,
   );
 
+  const step = activeDemoStep(module, moduleProgress);
+  const stepIdx = demoStepIndex(module, moduleProgress);
+  const totalSteps = PRODUCT_MODULES.reduce((n, m) => n + m.steps.length, 0);
+  const completedSteps =
+    PRODUCT_MODULES.slice(0, moduleIndex).reduce(
+      (n, m) => n + m.steps.length,
+      0,
+    ) + stepIdx;
+
   const selectModule = useCallback((id: ProductModuleId) => {
     setActiveId(id);
     setElapsedInModule(0);
@@ -76,6 +89,11 @@ export function ProductTour() {
     if (i <= 0) return;
     selectModule(PRODUCT_MODULES[i - 1].id);
   }, [activeId, selectModule]);
+
+  const restart = useCallback(() => {
+    selectModule("dashboard");
+    setPlaying(true);
+  }, [selectModule]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -116,11 +134,13 @@ export function ProductTour() {
         prev();
       } else if (e.key === "p" || e.key === "P") {
         setPlaying((p) => !p);
+      } else if (e.key === "r" || e.key === "R") {
+        restart();
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev]);
+  }, [next, prev, restart]);
 
   const agentMode: "text" | "voice" = "voice";
   const agentTick = Math.round(moduleProgress * 100);
@@ -132,7 +152,8 @@ export function ProductTour() {
         <header className="pw-pt-banner">
           <div>
             <p className="pw-pt-kicker">
-              YC walkthrough · one central view · under {TOTAL_SEC}s autoplay
+              YC application demo · exactly {formatTime(PRODUCT_AUTOPLAY_TOTAL_MS)}{" "}
+              · {totalSteps} interactive steps · under 100MB download
             </p>
             <h1 className="pw-pt-banner-title">PolicyWell product demo</h1>
           </div>
@@ -155,6 +176,16 @@ export function ProductTour() {
             >
               Next
             </button>
+            <button type="button" className="pw-pt-ctrl" onClick={restart}>
+              Restart
+            </button>
+            <a
+              className="pw-pt-ctrl pw-pt-ctrl-download"
+              href={PRODUCT_DEMO_DOWNLOAD_HREF}
+              download="PolicyWell-YC-Demo-3min.zip"
+            >
+              Download
+            </a>
           </div>
         </header>
 
@@ -170,7 +201,13 @@ export function ProductTour() {
         </div>
         <p className="pw-pt-timer">
           {formatTime(globalElapsed)} / {formatTime(PRODUCT_AUTOPLAY_TOTAL_MS)} ·
-          click the rail to jump · lightweight CSS (no video)
+          step {completedSteps + 1}/{totalSteps}: {step.label}
+        </p>
+        <p className="pw-pt-step-banner" aria-live="polite">
+          <strong>
+            {moduleIndex + 1}/{PRODUCT_MODULES.length} · {module.label}
+          </strong>
+          <span>{step.label}</span>
         </p>
 
         {/* Central app shell */}
@@ -200,7 +237,9 @@ export function ProductTour() {
               ))}
             </nav>
             <div className="pw-pt-rail-foot">
-              <Link href="/agent">Open live</Link>
+              <a href={PRODUCT_DEMO_DOWNLOAD_HREF} download="PolicyWell-YC-Demo-3min.zip">
+                Download YC ZIP
+              </a>
               <Link href="/book-a-call/">Book a call</Link>
             </div>
           </aside>
@@ -232,7 +271,10 @@ export function ProductTour() {
                   <h2>{module.title}</h2>
                   <p>{module.subtitle}</p>
                 </div>
-                <span className="pw-pt-workspace-badge">Demo</span>
+                <span className="pw-pt-workspace-badge">
+                  {Math.round(TOTAL_SEC / 60)}:
+                  {(TOTAL_SEC % 60).toString().padStart(2, "0")} demo
+                </span>
               </header>
 
               <div
@@ -256,9 +298,13 @@ export function ProductTour() {
         </div>
 
         <footer className="pw-pt-foot">
-          <Link href="/agent" className="pw-btn">
-            Open live workspace
-          </Link>
+          <a
+            href={PRODUCT_DEMO_DOWNLOAD_HREF}
+            className="pw-btn"
+            download="PolicyWell-YC-Demo-3min.zip"
+          >
+            {PRODUCT_DEMO_DOWNLOAD_LABEL}
+          </a>
           <Link href="/book-a-call/" className="pw-btn pw-btn-secondary">
             Book a call
           </Link>

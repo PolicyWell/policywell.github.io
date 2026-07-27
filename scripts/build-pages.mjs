@@ -61,6 +61,7 @@ function restoreMiddleware(parked) {
 const parkedApi = parkApi();
 const parkedMiddleware = parkMiddleware();
 try {
+  run("node", ["scripts/build-yc-demo-zip.mjs"]);
   run("npx", ["next", "build"], { STATIC_EXPORT: "1" });
 } finally {
   restoreMiddleware(parkedMiddleware);

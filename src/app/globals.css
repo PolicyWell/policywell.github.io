@@ -8997,6 +8997,47 @@ body:has(.pw-docs-app) .pw-ope {
   border-color: rgba(15, 47, 40, 0.35);
 }
 
+a.pw-pt-ctrl {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.pw-pt-ctrl-download {
+  background: rgba(47, 111, 85, 0.16);
+  border-color: rgba(47, 111, 85, 0.4);
+}
+
+.pw-pt-ctrl-download:hover {
+  border-color: rgba(47, 111, 85, 0.65);
+  background: rgba(47, 111, 85, 0.24);
+}
+
+.pw-pt-step-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.85rem;
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(47, 111, 85, 0.1);
+  border: 1px solid rgba(47, 111, 85, 0.22);
+  color: var(--pine);
+  font-size: 0.84rem;
+}
+
+.pw-pt-step-banner strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.pw-pt-step-banner span {
+  font-weight: 600;
+}
+
 .pw-pt-progress {
   height: 4px;
   border-radius: 999px;
