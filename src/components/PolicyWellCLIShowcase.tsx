@@ -12,6 +12,7 @@ import {
 import { runAgentTurn, type AgentWorkspace } from "@/lib/agent";
 import {
   CLI_AUDIENCES,
+  CLI_CHROME_TITLE,
   type CliAudience,
   type TerminalLine,
   type TerminalTone,
@@ -35,7 +36,7 @@ import {
 const LINE_MS = 48;
 
 const HELP_LINES: TerminalLine[] = [
-  { text: "Interactive PolicyWell Insurance Intelligence Agent", tone: "accent" },
+  { text: "Interactive PolicyWell Intelligence Agent", tone: "accent" },
   { text: "Type a question, or try:", tone: "muted" },
   { text: "  help                 Show this help", tone: "default" },
   { text: "  seed                 Load sample household (Alex Rivera)", tone: "default" },
@@ -554,7 +555,7 @@ export function PolicyWellCLIShowcase({
   return (
     <section
       className={`pw-cli ${compact ? "pw-cli-compact" : ""} ${className}`}
-      aria-label="PolicyWell Insurance Intelligence Agent"
+      aria-label={CLI_CHROME_TITLE}
     >
       {!(hideIntro || compact) && (
         <div className="pw-cli-intro">
@@ -575,9 +576,7 @@ export function PolicyWellCLIShowcase({
             <span className="pw-cli-dot pw-cli-dot-yellow" />
             <span className="pw-cli-dot pw-cli-dot-green" />
           </div>
-          <p className="pw-cli-title">
-            {audience.chromeTitle ?? "PolicyWell - Insurance Intelligence Agent"}
-          </p>
+          <p className="pw-cli-title">{CLI_CHROME_TITLE}</p>
           <div
             className="pw-cli-theme-toggle"
             role="group"
