@@ -10862,3 +10862,410 @@ button.pw-pt-action:disabled {
   cursor: not-allowed;
   filter: none;
 }
+
+/* ── Product tour iOS assistant flow ── */
+.pw-pt-ios-scene {
+  align-items: center;
+}
+
+.pw-pt-ios-scene-solo {
+  display: grid;
+  justify-items: center;
+}
+
+.pw-pt-ios {
+  width: min(272px, 100%);
+  border-radius: 36px;
+  border: 2.5px solid #1c1c1e;
+  background: #0b0b0c;
+  padding: 0.55rem 0.5rem 0.45rem;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 22px 50px rgba(8, 14, 12, 0.45);
+}
+
+.pw-pt-ios-speaker {
+  width: 5.5rem;
+  height: 1.15rem;
+  margin: 0.2rem auto 0.45rem;
+  border-radius: 999px;
+  background: #000;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.pw-pt-ios-screen {
+  background: #f4f6f5;
+  border-radius: 28px;
+  min-height: 28rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pw-pt-ios-status {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #1d2a24;
+}
+
+.pw-pt-ios-status span:last-child {
+  text-align: right;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.pw-pt-ios-island {
+  width: 4.6rem;
+  height: 1.05rem;
+  border-radius: 999px;
+  background: #0b0b0c;
+}
+
+.pw-pt-ios-app-title {
+  margin: 0.15rem 0 0;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.pw-pt-ios-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.55rem 0.7rem 0.35rem;
+  min-height: 0;
+}
+
+.pw-pt-ios-home {
+  width: 6.5rem;
+  height: 0.28rem;
+  margin: 0.35rem auto 0.45rem;
+  border-radius: 999px;
+  background: rgba(15, 47, 40, 0.28);
+}
+
+.pw-pt-ios-h {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.15rem;
+  color: var(--pine);
+  font-weight: 500;
+}
+
+.pw-pt-ios-lede {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--stone);
+}
+
+.pw-pt-ios-ingest-grid {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.pw-pt-ios-ingest-card {
+  appearance: none;
+  border: 1.5px dashed rgba(15, 47, 40, 0.22);
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.7rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 0.2rem;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.pw-pt-ios-ingest-card strong {
+  font-size: 0.84rem;
+  color: var(--pine);
+}
+
+.pw-pt-ios-ingest-card span {
+  font-size: 0.7rem;
+  color: var(--stone);
+  line-height: 1.35;
+}
+
+.pw-pt-ios-ingest-card:hover,
+.pw-pt-ios-ingest-card.is-on,
+.pw-pt-ios-ingest-card.is-drop {
+  border-style: solid;
+  border-color: rgba(47, 111, 85, 0.5);
+  background: rgba(47, 111, 85, 0.08);
+}
+
+.pw-pt-ios-progress {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.pw-pt-ios-progress p {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--pine);
+  font-weight: 600;
+}
+
+.pw-pt-ios-policy-chip {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  background: rgba(47, 111, 85, 0.1);
+  border: 1px solid rgba(47, 111, 85, 0.2);
+}
+
+.pw-pt-ios-policy-chip strong {
+  font-size: 0.78rem;
+  color: var(--pine);
+}
+
+.pw-pt-ios-policy-chip span {
+  font-size: 0.65rem;
+  color: var(--stone);
+}
+
+.pw-pt-ios-chat {
+  display: grid;
+  gap: 0.45rem;
+  flex: 1;
+  overflow: auto;
+  max-height: 14.5rem;
+  padding-right: 0.1rem;
+}
+
+.pw-pt-ios-bubble {
+  max-width: 100%;
+  padding: 0.55rem 0.65rem;
+  border-radius: 14px;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--pine);
+}
+
+.pw-pt-ios-bubble p {
+  margin: 0;
+}
+
+.pw-pt-ios-bubble.is-agent {
+  background: #fff;
+  border: 1px solid rgba(15, 47, 40, 0.1);
+  border-bottom-left-radius: 4px;
+}
+
+.pw-pt-ios-bubble.is-user {
+  justify-self: end;
+  background: rgba(47, 111, 85, 0.16);
+  border-bottom-right-radius: 4px;
+}
+
+.pw-pt-ios-bubble.is-voice {
+  background: rgba(92, 122, 143, 0.14);
+}
+
+.pw-pt-ios-prompts {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.pw-pt-ios-prompts button {
+  appearance: none;
+  border: 1px solid rgba(15, 47, 40, 0.14);
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.4rem 0.65rem;
+  font: inherit;
+  font-size: 0.68rem;
+  color: var(--pine);
+  cursor: pointer;
+  text-align: left;
+}
+
+.pw-pt-ios-prompts button.is-on,
+.pw-pt-ios-prompts button:hover {
+  border-color: rgba(47, 111, 85, 0.45);
+  background: rgba(47, 111, 85, 0.1);
+  font-weight: 600;
+}
+
+.pw-pt-ios-continue {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.15rem;
+}
+
+.pw-pt-cv-chart {
+  margin: 0.55rem 0 0;
+  padding: 0.4rem 0.35rem 0.3rem;
+  border-radius: 10px;
+  background: #f7f9f8;
+  border: 1px solid rgba(15, 47, 40, 0.08);
+}
+
+.pw-pt-cv-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pw-pt-cv-axis {
+  stroke: rgba(15, 47, 40, 0.18);
+  stroke-width: 1;
+}
+
+.pw-pt-cv-line {
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pw-pt-cv-line.is-base {
+  stroke: rgba(92, 122, 143, 0.75);
+  stroke-dasharray: 4 3;
+}
+
+.pw-pt-cv-line.is-over {
+  stroke: #2f6f55;
+}
+
+.pw-pt-cv-dot {
+  fill: #2f6f55;
+}
+
+.pw-pt-cv-label {
+  fill: #5a6b63;
+  font-size: 8px;
+  font-family: system-ui, sans-serif;
+}
+
+.pw-pt-cv-chart figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.2rem;
+  font-size: 0.6rem;
+  color: var(--stone);
+}
+
+.pw-pt-cv-chart figcaption span::before {
+  content: "";
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.15rem;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  border-radius: 999px;
+}
+
+.pw-pt-cv-chart figcaption .is-base::before {
+  background: #5c7a8f;
+}
+
+.pw-pt-cv-chart figcaption .is-over::before {
+  background: #2f6f55;
+}
+
+.pw-pt-ios-voice-head {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0 0.15rem;
+}
+
+.pw-pt-ios-orb {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #81c784, #2f6f55 62%, #1d4033);
+  box-shadow: 0 8px 20px rgba(47, 111, 85, 0.35);
+}
+
+.pw-pt-ios-orb span {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  background: rgba(245, 250, 247, 0.9);
+}
+
+.pw-pt-ios-voice-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--pine);
+}
+
+.pw-pt-ios-wave {
+  margin-bottom: 0.15rem;
+  height: 1.6rem;
+}
+
+.pw-pt-ios-listening {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--stone);
+  font-style: italic;
+}
+
+.pw-pt-ios-options {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.pw-pt-ios-option {
+  appearance: none;
+  border: 1px solid rgba(15, 47, 40, 0.12);
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.55rem 0.6rem;
+  display: grid;
+  gap: 0.12rem;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.pw-pt-ios-option strong {
+  font-size: 0.76rem;
+  color: var(--pine);
+}
+
+.pw-pt-ios-option span {
+  font-size: 0.66rem;
+  color: var(--stone);
+  line-height: 1.35;
+}
+
+.pw-pt-ios-option em {
+  font-style: normal;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.pw-pt-ios-option.is-on,
+.pw-pt-ios-option:hover {
+  border-color: rgba(47, 111, 85, 0.45);
+  background: rgba(47, 111, 85, 0.08);
+}
+
+.pw-pt-ios-bubble .pw-pt-action {
+  margin-top: 0.55rem;
+  width: 100%;
+  justify-content: center;
+}
