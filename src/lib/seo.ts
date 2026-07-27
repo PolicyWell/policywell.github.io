@@ -7,6 +7,14 @@ import {
 /** Canonical site origin for metadata, sitemap, and JSON-LD. */
 export const SITE_URL = "https://policywell.ai";
 
+/**
+ * Shared Open Graph / Twitter card image.
+ * Bump the query string when replacing public/og-image.png so social caches refresh.
+ * Must be included on every page's openGraph — page-level openGraph without images
+ * replaces the root layout images in Next.js metadata merging.
+ */
+export const OG_IMAGE = `${SITE_URL}/og-image.png?v=20260727d`;
+
 /** Shared robots directive for private / non-marketing surfaces. */
 export const NOINDEX_ROBOTS: Metadata["robots"] = {
   index: false,
@@ -65,11 +73,20 @@ export function marketingMetadata({
       url,
       siteName: "PolicyWell",
       type: "website",
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1536,
+          height: 1024,
+          alt: "PolicyWell | Insurance Intelligence. For Everyone.",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: openGraphTitle,
       description,
+      images: [OG_IMAGE],
     },
   };
 }
@@ -110,7 +127,7 @@ export function organizationJsonLd() {
     name: "PolicyWell",
     alternateName: "Policy Well",
     url: `${SITE_URL}/`,
-    logo: `${SITE_URL}/logo.png`,
+    logo: `${SITE_URL}/logo.png?v=20260727d`,
     description:
       "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
     telephone: "+1-470-887-0449",
