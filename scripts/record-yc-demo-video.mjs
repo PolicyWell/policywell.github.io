@@ -226,47 +226,17 @@ function encodeMp4() {
   copyFileSync(tmpMp4, mp4Path);
 }
 
-function encodeGifPreview(totalFrames) {
-  const previewCount = Math.min(totalFrames, FPS * 8); // ~8s preview
-  const palette = join(workDir, "palette.png");
-  const previewDir = join(workDir, "preview");
-  mkdirSync(previewDir, { recursive: true });
-  for (let i = 0; i < previewCount; i++) {
-    const src = join(framesDir, `frame-${String(i).padStart(4, "0")}.jpg`);
-    if (existsSync(src)) {
-      copyFileSync(
-        src,
-        join(previewDir, `frame-${String(i).padStart(4, "0")}.jpg`),
-      );
-    }
-  }
-  console.log("Encoding GIF preview…");
+function encodeGifFromMp4() {
+  // Full-length swift GIF (same cut as the MP4), kept small for YC.
+  console.log("Encoding full-length GIF from MP4…");
   execFileSync(
     "ffmpeg",
     [
       "-y",
-      "-framerate",
-      String(FPS),
       "-i",
-      join(previewDir, "frame-%04d.jpg"),
+      mp4Path,
       "-vf",
-      `fps=${Math.min(8, FPS)},scale=720:-1:flags=lanczos,palettegen=stats_mode=diff`,
-      palette,
-    ],
-    { stdio: "inherit" },
-  );
-  execFileSync(
-    "ffmpeg",
-    [
-      "-y",
-      "-framerate",
-      String(FPS),
-      "-i",
-      join(previewDir, "frame-%04d.jpg"),
-      "-i",
-      palette,
-      "-lavfi",
-      `fps=${Math.min(8, FPS)},scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4`,
+      "fps=6,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5",
       "-loop",
       "0",
       gifPath,
@@ -284,25 +254,25 @@ function writeManifest(totalFrames) {
   const note = `PolicyWell YC demo media (swift)
 ================================
 MP4: ${mp4Name} (${mp4Mb.toFixed(2)} MB, ~${duration.toFixed(0)}s)
-GIF: ${gifName} (${gifMb.toFixed(2)} MB)
+GIF: ${gifName} (${gifMb.toFixed(2)} MB, full ~${duration.toFixed(0)}s walkthrough)
 Pace: ${MODULES.length} modules × ${DWELL_SEC}s @ ${FPS} fps
 Source: ${DEMO_URL}
 Generated: ${new Date().toISOString()}
 
 Swift cut through every feature — Dashboard → Risk → Market → Claims →
 CLI → CRM → Analyzer → iOS → Voice. Under 100MB for YC uploads.
+Both MP4 and GIF cover the full feature pass.
 `;
   writeFileSync(join(outDir, "MEDIA-NOTE.txt"), note);
   console.log(note);
-  if (mp4Mb >= 100) {
-    console.error("ERROR: MP4 exceeds 100MB");
+  if (mp4Mb >= 100 || gifMb >= 100) {
+    console.error("ERROR: media exceeds 100MB");
     process.exit(1);
   }
 }
 
 async function main() {
   ensureClean();
-  // puppeteer-core may be missing if not installed in this shell
   try {
     await import("puppeteer-core");
   } catch {
@@ -313,7 +283,7 @@ async function main() {
   }
   const totalFrames = await captureFrames();
   encodeMp4();
-  encodeGifPreview(totalFrames);
+  encodeGifFromMp4();
   writeManifest(totalFrames);
   console.log(`Wrote ${mp4Path}`);
   console.log(`Wrote ${gifPath}`);

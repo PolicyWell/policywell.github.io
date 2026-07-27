@@ -197,9 +197,12 @@ export const PRODUCT_DEMO_DOWNLOAD_HREF =
 export const PRODUCT_DEMO_DOWNLOAD_LABEL =
   "Download YC demo (MP4 · swift · under 100MB)";
 
-/** Optional short GIF preview of the walkthrough. */
+/** Full-length swift GIF walkthrough (same cut as the MP4). */
 export const PRODUCT_DEMO_GIF_HREF =
   "/downloads/PolicyWell-YC-Demo-preview.gif";
+
+export const PRODUCT_DEMO_GIF_LABEL =
+  "Download YC demo (GIF · swift · under 100MB)";
 
 if (PRODUCT_AUTOPLAY_TOTAL_MS !== PRODUCT_DEMO_MAX_MS) {
   // Keep the walkthrough exactly 3:00 for YC submissions.
