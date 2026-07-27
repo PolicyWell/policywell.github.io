@@ -56,8 +56,8 @@ export function SiteFooter() {
               Services Industry
             </p>
             <p className="text-xs text-moss mt-3 font-semibold">
-              Built With <span aria-hidden="true">💚</span>
-              <span className="sr-only">love</span> in Atlanta
+              Built with <span aria-hidden="true">💚</span>
+              <span className="sr-only">love</span> Atlanta + Boston
             </p>
           </div>
 
