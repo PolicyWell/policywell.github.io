@@ -11,21 +11,41 @@ const SAMPLE_POLICY = {
   id: "pw-sample-policy",
   name: "Alex Rivera · IUL in-force.pdf",
   meta: "Mutual of Omaha · $1.25M face · 42 pages",
+  insured: "Alex Rivera",
+  product: "Indexed Universal Life",
+  carrier: "Mutual of Omaha",
+  policyNo: "IUL-2048-9183",
+  face: "$1,250,000",
+  premium: "$412 / mo",
+  issueDate: "Mar 14, 2022",
+  pages: 42,
 };
 
+type CarrierType = "Life" | "P&C" | "Specialty";
+
+const CARRIER_TYPES: CarrierType[] = ["Life", "P&C", "Specialty"];
+
 const MARKET_CARRIERS = [
-  { id: "hartford", carrier: "Hartford Financial", premium: 4200, match: 94, best: true },
-  { id: "travelers", carrier: "Travelers Group", premium: 4850, match: 87 },
-  { id: "chubb", carrier: "Chubb Limited", premium: 5100, match: 82 },
-  { id: "liberty", carrier: "Liberty Mutual", premium: 5400, match: 76 },
-  { id: "nationwide", carrier: "Nationwide", premium: 5650, match: 73 },
-  { id: "cna", carrier: "CNA Financial", premium: 5900, match: 70 },
-  { id: "zurich", carrier: "Zurich Insurance", premium: 6100, match: 68 },
-  { id: "berkshire", carrier: "Berkshire Hathaway", premium: 6350, match: 65 },
-  { id: "progressive", carrier: "Progressive Commercial", premium: 6500, match: 63 },
-  { id: "aig", carrier: "AIG Commercial", premium: 6720, match: 61 },
-  { id: "cincinnati", carrier: "Cincinnati Insurance", premium: 6980, match: 58 },
-  { id: "markel", carrier: "Markel Specialty", premium: 7200, match: 55 },
+  { id: "mutual", carrier: "Mutual of Omaha", type: "Life" as const, premium: 4944, match: 96, best: true },
+  { id: "pacific", carrier: "Pacific Life", type: "Life" as const, premium: 5120, match: 91 },
+  { id: "nationwide-life", carrier: "Nationwide Life", type: "Life" as const, premium: 5280, match: 88 },
+  { id: "lincoln", carrier: "Lincoln Financial", type: "Life" as const, premium: 5410, match: 85 },
+  { id: "prudential", carrier: "Prudential", type: "Life" as const, premium: 5560, match: 82 },
+  { id: "john-hancock", carrier: "John Hancock", type: "Life" as const, premium: 5690, match: 79 },
+  { id: "hartford", carrier: "Hartford Financial", type: "P&C" as const, premium: 4200, match: 94 },
+  { id: "travelers", carrier: "Travelers Group", type: "P&C" as const, premium: 4850, match: 87 },
+  { id: "chubb", carrier: "Chubb Limited", type: "P&C" as const, premium: 5100, match: 82 },
+  { id: "liberty", carrier: "Liberty Mutual", type: "P&C" as const, premium: 5400, match: 76 },
+  { id: "nationwide", carrier: "Nationwide", type: "P&C" as const, premium: 5650, match: 73 },
+  { id: "cna", carrier: "CNA Financial", type: "P&C" as const, premium: 5900, match: 70 },
+  { id: "zurich", carrier: "Zurich Insurance", type: "P&C" as const, premium: 6100, match: 68 },
+  { id: "progressive", carrier: "Progressive Commercial", type: "P&C" as const, premium: 6500, match: 63 },
+  { id: "aig", carrier: "AIG Commercial", type: "P&C" as const, premium: 6720, match: 61 },
+  { id: "cincinnati", carrier: "Cincinnati Insurance", type: "P&C" as const, premium: 6980, match: 58 },
+  { id: "berkshire", carrier: "Berkshire Hathaway", type: "Specialty" as const, premium: 6350, match: 65 },
+  { id: "markel", carrier: "Markel Specialty", type: "Specialty" as const, premium: 7200, match: 55 },
+  { id: "hiscox", carrier: "Hiscox", type: "Specialty" as const, premium: 7480, match: 52 },
+  { id: "beazley", carrier: "Beazley", type: "Specialty" as const, premium: 7710, match: 49 },
 ] as const;
 
 function AppChrome({
@@ -78,7 +98,17 @@ function money(n: number) {
 
 export function RiskAssessmentMock() {
   const [selected, setSelected] = useState<
-    "score" | "gaps" | "policies" | "property" | "liability" | "cyber" | "bi" | "activity" | null
+    | "score"
+    | "gaps"
+    | "policies"
+    | "property"
+    | "liability"
+    | "cyber"
+    | "bi"
+    | "act-review"
+    | "act-gap"
+    | "act-coverage"
+    | null
   >("score");
 
   const exposure = [
@@ -88,6 +118,27 @@ export function RiskAssessmentMock() {
     { id: "bi" as const, label: "Business Interruption", level: "Medium", pct: 71, tone: "mid" },
   ];
 
+  const activity = [
+    {
+      id: "act-review" as const,
+      label: "Policy review completed",
+      when: "2h ago",
+      detail: "Annual review closed with no funding flags.",
+    },
+    {
+      id: "act-gap" as const,
+      label: "New gap identified",
+      when: "4h ago",
+      detail: "Umbrella limit sits $1M below peer median.",
+    },
+    {
+      id: "act-coverage" as const,
+      label: "Coverage updated",
+      when: "1d ago",
+      detail: "GL endorsement applied for contractor exposure.",
+    },
+  ];
+
   const detail =
     selected === "score"
       ? "Overall score blends coverage adequacy, funding health, and peer benchmarks. Click another tile to inspect it."
@@ -95,8 +146,8 @@ export function RiskAssessmentMock() {
         ? "3 open gaps: umbrella limit, cyber sublimit, and BI waiting period."
         : selected === "policies"
           ? "4 in-force policies: GL, Property, Auto, and Workers' Comp."
-          : selected === "activity"
-            ? "Latest: policy review completed 2h ago · new gap 4h ago · coverage updated 1d ago."
+          : activity.find((a) => a.id === selected)
+            ? `${activity.find((a) => a.id === selected)!.label}: ${activity.find((a) => a.id === selected)!.detail}`
             : exposure.find((e) => e.id === selected)
               ? `${exposure.find((e) => e.id === selected)!.label}: ${exposure.find((e) => e.id === selected)!.level} exposure at ${exposure.find((e) => e.id === selected)!.pct}%.`
               : "Select a tile to inspect.";
@@ -170,29 +221,25 @@ export function RiskAssessmentMock() {
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          className={`pw-pt-card pw-pt-clickable${
-            selected === "activity" ? " is-selected" : ""
-          }`}
-          onClick={() => setSelected("activity")}
-        >
+        <div className="pw-pt-card">
           <p className="pw-pt-card-title">Recent activity</p>
-          <ul className="pw-pt-activity">
-            <li>
-              <span>Policy review completed</span>
-              <span>2h ago</span>
-            </li>
-            <li>
-              <span>New gap identified</span>
-              <span>4h ago</span>
-            </li>
-            <li>
-              <span>Coverage updated</span>
-              <span>1d ago</span>
-            </li>
+          <ul className="pw-pt-activity pw-pt-docs-click">
+            {activity.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={`pw-pt-square-btn${
+                    selected === item.id ? " is-selected" : ""
+                  }`}
+                  onClick={() => setSelected(item.id)}
+                >
+                  <strong>{item.label}</strong>
+                  <span>{item.when}</span>
+                </button>
+              </li>
+            ))}
           </ul>
-        </button>
+        </div>
       </div>
       <p className="pw-pt-inspect" role="status">
         {detail}
@@ -202,11 +249,38 @@ export function RiskAssessmentMock() {
 }
 
 export function MarketComparisonMock() {
-  const [selected, setSelected] = useState<Set<string>>(
-    () => new Set(["hartford", "travelers", "chubb", "liberty", "nationwide"]),
+  const [typeOn, setTypeOn] = useState<Set<CarrierType>>(
+    () => new Set(CARRIER_TYPES),
   );
+  const [selected, setSelected] = useState<Set<string>>(
+    () =>
+      new Set([
+        "mutual",
+        "pacific",
+        "hartford",
+        "travelers",
+        "chubb",
+        "liberty",
+        "nationwide",
+        "markel",
+      ]),
+  );
+  const [focused, setFocused] = useState("mutual");
 
-  function toggle(id: string) {
+  function toggleType(type: CarrierType) {
+    setTypeOn((prev) => {
+      const next = new Set(prev);
+      if (next.has(type)) {
+        if (next.size === 1) return prev;
+        next.delete(type);
+      } else {
+        next.add(type);
+      }
+      return next;
+    });
+  }
+
+  function toggleCarrier(id: string) {
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -217,12 +291,16 @@ export function MarketComparisonMock() {
       }
       return next;
     });
+    setFocused(id);
   }
 
-  const ranked = MARKET_CARRIERS.filter((c) => selected.has(c.id)).sort(
-    (a, b) => b.match - a.match,
-  );
+  const visibleCarriers = MARKET_CARRIERS.filter((c) => typeOn.has(c.type));
+  const ranked = visibleCarriers
+    .filter((c) => selected.has(c.id))
+    .sort((a, b) => b.match - a.match);
   const best = ranked[0];
+  const focusedRow =
+    ranked.find((c) => c.id === focused) ?? best ?? ranked[0];
   const avgMatch =
     ranked.length === 0
       ? 0
@@ -233,22 +311,43 @@ export function MarketComparisonMock() {
       <div className="pw-pt-main-head">
         <h3>Quotes / Market Comparison</h3>
         <p className="pw-pt-muted">
-          {selected.size} of {MARKET_CARRIERS.length} carriers selected · click
-          to toggle
+          Toggle carrier types &amp; carriers · {ranked.length} in compare
         </p>
       </div>
 
+      <div className="pw-pt-type-toggles" role="group" aria-label="Carrier types">
+        {CARRIER_TYPES.map((type) => {
+          const on = typeOn.has(type);
+          const count = MARKET_CARRIERS.filter((c) => c.type === type).length;
+          return (
+            <button
+              key={type}
+              type="button"
+              className={`pw-pt-type-chip${on ? " is-on" : ""}`}
+              aria-pressed={on}
+              onClick={() => toggleType(type)}
+            >
+              <strong>{type}</strong>
+              <span>{count} carriers</span>
+            </button>
+          );
+        })}
+      </div>
+
       <div className="pw-pt-carrier-toggles" role="group" aria-label="Carriers">
-        {MARKET_CARRIERS.map((c) => {
+        {visibleCarriers.map((c) => {
           const on = selected.has(c.id);
           return (
             <button
               key={c.id}
               type="button"
-              className={`pw-pt-carrier-chip${on ? " is-on" : ""}`}
+              className={`pw-pt-carrier-chip${on ? " is-on" : ""}${
+                focused === c.id ? " is-focus" : ""
+              }`}
               aria-pressed={on}
-              onClick={() => toggle(c.id)}
+              onClick={() => toggleCarrier(c.id)}
             >
+              <em>{c.type}</em>
               {c.carrier}
             </button>
           );
@@ -262,6 +361,7 @@ export function MarketComparisonMock() {
               <tr>
                 <th>#</th>
                 <th>Carrier</th>
+                <th>Type</th>
                 <th>Premium</th>
                 <th>Match</th>
               </tr>
@@ -270,8 +370,10 @@ export function MarketComparisonMock() {
               {ranked.map((row, i) => (
                 <tr
                   key={row.id}
-                  className={`${row.id === best?.id ? "is-best" : ""} is-row-click`}
-                  onClick={() => toggle(row.id)}
+                  className={`${row.id === best?.id ? "is-best" : ""} is-row-click${
+                    focused === row.id ? " is-focus" : ""
+                  }`}
+                  onClick={() => toggleCarrier(row.id)}
                 >
                   <td>{i + 1}</td>
                   <td>
@@ -279,6 +381,9 @@ export function MarketComparisonMock() {
                     {row.id === best?.id ? (
                       <span className="pw-pt-best">Best</span>
                     ) : null}
+                  </td>
+                  <td>
+                    <span className="pw-pt-type-tag">{row.type}</span>
                   </td>
                   <td>{money(row.premium)}</td>
                   <td>
@@ -307,12 +412,20 @@ export function MarketComparisonMock() {
               </dd>
             </div>
             <div>
+              <dt>Types on</dt>
+              <dd>{[...typeOn].join(" · ") || "—"}</dd>
+            </div>
+            <div>
               <dt>Best premium</dt>
               <dd>{best ? `${money(best.premium)} / year` : "—"}</dd>
             </div>
             <div>
-              <dt>Top match</dt>
-              <dd>{best ? `${best.match}% · ${best.carrier}` : "—"}</dd>
+              <dt>Focused carrier</dt>
+              <dd>
+                {focusedRow
+                  ? `${focusedRow.carrier} · ${focusedRow.match}%`
+                  : "—"}
+              </dd>
             </div>
             <div>
               <dt>Avg match</dt>
@@ -326,15 +439,54 @@ export function MarketComparisonMock() {
 }
 
 export function ClaimsTrackerMock() {
-  const [selected, setSelected] = useState<
-    "hero" | "timeline" | "docs" | null
-  >("timeline");
+  const timeline = [
+    {
+      id: "submitted",
+      title: "Claim submitted",
+      detail: "Today · intake complete",
+      state: "done" as const,
+    },
+    {
+      id: "assigned",
+      title: "Adjuster assigned",
+      detail: "Day 1 · Sarah M.",
+      state: "done" as const,
+    },
+    {
+      id: "review",
+      title: "Documentation review",
+      detail: "Pending your upload · Day 2",
+      state: "now" as const,
+    },
+    {
+      id: "payout",
+      title: "Resolution & payout",
+      detail: "Est. $24,500 · Day 3–5",
+      state: "pending" as const,
+    },
+  ];
+  const docs = [
+    { id: "form", name: "Claim form.pdf" },
+    { id: "photos", name: "Photos.zip" },
+    { id: "police", name: "Police report.pdf" },
+  ];
+
+  const [selected, setSelected] = useState<string>("review");
+
+  const status =
+    selected === "hero"
+      ? "Claim CW-2026-0847 is in progress with medium priority."
+      : timeline.find((t) => t.id === selected)
+        ? `${timeline.find((t) => t.id === selected)!.title}: ${timeline.find((t) => t.id === selected)!.detail}`
+        : docs.find((d) => d.id === selected)
+          ? `${docs.find((d) => d.id === selected)!.name} selected — open or replace in the claim file.`
+          : "Select a panel or square to inspect.";
 
   return (
     <AppChrome url="app.policywell.ai/claims" nav="claims">
       <div className="pw-pt-main-head">
         <h3>Claims / Active Claims</h3>
-        <p className="pw-pt-muted">CW-2026-0847 · panels are clickable</p>
+        <p className="pw-pt-muted">CW-2026-0847 · panels &amp; squares are clickable</p>
       </div>
       <button
         type="button"
@@ -356,58 +508,53 @@ export function ClaimsTrackerMock() {
         </div>
       </button>
       <div className="pw-pt-split">
-        <button
-          type="button"
-          className={`pw-pt-card pw-pt-clickable${
-            selected === "timeline" ? " is-selected" : ""
-          }`}
-          onClick={() => setSelected("timeline")}
-        >
+        <div className="pw-pt-card">
           <p className="pw-pt-card-title">Claim timeline</p>
           <ol className="pw-pt-timeline">
-            <li className="is-done">
-              <strong>Claim submitted</strong>
-              <span>Today</span>
-            </li>
-            <li className="is-done">
-              <strong>Adjuster assigned</strong>
-              <span>Day 1</span>
-            </li>
-            <li className="is-now">
-              <strong>Documentation review</strong>
-              <span>Pending your upload · Day 2</span>
-            </li>
-            <li>
-              <strong>Resolution &amp; payout</strong>
-              <span>Est. $24,500 · Day 3–5</span>
-            </li>
+            {timeline.map((step) => (
+              <li key={step.id}>
+                <button
+                  type="button"
+                  className={`pw-pt-square-btn${
+                    step.state === "done" ? " is-done" : ""
+                  }${step.state === "now" ? " is-now" : ""}${
+                    selected === step.id ? " is-selected" : ""
+                  }`}
+                  onClick={() => setSelected(step.id)}
+                >
+                  <strong>{step.title}</strong>
+                  <span>{step.detail}</span>
+                </button>
+              </li>
+            ))}
           </ol>
-        </button>
-        <button
-          type="button"
-          className={`pw-pt-card pw-pt-clickable${
-            selected === "docs" ? " is-selected" : ""
-          }`}
-          onClick={() => setSelected("docs")}
-        >
+        </div>
+        <div className="pw-pt-card">
           <p className="pw-pt-card-title">Documents</p>
-          <ul className="pw-pt-docs">
-            <li>Claim form.pdf</li>
-            <li>Photos.zip</li>
-            <li>Police report.pdf</li>
+          <ul className="pw-pt-docs pw-pt-docs-click">
+            {docs.map((doc) => (
+              <li key={doc.id}>
+                <button
+                  type="button"
+                  className={`pw-pt-square-btn${
+                    selected === doc.id ? " is-selected" : ""
+                  }`}
+                  onClick={() => setSelected(doc.id)}
+                >
+                  <strong>{doc.name}</strong>
+                  <span>Tap to inspect</span>
+                </button>
+              </li>
+            ))}
           </ul>
           <div className="pw-pt-actions">
             <span className="pw-pt-action">Upload Document</span>
             <span className="pw-pt-action is-ghost">Message Adjuster</span>
           </div>
-        </button>
+        </div>
       </div>
       <p className="pw-pt-inspect" role="status">
-        {selected === "hero"
-          ? "Claim CW-2026-0847 is in progress with medium priority."
-          : selected === "docs"
-            ? "3 documents on file. Upload more evidence to unblock review."
-            : "Documentation review is the current step — awaiting your upload."}
+        {status}
       </p>
     </AppChrome>
   );
@@ -418,47 +565,78 @@ export function CrmMock() {
     {
       id: "holders",
       title: "Policyholders",
-      items: ["Annual review due · Alex Rivera", "Statement ready · Jordan Lee"],
+      items: [
+        { id: "alex", label: "Annual review due · Alex Rivera" },
+        { id: "jordan", label: "Statement ready · Jordan Lee" },
+      ],
     },
     {
       id: "gaps",
       title: "Gap / new coverage",
-      items: ["Umbrella gap · Harbor Fab", "Cyber quote requested · Acme Retail"],
+      items: [
+        { id: "harbor", label: "Umbrella gap · Harbor Fab" },
+        { id: "acme", label: "Cyber quote requested · Acme Retail" },
+      ],
     },
     {
       id: "producers",
       title: "Producers",
-      items: ["Follow up · Casey (IMO)", "Submit pack · Mutual of Omaha"],
+      items: [
+        { id: "casey", label: "Follow up · Casey (IMO)" },
+        { id: "mutual-prod", label: "Submit pack · Mutual of Omaha" },
+      ],
     },
   ];
-  const [active, setActive] = useState("holders");
-  const current = queues.find((q) => q.id === active) ?? queues[0];
+  const [activeQueue, setActiveQueue] = useState("holders");
+  const [activeItem, setActiveItem] = useState("alex");
+  const current = queues.find((q) => q.id === activeQueue) ?? queues[0];
+  const item =
+    current.items.find((i) => i.id === activeItem) ??
+    queues.flatMap((q) => q.items).find((i) => i.id === activeItem);
 
   return (
     <div className="pw-pt-crm">
       {queues.map((q) => (
-        <button
+        <div
           key={q.id}
-          type="button"
-          className={`pw-pt-card pw-pt-clickable${
-            active === q.id ? " is-selected" : ""
+          className={`pw-pt-card pw-pt-clickable-panel${
+            activeQueue === q.id ? " is-selected" : ""
           }`}
-          onClick={() => setActive(q.id)}
         >
-          <p className="pw-pt-card-title">{q.title}</p>
-          <ul className="pw-pt-crm-list">
-            {q.items.map((item) => (
-              <li key={item}>{item}</li>
+          <button
+            type="button"
+            className="pw-pt-panel-head"
+            onClick={() => {
+              setActiveQueue(q.id);
+              setActiveItem(q.items[0].id);
+            }}
+          >
+            <p className="pw-pt-card-title">{q.title}</p>
+          </button>
+          <ul className="pw-pt-crm-list pw-pt-docs-click">
+            {q.items.map((entry) => (
+              <li key={entry.id}>
+                <button
+                  type="button"
+                  className={`pw-pt-square-btn${
+                    activeItem === entry.id ? " is-selected" : ""
+                  }`}
+                  onClick={() => {
+                    setActiveQueue(q.id);
+                    setActiveItem(entry.id);
+                  }}
+                >
+                  <strong>{entry.label}</strong>
+                  <span>Open follow-up</span>
+                </button>
+              </li>
             ))}
           </ul>
-          <span className="pw-pt-action is-ghost">
-            {active === q.id ? "Selected" : "Open queue"}
-          </span>
-        </button>
+        </div>
       ))}
       <p className="pw-pt-inspect pw-pt-inspect-span" role="status">
-        Viewing <strong>{current.title}</strong> — {current.items.length} open
-        follow-ups.
+        <strong>{current.title}</strong>
+        {item ? ` · ${item.label}` : ""} — click any square to switch.
       </p>
     </div>
   );
@@ -503,10 +681,70 @@ type AppUploadMockProps = {
   progress?: number;
 };
 
+function PolicyDocument({
+  dragging,
+  compact,
+}: {
+  dragging?: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={`pw-pt-policy-doc${compact ? " is-compact" : ""}${
+        dragging ? " is-dragging" : ""
+      }`}
+    >
+      <div className="pw-pt-policy-doc-bar">
+        <span>PDF</span>
+        <em>
+          {SAMPLE_POLICY.pages} pages · {SAMPLE_POLICY.name}
+        </em>
+      </div>
+      <div className="pw-pt-policy-doc-page">
+        <p className="pw-pt-policy-doc-brand">{SAMPLE_POLICY.carrier}</p>
+        <h4>In-force policy illustration</h4>
+        <dl>
+          <div>
+            <dt>Insured</dt>
+            <dd>{SAMPLE_POLICY.insured}</dd>
+          </div>
+          <div>
+            <dt>Product</dt>
+            <dd>{SAMPLE_POLICY.product}</dd>
+          </div>
+          <div>
+            <dt>Policy #</dt>
+            <dd>{SAMPLE_POLICY.policyNo}</dd>
+          </div>
+          <div>
+            <dt>Face amount</dt>
+            <dd>{SAMPLE_POLICY.face}</dd>
+          </div>
+          <div>
+            <dt>Premium</dt>
+            <dd>{SAMPLE_POLICY.premium}</dd>
+          </div>
+          <div>
+            <dt>Issue date</dt>
+            <dd>{SAMPLE_POLICY.issueDate}</dd>
+          </div>
+        </dl>
+        <div className="pw-pt-policy-doc-lines" aria-hidden>
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
   const [inserted, setInserted] = useState(false);
   const [localProgress, setLocalProgress] = useState(0);
   const [draggingOver, setDraggingOver] = useState(false);
+  const [draggingDoc, setDraggingDoc] = useState(false);
 
   const effective = inserted ? localProgress : progress;
 
@@ -532,6 +770,11 @@ export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
     e.dataTransfer.setData("text/pw-policy", SAMPLE_POLICY.id);
     e.dataTransfer.setData("text/plain", SAMPLE_POLICY.name);
     e.dataTransfer.effectAllowed = "copy";
+    setDraggingDoc(true);
+  }
+
+  function onDragEnd() {
+    setDraggingDoc(false);
   }
 
   function onDragOver(e: DragEvent) {
@@ -547,6 +790,7 @@ export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
   function onDrop(e: DragEvent) {
     e.preventDefault();
     setDraggingOver(false);
+    setDraggingDoc(false);
     const id = e.dataTransfer.getData("text/pw-policy");
     const name = e.dataTransfer.getData("text/plain");
     if (id === SAMPLE_POLICY.id || name === SAMPLE_POLICY.name) {
@@ -556,21 +800,33 @@ export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
 
   return (
     <div className="pw-pt-upload-scene">
-      <div
-        className="pw-pt-policy-chip"
-        draggable
-        onDragStart={onDragStart}
-        title="Drag into the upload zone"
-      >
-        <span className="pw-pt-policy-icon" aria-hidden>
-          PDF
-        </span>
-        <span className="pw-pt-policy-copy">
-          <strong>{SAMPLE_POLICY.name}</strong>
-          <em>{SAMPLE_POLICY.meta}</em>
-        </span>
-        <span className="pw-pt-policy-hint">Drag me →</span>
-      </div>
+      {!inserted ? (
+        <div className="pw-pt-policy-source">
+          <p className="pw-pt-policy-source-label">Sample policy</p>
+          <div
+            className="pw-pt-policy-drag"
+            draggable
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            title="Drag this policy into the upload zone"
+          >
+            <PolicyDocument dragging={draggingDoc} />
+            <span className="pw-pt-policy-hint">Drag into upload →</span>
+          </div>
+          <button
+            type="button"
+            className="pw-pt-action"
+            onClick={insertPolicy}
+          >
+            Insert sample policy
+          </button>
+        </div>
+      ) : (
+        <div className="pw-pt-policy-source is-done">
+          <p className="pw-pt-policy-source-label">Inserted</p>
+          <PolicyDocument compact />
+        </div>
+      )}
 
       <div className="pw-pt-phone">
         <div className="pw-pt-phone-notch" />
@@ -585,15 +841,22 @@ export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
             onDragLeave={onDragLeave}
             onDrop={onDrop}
           >
-            <p>
-              {inserted
-                ? effective < 100
-                  ? `Reading ${SAMPLE_POLICY.name}…`
-                  : "Policy inserted · analysis ready"
-                : draggingOver
+            {inserted ? (
+              <div className="pw-pt-upload-inserted">
+                <PolicyDocument compact />
+                <p>
+                  {effective < 100
+                    ? `Reading ${SAMPLE_POLICY.name}…`
+                    : "Policy inserted · analysis ready"}
+                </p>
+              </div>
+            ) : (
+              <p>
+                {draggingOver
                   ? "Drop policy here"
-                  : "Drop PDF or photo"}
-            </p>
+                  : "Drop the policy PDF here"}
+              </p>
+            )}
             <div className="pw-pt-bar-track">
               <span
                 className="pw-pt-bar-fill tone-low"
@@ -606,15 +869,6 @@ export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
             <li className={effective > 50 ? "is-done" : ""}>Extract terms</li>
             <li className={effective > 80 ? "is-done" : ""}>Score &amp; explain</li>
           </ul>
-          {!inserted ? (
-            <button
-              type="button"
-              className="pw-pt-action"
-              onClick={insertPolicy}
-            >
-              Insert sample policy
-            </button>
-          ) : null}
         </div>
       </div>
     </div>
