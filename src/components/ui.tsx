@@ -441,7 +441,8 @@ export function SiteNav() {
   const [companyOpen, setCompanyOpen] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
+    // Phones + tablets (incl. iPad portrait): hamburger. Inline nav from 1100px up.
+    const mq = window.matchMedia("(max-width: 1099px)");
     const sync = () => {
       setIsMobile(mq.matches);
       if (!mq.matches) setOpen(false);
