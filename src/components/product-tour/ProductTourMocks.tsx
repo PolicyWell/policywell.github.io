@@ -62,7 +62,7 @@ function AppChrome({
   const items = [
     { id: "overview", label: "Overview", jump: null },
     { id: "risk", label: "Risk", jump: "risk" as const },
-    { id: "market", label: "Market", jump: "market" as const },
+    { id: "market", label: "Marketplace", jump: "market" as const },
     { id: "claims", label: "Claims", jump: "claims" as const },
     { id: "docs", label: "Docs", jump: null },
   ] as const;
