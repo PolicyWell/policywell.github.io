@@ -9181,8 +9181,31 @@ body:has(.pw-docs-app) .pw-ope {
   place-items: center;
 }
 
+button.pw-pt-side-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+}
+
+button.pw-pt-side-item.is-nav:hover {
+  background: rgba(245, 250, 247, 0.1);
+}
+
+button.pw-pt-side-item.is-nav:focus-visible {
+  outline: 2px solid rgba(129, 199, 132, 0.7);
+  outline-offset: 2px;
+}
+
 .pw-pt-side-item.is-active {
   background: rgba(245, 250, 247, 0.12);
+}
+
+button.pw-pt-side-item.is-active {
+  background: rgba(47, 111, 85, 0.55);
+  box-shadow: 0 0 0 1px rgba(129, 199, 132, 0.35);
 }
 
 .pw-pt-side-icon {
@@ -9190,6 +9213,26 @@ body:has(.pw-docs-app) .pw-ope {
   height: 0.7rem;
   border-radius: 3px;
   border: 1.5px solid rgba(245, 250, 247, 0.55);
+}
+
+.pw-pt-side-icon.is-risk {
+  border-radius: 3px;
+  background: rgba(245, 250, 247, 0.08);
+}
+
+.pw-pt-side-icon.is-market {
+  border-radius: 2px;
+  border-style: solid;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 250, 247, 0.35) 0 50%,
+    transparent 50% 100%
+  );
+}
+
+.pw-pt-side-icon.is-claims {
+  border-radius: 999px;
+  background: rgba(245, 250, 247, 0.08);
 }
 
 .pw-pt-side-avatar {
