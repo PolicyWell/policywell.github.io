@@ -9708,3 +9708,335 @@ body:has(.pw-docs-app) .pw-ope {
     margin-top: 0;
   }
 }
+
+/* ── Product tour central app shell ── */
+.pw-pt-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.pw-pt-banner-title {
+  margin: 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.45rem, 2.8vw, 1.95rem);
+  color: var(--pine);
+  font-weight: 500;
+}
+
+.pw-pt-app {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: min(70vh, 52rem);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 47, 40, 0.35);
+  background: #0c1010;
+  box-shadow: 0 28px 70px rgba(8, 14, 12, 0.35);
+}
+
+@media (min-width: 900px) {
+  .pw-pt-app {
+    grid-template-columns: 13.5rem minmax(0, 1fr);
+  }
+}
+
+.pw-pt-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 0.75rem 1.1rem;
+  background: #080b0b;
+  border-bottom: 1px solid rgba(245, 250, 247, 0.06);
+}
+
+@media (min-width: 900px) {
+  .pw-pt-rail {
+    border-bottom: 0;
+    border-right: 1px solid rgba(245, 250, 247, 0.06);
+  }
+}
+
+.pw-pt-rail-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.45rem 0.85rem;
+  color: #f5faf7;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.pw-pt-rail-mark {
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: #2f6f55;
+  color: #f5faf7;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.pw-pt-rail-section {
+  margin: 0.15rem 0.45rem 0.35rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(245, 250, 247, 0.4);
+}
+
+.pw-pt-rail-nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+@media (min-width: 900px) {
+  .pw-pt-rail-nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
+.pw-pt-rail-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(245, 250, 247, 0.62);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+@media (max-width: 899px) {
+  .pw-pt-rail-item {
+    width: auto;
+  }
+}
+
+.pw-pt-rail-item:hover {
+  background: rgba(245, 250, 247, 0.05);
+  color: #f5faf7;
+}
+
+.pw-pt-rail-item.is-active {
+  background: rgba(47, 111, 85, 0.22);
+  color: #f5faf7;
+  font-weight: 600;
+}
+
+.pw-pt-rail-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: rgba(245, 250, 247, 0.28);
+  flex-shrink: 0;
+}
+
+.pw-pt-rail-item.is-active .pw-pt-rail-dot {
+  background: #81c784;
+  box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.2);
+}
+
+.pw-pt-rail-foot {
+  margin-top: auto;
+  padding: 0.85rem 0.45rem 0.2rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.pw-pt-rail-foot a {
+  font-size: 0.78rem;
+  color: rgba(245, 250, 247, 0.55);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.pw-pt-rail-foot a:hover {
+  color: #f5faf7;
+}
+
+.pw-pt-center {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #0f1413;
+}
+
+.pw-pt-topnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  padding: 0.65rem 0.85rem 0;
+  border-bottom: 1px solid rgba(245, 250, 247, 0.06);
+}
+
+.pw-pt-topnav-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(245, 250, 247, 0.5);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.pw-pt-topnav-item.is-active {
+  color: #f5faf7;
+  border-bottom-color: #2f6f55;
+  font-weight: 600;
+}
+
+.pw-pt-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem 1rem 1.25rem;
+  min-height: 0;
+  flex: 1;
+}
+
+.pw-pt-workspace-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pw-pt-workspace-head h2 {
+  margin: 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  color: #f5faf7;
+  font-weight: 500;
+}
+
+.pw-pt-workspace-head p {
+  margin: 0.4rem 0 0;
+  max-width: 40rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(245, 250, 247, 0.58);
+}
+
+.pw-pt-workspace-badge {
+  flex-shrink: 0;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 250, 247, 0.16);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 250, 247, 0.55);
+}
+
+.pw-pt-workspace-body {
+  flex: 1;
+  min-height: 18rem;
+}
+
+/* Dashboard suggestion list (central view home) */
+.pw-pt-dash-lede {
+  margin: 0 0 1rem;
+  color: rgba(245, 250, 247, 0.62);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: 40rem;
+}
+
+.pw-pt-dash-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.pw-pt-dash-row {
+  appearance: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 250, 247, 0.08);
+  background: rgba(245, 250, 247, 0.03);
+  color: #f5faf7;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pw-pt-dash-row:hover {
+  background: rgba(245, 250, 247, 0.06);
+  border-color: rgba(47, 111, 85, 0.45);
+}
+
+.pw-pt-dash-check {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(47, 111, 85, 0.25);
+  color: #81c784;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.pw-pt-dash-label {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.pw-pt-dash-label strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.pw-pt-dash-label em {
+  font-style: normal;
+  font-size: 0.78rem;
+  color: rgba(245, 250, 247, 0.48);
+}
+
+.pw-pt-dash-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #81c784;
+  text-transform: lowercase;
+}
+
+/* Light mocks inside dark workspace */
+.pw-pt-workspace-body .pw-pt-caption {
+  color: rgba(245, 250, 247, 0.55);
+}
+
+.pw-pt-workspace-body .pw-pt-cli .pw-cli {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 899px) {
+  .pw-pt-rail-foot {
+    display: none;
+  }
+}

@@ -6,7 +6,7 @@ import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
 export const metadata: Metadata = marketingMetadata({
   title: "Product",
   description:
-    "Interactive PolicyWell product tour for partners — web risk, market, and claims workspaces, white-label CLI agent, CRM, in-force analyzer, mobile upload, and text/voice agents. Under three minutes.",
+    "Interactive PolicyWell product demo in one central workspace — web risk, market, claims, white-label CLI, CRM, analyzer, mobile upload, and text/voice agents. Under three minutes.",
   path: "/product",
 });
 
