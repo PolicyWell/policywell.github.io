@@ -152,8 +152,8 @@ export function ProductTour() {
         <header className="pw-pt-banner">
           <div>
             <p className="pw-pt-kicker">
-              YC application demo · exactly {formatTime(PRODUCT_AUTOPLAY_TOTAL_MS)}{" "}
-              · {totalSteps} interactive steps · MP4 download under 100MB
+              YC application demo · live walkthrough · swift MP4 download under
+              100MB · {totalSteps} interactive steps
             </p>
             <h1 className="pw-pt-banner-title">PolicyWell product demo</h1>
           </div>

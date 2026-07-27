@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Records the PolicyWell /product demo autoplay to MP4 (+ short GIF).
- * Target: exactly ~3:00, well under 100MB for YC uploads.
+ * Records a swift, fluid PolicyWell /product walkthrough to MP4 (+ GIF).
+ * Clicks through every module quickly (~6s each) at higher FPS.
+ * Target duration: ~55s · well under 100MB.
  *
  * Usage:
  *   node scripts/record-yc-demo-video.mjs [url]
- * Default URL: https://policywell.ai/product/
  */
-import { spawn, execFileSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import {
   mkdirSync,
   rmSync,
@@ -24,19 +24,29 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = join(root, "public", "downloads");
 const workDir = join(root, ".tmp", "yc-demo-record");
 const framesDir = join(workDir, "frames");
-const mp4Name = "PolicyWell-YC-Demo-3min.mp4";
+const mp4Name = "PolicyWell-YC-Demo-3min.mp4"; // keep stable public URL
 const gifName = "PolicyWell-YC-Demo-preview.gif";
 const mp4Path = join(outDir, mp4Name);
 const gifPath = join(outDir, gifName);
 
 const DEMO_URL = process.argv[2] || "https://policywell.ai/product/";
-const DURATION_SEC = 180;
-const FPS = 2; // 2 fps → 360 frames for 3:00 (smooth enough, small file)
+/** Seconds to dwell on each rail module (swift pass). */
+const DWELL_SEC = 5.5;
+const FPS = 10;
 const VIEWPORT = { width: 1280, height: 800 };
-const CHROME =
-  process.env.CHROME_PATH ||
-  "/usr/local/bin/google-chrome" ||
-  "/usr/bin/google-chrome";
+const CHROME = process.env.CHROME_PATH || "/usr/local/bin/google-chrome";
+
+const MODULES = [
+  "Dashboard",
+  "Risk",
+  "Market",
+  "Claims",
+  "CLI Agent",
+  "CRM",
+  "Analyzer",
+  "iOS App",
+  "Voice Assistant",
+];
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -46,6 +56,37 @@ function ensureClean() {
   rmSync(workDir, { recursive: true, force: true });
   mkdirSync(framesDir, { recursive: true });
   mkdirSync(outDir, { recursive: true });
+}
+
+async function clickRail(page, label) {
+  await page.evaluate((name) => {
+    const items = Array.from(
+      document.querySelectorAll(".pw-pt-rail-item, .pw-pt-rail-nav button"),
+    );
+    const btn = items.find(
+      (el) => (el.textContent || "").trim() === name,
+    );
+    if (btn) {
+      btn.click();
+      return true;
+    }
+    // Fallback: any button whose text includes the label
+    const all = Array.from(document.querySelectorAll("button"));
+    const soft = all.find((el) =>
+      (el.textContent || "").trim().includes(name),
+    );
+    soft?.click();
+  }, label);
+}
+
+async function pauseAutoplay(page) {
+  await page.evaluate(() => {
+    const btns = Array.from(document.querySelectorAll("button"));
+    const pause = btns.find((b) =>
+      /^(pause)$/i.test((b.textContent || "").trim()),
+    );
+    pause?.click();
+  });
 }
 
 async function captureFrames() {
@@ -63,52 +104,97 @@ async function captureFrames() {
     defaultViewport: VIEWPORT,
   });
 
+  let frame = 0;
   try {
     const page = await browser.newPage();
     await page.setViewport(VIEWPORT);
     await page.goto(DEMO_URL, { waitUntil: "networkidle2", timeout: 120_000 });
-
-    // Dismiss cookie banners / wait for demo shell
     await page
       .waitForSelector(".pw-pt-app, .pw-product-tour", { timeout: 60_000 })
       .catch(() => null);
 
-    // Ensure playing from start
+    // Restart then pause — we drive the rail ourselves for a swift cut
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll("button"));
-      const restart = btns.find((b) => /restart/i.test(b.textContent || ""));
-      const play = btns.find((b) => /^(play)$/i.test((b.textContent || "").trim()));
-      restart?.click();
-      // If paused showing Play, click it
-      setTimeout(() => {
-        const p = Array.from(document.querySelectorAll("button")).find((b) =>
-          /^(play)$/i.test((b.textContent || "").trim()),
-        );
-        p?.click();
-      }, 200);
+      btns.find((b) => /restart/i.test(b.textContent || ""))?.click();
     });
+    await sleep(600);
+    await pauseAutoplay(page);
+    await sleep(300);
 
-    await sleep(800);
-
-    const totalFrames = DURATION_SEC * FPS;
     const intervalMs = 1000 / FPS;
-    console.log(`Capturing ${totalFrames} frames at ${FPS} fps…`);
+    const framesPerModule = Math.round(DWELL_SEC * FPS);
 
-    for (let i = 0; i < totalFrames; i++) {
-      const file = join(framesDir, `frame-${String(i).padStart(4, "0")}.jpg`);
-      await page.screenshot({
-        path: file,
-        type: "jpeg",
-        quality: 72,
-      });
-      if (i % 20 === 0) {
-        console.log(`  frame ${i + 1}/${totalFrames}`);
+    for (let m = 0; m < MODULES.length; m++) {
+      const label = MODULES[m];
+      console.log(`Module ${m + 1}/${MODULES.length}: ${label}`);
+      await clickRail(page, label);
+      await sleep(350);
+
+      // Light in-module nudges so surfaces feel interactive
+      if (label === "Market") {
+        await page.evaluate(() => {
+          document.querySelector(".pw-pt-type-chip")?.click();
+          document.querySelector(".pw-pt-carrier-chip")?.click();
+        });
+      } else if (label === "CRM") {
+        await page.evaluate(() => {
+          document.querySelector(".pw-pt-crm-greeting")?.click();
+        });
+      } else if (label === "iOS App") {
+        await page.evaluate(() => {
+          const cards = Array.from(
+            document.querySelectorAll(".pw-pt-ios-ingest-card"),
+          );
+          cards[0]?.click();
+        });
+        await sleep(200);
+        await page.evaluate(() => {
+          const prompts = Array.from(
+            document.querySelectorAll(".pw-pt-ios-prompts button"),
+          );
+          prompts[1]?.click() || prompts[0]?.click();
+        });
+      } else if (label === "Voice Assistant") {
+        await page.evaluate(() => {
+          document
+            .querySelector(".pw-pt-ios-continue, .pw-pt-action")
+            ?.click();
+        });
+        await sleep(250);
+        await page.evaluate(() => {
+          document.querySelector(".pw-pt-ios-option")?.click();
+        });
+      } else if (label === "Risk") {
+        await page.evaluate(() => {
+          document.querySelector(".pw-pt-clickable")?.click();
+        });
+      } else if (label === "Claims") {
+        await page.evaluate(() => {
+          document.querySelector(".pw-pt-square-btn")?.click();
+        });
+      } else if (label === "Analyzer") {
+        await page.evaluate(() => {
+          document.querySelector(".pw-pt-analyzer .pw-pt-clickable")?.click();
+        });
       }
-      if (i < totalFrames - 1) await sleep(intervalMs);
+
+      for (let i = 0; i < framesPerModule; i++) {
+        const file = join(
+          framesDir,
+          `frame-${String(frame).padStart(4, "0")}.jpg`,
+        );
+        await page.screenshot({ path: file, type: "jpeg", quality: 78 });
+        frame += 1;
+        if (i < framesPerModule - 1) await sleep(intervalMs);
+      }
     }
+
+    console.log(`Captured ${frame} frames`);
   } finally {
     await browser.close();
   }
+  return frame;
 }
 
 function encodeMp4() {
@@ -127,9 +213,9 @@ function encodeMp4() {
       "-pix_fmt",
       "yuv420p",
       "-profile:v",
-      "main",
+      "high",
       "-crf",
-      "28",
+      "23",
       "-movflags",
       "+faststart",
       "-an",
@@ -140,31 +226,31 @@ function encodeMp4() {
   copyFileSync(tmpMp4, mp4Path);
 }
 
-function encodeGifPreview() {
-  // ~12s preview GIF from the first portion of frames (small file)
-  const previewFrames = Math.min(24, DURATION_SEC * FPS); // 12s at 2fps
+function encodeGifPreview(totalFrames) {
+  const previewCount = Math.min(totalFrames, FPS * 8); // ~8s preview
   const palette = join(workDir, "palette.png");
   const previewDir = join(workDir, "preview");
   mkdirSync(previewDir, { recursive: true });
-
-  // copy first N frames
-  for (let i = 0; i < previewFrames; i++) {
+  for (let i = 0; i < previewCount; i++) {
     const src = join(framesDir, `frame-${String(i).padStart(4, "0")}.jpg`);
-    const dst = join(previewDir, `frame-${String(i).padStart(4, "0")}.jpg`);
-    if (existsSync(src)) copyFileSync(src, dst);
+    if (existsSync(src)) {
+      copyFileSync(
+        src,
+        join(previewDir, `frame-${String(i).padStart(4, "0")}.jpg`),
+      );
+    }
   }
-
   console.log("Encoding GIF preview…");
   execFileSync(
     "ffmpeg",
     [
       "-y",
       "-framerate",
-      "2",
+      String(FPS),
       "-i",
       join(previewDir, "frame-%04d.jpg"),
       "-vf",
-      "fps=2,scale=640:-1:flags=lanczos,palettegen=stats_mode=diff",
+      `fps=${Math.min(8, FPS)},scale=720:-1:flags=lanczos,palettegen=stats_mode=diff`,
       palette,
     ],
     { stdio: "inherit" },
@@ -174,13 +260,13 @@ function encodeGifPreview() {
     [
       "-y",
       "-framerate",
-      "2",
+      String(FPS),
       "-i",
       join(previewDir, "frame-%04d.jpg"),
       "-i",
       palette,
       "-lavfi",
-      "fps=2,scale=640:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5",
+      `fps=${Math.min(8, FPS)},scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4`,
       "-loop",
       "0",
       gifPath,
@@ -189,21 +275,22 @@ function encodeGifPreview() {
   );
 }
 
-function writeManifest() {
+function writeManifest(totalFrames) {
+  const duration = totalFrames / FPS;
   const mp4Bytes = statSync(mp4Path).size;
   const gifBytes = existsSync(gifPath) ? statSync(gifPath).size : 0;
   const mp4Mb = mp4Bytes / (1024 * 1024);
   const gifMb = gifBytes / (1024 * 1024);
-  const note = `PolicyWell YC demo media
-========================
-MP4: ${mp4Name} (${mp4Mb.toFixed(2)} MB)
+  const note = `PolicyWell YC demo media (swift)
+================================
+MP4: ${mp4Name} (${mp4Mb.toFixed(2)} MB, ~${duration.toFixed(0)}s)
 GIF: ${gifName} (${gifMb.toFixed(2)} MB)
-Duration: ${DURATION_SEC}s @ ${FPS} fps
+Pace: ${MODULES.length} modules × ${DWELL_SEC}s @ ${FPS} fps
 Source: ${DEMO_URL}
 Generated: ${new Date().toISOString()}
 
-Both files are intentionally kept under 100MB for YC application uploads.
-Prefer the MP4 for the full 3:00 walkthrough; use the GIF as a short preview.
+Swift cut through every feature — Dashboard → Risk → Market → Claims →
+CLI → CRM → Analyzer → iOS → Voice. Under 100MB for YC uploads.
 `;
   writeFileSync(join(outDir, "MEDIA-NOTE.txt"), note);
   console.log(note);
@@ -215,10 +302,19 @@ Prefer the MP4 for the full 3:00 walkthrough; use the GIF as a short preview.
 
 async function main() {
   ensureClean();
-  await captureFrames();
+  // puppeteer-core may be missing if not installed in this shell
+  try {
+    await import("puppeteer-core");
+  } catch {
+    execFileSync("npm", ["install", "--no-save", "puppeteer-core@24"], {
+      cwd: root,
+      stdio: "inherit",
+    });
+  }
+  const totalFrames = await captureFrames();
   encodeMp4();
-  encodeGifPreview();
-  writeManifest();
+  encodeGifPreview(totalFrames);
+  writeManifest(totalFrames);
   console.log(`Wrote ${mp4Path}`);
   console.log(`Wrote ${gifPath}`);
 }
