@@ -9849,26 +9849,21 @@ button.pw-pt-side-item.is-active {
   box-shadow: none;
 }
 
-.pw-pt-workspace-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.45rem;
-  flex-shrink: 0;
-}
-
 .pw-pt-fullscreen-btn {
   appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.35rem;
   border: 1px solid rgba(245, 250, 247, 0.18);
   background: rgba(245, 250, 247, 0.06);
   color: rgba(245, 250, 247, 0.82);
-  border-radius: 999px;
-  padding: 0.28rem 0.7rem;
-  font: inherit;
-  font-size: 0.72rem;
-  font-weight: 600;
+  border-radius: 0.55rem;
+  padding: 0;
   cursor: pointer;
-  letter-spacing: 0.02em;
+  flex-shrink: 0;
 }
 
 .pw-pt-fullscreen-btn:hover,
@@ -10020,12 +10015,20 @@ button.pw-pt-side-item.is-active {
   background: #0f1413;
 }
 
+.pw-pt-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem 0;
+  border-bottom: 1px solid rgba(245, 250, 247, 0.06);
+}
+
 .pw-pt-topnav {
   display: flex;
   flex-wrap: wrap;
   gap: 0.15rem;
-  padding: 0.65rem 0.85rem 0;
-  border-bottom: 1px solid rgba(245, 250, 247, 0.06);
+  min-width: 0;
+  flex: 1;
 }
 
 .pw-pt-topnav-item {
