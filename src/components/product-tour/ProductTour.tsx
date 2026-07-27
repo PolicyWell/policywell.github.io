@@ -358,7 +358,8 @@ function ModuleView({
         <div className="pw-pt-scene">
           <CrmMock />
           <p className="pw-pt-caption">
-            Messaging: email + SMS channels for producers and consumers.
+            CRM: customer rows, suitability status, and clickable advisor
+            greetings for send / mass follow-up.
           </p>
         </div>
       );
