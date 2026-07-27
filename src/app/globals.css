@@ -11178,6 +11178,90 @@ button.pw-pt-action:disabled {
   background: #2f6f55;
 }
 
+.pw-pt-cv-line.is-db {
+  stroke: #5c7a8f;
+  stroke-width: 1.75;
+  stroke-dasharray: 4 3;
+}
+
+.pw-pt-iul-illus {
+  margin: 0.55rem 0 0;
+  padding: 0.5rem 0.45rem 0.45rem;
+  border-radius: 12px;
+  background: #f3f7f5;
+  border: 1px solid rgba(47, 111, 85, 0.18);
+}
+
+.pw-pt-iul-illus-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.55rem;
+  margin-bottom: 0.25rem;
+  padding: 0 0.15rem;
+}
+
+.pw-pt-iul-illus-head strong {
+  font-size: 0.72rem;
+  color: var(--pine);
+}
+
+.pw-pt-iul-illus-head span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.pw-pt-iul-illus svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pw-pt-iul-illus figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.15rem;
+  font-size: 0.6rem;
+  color: var(--stone);
+}
+
+.pw-pt-iul-illus figcaption span::before {
+  content: "";
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.15rem;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  border-radius: 999px;
+}
+
+.pw-pt-iul-illus figcaption .is-over::before {
+  background: #2f6f55;
+}
+
+.pw-pt-iul-illus figcaption .is-db::before {
+  background: #5c7a8f;
+}
+
+.pw-pt-iul-illus-copy {
+  margin: 0.35rem 0 0;
+  padding: 0 0.15rem;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--pine);
+}
+
+.pw-pt-ios-bubble-illus {
+  padding-bottom: 0.55rem;
+}
+
+.pw-pt-ios-chat {
+  max-height: 16.5rem;
+}
+
 .pw-pt-ios-voice-head {
   display: grid;
   justify-items: center;

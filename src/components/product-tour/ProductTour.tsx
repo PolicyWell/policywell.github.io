@@ -390,7 +390,8 @@ function ModuleView({
         <div className="pw-pt-scene pw-pt-app-scene">
           <TextVoiceAgentMock mode={agentMode} tick={agentTick} />
           <p className="pw-pt-caption">
-            Voice assistant: overfunded IUL options and a broker handoff.
+            Voice assistant: pick an IUL option to see growth illustration, then
+            connect with a broker.
           </p>
         </div>
       );
