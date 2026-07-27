@@ -38,7 +38,7 @@ export const PRODUCT_MODULES: ProductModule[] = [
   {
     id: "dashboard",
     label: "Dashboard",
-    shortLabel: "Home",
+    shortLabel: "Dashboard",
     topTab: "web",
     title: "PolicyWell command center",
     subtitle:
@@ -68,8 +68,8 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "market",
-    label: "Market",
-    shortLabel: "Market",
+    label: "Marketplace",
+    shortLabel: "Marketplace",
     topTab: "web",
     title: "Market comparison",
     subtitle:
@@ -99,8 +99,8 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "cli",
-    label: "CLI Agent",
-    shortLabel: "CLI",
+    label: "AI Agent",
+    shortLabel: "AI Agent",
     topTab: "cli",
     title: "White-label CLI agent",
     subtitle:
@@ -130,8 +130,8 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "analyzer",
-    label: "Analyzer",
-    shortLabel: "Analyze",
+    label: "Policy Analyzer",
+    shortLabel: "Analyzer",
     topTab: "crm",
     title: "In-force policy analyzer",
     subtitle:
@@ -145,8 +145,8 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "app",
-    label: "iOS App",
-    shortLabel: "App",
+    label: "Mobile App",
+    shortLabel: "Mobile",
     topTab: "app",
     title: "iOS · connect & ask",
     subtitle:
@@ -162,7 +162,7 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "agents",
-    label: "Voice Assistant",
+    label: "Voice",
     shortLabel: "Voice",
     topTab: "app",
     title: "iOS · voice to broker",
