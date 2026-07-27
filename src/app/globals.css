@@ -9874,6 +9874,15 @@ button.pw-pt-side-item.is-active {
   letter-spacing: 0.04em;
 }
 
+.pw-pt-rail-logo {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #f5faf7;
+  flex-shrink: 0;
+}
+
 .pw-pt-rail-section {
   margin: 0.15rem 0.45rem 0.35rem;
   font-size: 0.62rem;
