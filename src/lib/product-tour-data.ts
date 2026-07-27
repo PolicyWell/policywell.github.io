@@ -195,7 +195,7 @@ export const PRODUCT_DEMO_DOWNLOAD_HREF =
   "/downloads/PolicyWell-YC-Demo-3min.mp4";
 
 export const PRODUCT_DEMO_DOWNLOAD_LABEL =
-  "Download 3-min YC demo (MP4 · under 100MB)";
+  "Download YC demo (MP4 · swift · under 100MB)";
 
 /** Optional short GIF preview of the walkthrough. */
 export const PRODUCT_DEMO_GIF_HREF =
