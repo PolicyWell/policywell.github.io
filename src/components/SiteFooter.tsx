@@ -53,7 +53,7 @@ export function SiteFooter() {
             </p>
             <p className="text-xs text-moss mt-3 font-semibold">
               Built With <span aria-hidden="true">💚</span>
-              <span className="sr-only">love</span> in Boston
+              <span className="sr-only">love</span> in Atlanta
             </p>
           </div>
 

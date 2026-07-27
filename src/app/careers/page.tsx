@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
 export const metadata: Metadata = marketingMetadata({
   title: "Careers",
   description:
-    "Careers at PolicyWell — join a Boston-built team building AI infrastructure for insurance and financial services.",
+    "Careers at PolicyWell — join an Atlanta-built team building AI infrastructure for insurance and financial services.",
   path: "/careers",
 });
 
@@ -33,7 +33,7 @@ export default function CareersPage() {
           <p className="text-stone text-sm md:text-base">
             We&apos;re building the agentic layer for insurance — with high
             standards for accuracy, explainability, and human control. Built
-            with care in Boston.
+            with care in Atlanta.
           </p>
         </header>
 
