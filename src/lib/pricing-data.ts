@@ -313,7 +313,7 @@ export const PRICING = {
     primaryCta: { label: "View API Documentation", href: "/docs" },
     secondaryCta: {
       label: "Discuss Integration",
-      href: "https://www.linkedin.com/company/policywell",
+      href: "/book-a-call/",
     },
     note: "No rip-and-replace required.",
   },
