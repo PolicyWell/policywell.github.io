@@ -44,9 +44,9 @@ export default function PressPage() {
               For interviews, product briefings, or logo assets, email{" "}
               <a
                 className="underline hover:text-pine"
-                href="mailto:press@policywell.ai"
+                href="mailto:info@policywell.ai"
               >
-                press@policywell.ai
+                info@policywell.ai
               </a>{" "}
               or call{" "}
               <a className="underline hover:text-pine" href="tel:+14708870449">

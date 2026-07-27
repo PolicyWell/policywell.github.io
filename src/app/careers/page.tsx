@@ -44,9 +44,9 @@ export default function CareersPage() {
             insurance systems interest you to{" "}
             <a
               className="underline hover:text-pine"
-              href="mailto:careers@policywell.ai"
+              href="mailto:info@policywell.ai"
             >
-              careers@policywell.ai
+              info@policywell.ai
             </a>
             .
           </p>
