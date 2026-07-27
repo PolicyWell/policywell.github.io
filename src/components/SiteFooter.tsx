@@ -18,10 +18,10 @@ const SOCIALS = [
   },
 ] as const;
 
-const FOOTER_LINKS = [
-  { href: "/industries/", label: "Industries" },
-  { href: "/pricing/", label: "Pricing" },
-  { href: "/quote/#contact", label: "Request a Quote" },
+const PLATFORM_LINKS = [
+  { href: "/agent/", label: "Agent" },
+  { href: "/product/", label: "Product" },
+  { href: "/demo/", label: "Demo" },
 ] as const;
 
 const FINANCIAL_PRODUCT_LINKS = [
@@ -33,6 +33,10 @@ const COMPANY_LINKS = [
   { href: "/docs/", label: "Documentation" },
   { href: "/press/", label: "Press" },
   { href: "/careers/", label: "Careers" },
+] as const;
+
+const PRICING_LINKS = [
+  { href: "/quote/#contact", label: "Request a Quote" },
 ] as const;
 
 export function SiteFooter() {
@@ -82,11 +86,21 @@ export function SiteFooter() {
 
         <nav aria-label="Footer">
           <ul className="pw-footer-links">
-            {FOOTER_LINKS.slice(0, 1).map((link) => (
-              <li key={link.href}>
-                <Link href={link.href}>{link.label}</Link>
-              </li>
-            ))}
+            <li className="pw-footer-group">
+              <span className="pw-footer-group-title">Platform</span>
+              <ul className="pw-footer-sublinks">
+                {PLATFORM_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li className="pw-footer-group">
+              <Link href="/industries/" className="pw-footer-group-title">
+                Industries
+              </Link>
+            </li>
             <li className="pw-footer-group">
               <Link
                 href="/financial-products/"
@@ -112,11 +126,18 @@ export function SiteFooter() {
                 ))}
               </ul>
             </li>
-            {FOOTER_LINKS.slice(1).map((link) => (
-              <li key={link.href}>
-                <Link href={link.href}>{link.label}</Link>
-              </li>
-            ))}
+            <li className="pw-footer-group">
+              <Link href="/pricing/" className="pw-footer-group-title">
+                Pricing
+              </Link>
+              <ul className="pw-footer-sublinks">
+                {PRICING_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
           </ul>
         </nav>
       </div>
