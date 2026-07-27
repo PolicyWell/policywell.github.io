@@ -9875,12 +9875,13 @@ button.pw-pt-side-item.is-active {
 }
 
 .pw-pt-rail-logo {
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 8px;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 7px;
   object-fit: contain;
-  background: #f5faf7;
   flex-shrink: 0;
+  display: block;
+  background: transparent;
 }
 
 .pw-pt-rail-section {
