@@ -427,21 +427,44 @@ export function IndustriesMegaMenu({
             {INDUSTRY_CATEGORIES.map((cat) => {
               const isActive = cat.id === active.id;
               const hasChildren = cat.children.length > 0;
+              const itemClass = `pw-industries-rail-item${isActive ? " is-active" : ""}`;
+              const main = (
+                <span className="pw-industries-rail-main">
+                  <IndustryIcon id={cat.id} />
+                  <span>{cat.label}</span>
+                </span>
+              );
+
+              // Leaf industries (Catering, Retail Store, Bar, …) navigate on
+              // first click — no second "Open landing" step in the panel.
+              if (!hasChildren) {
+                return (
+                  <Link
+                    key={cat.id}
+                    href={industryCategoryHref(cat.id)}
+                    role="listitem"
+                    className={itemClass}
+                    onMouseEnter={() => setActiveId(cat.id)}
+                    onFocus={() => setActiveId(cat.id)}
+                    onClick={() => onOpenChange(false)}
+                  >
+                    {main}
+                  </Link>
+                );
+              }
+
               return (
                 <button
                   key={cat.id}
                   type="button"
                   role="listitem"
-                  className={`pw-industries-rail-item${isActive ? " is-active" : ""}`}
+                  className={itemClass}
                   onMouseEnter={() => setActiveId(cat.id)}
                   onFocus={() => setActiveId(cat.id)}
                   onClick={() => setActiveId(cat.id)}
                 >
-                  <span className="pw-industries-rail-main">
-                    <IndustryIcon id={cat.id} />
-                    <span>{cat.label}</span>
-                  </span>
-                  {hasChildren && <Chevron />}
+                  {main}
+                  <Chevron />
                 </button>
               );
             })}

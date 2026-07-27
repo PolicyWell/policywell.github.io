@@ -5430,6 +5430,7 @@ body:has(.pw-docs-app) .pw-ope {
   font: inherit;
   font-size: 0.92rem;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
   transition:
     background 0.15s ease,
