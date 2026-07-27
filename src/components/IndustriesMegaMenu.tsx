@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import {
   INDUSTRY_CATEGORIES,
@@ -163,7 +164,8 @@ function PanelBody({
   category: IndustryCategory;
   onNavigate?: () => void;
 }) {
-  // Empty children still have a dedicated Coverwatch-style landing page.
+  // Leaf categories navigate from the rail itself — keep a short confirm
+  // link in the detail pane for keyboard / hover discovery only.
   if (category.children.length === 0) {
     return (
       <div className="pw-industries-note">
@@ -173,14 +175,7 @@ function PanelBody({
           className="pw-industries-note-link"
           onClick={onNavigate}
         >
-          Open {category.label} landing
-        </Link>
-        <Link
-          href="/industries/"
-          className="pw-industries-note-link"
-          onClick={onNavigate}
-        >
-          ← Back to all industries
+          Continue to {category.label}
         </Link>
       </div>
     );
@@ -230,6 +225,7 @@ export function IndustriesMegaMenu({
 }: IndustriesMegaMenuProps) {
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const [activeId, setActiveId] = useState("");
   const active =
     INDUSTRY_CATEGORIES.find((c) => c.id === activeId) ?? INDUSTRY_CATEGORIES[0];
@@ -242,6 +238,13 @@ export function IndustriesMegaMenu({
     setActiveId("");
     onOpenChange(false);
     onNavigate?.();
+  }
+
+  /** Navigate leaf industries in one gesture (avoids iOS hover/re-render double-tap). */
+  function goLeaf(categoryId: string) {
+    const href = industryCategoryHref(categoryId);
+    router.push(href);
+    closeAll();
   }
 
   useEffect(() => {
@@ -375,16 +378,16 @@ export function IndustriesMegaMenu({
                   <Chevron />
                 </button>
               ) : (
-                <Link
-                  href={industryCategoryHref(cat.id)}
+                <button
+                  type="button"
                   className="pw-industries-rail-item"
-                  onClick={closeAll}
+                  onClick={() => goLeaf(cat.id)}
                 >
                   <span className="pw-industries-rail-main">
                     <IndustryIcon id={cat.id} />
                     <span>{cat.label}</span>
                   </span>
-                </Link>
+                </button>
               )}
             </div>
           ))}
@@ -435,21 +438,19 @@ export function IndustriesMegaMenu({
                 </span>
               );
 
-              // Leaf industries (Catering, Retail Store, Bar, …) navigate on
-              // first click — no second "Open landing" step in the panel.
+              // Leaf industries navigate on the first tap/click — no hover
+              // setState (iOS) and no second "Open landing" step.
               if (!hasChildren) {
                 return (
-                  <Link
+                  <button
                     key={cat.id}
-                    href={industryCategoryHref(cat.id)}
+                    type="button"
                     role="listitem"
                     className={itemClass}
-                    onMouseEnter={() => setActiveId(cat.id)}
-                    onFocus={() => setActiveId(cat.id)}
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => goLeaf(cat.id)}
                   >
                     {main}
-                  </Link>
+                  </button>
                 );
               }
 
@@ -470,10 +471,7 @@ export function IndustriesMegaMenu({
             })}
           </div>
           <div className="pw-industries-detail">
-            <PanelBody
-              category={active}
-              onNavigate={() => onOpenChange(false)}
-            />
+            <PanelBody category={active} onNavigate={closeAll} />
           </div>
         </div>
       )}
