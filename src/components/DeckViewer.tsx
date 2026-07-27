@@ -16,10 +16,10 @@ export const DECK_SLIDES = Array.from({ length: 12 }, (_, i) => {
 export function DeckViewer({
   compact = false,
 }: {
-  /** Home preview: first few slides + CTA; full page shows all. */
+  /** Kept for call-site compatibility; all 12 slides are always available. */
   compact?: boolean;
 }) {
-  const slides = compact ? DECK_SLIDES.slice(0, 3) : DECK_SLIDES;
+  const slides = DECK_SLIDES;
   const [index, setIndex] = useState(0);
   const touchX = useRef<number | null>(null);
   const current = slides[index] ?? slides[0];
@@ -32,7 +32,7 @@ export function DeckViewer({
   }
 
   return (
-    <div className="space-y-4">
+    <div className={`space-y-4${compact ? " pw-deck-compact" : ""}`}>
       <div className="pw-deck-frame">
         <div
           className="pw-deck-slide"
@@ -71,7 +71,6 @@ export function DeckViewer({
           </button>
           <span className="pw-deck-count">
             {index + 1} / {slides.length}
-            {compact ? " · preview" : ""}
           </span>
           <button
             type="button"
