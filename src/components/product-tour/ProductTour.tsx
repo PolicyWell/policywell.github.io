@@ -7,7 +7,6 @@ import { SiteNav } from "@/components/ui";
 import {
   PRODUCT_AUTOPLAY_TOTAL_MS,
   PRODUCT_DEMO_DOWNLOAD_HREF,
-  PRODUCT_DEMO_DOWNLOAD_LABEL,
   PRODUCT_DEMO_GIF_HREF,
   PRODUCT_MODULES,
   PRODUCT_TOP_TABS,
@@ -153,8 +152,8 @@ export function ProductTour() {
         <header className="pw-pt-banner">
           <div>
             <p className="pw-pt-kicker">
-              YC application demo · live walkthrough · swift MP4 download under
-              100MB · {totalSteps} interactive steps
+              YC application demo · live walkthrough · {totalSteps} interactive
+              steps
             </p>
             <h1 className="pw-pt-banner-title">PolicyWell product demo</h1>
           </div>
@@ -252,10 +251,8 @@ export function ProductTour() {
               ))}
             </nav>
             <div className="pw-pt-rail-foot">
-              <a href={PRODUCT_DEMO_DOWNLOAD_HREF} download="PolicyWell-YC-Demo-3min.mp4">
-                Download YC MP4
-              </a>
               <Link href="/book-a-call/">Book a call</Link>
+              <Link href="/agent">Open live</Link>
             </div>
           </aside>
 
@@ -313,15 +310,11 @@ export function ProductTour() {
         </div>
 
         <footer className="pw-pt-foot">
-          <a
-            href={PRODUCT_DEMO_DOWNLOAD_HREF}
-            className="pw-btn"
-            download="PolicyWell-YC-Demo-3min.mp4"
-          >
-            {PRODUCT_DEMO_DOWNLOAD_LABEL}
-          </a>
-          <Link href="/book-a-call/" className="pw-btn pw-btn-secondary">
+          <Link href="/book-a-call/" className="pw-btn">
             Book a call
+          </Link>
+          <Link href="/agent" className="pw-btn pw-btn-secondary">
+            Open live workspace
           </Link>
           <Link href="/demo/" className="pw-pt-link">
             Lifecycle demo
