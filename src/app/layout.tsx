@@ -19,7 +19,7 @@ const manrope = Manrope({
 const SITE_URL = "https://policywell.ai";
 const OG_IMAGE = `${SITE_URL}/og-image.png?v=20260723c`;
 /** Bump to force browsers/CDNs/Google to pick up refreshed favicons. */
-const ICON_V = "20260724a";
+const ICON_V = "20260727a";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -32,8 +32,16 @@ export const metadata: Metadata = {
   applicationName: "PolicyWell",
   icons: {
     icon: [
-      { url: `/favicon.ico?v=${ICON_V}`, sizes: "any" },
-      { url: `/favicon.svg?v=${ICON_V}`, type: "image/svg+xml" },
+      {
+        url: `/favicon-32.png?v=${ICON_V}`,
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: `/favicon-64.png?v=${ICON_V}`,
+        sizes: "64x64",
+        type: "image/png",
+      },
       {
         url: `/favicon-48.png?v=${ICON_V}`,
         sizes: "48x48",
@@ -49,6 +57,8 @@ export const metadata: Metadata = {
         sizes: "192x192",
         type: "image/png",
       },
+      { url: `/favicon.svg?v=${ICON_V}`, type: "image/svg+xml" },
+      { url: `/favicon.ico?v=${ICON_V}`, sizes: "48x48" },
     ],
     apple: [
       {
@@ -57,7 +67,7 @@ export const metadata: Metadata = {
         type: "image/png",
       },
     ],
-    shortcut: [`/favicon.ico?v=${ICON_V}`],
+    shortcut: [`/favicon-64.png?v=${ICON_V}`],
   },
   appleWebApp: {
     capable: true,
@@ -104,16 +114,22 @@ export default function RootLayout({
       className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}
     >
       <head>
-        {/* Global favicons for browsers + Google Search results */}
         <meta
           name="google-site-verification"
           content="YWZ2M2Q486Ke411V0zJ6FkhO6ykrmZN9WYEexjrutF4"
         />
-        <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="any" />
+        {/* Crisp multi-size PNGs from the 1024 master; ICO last for legacy browsers */}
         <link
           rel="icon"
-          type="image/svg+xml"
-          href={`/favicon.svg?v=${ICON_V}`}
+          type="image/png"
+          sizes="32x32"
+          href={`/favicon-32.png?v=${ICON_V}`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="64x64"
+          href={`/favicon-64.png?v=${ICON_V}`}
         />
         <link
           rel="icon"
@@ -134,7 +150,15 @@ export default function RootLayout({
           href={`/icon-192.png?v=${ICON_V}`}
         />
         <link
+          rel="icon"
+          type="image/svg+xml"
+          href={`/favicon.svg?v=${ICON_V}`}
+        />
+        <link rel="shortcut icon" href={`/favicon-64.png?v=${ICON_V}`} />
+        <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="48x48" />
+        <link
           rel="apple-touch-icon"
+          sizes="180x180"
           href={`/apple-touch-icon.png?v=${ICON_V}`}
         />
         <link rel="manifest" href={`/site.webmanifest?v=${ICON_V}`} />
