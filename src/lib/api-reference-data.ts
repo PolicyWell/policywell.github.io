@@ -931,7 +931,8 @@ export const API_GROUPS: readonly ApiGroup[] = [
         },
         notes: [
           "Email or phone is required.",
-          "Public site /quote maps to this intake shape.",
+          "Public site /quote?line=commercial maps to this intake shape.",
+          "Life and annuity requests use POST /quotes/personal (see below).",
           "Does not return carrier-bound premiums.",
         ],
       },
@@ -955,6 +956,8 @@ export const API_GROUPS: readonly ApiGroup[] = [
               email: "alex@example.com",
               phone: "+14155550100",
             },
+            focus: ["review_current_policies"],
+            policy_notes: "Existing IUL, $500k face, issued 2019.",
           },
         },
         responseExample: {
@@ -968,6 +971,11 @@ export const API_GROUPS: readonly ApiGroup[] = [
             "Indicative decision support only — not a bindable quote or underwriting decision.",
           created_at: "2026-07-25T12:05:00Z",
         },
+        notes: [
+          "Public site life/annuity pages and /quote?line=personal map to this intake.",
+          "Focus on current coverage and policies — not business revenue.",
+          "Does not return carrier-bound premiums.",
+        ],
       },
       {
         id: "list-quotes",

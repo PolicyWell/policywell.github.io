@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
 export const metadata: Metadata = marketingMetadata({
   title: "Get a Quote",
   description:
-    "Request a PolicyWell coverage quote. A licensed advisor reviews every request.",
+    "Request a PolicyWell quote for business insurance, or a life and annuity coverage review. A licensed advisor reviews every request.",
   path: "/quote",
 });
 
@@ -23,7 +23,7 @@ export default function QuotePage() {
       <SiteNav />
       <main className="pw-shell py-8 md:py-12 min-w-0 w-full">
         <section id="contact" className="pw-quote-page">
-          <QuoteRequestForm />
+          <QuoteRequestForm allowLineSwitch />
         </section>
       </main>
     </div>

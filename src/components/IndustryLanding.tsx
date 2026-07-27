@@ -39,7 +39,12 @@ export function IndustryLanding({ path }: { path: string }) {
   /** Standalone hubs (Retail, Bar, Catering) have no children or siblings. */
   const isStandaloneHub = children.length === 0 && !parent;
   const isAnnuity = page.path === "/annuities" || page.path.startsWith("/annuities/");
-  const primaryCtaLabel = isAnnuity ? "Get Illustration" : "Get a quote";
+  const isPersonalLine = page.categoryId === "financial-products";
+  const primaryCtaLabel = isAnnuity
+    ? "Get Illustration"
+    : isPersonalLine
+      ? "Review coverage"
+      : "Get a quote";
 
   /** Hub pages browse their children; micro pages browse sibling verticals. */
   const nestItems = children.length > 0 ? children : siblings;
@@ -178,7 +183,11 @@ export function IndustryLanding({ path }: { path: string }) {
 
         <section id="contact" className="pw-industry-contact">
           <div className="pw-shell">
-            <QuoteRequestForm defaultIndustry={page.label} />
+            <QuoteRequestForm
+              line={isPersonalLine ? "personal" : "commercial"}
+              defaultIndustry={page.label}
+              defaultPath={page.path}
+            />
           </div>
         </section>
       </main>
