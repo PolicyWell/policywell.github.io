@@ -148,11 +148,6 @@ export default function RootLayout({
           sizes="192x192"
           href={`/icon-192.png?v=${ICON_V}`}
         />
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href={`/favicon.svg?v=${ICON_V}`}
-        />
         <link rel="shortcut icon" href={`/favicon-64.png?v=${ICON_V}`} />
         <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="48x48" />
         <link
