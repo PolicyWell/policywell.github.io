@@ -161,7 +161,7 @@ export function ProductTour() {
             <div className="pw-pt-rail-brand">
               <img
                 className="pw-pt-rail-logo"
-                src="/favicon.svg"
+                src="/logo-64.png"
                 alt="PolicyWell"
                 width={32}
                 height={32}
