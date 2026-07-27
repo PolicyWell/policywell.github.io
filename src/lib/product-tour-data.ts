@@ -31,7 +31,7 @@ export const PRODUCT_MODULES: ProductModule[] = [
     topTab: "web",
     title: "PolicyWell command center",
     subtitle:
-      "One workspace for risk, market, claims, CLI, CRM, and in-force analysis — switch modules from the rail.",
+      "One workspace for risk, market, claims, CLI, messaging, and in-force analysis — switch modules from the rail.",
     durationMs: 14000,
   },
   {
@@ -76,13 +76,13 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "crm",
-    label: "CRM",
-    shortLabel: "CRM",
+    label: "Messaging",
+    shortLabel: "Inbox",
     topTab: "crm",
-    title: "Follow-up CRM",
+    title: "Email & SMS messaging",
     subtitle:
-      "Queues for policyholders, gap seekers, and producers — next actions from live context.",
-    durationMs: 16000,
+      "One inbox for producers and consumers — keep email and SMS on the same contact thread.",
+    durationMs: 20000,
   },
   {
     id: "analyzer",
@@ -119,7 +119,7 @@ export const PRODUCT_MODULES: ProductModule[] = [
 export const PRODUCT_TOP_TABS: { id: ProductTopTab; label: string }[] = [
   { id: "web", label: "Web product" },
   { id: "cli", label: "CLI agent" },
-  { id: "crm", label: "CRM & analyzer" },
+  { id: "crm", label: "Messaging & analyzer" },
   { id: "app", label: "App & agents" },
 ];
 

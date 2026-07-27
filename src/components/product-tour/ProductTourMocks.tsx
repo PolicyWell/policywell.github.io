@@ -561,83 +561,426 @@ export function ClaimsTrackerMock() {
 }
 
 export function CrmMock() {
-  const queues = [
+  type Channel = "email" | "sms";
+  type Audience = "consumer" | "producer";
+  type Msg = { id: string; from: "you" | "them"; channel: Channel; body: string; at: string };
+
+  type Thread = {
+    id: string;
+    name: string;
+    role: string;
+    audience: Audience;
+    email: string;
+    phone: string;
+    preview: string;
+    unread?: boolean;
+    messages: Msg[];
+  };
+
+  const threads: Thread[] = [
     {
-      id: "holders",
-      title: "Policyholders",
-      items: [
-        { id: "alex", label: "Annual review due · Alex Rivera" },
-        { id: "jordan", label: "Statement ready · Jordan Lee" },
+      id: "alex",
+      name: "Alex Rivera",
+      role: "Policyholder · IUL",
+      audience: "consumer",
+      email: "alex.rivera@email.com",
+      phone: "(404) 555-0142",
+      preview: "Can we move my review to Thursday?",
+      unread: true,
+      messages: [
+        {
+          id: "a1",
+          from: "you",
+          channel: "email",
+          body: "Hi Alex — your annual IUL review is due next week. Want me to send the funding summary?",
+          at: "Mon 9:12a",
+        },
+        {
+          id: "a2",
+          from: "them",
+          channel: "email",
+          body: "Yes please. Also, can we move my review to Thursday afternoon?",
+          at: "Mon 10:04a",
+        },
+        {
+          id: "a3",
+          from: "you",
+          channel: "sms",
+          body: "Thursday 2:30pm works. I’ll text a calendar link.",
+          at: "Mon 10:08a",
+        },
+        {
+          id: "a4",
+          from: "them",
+          channel: "sms",
+          body: "Perfect — thanks.",
+          at: "Mon 10:09a",
+        },
       ],
     },
     {
-      id: "gaps",
-      title: "Gap / new coverage",
-      items: [
-        { id: "harbor", label: "Umbrella gap · Harbor Fab" },
-        { id: "acme", label: "Cyber quote requested · Acme Retail" },
+      id: "jordan",
+      name: "Jordan Lee",
+      role: "Policyholder · Term",
+      audience: "consumer",
+      email: "jordan.lee@email.com",
+      phone: "(678) 555-0198",
+      preview: "Statement looks good — any lapse risk?",
+      messages: [
+        {
+          id: "j1",
+          from: "you",
+          channel: "email",
+          body: "Jordan, your Q2 statement is ready. Cash value is up 3.1% vs prior quarter.",
+          at: "Sun 4:20p",
+        },
+        {
+          id: "j2",
+          from: "them",
+          channel: "email",
+          body: "Statement looks good — any lapse risk if I skip August?",
+          at: "Sun 5:01p",
+        },
+        {
+          id: "j3",
+          from: "you",
+          channel: "sms",
+          body: "Skipping August bumps lapse risk from 12% → ~28%. Want a short catch-up plan?",
+          at: "Sun 5:06p",
+        },
       ],
     },
     {
-      id: "producers",
-      title: "Producers",
-      items: [
-        { id: "casey", label: "Follow up · Casey (IMO)" },
-        { id: "mutual-prod", label: "Submit pack · Mutual of Omaha" },
+      id: "harbor",
+      name: "Maya Chen",
+      role: "Harbor Fab · Commercial",
+      audience: "consumer",
+      email: "maya@harborfab.com",
+      phone: "(312) 555-0177",
+      preview: "Umbrella quote — still under $1M?",
+      unread: true,
+      messages: [
+        {
+          id: "h1",
+          from: "you",
+          channel: "email",
+          body: "Maya — peer median umbrella for your revenue band is $2M. You’re at $1M today.",
+          at: "Fri 1:14p",
+        },
+        {
+          id: "h2",
+          from: "them",
+          channel: "email",
+          body: "Got it. Can you send the $2M umbrella quote — still under $1M premium delta?",
+          at: "Fri 2:02p",
+        },
+        {
+          id: "h3",
+          from: "you",
+          channel: "sms",
+          body: "Draft quote is +$1,840/yr. Want me to email the full comparison pack?",
+          at: "Fri 2:11p",
+        },
+      ],
+    },
+    {
+      id: "casey",
+      name: "Casey Nguyen",
+      role: "Producer · IMO",
+      audience: "producer",
+      email: "casey@northpointimo.com",
+      phone: "(470) 555-0110",
+      preview: "Need Rivera illustration before Thursday.",
+      unread: true,
+      messages: [
+        {
+          id: "c1",
+          from: "them",
+          channel: "email",
+          body: "Need the Rivera IUL illustration before Thursday’s review. Can you push the latest score?",
+          at: "Mon 8:40a",
+        },
+        {
+          id: "c2",
+          from: "you",
+          channel: "email",
+          body: "Score is 78 KEEP IN FORCE. I’ll attach the education-rider note and funding chart.",
+          at: "Mon 8:55a",
+        },
+        {
+          id: "c3",
+          from: "them",
+          channel: "sms",
+          body: "Thanks — text me when the pack is in the portal.",
+          at: "Mon 9:01a",
+        },
+      ],
+    },
+    {
+      id: "mutual-prod",
+      name: "Sam Okonkwo",
+      role: "Producer · Mutual of Omaha",
+      audience: "producer",
+      email: "sam.okonkwo@mutualofomaha.com",
+      phone: "(402) 555-0163",
+      preview: "Submit pack received — underwriting Qs.",
+      messages: [
+        {
+          id: "m1",
+          from: "you",
+          channel: "email",
+          body: "Sam — submit pack for Harbor Fab umbrella is uploaded. Appetite match looks clean.",
+          at: "Thu 11:20a",
+        },
+        {
+          id: "m2",
+          from: "them",
+          channel: "email",
+          body: "Received. Two underwriting questions on contractor exposure — can you clarify by EOD?",
+          at: "Thu 12:05p",
+        },
+        {
+          id: "m3",
+          from: "you",
+          channel: "sms",
+          body: "Clarifying now. I’ll email answers + loss runs within the hour.",
+          at: "Thu 12:12p",
+        },
+      ],
+    },
+    {
+      id: "priya",
+      name: "Priya Shah",
+      role: "Producer · Agency",
+      audience: "producer",
+      email: "priya@shahagency.com",
+      phone: "(615) 555-0184",
+      preview: "Client wants SMS reminders for premium.",
+      messages: [
+        {
+          id: "p1",
+          from: "them",
+          channel: "sms",
+          body: "Client wants SMS reminders 5 days before premium. Can PolicyWell own that thread?",
+          at: "Wed 3:30p",
+        },
+        {
+          id: "p2",
+          from: "you",
+          channel: "sms",
+          body: "Yes — we’ll keep email for docs and SMS for reminders on the same contact.",
+          at: "Wed 3:36p",
+        },
+        {
+          id: "p3",
+          from: "them",
+          channel: "email",
+          body: "Great. Please CC me on the first reminder so I can coach the conversation.",
+          at: "Wed 3:48p",
+        },
       ],
     },
   ];
-  const [activeQueue, setActiveQueue] = useState("holders");
-  const [activeItem, setActiveItem] = useState("alex");
-  const current = queues.find((q) => q.id === activeQueue) ?? queues[0];
-  const item =
-    current.items.find((i) => i.id === activeItem) ??
-    queues.flatMap((q) => q.items).find((i) => i.id === activeItem);
+
+  const drafts: Record<Channel, string> = {
+    email:
+      "Sharing the updated funding summary and Thursday hold. Reply here or text if timing changes.",
+    sms: "Thursday 2:30pm confirmed. Calendar link incoming.",
+  };
+
+  const [activeId, setActiveId] = useState("alex");
+  const [channel, setChannel] = useState<Channel>("email");
+  const [audienceFilter, setAudienceFilter] = useState<"all" | Audience>("all");
+  const [sent, setSent] = useState<Msg[]>([]);
+  const [composer, setComposer] = useState(drafts.email);
+
+  const active = threads.find((t) => t.id === activeId) ?? threads[0];
+  const filtered = threads.filter(
+    (t) => audienceFilter === "all" || t.audience === audienceFilter,
+  );
+  const consumers = filtered.filter((t) => t.audience === "consumer");
+  const producers = filtered.filter((t) => t.audience === "producer");
+
+  const threadMessages = [
+    ...active.messages.filter((m) => m.channel === channel),
+    ...sent.filter((m) => m.id.startsWith(active.id) && m.channel === channel),
+  ];
+
+  function openThread(id: string) {
+    setActiveId(id);
+    setSent([]);
+    const thread = threads.find((t) => t.id === id);
+    const preferred =
+      thread?.messages[thread.messages.length - 1]?.channel ?? "email";
+    setChannel(preferred);
+    setComposer(drafts[preferred]);
+  }
+
+  function switchChannel(next: Channel) {
+    setChannel(next);
+    setComposer(drafts[next]);
+  }
+
+  function sendMessage() {
+    const body = composer.trim();
+    if (!body) return;
+    setSent((prev) => [
+      ...prev,
+      {
+        id: `${active.id}-out-${prev.length + 1}`,
+        from: "you",
+        channel,
+        body,
+        at: "Just now",
+      },
+    ]);
+    setComposer("");
+  }
+
+  function renderGroup(title: string, items: Thread[]) {
+    if (items.length === 0) return null;
+    return (
+      <div className="pw-pt-msg-group">
+        <p className="pw-pt-msg-group-title">{title}</p>
+        <ul>
+          {items.map((t) => (
+            <li key={t.id}>
+              <button
+                type="button"
+                className={`pw-pt-msg-thread${
+                  activeId === t.id ? " is-selected" : ""
+                }`}
+                onClick={() => openThread(t.id)}
+              >
+                <span className="pw-pt-msg-thread-top">
+                  <strong>{t.name}</strong>
+                  {t.unread ? <span className="pw-pt-msg-unread" /> : null}
+                </span>
+                <em>{t.role}</em>
+                <span className="pw-pt-msg-preview">{t.preview}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   return (
-    <div className="pw-pt-crm">
-      {queues.map((q) => (
-        <div
-          key={q.id}
-          className={`pw-pt-card pw-pt-clickable-panel${
-            activeQueue === q.id ? " is-selected" : ""
-          }`}
-        >
-          <button
-            type="button"
-            className="pw-pt-panel-head"
-            onClick={() => {
-              setActiveQueue(q.id);
-              setActiveItem(q.items[0].id);
-            }}
-          >
-            <p className="pw-pt-card-title">{q.title}</p>
-          </button>
-          <ul className="pw-pt-crm-list pw-pt-docs-click">
-            {q.items.map((entry) => (
-              <li key={entry.id}>
-                <button
-                  type="button"
-                  className={`pw-pt-square-btn${
-                    activeItem === entry.id ? " is-selected" : ""
-                  }`}
-                  onClick={() => {
-                    setActiveQueue(q.id);
-                    setActiveItem(entry.id);
-                  }}
-                >
-                  <strong>{entry.label}</strong>
-                  <span>Open follow-up</span>
-                </button>
-              </li>
+    <div className="pw-pt-msg">
+      <aside className="pw-pt-msg-rail" aria-label="Conversations">
+        <div className="pw-pt-msg-rail-head">
+          <p className="pw-pt-card-title">Messaging</p>
+          <div className="pw-pt-msg-filters" role="group" aria-label="Audience">
+            {(
+              [
+                ["all", "All"],
+                ["consumer", "Consumers"],
+                ["producer", "Producers"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                className={audienceFilter === id ? "is-on" : ""}
+                aria-pressed={audienceFilter === id}
+                onClick={() => setAudienceFilter(id)}
+              >
+                {label}
+              </button>
             ))}
-          </ul>
+          </div>
         </div>
-      ))}
-      <p className="pw-pt-inspect pw-pt-inspect-span" role="status">
-        <strong>{current.title}</strong>
-        {item ? ` · ${item.label}` : ""} — click any square to switch.
-      </p>
+        {renderGroup("Consumers", consumers)}
+        {renderGroup("Producers", producers)}
+      </aside>
+
+      <section className="pw-pt-msg-pane" aria-label="Conversation">
+        <header className="pw-pt-msg-pane-head">
+          <div>
+            <h3>{active.name}</h3>
+            <p>
+              {active.role} ·{" "}
+              {channel === "email" ? active.email : active.phone}
+            </p>
+          </div>
+          <div className="pw-pt-msg-channels" role="tablist" aria-label="Channel">
+            <button
+              type="button"
+              role="tab"
+              className={channel === "email" ? "is-on" : ""}
+              aria-selected={channel === "email"}
+              onClick={() => switchChannel("email")}
+            >
+              Email
+            </button>
+            <button
+              type="button"
+              role="tab"
+              className={channel === "sms" ? "is-on" : ""}
+              aria-selected={channel === "sms"}
+              onClick={() => switchChannel("sms")}
+            >
+              SMS
+            </button>
+          </div>
+        </header>
+
+        <div className="pw-pt-msg-log" role="log">
+          {threadMessages.length === 0 ? (
+            <p className="pw-pt-msg-empty">
+              No {channel === "email" ? "email" : "SMS"} messages yet — start
+              the thread below.
+            </p>
+          ) : (
+            threadMessages.map((m) => (
+              <div
+                key={m.id}
+                className={`pw-pt-msg-bubble${m.from === "you" ? " is-you" : ""}`}
+              >
+                <div className="pw-pt-msg-meta">
+                  <strong>{m.from === "you" ? "You" : active.name}</strong>
+                  <span>
+                    {m.channel.toUpperCase()} · {m.at}
+                  </span>
+                </div>
+                <p>{m.body}</p>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="pw-pt-msg-compose">
+          <label className="pw-pt-msg-compose-label" htmlFor="pw-pt-msg-input">
+            {channel === "email" ? "Email reply" : "SMS reply"}
+          </label>
+          <textarea
+            id="pw-pt-msg-input"
+            rows={3}
+            value={composer}
+            onChange={(e) => setComposer(e.target.value)}
+            placeholder={
+              channel === "email"
+                ? "Write an email to this contact…"
+                : "Write an SMS…"
+            }
+          />
+          <div className="pw-pt-msg-compose-actions">
+            <span className="pw-pt-msg-channel-hint">
+              Sending via <strong>{channel === "email" ? "Email" : "SMS"}</strong>{" "}
+              · same contact thread
+            </span>
+            <button
+              type="button"
+              className="pw-pt-action"
+              onClick={sendMessage}
+              disabled={!composer.trim()}
+            >
+              Send {channel === "email" ? "email" : "SMS"}
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
