@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Builds public/downloads/PolicyWell-YC-Demo-3min.zip
- * Lightweight CSS/HTML package for YC application (<100MB).
+ * Includes MP4 + GIF preview + offline HTML when available (<100MB).
  */
 import { execFileSync } from "node:child_process";
 import {
@@ -10,6 +10,7 @@ import {
   rmSync,
   existsSync,
   statSync,
+  copyFileSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -34,30 +35,23 @@ const BEATS = [
 const readme = `PolicyWell — YC Product Demo (3:00)
 =====================================
 
-WHAT THIS IS
-------------
-A lightweight, downloadable companion to the interactive PolicyWell product
-demo used for YC applications. No video file — CSS/HTML only — well under
-the 100MB limit.
+PRIMARY DOWNLOAD (recommended for YC upload)
+--------------------------------------------
+PolicyWell-YC-Demo-3min.mp4
+  Full 3:00 screen recording of the interactive product demo.
+  Well under 100MB.
 
-LIVE INTERACTIVE DEMO (recommended for partners)
-------------------------------------------------
+PolicyWell-YC-Demo-preview.gif
+  Short animated preview clip.
+
+LIVE INTERACTIVE DEMO
+---------------------
 https://policywell.ai/product/
 
-Open that URL and press Play. Autoplay walks every feature step-by-step
-in exactly 3:00. You can Pause, Next/Prev, or click the rail to jump.
-
-OFFLINE FILES IN THIS ZIP
--------------------------
-- README.txt          This file
-- TIMING.txt          Second-by-second beat sheet (3:00)
-- offline-demo.html   Offline step player (open in any browser)
-- SIZE-NOTE.txt       Confirms package stays under 100MB
-
-SIZE
-----
-This package is intentionally tiny (HTML/text only, no video/audio).
-Target: well under 100MB for YC upload limits.
+ALSO IN THIS ZIP
+----------------
+- README.txt / TIMING.txt / offline-demo.html / SIZE-NOTE.txt
+- The MP4 and GIF when present in public/downloads/
 
 CONTACT
 -------
@@ -432,6 +426,15 @@ writeFileSync(join(stageDir, "README.txt"), readme);
 writeFileSync(join(stageDir, "TIMING.txt"), timing);
 writeFileSync(join(stageDir, "SIZE-NOTE.txt"), sizeNote);
 writeFileSync(join(stageDir, "offline-demo.html"), offlineHtml);
+
+const mp4Src = join(outDir, "PolicyWell-YC-Demo-3min.mp4");
+const gifSrc = join(outDir, "PolicyWell-YC-Demo-preview.gif");
+if (existsSync(mp4Src)) {
+  copyFileSync(mp4Src, join(stageDir, "PolicyWell-YC-Demo-3min.mp4"));
+}
+if (existsSync(gifSrc)) {
+  copyFileSync(gifSrc, join(stageDir, "PolicyWell-YC-Demo-preview.gif"));
+}
 
 if (existsSync(zipPath)) rmSync(zipPath);
 
