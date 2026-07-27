@@ -76,13 +76,13 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "crm",
-    label: "Messaging",
-    shortLabel: "Inbox",
+    label: "CRM",
+    shortLabel: "CRM",
     topTab: "crm",
-    title: "Email & SMS messaging",
+    title: "Customer book & follow-up",
     subtitle:
-      "One inbox for producers and consumers — keep email and SMS on the same contact thread.",
-    durationMs: 20000,
+      "Customer rows with policy and protection suitability — click a greeting to send or mass follow up.",
+    durationMs: 22000,
   },
   {
     id: "analyzer",
@@ -119,7 +119,7 @@ export const PRODUCT_MODULES: ProductModule[] = [
 export const PRODUCT_TOP_TABS: { id: ProductTopTab; label: string }[] = [
   { id: "web", label: "Web product" },
   { id: "cli", label: "CLI agent" },
-  { id: "crm", label: "Messaging & analyzer" },
+  { id: "crm", label: "CRM & analyzer" },
   { id: "app", label: "iOS app & voice" },
 ];
 
