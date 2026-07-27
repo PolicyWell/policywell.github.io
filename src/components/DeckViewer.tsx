@@ -32,7 +32,7 @@ export function DeckViewer({
   }
 
   return (
-    <div className={`space-y-4${compact ? " pw-deck-compact" : ""}`}>
+    <div className="space-y-4">
       <div className="pw-deck-frame">
         <div
           className="pw-deck-slide"
