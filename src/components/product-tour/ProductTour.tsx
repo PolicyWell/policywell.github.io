@@ -1,17 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 import {
-  PRODUCT_AUTOPLAY_TOTAL_MS,
-  PRODUCT_DEMO_DOWNLOAD_HREF,
-  PRODUCT_DEMO_GIF_HREF,
   PRODUCT_MODULES,
   PRODUCT_TOP_TABS,
-  activeDemoStep,
-  demoStepIndex,
   type ProductModuleId,
   type ProductTopTab,
 } from "@/lib/product-tour-data";
@@ -25,7 +20,9 @@ import {
   TextVoiceAgentMock,
 } from "@/components/product-tour/ProductTourMocks";
 
-const TOTAL_SEC = Math.round(PRODUCT_AUTOPLAY_TOTAL_MS / 1000);
+const TOTAL_SEC = Math.round(
+  PRODUCT_MODULES.reduce((sum, m) => sum + m.durationMs, 0) / 1000,
+);
 
 export function ProductTour() {
   const [activeId, setActiveId] = useState<ProductModuleId>("dashboard");
@@ -39,26 +36,6 @@ export function ProductTour() {
   const topTab = module.topTab;
 
   const moduleProgress = Math.min(1, elapsedInModule / module.durationMs);
-  const globalElapsed = useMemo(() => {
-    const prior = PRODUCT_MODULES.slice(0, moduleIndex).reduce(
-      (sum, m) => sum + m.durationMs,
-      0,
-    );
-    return prior + elapsedInModule;
-  }, [moduleIndex, elapsedInModule]);
-  const globalProgress = Math.min(
-    1,
-    globalElapsed / PRODUCT_AUTOPLAY_TOTAL_MS,
-  );
-
-  const step = activeDemoStep(module, moduleProgress);
-  const stepIdx = demoStepIndex(module, moduleProgress);
-  const totalSteps = PRODUCT_MODULES.reduce((n, m) => n + m.steps.length, 0);
-  const completedSteps =
-    PRODUCT_MODULES.slice(0, moduleIndex).reduce(
-      (n, m) => n + m.steps.length,
-      0,
-    ) + stepIdx;
 
   const selectModule = useCallback((id: ProductModuleId) => {
     setActiveId(id);
@@ -149,74 +126,6 @@ export function ProductTour() {
     <div className="pw-product-tour">
       <SiteNav />
       <div className="pw-shell pw-pt-shell">
-        <header className="pw-pt-banner">
-          <div>
-            <p className="pw-pt-kicker">
-              YC application demo · live walkthrough · {totalSteps} interactive
-              steps
-            </p>
-            <h1 className="pw-pt-banner-title">PolicyWell product demo</h1>
-          </div>
-          <div className="pw-pt-controls" aria-label="Tour controls">
-            <button type="button" className="pw-pt-ctrl" onClick={prev} disabled={moduleIndex === 0}>
-              Prev
-            </button>
-            <button
-              type="button"
-              className="pw-pt-ctrl"
-              onClick={() => setPlaying((p) => !p)}
-            >
-              {playing ? "Pause" : "Play"}
-            </button>
-            <button
-              type="button"
-              className="pw-pt-ctrl"
-              onClick={next}
-              disabled={moduleIndex === PRODUCT_MODULES.length - 1}
-            >
-              Next
-            </button>
-            <button type="button" className="pw-pt-ctrl" onClick={restart}>
-              Restart
-            </button>
-            <a
-              className="pw-pt-ctrl pw-pt-ctrl-download"
-              href={PRODUCT_DEMO_DOWNLOAD_HREF}
-              download="PolicyWell-YC-Demo-3min.mp4"
-            >
-              Download MP4
-            </a>
-            <a
-              className="pw-pt-ctrl pw-pt-ctrl-download"
-              href={PRODUCT_DEMO_GIF_HREF}
-              download="PolicyWell-YC-Demo-preview.gif"
-            >
-              Download GIF
-            </a>
-          </div>
-        </header>
-
-        <div
-          className="pw-pt-progress"
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(globalProgress * 100)}
-          aria-label="Demo progress"
-        >
-          <span style={{ width: `${globalProgress * 100}%` }} />
-        </div>
-        <p className="pw-pt-timer">
-          {formatTime(globalElapsed)} / {formatTime(PRODUCT_AUTOPLAY_TOTAL_MS)} ·
-          step {completedSteps + 1}/{totalSteps}: {step.label}
-        </p>
-        <p className="pw-pt-step-banner" aria-live="polite">
-          <strong>
-            {moduleIndex + 1}/{PRODUCT_MODULES.length} · {module.label}
-          </strong>
-          <span>{step.label}</span>
-        </p>
-
         {/* Central app shell */}
         <div className="pw-pt-app">
           <aside className="pw-pt-rail" aria-label="Product modules">
@@ -452,11 +361,4 @@ function ModuleView({
     default:
       return null;
   }
-}
-
-function formatTime(ms: number) {
-  const total = Math.max(0, Math.floor(ms / 1000));
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
 }
