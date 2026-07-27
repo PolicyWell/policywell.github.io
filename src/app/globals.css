@@ -6406,6 +6406,53 @@ body:has(.pw-docs-app) .pw-ope {
   overflow: hidden;
 }
 
+/* Stacked / portrait industry heroes: frame assets without over-cropping. */
+@media (max-width: 959px) {
+  .pw-industry-hero-stage {
+    min-height: 0;
+  }
+
+  .pw-industry-hero-scene .pw-industry-hero-stage,
+  .pw-industry-hero-alcohol .pw-industry-hero-stage {
+    overflow: visible;
+    contain: none;
+  }
+
+  .pw-photo-stage {
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: 3 / 2;
+    max-height: min(42svh, 360px);
+    min-height: 0;
+    height: auto;
+    margin-inline: auto;
+    overflow: visible;
+    touch-action: pan-y;
+    cursor: default;
+  }
+
+  .pw-photo-stage:active {
+    cursor: default;
+  }
+
+  .pw-photo-stage-media {
+    inset: 1% 0;
+    overflow: visible;
+  }
+
+  .pw-photo-stage-bob {
+    overflow: visible;
+  }
+
+  .pw-photo-stage-fx {
+    overflow: visible;
+  }
+
+  .pw-photo-stage-img {
+    filter: drop-shadow(0 12px 20px rgba(15, 47, 40, 0.1));
+  }
+}
+
 @keyframes pw-photo-bob {
   0%,
   100% {
