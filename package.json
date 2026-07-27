@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "seo:check": "node scripts/seo-check.mjs",
+    "demo:zip": "node scripts/build-yc-demo-zip.mjs",
     "verify": "npm run typecheck && npm test && npm run build && npm run build:pages && SEO_CHECK_DIR=out npm run seo:check"
   },
   "dependencies": {
