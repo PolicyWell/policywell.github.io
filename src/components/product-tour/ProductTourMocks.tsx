@@ -1467,20 +1467,113 @@ const IUL_OPTIONS = [
     name: "Max cash-value IUL",
     note: "Higher AG / lower COI · best for overfund CV build",
     match: "94% match",
+    cvLabel: "$312k CV",
+    dbLabel: "$1.25M DB",
+    summary:
+      "Fastest illustrated cash-value climb — overfund premiums compound into ~$312k CV by year 20 while holding $1.25M death benefit.",
+    /** SVG polyline points for CV growth (x,y in 280×130 viewBox) */
+    cvPoints: "28,96 70,86 112,68 154,48 196,32 238,20 268,12",
+    dbPoints: "28,42 70,40 112,38 154,36 196,34 238,32 268,30",
+    areaPath:
+      "M28,96 L70,86 L112,68 L154,48 L196,32 L238,20 L268,12 L268,110 L28,110 Z",
   },
   {
     id: "balanced",
     name: "Balanced protection IUL",
     note: "Death benefit + CV blend · MEC headroom intact",
     match: "88% match",
+    cvLabel: "$248k CV",
+    dbLabel: "$1.5M DB",
+    summary:
+      "Balanced path — cash value grows to ~$248k by year 20 with a higher $1.5M death benefit and MEC headroom for flexible funding.",
+    cvPoints: "28,96 70,88 112,76 154,62 196,50 238,40 268,34",
+    dbPoints: "28,36 70,34 112,32 154,30 196,28 238,26 268,24",
+    areaPath:
+      "M28,96 L70,88 L112,76 L154,62 L196,50 L238,40 L268,34 L268,110 L28,110 Z",
   },
   {
     id: "legacy",
     name: "Legacy / DB-focused IUL",
     note: "Stronger guarantee · slower CV path",
     match: "71% match",
+    cvLabel: "$168k CV",
+    dbLabel: "$2.0M DB",
+    summary:
+      "Legacy-first illustration — slower CV to ~$168k by year 20, but a stronger $2.0M death-benefit guarantee for heirs.",
+    cvPoints: "28,96 70,92 112,86 154,78 196,70 238,64 268,58",
+    dbPoints: "28,28 70,26 112,24 154,22 196,20 238,18 268,16",
+    areaPath:
+      "M28,96 L70,92 L112,86 L154,78 L196,70 L238,64 L268,58 L268,110 L28,110 Z",
   },
 ] as const;
+
+type IulOptionId = (typeof IUL_OPTIONS)[number]["id"];
+
+function IulGrowthIllustration({ optionId }: { optionId: IulOptionId }) {
+  const opt = IUL_OPTIONS.find((o) => o.id === optionId) ?? IUL_OPTIONS[0];
+
+  return (
+    <figure
+      className="pw-pt-iul-illus"
+      aria-label={`${opt.name} growth illustration`}
+    >
+      <div className="pw-pt-iul-illus-head">
+        <strong>{opt.name}</strong>
+        <span>
+          {opt.cvLabel} · {opt.dbLabel} @ yr 20
+        </span>
+      </div>
+      <svg viewBox="0 0 280 130" role="img">
+        <title>
+          {opt.name}: cash value to {opt.cvLabel}, death benefit {opt.dbLabel}
+        </title>
+        <defs>
+          <linearGradient id={`pw-iul-fill-${opt.id}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#2f6f55" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#2f6f55" stopOpacity="0.02" />
+          </linearGradient>
+        </defs>
+        <line x1="28" y1="12" x2="28" y2="110" className="pw-pt-cv-axis" />
+        <line x1="28" y1="110" x2="268" y2="110" className="pw-pt-cv-axis" />
+        <path
+          d={opt.areaPath}
+          fill={`url(#pw-iul-fill-${opt.id})`}
+          className="pw-pt-iul-area"
+        />
+        <polyline
+          className="pw-pt-cv-line is-db"
+          fill="none"
+          points={opt.dbPoints}
+        />
+        <polyline
+          className="pw-pt-cv-line is-over"
+          fill="none"
+          points={opt.cvPoints}
+        />
+        <circle
+          cx="268"
+          cy={Number(opt.cvPoints.split(" ").at(-1)?.split(",")[1] ?? 12)}
+          r="3.5"
+          className="pw-pt-cv-dot"
+        />
+        <text x="210" y="14" className="pw-pt-cv-label">
+          {opt.cvLabel}
+        </text>
+        <text x="28" y="124" className="pw-pt-cv-label">
+          Now
+        </text>
+        <text x="238" y="124" className="pw-pt-cv-label">
+          Yr 20
+        </text>
+      </svg>
+      <figcaption>
+        <span className="is-over">Cash value growth</span>
+        <span className="is-db">Death benefit</span>
+      </figcaption>
+      <p className="pw-pt-iul-illus-copy">{opt.summary}</p>
+    </figure>
+  );
+}
 
 export function TextVoiceAgentMock({
   mode,
@@ -1492,7 +1585,7 @@ export function TextVoiceAgentMock({
   onConnectBroker?: () => void;
 }) {
   const [asked, setAsked] = useState(false);
-  const [picked, setPicked] = useState<string | null>(null);
+  const [picked, setPicked] = useState<IulOptionId | null>(null);
   const [brokerSent, setBrokerSent] = useState(false);
 
   useEffect(() => {
@@ -1502,6 +1595,9 @@ export function TextVoiceAgentMock({
 
   const showOptions = asked || tick > 35;
   const showBroker = showOptions && (picked != null || tick > 55);
+  const selected = picked
+    ? IUL_OPTIONS.find((o) => o.id === picked) ?? null
+    : null;
 
   return (
     <div className="pw-pt-ios-scene pw-pt-ios-scene-solo">
@@ -1537,8 +1633,9 @@ export function TextVoiceAgentMock({
             <div className="pw-pt-ios-bubble is-agent">
               <p>
                 For your overfund goal, I’d prioritize products with strong
-                indexed AG and room under MEC. Here are three fits — tap one,
-                then I can connect you with a broker.
+                indexed AG and room under MEC. Here are three fits — tap one to
+                see the illustrated growth, then I can connect you with a
+                broker.
               </p>
             </div>
           ) : (
@@ -1565,14 +1662,25 @@ export function TextVoiceAgentMock({
             </div>
           ) : null}
 
+          {picked ? (
+            <div className="pw-pt-ios-bubble is-agent pw-pt-ios-bubble-illus">
+              <p>
+                Here’s the illustrated growth for{" "}
+                <strong>{selected?.name}</strong> — cash value vs death benefit
+                over 20 years.
+              </p>
+              <IulGrowthIllustration optionId={picked} />
+            </div>
+          ) : null}
+
           {showBroker ? (
             <div className="pw-pt-ios-bubble is-agent">
               <p>
                 {picked
-                  ? `Great — ${IUL_OPTIONS.find((o) => o.id === picked)?.name} is a strong fit.`
+                  ? `Great — ${selected?.name} is a strong fit for your overfund goal.`
                   : "Any of these can work with a broker review."}{" "}
-                I can introduce you to a licensed broker to compare illustrations
-                and place the case.
+                I can introduce you to a licensed broker to compare full
+                carrier illustrations and place the case.
               </p>
               <button
                 type="button"
