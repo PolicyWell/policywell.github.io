@@ -96,23 +96,23 @@ export const PRODUCT_MODULES: ProductModule[] = [
   },
   {
     id: "app",
-    label: "App Upload",
+    label: "iOS App",
     shortLabel: "App",
     topTab: "app",
-    title: "Mobile app · upload a policy",
+    title: "iOS · connect & ask",
     subtitle:
-      "Photograph or upload a policy, then extract, score, and explain.",
-    durationMs: 16000,
+      "Upload a policy or connect a live in-force API, then ask in text — lapse risk and overfund projections with charts.",
+    durationMs: 24000,
   },
   {
     id: "agents",
-    label: "Text / Voice",
-    shortLabel: "Agents",
+    label: "Voice Assistant",
+    shortLabel: "Voice",
     topTab: "app",
-    title: "Text & voice interpretation",
+    title: "iOS · voice to broker",
     subtitle:
-      "Ask in plain language or speak — grounded, explainable answers.",
-    durationMs: 16000,
+      "Ask the voice agent for overfunded IUL coverage options, then connect with a broker.",
+    durationMs: 22000,
   },
 ];
 
@@ -120,7 +120,7 @@ export const PRODUCT_TOP_TABS: { id: ProductTopTab; label: string }[] = [
   { id: "web", label: "Web product" },
   { id: "cli", label: "CLI agent" },
   { id: "crm", label: "Messaging & analyzer" },
-  { id: "app", label: "App & agents" },
+  { id: "app", label: "iOS app & voice" },
 ];
 
 export const PRODUCT_AUTOPLAY_TOTAL_MS = PRODUCT_MODULES.reduce(

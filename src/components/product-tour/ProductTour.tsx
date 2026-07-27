@@ -122,8 +122,7 @@ export function ProductTour() {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
-  const agentMode: "text" | "voice" =
-    activeId === "agents" && moduleProgress > 0.48 ? "voice" : "text";
+  const agentMode: "text" | "voice" = "voice";
   const agentTick = Math.round(moduleProgress * 100);
 
   return (
@@ -375,18 +374,22 @@ function ModuleView({
     case "app":
       return (
         <div className="pw-pt-scene pw-pt-app-scene">
-          <AppUploadMock progress={uploadProgress} />
+          <AppUploadMock
+            progress={uploadProgress}
+            onContinueToVoice={() => onJump("agents")}
+          />
           <p className="pw-pt-caption">
-            Mobile upload: capture a policy, extract terms, score &amp; explain.
+            iOS: upload or live API → ask lapse &amp; overfund questions with a
+            cash-value chart → continue to voice.
           </p>
         </div>
       );
     case "agents":
       return (
-        <div className="pw-pt-scene">
+        <div className="pw-pt-scene pw-pt-app-scene">
           <TextVoiceAgentMock mode={agentMode} tick={agentTick} />
           <p className="pw-pt-caption">
-            Text-to-interpret and voice-to-interpret agent interactions.
+            Voice assistant: overfunded IUL options and a broker handoff.
           </p>
         </div>
       );

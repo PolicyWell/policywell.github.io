@@ -1069,11 +1069,6 @@ export function AnalyzerMock() {
   );
 }
 
-type AppUploadMockProps = {
-  /** Optional external progress (autoplay). Ignored once a policy is inserted. */
-  progress?: number;
-};
-
 function PolicyDocument({
   dragging,
   compact,
@@ -1133,30 +1128,111 @@ function PolicyDocument({
   );
 }
 
-export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
-  const [inserted, setInserted] = useState(false);
-  const [localProgress, setLocalProgress] = useState(0);
+type AppUploadMockProps = {
+  /** Autoplay progress 0–100 through ingest → text Q&A. */
+  progress?: number;
+  onContinueToVoice?: () => void;
+};
+
+function IosPhone({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title?: string;
+}) {
+  return (
+    <div className="pw-pt-ios">
+      <div className="pw-pt-ios-speaker" aria-hidden />
+      <div className="pw-pt-ios-screen">
+        <div className="pw-pt-ios-status" aria-hidden>
+          <span>9:41</span>
+          <span className="pw-pt-ios-island" />
+          <span>5G · 84%</span>
+        </div>
+        {title ? <p className="pw-pt-ios-app-title">{title}</p> : null}
+        <div className="pw-pt-ios-body">{children}</div>
+        <div className="pw-pt-ios-home" aria-hidden />
+      </div>
+    </div>
+  );
+}
+
+function CashValueChart() {
+  return (
+    <figure className="pw-pt-cv-chart" aria-label="Cash value projection chart">
+      <svg viewBox="0 0 280 120" role="img">
+        <title>Cash value: current funding vs overfunded path to $285k</title>
+        <line x1="28" y1="10" x2="28" y2="100" className="pw-pt-cv-axis" />
+        <line x1="28" y1="100" x2="268" y2="100" className="pw-pt-cv-axis" />
+        <polyline
+          className="pw-pt-cv-line is-base"
+          fill="none"
+          points="28,88 70,82 112,74 154,68 196,62 238,58 268,54"
+        />
+        <polyline
+          className="pw-pt-cv-line is-over"
+          fill="none"
+          points="28,88 70,78 112,62 154,48 196,34 238,22 268,14"
+        />
+        <circle cx="268" cy="14" r="3.5" className="pw-pt-cv-dot" />
+        <text x="232" y="12" className="pw-pt-cv-label">
+          $285k
+        </text>
+        <text x="28" y="114" className="pw-pt-cv-label">
+          Now
+        </text>
+        <text x="240" y="114" className="pw-pt-cv-label">
+          Yr 20
+        </text>
+      </svg>
+      <figcaption>
+        <span className="is-base">Current funding</span>
+        <span className="is-over">Overfund to $285k CV</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+type IngestMode = "upload" | "api" | null;
+type TextPromptId = "lapse" | "overfund" | null;
+
+export function AppUploadMock({
+  progress = 0,
+  onContinueToVoice,
+}: AppUploadMockProps) {
+  const [ingest, setIngest] = useState<IngestMode>(null);
+  const [ingestPct, setIngestPct] = useState(0);
+  const [prompt, setPrompt] = useState<TextPromptId>(null);
   const [draggingOver, setDraggingOver] = useState(false);
   const [draggingDoc, setDraggingDoc] = useState(false);
 
-  const effective = inserted ? localProgress : progress;
+  const autoIngested = progress >= 22;
+  const autoPrompt: TextPromptId =
+    progress >= 72 ? "overfund" : progress >= 48 ? "lapse" : null;
+
+  const linked = ingest != null || autoIngested;
+  const activePrompt = prompt ?? autoPrompt;
+  const showChat = linked && (ingestPct >= 100 || autoIngested);
 
   useEffect(() => {
-    if (!inserted) return;
-    setLocalProgress(8);
+    if (!ingest) return;
+    setIngestPct(6);
     const started = performance.now();
     let frame = 0;
     const tick = (now: number) => {
-      const pct = Math.min(100, Math.round(((now - started) / 2400) * 100));
-      setLocalProgress(pct);
+      const pct = Math.min(100, Math.round(((now - started) / 1800) * 100));
+      setIngestPct(pct);
       if (pct < 100) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [inserted]);
+  }, [ingest]);
 
-  function insertPolicy() {
-    setInserted(true);
+  function startIngest(mode: IngestMode) {
+    if (!mode) return;
+    setIngest(mode);
+    setPrompt(null);
   }
 
   function onDragStart(e: DragEvent) {
@@ -1187,163 +1263,310 @@ export function AppUploadMock({ progress = 0 }: AppUploadMockProps) {
     const id = e.dataTransfer.getData("text/pw-policy");
     const name = e.dataTransfer.getData("text/plain");
     if (id === SAMPLE_POLICY.id || name === SAMPLE_POLICY.name) {
-      insertPolicy();
+      startIngest("upload");
     }
   }
 
+  const sourceLabel =
+    ingest === "api" ? "Live in-force API" : "Document upload";
+
   return (
-    <div className="pw-pt-upload-scene">
-      {!inserted ? (
+    <div className="pw-pt-upload-scene pw-pt-ios-scene">
+      {!linked ? (
         <div className="pw-pt-policy-source">
-          <p className="pw-pt-policy-source-label">Sample policy</p>
+          <p className="pw-pt-policy-source-label">Sample in-force PDF</p>
           <div
             className="pw-pt-policy-drag"
             draggable
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            title="Drag this policy into the upload zone"
+            title="Drag into the iPhone upload zone"
           >
             <PolicyDocument dragging={draggingDoc} />
-            <span className="pw-pt-policy-hint">Drag into upload →</span>
+            <span className="pw-pt-policy-hint">Drag into iPhone →</span>
           </div>
-          <button
-            type="button"
-            className="pw-pt-action"
-            onClick={insertPolicy}
-          >
-            Insert sample policy
-          </button>
         </div>
       ) : (
         <div className="pw-pt-policy-source is-done">
-          <p className="pw-pt-policy-source-label">Inserted</p>
+          <p className="pw-pt-policy-source-label">Linked via {sourceLabel}</p>
           <PolicyDocument compact />
         </div>
       )}
 
-      <div className="pw-pt-phone">
-        <div className="pw-pt-phone-notch" />
-        <div className="pw-pt-phone-screen">
-          <p className="pw-pt-stat-label">PolicyWell</p>
-          <h3>Upload a policy</h3>
-          <div
-            className={`pw-pt-upload${effective > 10 ? " is-active" : ""}${
-              draggingOver ? " is-drop" : ""
-            }`}
-            onDragOver={onDragOver}
-            onDragLeave={onDragLeave}
-            onDrop={onDrop}
-          >
-            {inserted ? (
-              <div className="pw-pt-upload-inserted">
-                <PolicyDocument compact />
+      <IosPhone title="PolicyWell">
+        {!showChat ? (
+          <>
+            <h3 className="pw-pt-ios-h">Connect your policy</h3>
+            <p className="pw-pt-ios-lede">
+              Upload a document or connect a live in-force feed.
+            </p>
+            <div className="pw-pt-ios-ingest-grid">
+              <button
+                type="button"
+                className={`pw-pt-ios-ingest-card${
+                  ingest === "upload" ? " is-on" : ""
+                }${draggingOver ? " is-drop" : ""}`}
+                onClick={() => startIngest("upload")}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+              >
+                <strong>Upload PDF</strong>
+                <span>Ingest illustration / in-force statement</span>
+              </button>
+              <button
+                type="button"
+                className={`pw-pt-ios-ingest-card${
+                  ingest === "api" ? " is-on" : ""
+                }`}
+                onClick={() => startIngest("api")}
+              >
+                <strong>Live API</strong>
+                <span>Connect carrier in-force policy feed</span>
+              </button>
+            </div>
+            {linked ? (
+              <div className="pw-pt-ios-progress">
                 <p>
-                  {effective < 100
-                    ? `Reading ${SAMPLE_POLICY.name}…`
-                    : "Policy inserted · analysis ready"}
+                  {ingest === "api"
+                    ? "Syncing live in-force values…"
+                    : `Reading ${SAMPLE_POLICY.name}…`}
+                </p>
+                <div className="pw-pt-bar-track">
+                  <span
+                    className="pw-pt-bar-fill tone-low"
+                    style={{
+                      width: `${Math.max(ingestPct, progress)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <div className="pw-pt-ios-policy-chip">
+              <strong>{SAMPLE_POLICY.insured}</strong>
+              <span>
+                {SAMPLE_POLICY.product} · {SAMPLE_POLICY.face}
+              </span>
+            </div>
+            <div className="pw-pt-ios-chat" role="log">
+              <div className="pw-pt-ios-bubble is-agent">
+                <p>
+                  Policy linked via{" "}
+                  <strong>
+                    {ingest === "api" ? "live API" : "document ingest"}
+                  </strong>
+                  . Ask anything about funding, lapse, or cash value.
                 </p>
               </div>
-            ) : (
-              <p>
-                {draggingOver
-                  ? "Drop policy here"
-                  : "Drop the policy PDF here"}
-              </p>
-            )}
-            <div className="pw-pt-bar-track">
-              <span
-                className="pw-pt-bar-fill tone-low"
-                style={{ width: `${Math.min(effective, 100)}%` }}
-              />
+
+              {activePrompt === "lapse" || activePrompt === "overfund" ? (
+                <>
+                  <div className="pw-pt-ios-bubble is-user">
+                    <p>Will my policy lapse?</p>
+                  </div>
+                  <div className="pw-pt-ios-bubble is-agent">
+                    <p>
+                      Not if you keep the planned $412/mo. Current lapse risk is{" "}
+                      <strong>18%</strong> over 12 months. Skipping two premiums
+                      lifts that to ~34% within 9 months.
+                    </p>
+                  </div>
+                </>
+              ) : null}
+
+              {activePrompt === "overfund" ? (
+                <>
+                  <div className="pw-pt-ios-bubble is-user">
+                    <p>
+                      How can I overfund my policy to create $285k in cash value
+                      for retirement?
+                    </p>
+                  </div>
+                  <div className="pw-pt-ios-bubble is-agent">
+                    <p>
+                      Raise planned premium to ~$780/mo (MEC-safe) for 12 years,
+                      then reduce. Illustrated path reaches about{" "}
+                      <strong>$285k CV by year 20</strong>.
+                    </p>
+                    <CashValueChart />
+                  </div>
+                </>
+              ) : null}
             </div>
-          </div>
-          <ul className="pw-pt-upload-steps">
-            <li className={effective > 20 ? "is-done" : ""}>Capture / upload</li>
-            <li className={effective > 50 ? "is-done" : ""}>Extract terms</li>
-            <li className={effective > 80 ? "is-done" : ""}>Score &amp; explain</li>
-          </ul>
-        </div>
-      </div>
+
+            <div className="pw-pt-ios-prompts" role="group" aria-label="Ask">
+              <button
+                type="button"
+                className={activePrompt === "lapse" ? "is-on" : ""}
+                onClick={() => setPrompt("lapse")}
+              >
+                Will my policy lapse?
+              </button>
+              <button
+                type="button"
+                className={activePrompt === "overfund" ? "is-on" : ""}
+                onClick={() => setPrompt("overfund")}
+              >
+                Overfund for $285k retirement CV?
+              </button>
+            </div>
+
+            {activePrompt === "overfund" && onContinueToVoice ? (
+              <button
+                type="button"
+                className="pw-pt-action pw-pt-ios-continue"
+                onClick={onContinueToVoice}
+              >
+                Ask by voice →
+              </button>
+            ) : null}
+          </>
+        )}
+      </IosPhone>
     </div>
   );
 }
 
+const IUL_OPTIONS = [
+  {
+    id: "max-cv",
+    name: "Max cash-value IUL",
+    note: "Higher AG / lower COI · best for overfund CV build",
+    match: "94% match",
+  },
+  {
+    id: "balanced",
+    name: "Balanced protection IUL",
+    note: "Death benefit + CV blend · MEC headroom intact",
+    match: "88% match",
+  },
+  {
+    id: "legacy",
+    name: "Legacy / DB-focused IUL",
+    note: "Stronger guarantee · slower CV path",
+    match: "71% match",
+  },
+] as const;
+
 export function TextVoiceAgentMock({
   mode,
   tick,
+  onConnectBroker,
 }: {
   mode: "text" | "voice";
   tick: number;
+  onConnectBroker?: () => void;
 }) {
-  const [localMode, setLocalMode] = useState<"text" | "voice">(mode);
+  const [asked, setAsked] = useState(false);
+  const [picked, setPicked] = useState<string | null>(null);
+  const [brokerSent, setBrokerSent] = useState(false);
 
   useEffect(() => {
-    setLocalMode(mode);
-  }, [mode]);
+    if (mode === "voice" && tick > 18) setAsked(true);
+    if (tick > 55) setPicked((p) => p ?? "max-cv");
+  }, [mode, tick]);
 
-  const textTurns = [
-    { who: "You", text: "What’s my lapse risk if I skip two premiums?" },
-    {
-      who: "Agent",
-      text: "Based on your IUL cash value and funding ratio, lapse risk rises from 18% to ~34% within 9 months.",
-    },
-  ];
-  const voiceTurns = [
-    { who: "You", text: "“Compare my umbrella to peers in my revenue band.”" },
-    {
-      who: "Agent",
-      text: "Your $1M umbrella sits below the peer median of $2M for similar commercial profiles.",
-    },
-  ];
-  const turns = localMode === "text" ? textTurns : voiceTurns;
-  const visible = tick > 30 ? turns : turns.slice(0, 1);
+  const showOptions = asked || tick > 35;
+  const showBroker = showOptions && (picked != null || tick > 55);
 
   return (
-    <div className="pw-pt-agent-chat">
-      <div className="pw-pt-agent-mode" role="tablist" aria-label="Agent mode">
-        <button
-          type="button"
-          role="tab"
-          className={localMode === "text" ? "is-on" : ""}
-          aria-selected={localMode === "text"}
-          onClick={() => setLocalMode("text")}
-        >
-          Text
-        </button>
-        <button
-          type="button"
-          role="tab"
-          className={localMode === "voice" ? "is-on" : ""}
-          aria-selected={localMode === "voice"}
-          onClick={() => setLocalMode("voice")}
-        >
-          Voice
-        </button>
-      </div>
-      {localMode === "voice" ? (
-        <div className="pw-pt-voice-wave">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span
-              key={i}
-              style={{
-                animationDelay: `${i * 0.08}s`,
-                height: `${8 + ((tick + i * 7) % 18)}px`,
-              }}
-            />
-          ))}
-        </div>
-      ) : null}
-      <div className="pw-pt-chat-log">
-        {visible.map((turn) => (
-          <div
-            key={turn.text}
-            className={`pw-pt-bubble${turn.who === "You" ? " is-user" : ""}`}
-          >
-            <strong>{turn.who}</strong>
-            <p>{turn.text}</p>
+    <div className="pw-pt-ios-scene pw-pt-ios-scene-solo">
+      <IosPhone title="PolicyWell Voice">
+        <div className="pw-pt-ios-voice-head">
+          <div className="pw-pt-ios-orb" aria-hidden>
+            <span />
           </div>
-        ))}
-      </div>
+          <p className="pw-pt-ios-voice-label">
+            {asked ? "Listening complete" : "Voice assistant"}
+          </p>
+          <div className="pw-pt-voice-wave pw-pt-ios-wave">
+            {Array.from({ length: 14 }).map((_, i) => (
+              <span
+                key={i}
+                style={{
+                  animationDelay: `${i * 0.07}s`,
+                  height: `${8 + ((tick + i * 7) % 20)}px`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="pw-pt-ios-chat" role="log">
+          <div className="pw-pt-ios-bubble is-user is-voice">
+            <p>
+              “What are the best coverage options for an overfunded IUL?”
+            </p>
+          </div>
+
+          {asked ? (
+            <div className="pw-pt-ios-bubble is-agent">
+              <p>
+                For your overfund goal, I’d prioritize products with strong
+                indexed AG and room under MEC. Here are three fits — tap one,
+                then I can connect you with a broker.
+              </p>
+            </div>
+          ) : (
+            <p className="pw-pt-ios-listening">Transcribing your question…</p>
+          )}
+
+          {showOptions ? (
+            <div className="pw-pt-ios-options" role="list">
+              {IUL_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  role="listitem"
+                  className={`pw-pt-ios-option${
+                    picked === opt.id ? " is-on" : ""
+                  }`}
+                  onClick={() => setPicked(opt.id)}
+                >
+                  <strong>{opt.name}</strong>
+                  <span>{opt.note}</span>
+                  <em>{opt.match}</em>
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          {showBroker ? (
+            <div className="pw-pt-ios-bubble is-agent">
+              <p>
+                {picked
+                  ? `Great — ${IUL_OPTIONS.find((o) => o.id === picked)?.name} is a strong fit.`
+                  : "Any of these can work with a broker review."}{" "}
+                I can introduce you to a licensed broker to compare illustrations
+                and place the case.
+              </p>
+              <button
+                type="button"
+                className="pw-pt-action"
+                onClick={() => {
+                  setBrokerSent(true);
+                  onConnectBroker?.();
+                }}
+              >
+                {brokerSent ? "Broker intro sent" : "Connect with a broker"}
+              </button>
+            </div>
+          ) : null}
+        </div>
+
+        {!asked ? (
+          <button
+            type="button"
+            className="pw-pt-action pw-pt-ios-continue"
+            onClick={() => setAsked(true)}
+          >
+            Ask about overfunded IUL options
+          </button>
+        ) : null}
+      </IosPhone>
     </div>
   );
 }
