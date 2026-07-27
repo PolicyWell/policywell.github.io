@@ -20,10 +20,6 @@ import {
   TextVoiceAgentMock,
 } from "@/components/product-tour/ProductTourMocks";
 
-const TOTAL_SEC = Math.round(
-  PRODUCT_MODULES.reduce((sum, m) => sum + m.durationMs, 0) / 1000,
-);
-
 export function ProductTour() {
   const [activeId, setActiveId] = useState<ProductModuleId>("dashboard");
   const [playing, setPlaying] = useState(true);
@@ -239,10 +235,7 @@ export function ProductTour() {
                   >
                     {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
                   </button>
-                  <span className="pw-pt-workspace-badge">
-                    {Math.round(TOTAL_SEC / 60)}:
-                    {(TOTAL_SEC % 60).toString().padStart(2, "0")} demo
-                  </span>
+                  <span className="pw-pt-workspace-badge">demo</span>
                 </div>
               </header>
 
