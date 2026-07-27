@@ -5114,6 +5114,16 @@ body:has(.pw-docs-app) .pw-ope {
   color: var(--stone);
 }
 
+.pw-quote-notes {
+  min-height: 5.5rem;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.pw-quote-line-switch {
+  margin-bottom: 0.15rem;
+}
+
 .pw-quote-error {
   margin: 0;
   color: var(--danger);
