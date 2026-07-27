@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 import {
@@ -30,6 +30,8 @@ export function ProductTour() {
   const [elapsedInModule, setElapsedInModule] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [uploadTick, setUploadTick] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const appRef = useRef<HTMLDivElement>(null);
 
   const moduleIndex = PRODUCT_MODULES.findIndex((m) => m.id === activeId);
   const module = PRODUCT_MODULES[moduleIndex] ?? PRODUCT_MODULES[0];
@@ -72,12 +74,35 @@ export function ProductTour() {
     setPlaying(true);
   }, [selectModule]);
 
+  const toggleFullscreen = useCallback(async () => {
+    const el = appRef.current;
+    if (!el) return;
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await el.requestFullscreen();
+      }
+    } catch {
+      // Fullscreen may be blocked; fall back to CSS-expanded mode.
+      setIsFullscreen((v) => !v);
+    }
+  }, []);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setPrefersReducedMotion(mq.matches);
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    function onFsChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
 
   useEffect(() => {
@@ -113,11 +138,16 @@ export function ProductTour() {
         setPlaying((p) => !p);
       } else if (e.key === "r" || e.key === "R") {
         restart();
+      } else if (e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        void toggleFullscreen();
+      } else if (e.key === "Escape" && isFullscreen && !document.fullscreenElement) {
+        setIsFullscreen(false);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, restart]);
+  }, [next, prev, restart, toggleFullscreen, isFullscreen]);
 
   const agentMode: "text" | "voice" = "voice";
   const agentTick = Math.round(moduleProgress * 100);
@@ -127,7 +157,10 @@ export function ProductTour() {
       <SiteNav />
       <div className="pw-shell pw-pt-shell">
         {/* Central app shell */}
-        <div className="pw-pt-app">
+        <div
+          ref={appRef}
+          className={`pw-pt-app${isFullscreen ? " is-fullscreen" : ""}`}
+        >
           <aside className="pw-pt-rail" aria-label="Product modules">
             <div className="pw-pt-rail-brand">
               <img
@@ -192,10 +225,25 @@ export function ProductTour() {
                   <h2>{module.title}</h2>
                   <p>{module.subtitle}</p>
                 </div>
-                <span className="pw-pt-workspace-badge">
-                  {Math.round(TOTAL_SEC / 60)}:
-                  {(TOTAL_SEC % 60).toString().padStart(2, "0")} demo
-                </span>
+                <div className="pw-pt-workspace-actions">
+                  <button
+                    type="button"
+                    className="pw-pt-fullscreen-btn"
+                    onClick={() => void toggleFullscreen()}
+                    aria-pressed={isFullscreen}
+                    title={
+                      isFullscreen
+                        ? "Exit fullscreen (Esc or F)"
+                        : "Enter fullscreen (F)"
+                    }
+                  >
+                    {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                  </button>
+                  <span className="pw-pt-workspace-badge">
+                    {Math.round(TOTAL_SEC / 60)}:
+                    {(TOTAL_SEC % 60).toString().padStart(2, "0")} demo
+                  </span>
+                </div>
               </header>
 
               <div
