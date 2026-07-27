@@ -236,7 +236,11 @@ export function ProductTour() {
                 <span className="pw-pt-workspace-badge">Demo</span>
               </header>
 
-              <div className="pw-pt-workspace-body" aria-live="polite">
+              <div
+                className="pw-pt-workspace-body"
+                aria-live="polite"
+                onPointerDownCapture={() => setPlaying(false)}
+              >
                 <ModuleView
                   id={activeId}
                   uploadProgress={activeId === "app" ? uploadTick : 0}

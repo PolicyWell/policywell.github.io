@@ -9623,14 +9623,21 @@ body:has(.pw-docs-app) .pw-ope {
   margin-bottom: 0.85rem;
 }
 
-.pw-pt-agent-mode span {
+.pw-pt-agent-mode span,
+.pw-pt-agent-mode button {
+  appearance: none;
+  border: 0;
+  background: transparent;
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
   font-size: 0.75rem;
   color: var(--stone);
+  cursor: pointer;
+  font: inherit;
 }
 
-.pw-pt-agent-mode span.is-on {
+.pw-pt-agent-mode span.is-on,
+.pw-pt-agent-mode button.is-on {
   background: #fff;
   color: var(--pine);
   font-weight: 700;
