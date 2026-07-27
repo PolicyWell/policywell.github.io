@@ -195,24 +195,70 @@ export function ProductTour() {
           </aside>
 
           <div className="pw-pt-center">
-            <div className="pw-pt-topnav" role="tablist" aria-label="Product areas">
-              {PRODUCT_TOP_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={topTab === tab.id}
-                  className={`pw-pt-topnav-item${
-                    topTab === tab.id ? " is-active" : ""
-                  }`}
-                  onClick={() => {
-                    selectTab(tab.id);
-                    setPlaying(false);
-                  }}
+            <div className="pw-pt-topbar">
+              <div className="pw-pt-topnav" role="tablist" aria-label="Product areas">
+                {PRODUCT_TOP_TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={topTab === tab.id}
+                    className={`pw-pt-topnav-item${
+                      topTab === tab.id ? " is-active" : ""
+                    }`}
+                    onClick={() => {
+                      selectTab(tab.id);
+                      setPlaying(false);
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="pw-pt-fullscreen-btn"
+                onClick={() => void toggleFullscreen()}
+                aria-pressed={isFullscreen}
+                aria-label={
+                  isFullscreen
+                    ? "Exit fullscreen (Esc or F)"
+                    : "Enter fullscreen (F)"
+                }
+                title={
+                  isFullscreen
+                    ? "Exit fullscreen (Esc or F)"
+                    : "Enter fullscreen (F)"
+                }
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  aria-hidden
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  {tab.label}
-                </button>
-              ))}
+                  {isFullscreen ? (
+                    <>
+                      <path d="M9 4v5H4" />
+                      <path d="M15 4v5h5" />
+                      <path d="M9 20v-5H4" />
+                      <path d="M15 20v-5h5" />
+                    </>
+                  ) : (
+                    <>
+                      <path d="M8 3H3v5" />
+                      <path d="M16 3h5v5" />
+                      <path d="M8 21H3v-5" />
+                      <path d="M16 21h5v-5" />
+                    </>
+                  )}
+                </svg>
+              </button>
             </div>
 
             <div className="pw-pt-workspace">
@@ -221,22 +267,7 @@ export function ProductTour() {
                   <h2>{module.title}</h2>
                   <p>{module.subtitle}</p>
                 </div>
-                <div className="pw-pt-workspace-actions">
-                  <button
-                    type="button"
-                    className="pw-pt-fullscreen-btn"
-                    onClick={() => void toggleFullscreen()}
-                    aria-pressed={isFullscreen}
-                    title={
-                      isFullscreen
-                        ? "Exit fullscreen (Esc or F)"
-                        : "Enter fullscreen (F)"
-                    }
-                  >
-                    {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-                  </button>
-                  <span className="pw-pt-workspace-badge">demo</span>
-                </div>
+                <span className="pw-pt-workspace-badge">demo</span>
               </header>
 
               <div
