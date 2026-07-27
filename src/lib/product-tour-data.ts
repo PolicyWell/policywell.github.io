@@ -1,5 +1,5 @@
-export type ProductSceneId =
-  | "intro"
+export type ProductModuleId =
+  | "dashboard"
   | "risk"
   | "market"
   | "claims"
@@ -7,103 +7,127 @@ export type ProductSceneId =
   | "crm"
   | "analyzer"
   | "app"
-  | "agents"
-  | "close";
+  | "agents";
 
-export type ProductScene = {
-  id: ProductSceneId;
-  step: string;
+export type ProductTopTab = "web" | "cli" | "crm" | "app";
+
+export type ProductModule = {
+  id: ProductModuleId;
+  label: string;
+  shortLabel: string;
+  topTab: ProductTopTab;
   title: string;
   subtitle: string;
-  /** Auto-advance duration in ms (total tour ~3 minutes). */
+  /** Autoplay dwell time when cycling the central view. */
   durationMs: number;
 };
 
-/** YC partner product tour — ~180s when autoplayed. */
-export const PRODUCT_SCENES: ProductScene[] = [
+/** Modules shown in the left rail of the /product central demo. */
+export const PRODUCT_MODULES: ProductModule[] = [
   {
-    id: "intro",
-    step: "01",
-    title: "PolicyWell product tour",
+    id: "dashboard",
+    label: "Dashboard",
+    shortLabel: "Home",
+    topTab: "web",
+    title: "PolicyWell command center",
     subtitle:
-      "A three-minute walkthrough of the web workspace, white-label CLI agent, CRM, policy analyzer, and mobile app — built for carriers, IMOs, producers, and commercial groups.",
-    durationMs: 16000,
+      "One workspace for risk, market, claims, CLI, CRM, and in-force analysis — switch modules from the rail.",
+    durationMs: 14000,
   },
   {
     id: "risk",
-    step: "02",
+    label: "Risk",
+    shortLabel: "Risk",
+    topTab: "web",
     title: "Risk assessment",
     subtitle:
-      "Every in-force policy is scored for gaps and exposure so teams see under- and over-coverage before renewal.",
-    durationMs: 20000,
+      "Every in-force policy scored for gaps and exposure before renewal.",
+    durationMs: 18000,
   },
   {
     id: "market",
-    step: "03",
+    label: "Market",
+    shortLabel: "Market",
+    topTab: "web",
     title: "Market comparison",
     subtitle:
-      "Quotes from carrier partners sit side by side on premium, terms, and coverage match.",
-    durationMs: 20000,
+      "Carrier quotes side by side on premium, terms, and coverage match.",
+    durationMs: 18000,
   },
   {
     id: "claims",
-    step: "04",
+    label: "Claims",
+    shortLabel: "Claims",
+    topTab: "web",
     title: "Claims tracker",
     subtitle:
-      "Open claims and renewals live in one place — with adjusters, documents, and resolution timelines.",
-    durationMs: 18000,
+      "Open claims and renewals with adjusters, documents, and timelines.",
+    durationMs: 16000,
   },
   {
     id: "cli",
-    step: "05",
+    label: "CLI Agent",
+    shortLabel: "CLI",
+    topTab: "cli",
     title: "White-label CLI agent",
     subtitle:
-      "Insurance professionals embed PolicyWell as a terminal agent — policyholders, carriers, IMOs, and commercial teams.",
-    durationMs: 24000,
+      "Embedded terminal agent for policyholders, carriers, IMOs, and commercial teams.",
+    durationMs: 22000,
   },
   {
     id: "crm",
-    step: "06",
+    label: "CRM",
+    shortLabel: "CRM",
+    topTab: "crm",
     title: "Follow-up CRM",
     subtitle:
-      "Queues for policyholders, gap seekers, and producers — next actions grounded in live policy context.",
-    durationMs: 18000,
+      "Queues for policyholders, gap seekers, and producers — next actions from live context.",
+    durationMs: 16000,
   },
   {
     id: "analyzer",
-    step: "07",
+    label: "Analyzer",
+    shortLabel: "Analyze",
+    topTab: "crm",
     title: "In-force policy analyzer",
     subtitle:
-      "Live analysis for households, carriers, IMOs, and commercial groups — health scores, riders, and recommendations.",
-    durationMs: 18000,
+      "Live analysis for households, carriers, IMOs, and commercial groups.",
+    durationMs: 16000,
   },
   {
     id: "app",
-    step: "08",
+    label: "App Upload",
+    shortLabel: "App",
+    topTab: "app",
     title: "Mobile app · upload a policy",
     subtitle:
-      "After the web product, the app lets clients photograph or upload a policy and start analysis on device.",
-    durationMs: 18000,
+      "Photograph or upload a policy, then extract, score, and explain.",
+    durationMs: 16000,
   },
   {
     id: "agents",
-    step: "09",
+    label: "Text / Voice",
+    shortLabel: "Agents",
+    topTab: "app",
     title: "Text & voice interpretation",
     subtitle:
-      "Ask in plain language or speak — the agent interprets coverage questions with grounded, explainable answers.",
-    durationMs: 18000,
-  },
-  {
-    id: "close",
-    step: "10",
-    title: "Ready to go deeper?",
-    subtitle:
-      "Open the live workspace, book a call with the team, or replay any scene from this tour.",
-    durationMs: 10000,
+      "Ask in plain language or speak — grounded, explainable answers.",
+    durationMs: 16000,
   },
 ];
 
-export const PRODUCT_TOUR_TOTAL_MS = PRODUCT_SCENES.reduce(
-  (sum, s) => sum + s.durationMs,
+export const PRODUCT_TOP_TABS: { id: ProductTopTab; label: string }[] = [
+  { id: "web", label: "Web product" },
+  { id: "cli", label: "CLI agent" },
+  { id: "crm", label: "CRM & analyzer" },
+  { id: "app", label: "App & agents" },
+];
+
+export const PRODUCT_AUTOPLAY_TOTAL_MS = PRODUCT_MODULES.reduce(
+  (sum, m) => sum + m.durationMs,
   0,
 );
+
+export function modulesForTab(tab: ProductTopTab): ProductModule[] {
+  return PRODUCT_MODULES.filter((m) => m.topTab === tab);
+}

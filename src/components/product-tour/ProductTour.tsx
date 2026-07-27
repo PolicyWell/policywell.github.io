@@ -5,9 +5,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { SiteNav } from "@/components/ui";
 import {
-  PRODUCT_SCENES,
-  PRODUCT_TOUR_TOTAL_MS,
-  type ProductSceneId,
+  PRODUCT_AUTOPLAY_TOTAL_MS,
+  PRODUCT_MODULES,
+  PRODUCT_TOP_TABS,
+  type ProductModuleId,
+  type ProductTopTab,
 } from "@/lib/product-tour-data";
 import {
   AnalyzerMock,
@@ -19,45 +21,61 @@ import {
   TextVoiceAgentMock,
 } from "@/components/product-tour/ProductTourMocks";
 
-const TOTAL_SEC = Math.round(PRODUCT_TOUR_TOTAL_MS / 1000);
+const TOTAL_SEC = Math.round(PRODUCT_AUTOPLAY_TOTAL_MS / 1000);
 
 export function ProductTour() {
-  const [index, setIndex] = useState(0);
+  const [activeId, setActiveId] = useState<ProductModuleId>("dashboard");
   const [playing, setPlaying] = useState(true);
-  const [elapsedInScene, setElapsedInScene] = useState(0);
+  const [elapsedInModule, setElapsedInModule] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [uploadTick, setUploadTick] = useState(0);
 
-  const scene = PRODUCT_SCENES[index];
-  const sceneProgress = Math.min(1, elapsedInScene / scene.durationMs);
+  const moduleIndex = PRODUCT_MODULES.findIndex((m) => m.id === activeId);
+  const module = PRODUCT_MODULES[moduleIndex] ?? PRODUCT_MODULES[0];
+  const topTab = module.topTab;
+
+  const moduleProgress = Math.min(1, elapsedInModule / module.durationMs);
   const globalElapsed = useMemo(() => {
-    const prior = PRODUCT_SCENES.slice(0, index).reduce(
-      (sum, s) => sum + s.durationMs,
+    const prior = PRODUCT_MODULES.slice(0, moduleIndex).reduce(
+      (sum, m) => sum + m.durationMs,
       0,
     );
-    return prior + elapsedInScene;
-  }, [index, elapsedInScene]);
-  const globalProgress = Math.min(1, globalElapsed / PRODUCT_TOUR_TOTAL_MS);
+    return prior + elapsedInModule;
+  }, [moduleIndex, elapsedInModule]);
+  const globalProgress = Math.min(
+    1,
+    globalElapsed / PRODUCT_AUTOPLAY_TOTAL_MS,
+  );
 
-  const goTo = useCallback((next: number) => {
-    const clamped = Math.max(0, Math.min(PRODUCT_SCENES.length - 1, next));
-    setIndex(clamped);
-    setElapsedInScene(0);
+  const selectModule = useCallback((id: ProductModuleId) => {
+    setActiveId(id);
+    setElapsedInModule(0);
+    setUploadTick(0);
   }, []);
 
+  const selectTab = useCallback((tab: ProductTopTab) => {
+    const first = PRODUCT_MODULES.find((m) => m.topTab === tab);
+    if (first) selectModule(first.id);
+  }, [selectModule]);
+
   const next = useCallback(() => {
-    setIndex((i) => {
-      if (i >= PRODUCT_SCENES.length - 1) {
+    setActiveId((id) => {
+      const i = PRODUCT_MODULES.findIndex((m) => m.id === id);
+      if (i >= PRODUCT_MODULES.length - 1) {
         setPlaying(false);
-        return i;
+        return id;
       }
-      return i + 1;
+      return PRODUCT_MODULES[i + 1].id;
     });
-    setElapsedInScene(0);
+    setElapsedInModule(0);
+    setUploadTick(0);
   }, []);
 
   const prev = useCallback(() => {
-    goTo(index - 1);
-  }, [goTo, index]);
+    const i = PRODUCT_MODULES.findIndex((m) => m.id === activeId);
+    if (i <= 0) return;
+    selectModule(PRODUCT_MODULES[i - 1].id);
+  }, [activeId, selectModule]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -70,12 +88,15 @@ export function ProductTour() {
   useEffect(() => {
     if (!playing || prefersReducedMotion) return;
     const started = performance.now();
-    setElapsedInScene(0);
+    setElapsedInModule(0);
     let frame = 0;
     const tick = (now: number) => {
       const elapsed = now - started;
-      setElapsedInScene(elapsed);
-      if (elapsed >= scene.durationMs) {
+      setElapsedInModule(elapsed);
+      if (activeId === "app") {
+        setUploadTick(Math.min(100, Math.round((elapsed / module.durationMs) * 100)));
+      }
+      if (elapsed >= module.durationMs) {
         next();
         return;
       }
@@ -83,7 +104,7 @@ export function ProductTour() {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [playing, index, scene.durationMs, next, prefersReducedMotion]);
+  }, [playing, activeId, module.durationMs, next, prefersReducedMotion]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -101,28 +122,23 @@ export function ProductTour() {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
-  const uploadProgress = Math.min(
-    100,
-    scene.id === "app" ? Math.round(sceneProgress * 100) : 0,
-  );
-  const agentTick = Math.round(sceneProgress * 100);
   const agentMode: "text" | "voice" =
-    scene.id === "agents" && sceneProgress > 0.48 ? "voice" : "text";
+    activeId === "agents" && moduleProgress > 0.48 ? "voice" : "text";
+  const agentTick = Math.round(moduleProgress * 100);
 
   return (
     <div className="pw-product-tour">
       <SiteNav />
       <div className="pw-shell pw-pt-shell">
-        <header className="pw-pt-top">
+        <header className="pw-pt-banner">
           <div>
-            <p className="pw-pt-kicker">YC product walkthrough · under 3 min</p>
-            <h1 className="pw-pt-h1">
-              <span className="pw-pt-step">{scene.step}</span> {scene.title}
-            </h1>
-            <p className="pw-pt-sub">{scene.subtitle}</p>
+            <p className="pw-pt-kicker">
+              YC walkthrough · one central view · under {TOTAL_SEC}s autoplay
+            </p>
+            <h1 className="pw-pt-banner-title">PolicyWell product demo</h1>
           </div>
           <div className="pw-pt-controls" aria-label="Tour controls">
-            <button type="button" className="pw-pt-ctrl" onClick={prev} disabled={index === 0}>
+            <button type="button" className="pw-pt-ctrl" onClick={prev} disabled={moduleIndex === 0}>
               Prev
             </button>
             <button
@@ -136,7 +152,7 @@ export function ProductTour() {
               type="button"
               className="pw-pt-ctrl"
               onClick={next}
-              disabled={index === PRODUCT_SCENES.length - 1}
+              disabled={moduleIndex === PRODUCT_MODULES.length - 1}
             >
               Next
             </button>
@@ -149,41 +165,92 @@ export function ProductTour() {
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(globalProgress * 100)}
-          aria-label="Tour progress"
+          aria-label="Demo progress"
         >
           <span style={{ width: `${globalProgress * 100}%` }} />
         </div>
         <p className="pw-pt-timer">
-          {formatTime(globalElapsed)} / {formatTime(PRODUCT_TOUR_TOTAL_MS)} ·{" "}
-          {TOTAL_SEC}s cap · lightweight UI mocks (no video)
+          {formatTime(globalElapsed)} / {formatTime(PRODUCT_AUTOPLAY_TOTAL_MS)} ·
+          click the rail to jump · lightweight CSS (no video)
         </p>
 
-        <nav className="pw-pt-chapters" aria-label="Scenes">
-          {PRODUCT_SCENES.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              className={`pw-pt-chapter${i === index ? " is-active" : ""}${
-                i < index ? " is-done" : ""
-              }`}
-              onClick={() => {
-                goTo(i);
-                setPlaying(true);
-              }}
-            >
-              {s.step} {shortLabel(s.id)}
-            </button>
-          ))}
-        </nav>
+        {/* Central app shell */}
+        <div className="pw-pt-app">
+          <aside className="pw-pt-rail" aria-label="Product modules">
+            <div className="pw-pt-rail-brand">
+              <span className="pw-pt-rail-mark">PW</span>
+              <span>PolicyWell</span>
+            </div>
+            <p className="pw-pt-rail-section">Workspace</p>
+            <nav className="pw-pt-rail-nav">
+              {PRODUCT_MODULES.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  className={`pw-pt-rail-item${
+                    activeId === m.id ? " is-active" : ""
+                  }`}
+                  onClick={() => {
+                    selectModule(m.id);
+                    setPlaying(false);
+                  }}
+                >
+                  <span className="pw-pt-rail-dot" aria-hidden />
+                  {m.label}
+                </button>
+              ))}
+            </nav>
+            <div className="pw-pt-rail-foot">
+              <Link href="/agent">Open live</Link>
+              <Link href="/book-a-call/">Book a call</Link>
+            </div>
+          </aside>
 
-        <section className="pw-pt-stage" aria-live="polite">
-          <SceneStage
-            id={scene.id}
-            uploadProgress={uploadProgress}
-            agentMode={agentMode}
-            agentTick={agentTick}
-          />
-        </section>
+          <div className="pw-pt-center">
+            <div className="pw-pt-topnav" role="tablist" aria-label="Product areas">
+              {PRODUCT_TOP_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={topTab === tab.id}
+                  className={`pw-pt-topnav-item${
+                    topTab === tab.id ? " is-active" : ""
+                  }`}
+                  onClick={() => {
+                    selectTab(tab.id);
+                    setPlaying(false);
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="pw-pt-workspace">
+              <header className="pw-pt-workspace-head">
+                <div>
+                  <h2>{module.title}</h2>
+                  <p>{module.subtitle}</p>
+                </div>
+                <span className="pw-pt-workspace-badge">Demo</span>
+              </header>
+
+              <div className="pw-pt-workspace-body" aria-live="polite">
+                <ModuleView
+                  id={activeId}
+                  uploadProgress={activeId === "app" ? uploadTick : 0}
+                  agentMode={agentMode}
+                  agentTick={agentTick}
+                  onJump={(id) => {
+                    selectModule(id);
+                    setPlaying(false);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
         <footer className="pw-pt-foot">
           <Link href="/agent" className="pw-btn">
@@ -195,48 +262,53 @@ export function ProductTour() {
           <Link href="/demo/" className="pw-pt-link">
             Lifecycle demo
           </Link>
-          <Link href="/docs/cli/" className="pw-pt-link">
-            CLI docs
-          </Link>
         </footer>
       </div>
     </div>
   );
 }
 
-function SceneStage({
+function ModuleView({
   id,
   uploadProgress,
   agentMode,
   agentTick,
+  onJump,
 }: {
-  id: ProductSceneId;
+  id: ProductModuleId;
   uploadProgress: number;
   agentMode: "text" | "voice";
   agentTick: number;
+  onJump: (id: ProductModuleId) => void;
 }) {
   switch (id) {
-    case "intro":
+    case "dashboard":
       return (
-        <div className="pw-pt-intro">
-          <div className="pw-pt-intro-grid">
-            {[
-              "Web risk · market · claims",
-              "White-label CLI agent",
-              "Follow-up CRM",
-              "In-force analyzer",
-              "Mobile upload",
-              "Text & voice agents",
-            ].map((item) => (
-              <div key={item} className="pw-pt-card pw-pt-intro-card">
-                {item}
-              </div>
-            ))}
-          </div>
-          <p className="pw-pt-caption">
-            Built for policyholders, producers, carriers, IMOs, and commercial
-            groups — explainable recommendations with human review.
+        <div className="pw-pt-dash">
+          <p className="pw-pt-dash-lede">
+            Select a module in the left rail — or let autoplay walk YC partners
+            through the full surface in one window.
           </p>
+          <ul className="pw-pt-dash-list" aria-label="Module suggestions">
+            {PRODUCT_MODULES.filter((m) => m.id !== "dashboard").map((m) => (
+              <li key={m.id}>
+                <button
+                  type="button"
+                  className="pw-pt-dash-row"
+                  onClick={() => onJump(m.id)}
+                >
+                  <span className="pw-pt-dash-check" aria-hidden>
+                    ✓
+                  </span>
+                  <span className="pw-pt-dash-label">
+                    <strong>{m.label}</strong>
+                    <em>{m.title}</em>
+                  </span>
+                  <span className="pw-pt-dash-status">available</span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       );
     case "risk":
@@ -244,8 +316,7 @@ function SceneStage({
         <div className="pw-pt-scene">
           <RiskAssessmentMock />
           <p className="pw-pt-caption">
-            Risk dashboard: every policy is scored for gaps and exposure before
-            renewal.
+            Risk dashboard: gaps and exposure before renewal.
           </p>
         </div>
       );
@@ -254,8 +325,7 @@ function SceneStage({
         <div className="pw-pt-scene">
           <MarketComparisonMock />
           <p className="pw-pt-caption">
-            Market comparison: carrier quotes side by side on price, terms, and
-            coverage match.
+            Market comparison: carrier quotes on price, terms, and match.
           </p>
         </div>
       );
@@ -264,8 +334,7 @@ function SceneStage({
         <div className="pw-pt-scene">
           <ClaimsTrackerMock />
           <p className="pw-pt-caption">
-            Claims tracker: open claims and renewals in one place with carrier
-            back-and-forth handled.
+            Claims tracker: timelines, documents, and adjuster handoff.
           </p>
         </div>
       );
@@ -274,8 +343,7 @@ function SceneStage({
         <div className="pw-pt-scene pw-pt-cli">
           <PolicyWellCLIShowcase compact hideIntro />
           <p className="pw-pt-caption">
-            White-label CLI agent insurance professionals embed — switch
-            audiences above and try live commands.
+            White-label CLI — switch audiences and try live commands.
           </p>
         </div>
       );
@@ -284,8 +352,7 @@ function SceneStage({
         <div className="pw-pt-scene">
           <CrmMock />
           <p className="pw-pt-caption">
-            Follow-up CRM for policyholders, gap seekers, and producers —
-            next-best actions from live context.
+            Follow-up CRM for policyholders, gap seekers, and producers.
           </p>
         </div>
       );
@@ -294,8 +361,7 @@ function SceneStage({
         <div className="pw-pt-scene">
           <AnalyzerMock />
           <p className="pw-pt-caption">
-            In-force analyzer across households, carriers, IMOs, and commercial
-            groups.
+            In-force analyzer across household, carrier, IMO, and commercial.
           </p>
         </div>
       );
@@ -304,8 +370,7 @@ function SceneStage({
         <div className="pw-pt-scene pw-pt-app-scene">
           <AppUploadMock progress={uploadProgress} />
           <p className="pw-pt-caption">
-            Mobile app: upload or photograph a policy, then extract, score, and
-            explain on device.
+            Mobile upload: capture a policy, extract terms, score &amp; explain.
           </p>
         </div>
       );
@@ -314,30 +379,8 @@ function SceneStage({
         <div className="pw-pt-scene">
           <TextVoiceAgentMock mode={agentMode} tick={agentTick} />
           <p className="pw-pt-caption">
-            Text-to-interpret and voice-to-interpret agent interactions —
-            grounded answers, not black-box advice.
+            Text-to-interpret and voice-to-interpret agent interactions.
           </p>
-        </div>
-      );
-    case "close":
-      return (
-        <div className="pw-pt-close">
-          <h2 className="pw-pt-close-title">That&apos;s the product surface</h2>
-          <p>
-            Seed a household, open commercial risk, or schedule time with the
-            PolicyWell team.
-          </p>
-          <div className="pw-pt-close-actions">
-            <Link href="/agent" className="pw-btn">
-              Talk to the agent
-            </Link>
-            <Link href="/commercial" className="pw-btn pw-btn-secondary">
-              Commercial workspace
-            </Link>
-            <Link href="/book-a-call/" className="pw-btn pw-btn-secondary">
-              Book a call
-            </Link>
-          </div>
         </div>
       );
     default:
@@ -350,31 +393,4 @@ function formatTime(ms: number) {
   const m = Math.floor(total / 60);
   const s = total % 60;
   return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
-function shortLabel(id: ProductSceneId) {
-  switch (id) {
-    case "intro":
-      return "Intro";
-    case "risk":
-      return "Risk";
-    case "market":
-      return "Market";
-    case "claims":
-      return "Claims";
-    case "cli":
-      return "CLI";
-    case "crm":
-      return "CRM";
-    case "analyzer":
-      return "Analyzer";
-    case "app":
-      return "App";
-    case "agents":
-      return "Agents";
-    case "close":
-      return "Next";
-    default:
-      return id;
-  }
 }
