@@ -15,9 +15,9 @@ export function BrandMark({ large = false }: { large?: boolean }) {
   const iconSize = large ? 48 : 32;
   return (
     <Link href="/" className="inline-flex items-center gap-2.5 shrink-0">
-      {/* 2× PNG (logo-64) keeps the nav mark sharp on retina */}
+      {/* Transparent 2× PNG keeps the nav mark sharp on retina */}
       <img
-        src="/logo-64.png"
+        src="/logo-64.png?v=20260727d"
         alt=""
         width={iconSize}
         height={iconSize}

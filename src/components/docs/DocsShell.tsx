@@ -62,7 +62,7 @@ function DocsLogo() {
   return (
     <Link href="/" className="pw-docs-logo" aria-label="PolicyWell home">
       <img
-        src="/logo-64.png"
+        src="/logo-64.png?v=20260727d"
         alt=""
         width={22}
         height={22}

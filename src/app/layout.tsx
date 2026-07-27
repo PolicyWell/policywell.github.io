@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import { MeetOpeWidget } from "@/components/MeetOpeWidget";
 import { SiteFooter } from "@/components/SiteFooter";
+import { OG_IMAGE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -16,10 +17,8 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const SITE_URL = "https://policywell.ai";
-const OG_IMAGE = `${SITE_URL}/og-image.png?v=20260723c`;
 /** Bump to force browsers/CDNs/Google to pick up refreshed favicons. */
-const ICON_V = "20260727c";
+const ICON_V = "20260727d";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
