@@ -19,7 +19,7 @@ const manrope = Manrope({
 const SITE_URL = "https://policywell.ai";
 const OG_IMAGE = `${SITE_URL}/og-image.png?v=20260723c`;
 /** Bump to force browsers/CDNs/Google to pick up refreshed favicons. */
-const ICON_V = "20260727b";
+const ICON_V = "20260727c";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -147,11 +147,6 @@ export default function RootLayout({
           type="image/png"
           sizes="192x192"
           href={`/icon-192.png?v=${ICON_V}`}
-        />
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href={`/favicon.svg?v=${ICON_V}`}
         />
         <link rel="shortcut icon" href={`/favicon-64.png?v=${ICON_V}`} />
         <link rel="icon" href={`/favicon.ico?v=${ICON_V}`} sizes="48x48" />
