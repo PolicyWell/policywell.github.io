@@ -114,6 +114,7 @@ export function organizationJsonLd() {
     description:
       "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
     telephone: "+1-470-887-0449",
+    email: "info@policywell.ai",
     sameAs: [...VERIFIED_SAME_AS],
   };
 }
