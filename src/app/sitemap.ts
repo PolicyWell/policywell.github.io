@@ -26,6 +26,7 @@ function corePaths(): string[] {
     "/docs/cli",
     "/docs/engineering",
     "/demo",
+    "/product",
     "/book-a-call",
     "/press",
     "/careers",

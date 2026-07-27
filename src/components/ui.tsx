@@ -39,6 +39,11 @@ const PHONE_HREF = "tel:+14708870449";
 
 const PLATFORM_LINKS = [
   { href: "/agent", label: "Agent", blurb: "Insurance intelligence workspace" },
+  {
+    href: "/product/",
+    label: "Product",
+    blurb: "Interactive 3-minute product tour",
+  },
   { href: "/demo", label: "Demo", blurb: "Walk through the product lifecycle" },
 ] as const;
 
