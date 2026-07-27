@@ -52,17 +52,19 @@ function AppChrome({
   url,
   children,
   nav = "risk",
+  onNavigate,
 }: {
   url: string;
   children: ReactNode;
   nav?: "overview" | "risk" | "market" | "claims" | "docs";
+  onNavigate?: (section: "risk" | "market" | "claims") => void;
 }) {
   const items = [
-    { id: "overview", label: "Overview" },
-    { id: "risk", label: "Risk" },
-    { id: "market", label: "Market" },
-    { id: "claims", label: "Claims" },
-    { id: "docs", label: "Docs" },
+    { id: "overview", label: "Overview", jump: null },
+    { id: "risk", label: "Risk", jump: "risk" as const },
+    { id: "market", label: "Market", jump: "market" as const },
+    { id: "claims", label: "Claims", jump: "claims" as const },
+    { id: "docs", label: "Docs", jump: null },
   ] as const;
 
   return (
@@ -74,16 +76,38 @@ function AppChrome({
         <span className="pw-pt-url">{url}</span>
       </div>
       <div className="pw-pt-window-body">
-        <aside className="pw-pt-side" aria-hidden>
-          {items.map((item) => (
-            <span
-              key={item.id}
-              className={`pw-pt-side-item${nav === item.id ? " is-active" : ""}`}
-              title={item.label}
-            >
-              <span className="pw-pt-side-icon" />
-            </span>
-          ))}
+        <aside className="pw-pt-side" aria-label="Web product sections">
+          {items.map((item) => {
+            const canJump = item.jump != null && onNavigate;
+            const active = nav === item.id;
+            if (canJump && item.jump) {
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`pw-pt-side-item is-nav${
+                    active ? " is-active" : ""
+                  }`}
+                  title={`${item.label} — open section`}
+                  aria-label={`Open ${item.label}`}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => onNavigate(item.jump)}
+                >
+                  <span className={`pw-pt-side-icon is-${item.id}`} />
+                </button>
+              );
+            }
+            return (
+              <span
+                key={item.id}
+                className={`pw-pt-side-item${active ? " is-active" : ""}`}
+                title={item.label}
+                aria-hidden
+              >
+                <span className={`pw-pt-side-icon is-${item.id}`} />
+              </span>
+            );
+          })}
           <span className="pw-pt-side-avatar">JD</span>
         </aside>
         <div className="pw-pt-main">{children}</div>
@@ -96,7 +120,13 @@ function money(n: number) {
   return `$${n.toLocaleString("en-US")}`;
 }
 
-export function RiskAssessmentMock() {
+type WebSectionNav = (section: "risk" | "market" | "claims") => void;
+
+export function RiskAssessmentMock({
+  onNavigate,
+}: {
+  onNavigate?: WebSectionNav;
+} = {}) {
   const [selected, setSelected] = useState<
     | "score"
     | "gaps"
@@ -153,7 +183,11 @@ export function RiskAssessmentMock() {
               : "Select a tile to inspect.";
 
   return (
-    <AppChrome url="app.policywell.ai/risk-assessment" nav="risk">
+    <AppChrome
+      url="app.policywell.ai/risk-assessment"
+      nav="risk"
+      onNavigate={onNavigate}
+    >
       <div className="pw-pt-main-head">
         <div>
           <h3>
@@ -248,7 +282,11 @@ export function RiskAssessmentMock() {
   );
 }
 
-export function MarketComparisonMock() {
+export function MarketComparisonMock({
+  onNavigate,
+}: {
+  onNavigate?: WebSectionNav;
+} = {}) {
   const [typeOn, setTypeOn] = useState<Set<CarrierType>>(
     () => new Set(CARRIER_TYPES),
   );
@@ -307,7 +345,11 @@ export function MarketComparisonMock() {
       : Math.round(ranked.reduce((s, c) => s + c.match, 0) / ranked.length);
 
   return (
-    <AppChrome url="app.policywell.ai/market" nav="market">
+    <AppChrome
+      url="app.policywell.ai/market"
+      nav="market"
+      onNavigate={onNavigate}
+    >
       <div className="pw-pt-main-head">
         <h3>Quotes / Market Comparison</h3>
         <p className="pw-pt-muted">
@@ -438,7 +480,11 @@ export function MarketComparisonMock() {
   );
 }
 
-export function ClaimsTrackerMock() {
+export function ClaimsTrackerMock({
+  onNavigate,
+}: {
+  onNavigate?: WebSectionNav;
+} = {}) {
   const timeline = [
     {
       id: "submitted",
@@ -483,7 +529,11 @@ export function ClaimsTrackerMock() {
           : "Select a panel or square to inspect.";
 
   return (
-    <AppChrome url="app.policywell.ai/claims" nav="claims">
+    <AppChrome
+      url="app.policywell.ai/claims"
+      nav="claims"
+      onNavigate={onNavigate}
+    >
       <div className="pw-pt-main-head">
         <h3>Claims / Active Claims</h3>
         <p className="pw-pt-muted">CW-2026-0847 · panels &amp; squares are clickable</p>

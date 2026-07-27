@@ -318,27 +318,30 @@ function ModuleView({
     case "risk":
       return (
         <div className="pw-pt-scene">
-          <RiskAssessmentMock />
+          <RiskAssessmentMock onNavigate={onJump} />
           <p className="pw-pt-caption">
-            Risk dashboard: gaps and exposure before renewal.
+            Risk dashboard: gaps and exposure before renewal. Side squares jump
+            Risk → Market → Claims.
           </p>
         </div>
       );
     case "market":
       return (
         <div className="pw-pt-scene">
-          <MarketComparisonMock />
+          <MarketComparisonMock onNavigate={onJump} />
           <p className="pw-pt-caption">
-            Market comparison: carrier quotes on price, terms, and match.
+            Market comparison: carrier quotes on price, terms, and match. Use
+            the side squares to switch sections.
           </p>
         </div>
       );
     case "claims":
       return (
         <div className="pw-pt-scene">
-          <ClaimsTrackerMock />
+          <ClaimsTrackerMock onNavigate={onJump} />
           <p className="pw-pt-caption">
-            Claims tracker: timelines, documents, and adjuster handoff.
+            Claims tracker: timelines, documents, and adjuster handoff. Side
+            squares open Risk or Market.
           </p>
         </div>
       );
