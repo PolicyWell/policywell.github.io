@@ -5874,7 +5874,7 @@ body:has(.pw-docs-app) .pw-ope {
   align-items: center;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1100px) {
   .pw-industry-hero-grid {
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
   }
@@ -5915,10 +5915,10 @@ body:has(.pw-docs-app) .pw-ope {
 }
 
 .pw-industry-hero-stage {
-  min-height: 340px;
+  min-height: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1100px) {
   .pw-industry-hero-stage {
     min-height: 440px;
   }
@@ -6277,7 +6277,7 @@ body:has(.pw-docs-app) .pw-ope {
   align-items: start;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1100px) {
   .pw-industry-hero-scene .pw-industry-hero-stack,
   .pw-industry-hero-alcohol .pw-industry-hero-stack {
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
@@ -6406,15 +6406,18 @@ body:has(.pw-docs-app) .pw-ope {
   overflow: hidden;
 }
 
-/* Stacked / portrait industry heroes: frame assets without over-cropping. */
-@media (max-width: 959px) {
+/* Phones + tablets (incl. iPad portrait): stack and fit assets fully. */
+@media (max-width: 1099px) {
   .pw-industry-hero-stage {
     min-height: 0;
   }
 
   .pw-industry-hero-scene .pw-industry-hero-stage,
   .pw-industry-hero-alcohol .pw-industry-hero-stage {
-    overflow: visible;
+    width: 100%;
+    max-width: min(100%, 40rem);
+    margin-inline: auto;
+    overflow: hidden;
     contain: none;
   }
 
@@ -6422,13 +6425,14 @@ body:has(.pw-docs-app) .pw-ope {
     width: auto;
     max-width: 100%;
     aspect-ratio: 3 / 2;
-    max-height: min(42svh, 360px);
+    max-height: min(48svh, 420px);
     min-height: 0;
     height: auto;
     margin-inline: auto;
-    overflow: visible;
+    overflow: hidden;
     touch-action: pan-y;
     cursor: default;
+    perspective: none;
   }
 
   .pw-photo-stage:active {
@@ -6436,20 +6440,38 @@ body:has(.pw-docs-app) .pw-ope {
   }
 
   .pw-photo-stage-media {
-    inset: 1% 0;
-    overflow: visible;
+    inset: 0;
+    overflow: hidden;
+    transform: none !important;
+    will-change: auto;
   }
 
   .pw-photo-stage-bob {
-    overflow: visible;
+    overflow: hidden;
+    animation: none;
+    transform: none;
   }
 
+  /* Hide decorative FX on compact viewports — % overlays misalign and look jumbled. */
   .pw-photo-stage-fx {
-    overflow: visible;
+    display: none;
   }
 
   .pw-photo-stage-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center center;
     filter: drop-shadow(0 12px 20px rgba(15, 47, 40, 0.1));
+  }
+}
+
+/* Extra-narrow phones: keep the full asset readable above the fold. */
+@media (max-width: 479px) {
+  .pw-photo-stage {
+    max-height: min(40svh, 280px);
   }
 }
 

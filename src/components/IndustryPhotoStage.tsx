@@ -137,9 +137,9 @@ export function IndustryPhotoStage({
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    // Skip pointer-tilt on stacked/portrait and touch devices so the asset
+    // Skip pointer-tilt on phones/tablets and touch devices so the asset
     // stays fully legible inside the responsive frame.
-    const compact = window.matchMedia("(max-width: 959px)").matches;
+    const compact = window.matchMedia("(max-width: 1099px)").matches;
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     if (reduced || compact || coarse) return;
 
