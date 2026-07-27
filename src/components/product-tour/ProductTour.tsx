@@ -214,7 +214,14 @@ export function ProductTour() {
         <div className="pw-pt-app">
           <aside className="pw-pt-rail" aria-label="Product modules">
             <div className="pw-pt-rail-brand">
-              <span className="pw-pt-rail-mark">PW</span>
+              <img
+                className="pw-pt-rail-logo"
+                src="/logo-64.png"
+                alt=""
+                width={28}
+                height={28}
+                decoding="async"
+              />
               <span>PolicyWell</span>
             </div>
             <p className="pw-pt-rail-section">Workspace</p>
