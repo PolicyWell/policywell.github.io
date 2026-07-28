@@ -48,7 +48,8 @@ type MotionKind =
   | "hoa-single-family"
   | "hoa-townhome"
   | "life"
-  | "annuity";
+  | "annuity"
+  | "pet";
 
 const MOTION_BY_SLUG: Record<string, MotionKind> = {
   ecommerce: "computer",
@@ -56,7 +57,7 @@ const MOTION_BY_SLUG: Record<string, MotionKind> = {
   "clothing-store": "rack",
   cpg: "pallet",
   "food-and-beverage": "shop",
-  "pet-business": "float",
+  "pet-business": "pet",
   supplement: "pills",
   "alcoholic-beverage": "pour",
   "box-truck": "box-truck",
@@ -187,7 +188,9 @@ export function IndustryPhotoStage({
       aria-labelledby={labelId}
     >
       <span id={labelId} className="sr-only">
-        Interactive {label} scene — move to tilt; products animate in place
+        {motion === "pet"
+          ? `Interactive ${label} scene with Rambo walking up to his bowl — move to tilt`
+          : `Interactive ${label} scene — move to tilt; products animate in place`}
       </span>
 
       <div ref={mediaRef} className="pw-photo-stage-media">
@@ -491,6 +494,12 @@ export function IndustryPhotoStage({
               <>
                 <span className="pw-fx-annuity-flow" />
                 <span className="pw-fx-annuity-coin" />
+              </>
+            )}
+            {motion === "pet" && (
+              <>
+                <span className="pw-fx-treat pw-fx-treat-a" />
+                <span className="pw-fx-treat pw-fx-treat-b" />
               </>
             )}
             {motion === "float" && (
