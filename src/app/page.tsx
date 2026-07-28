@@ -91,9 +91,8 @@ export default function HomePage() {
               Services Industry
             </h1>
             <p className="animate-rise-delay mt-4 max-w-2xl text-sm md:text-base text-stone">
-              Analyze coverage, automate insurance workflows, identify risks,
-              and make better insurance decisions — with human review in the
-              loop.
+              PolicyWell transforms insurance data into personalized
+              recommendations and actionable insights with AI agents
             </p>
           </div>
 
