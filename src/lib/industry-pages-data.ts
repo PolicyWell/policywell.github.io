@@ -264,7 +264,7 @@ export const INDUSTRY_PAGES: readonly IndustryPage[] = [
     path: "/ecommerce",
     label: "Ecommerce",
     headline: "Ecommerce insurance built to scale with your brand",
-    support: "Insurance decision support for ecommerce sellers and consumer brands. Product liability, recall coverage, and compliance for Amazon, Shopify, DTC, and CPG brands. a variety of carriers, a response within the next hour.",
+    support: "Insurance decision support for ecommerce sellers and consumer brands. Product liability, recall coverage, and compliance for Amazon, Shopify, DTC, and CPG brands. A variety of carriers, a response within the next hour.",
     title: "Ecommerce & Consumer Brand Insurance",
     hero: "ecommerce-hero",
     categoryId: "ecommerce",
