@@ -267,11 +267,11 @@ export function QuoteRequestForm({
 
   const asideCopy = isPersonal
     ? defaultIndustry
-      ? `Share your current ${industryLabel.toLowerCase()} policies and a licensed advisor reviews protection, funding, and gaps across 60+ carriers. If your coverage is already solid, we'll tell you.`
-      : "Share your current life or annuity policies and a licensed advisor reviews protection, funding, and gaps across 60+ carriers. If your coverage is already solid, we'll tell you."
+      ? `Share your current ${industryLabel.toLowerCase()} policies and a licensed advisor reviews protection, funding, and gaps across a variety of carriers. If your coverage is already solid, we'll tell you.`
+      : "Share your current life or annuity policies and a licensed advisor reviews protection, funding, and gaps across a variety of carriers. If your coverage is already solid, we'll tell you."
     : defaultIndustry
-      ? `Send us your policy and a licensed advisor benchmarks your ${industryLabel.toLowerCase()} insurance across 60+ carriers, showing the gaps and the savings. If your program is already solid, we'll tell you.`
-      : "Send us your policy and a licensed advisor benchmarks your coverage across 60+ carriers, showing the gaps and the savings. If your program is already solid, we'll tell you.";
+      ? `Send us your policy and a licensed advisor benchmarks your ${industryLabel.toLowerCase()} insurance across a variety of carriers, showing the gaps and the savings. If your program is already solid, we'll tell you.`
+      : "Send us your policy and a licensed advisor benchmarks your coverage across a variety of carriers, showing the gaps and the savings. If your program is already solid, we'll tell you.";
 
   const formTitle = isPersonal
     ? "Life & annuity coverage review"
