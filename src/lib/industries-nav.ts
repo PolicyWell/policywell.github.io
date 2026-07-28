@@ -35,7 +35,7 @@ export type EcommerceVertical = {
 };
 
 export const INDUSTRY_SPECIALIST_NOTE =
-  "Specialist coverage placed across 60+ carriers. Open the page for details.";
+  "Specialist coverage placed across a variety of carriers. Open the page for details.";
 
 /** Industries mega-menu - structure matches the Industries Tab screenshots. */
 export const INDUSTRY_CATEGORIES: IndustryCategory[] = [
@@ -201,7 +201,7 @@ export const ECOMMERCE_VERTICALS: readonly EcommerceVertical[] = [
     label: "Clothing Store",
     headline: "Clothing store insurance tailored for online and retail sellers",
     support:
-      "Product liability, commercial property, cyber coverage, and Workers Comp for fashion retailers selling through Amazon, Shopify, and brick-and-mortar locations. Quotes across 60+ carriers.",
+      "Product liability, commercial property, cyber coverage, and Workers Comp for fashion retailers selling through Amazon, Shopify, and brick-and-mortar locations. Quotes across a variety of carriers.",
     productName: "Essential Knit Sweater",
     price: "$189.00",
     colors: ["#d4c4b0", "#8a9aa8", "#2b2b2b"],
