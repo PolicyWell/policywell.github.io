@@ -18,25 +18,30 @@ const SOCIALS = [
   },
 ] as const;
 
-const PLATFORM_LINKS = [
-  { href: "/agent/", label: "Agent" },
-  { href: "/product/", label: "Product" },
+/** Primary hierarchy — crawlable footer anchors for sitelink signals. */
+const PRIMARY_LINKS = [
+  { href: "/platform/", label: "Platform" },
+  { href: "/industries/", label: "Industries" },
+  { href: "/pricing/", label: "Pricing" },
+  { href: "/docs/", label: "Docs" },
   { href: "/demo/", label: "Demo" },
+  { href: "/api/", label: "API" },
+  { href: "/about/", label: "About" },
+  { href: "/contact/", label: "Contact" },
 ] as const;
 
-const FINANCIAL_PRODUCT_LINKS = [
+const SUPPORTING_LINKS = [
+  { href: "/product/", label: "Product tour" },
   { href: "/life-insurance/", label: "Life Insurance" },
   { href: "/annuities/", label: "Annuities" },
-] as const;
-
-const COMPANY_LINKS = [
-  { href: "/docs/", label: "Documentation" },
   { href: "/press/", label: "Press" },
   { href: "/careers/", label: "Careers" },
+  { href: "/quote/#contact", label: "Request a Quote" },
 ] as const;
 
-const PRICING_LINKS = [
-  { href: "/quote/#contact", label: "Request a Quote" },
+const LEGAL_LINKS = [
+  { href: "/privacy/", label: "Privacy Policy" },
+  { href: "/terms/", label: "Terms of Service" },
 ] as const;
 
 export function SiteFooter() {
@@ -52,8 +57,8 @@ export function SiteFooter() {
               PolicyWell
             </Link>
             <p className="text-xs text-stone mt-1 max-w-sm">
-              The Agentic Operating System for the Insurance &amp; Financial
-              Services Industry
+              AI infrastructure for insurance — coverage analysis, workflows,
+              and decision support for the insurance ecosystem.
             </p>
             <p className="text-xs text-moss mt-3 font-semibold">
               Built with <span aria-hidden="true">💚</span>
@@ -87,9 +92,9 @@ export function SiteFooter() {
         <nav aria-label="Footer">
           <ul className="pw-footer-links">
             <li className="pw-footer-group">
-              <span className="pw-footer-group-title">Platform</span>
+              <span className="pw-footer-group-title">Explore</span>
               <ul className="pw-footer-sublinks">
-                {PLATFORM_LINKS.map((link) => (
+                {PRIMARY_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href}>{link.label}</Link>
                   </li>
@@ -97,19 +102,9 @@ export function SiteFooter() {
               </ul>
             </li>
             <li className="pw-footer-group">
-              <Link href="/industries/" className="pw-footer-group-title">
-                Industries
-              </Link>
-            </li>
-            <li className="pw-footer-group">
-              <Link
-                href="/financial-products/"
-                className="pw-footer-group-title"
-              >
-                Financial Products
-              </Link>
+              <span className="pw-footer-group-title">More</span>
               <ul className="pw-footer-sublinks">
-                {FINANCIAL_PRODUCT_LINKS.map((link) => (
+                {SUPPORTING_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href}>{link.label}</Link>
                   </li>
@@ -117,21 +112,9 @@ export function SiteFooter() {
               </ul>
             </li>
             <li className="pw-footer-group">
-              <span className="pw-footer-group-title">Company</span>
+              <span className="pw-footer-group-title">Legal</span>
               <ul className="pw-footer-sublinks">
-                {COMPANY_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>{link.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            <li className="pw-footer-group">
-              <Link href="/pricing/" className="pw-footer-group-title">
-                Pricing
-              </Link>
-              <ul className="pw-footer-sublinks">
-                {PRICING_LINKS.map((link) => (
+                {LEGAL_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href}>{link.label}</Link>
                   </li>

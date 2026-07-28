@@ -29,7 +29,7 @@ export default function robots(): MetadataRoute.Robots {
           "/agent",
           "/commercial",
           "/deck",
-          "/api/",
+          "/api/agent",
         ],
       },
     ],

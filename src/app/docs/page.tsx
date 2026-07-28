@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { UseCaseCard } from "@/components/docs/UseCaseCard";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { DOCS_META, DOCS_USE_CASES } from "@/lib/docs-data";
+import { DOCS_USE_CASES } from "@/lib/docs-data";
 import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = marketingMetadata({
-  title: DOCS_META.title,
-  description: DOCS_META.description,
+  title: "PolicyWell Documentation | Product Guides",
+  description:
+    "Explore PolicyWell product guides, common use cases, CLI patterns, and integration documentation.",
   path: "/docs",
-  ogTitle: `${DOCS_META.title} · PolicyWell Docs`,
+  absoluteTitle: true,
 });
 
 export default function DocsStartHerePage() {
@@ -17,14 +18,18 @@ export default function DocsStartHerePage() {
     <article className="pw-docs-article">
       <JsonLd
         data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
           { name: "Docs", path: "/docs" },
         ])}
       />
       <header className="pw-docs-article-header">
         <div className="pw-docs-title-row">
-          <h1>{DOCS_META.title}</h1>
+          <h1>PolicyWell Documentation</h1>
         </div>
-        <p className="pw-docs-lede">{DOCS_META.description}</p>
+        <p className="pw-docs-lede">
+          Explore common use cases and integrate PolicyWell into advisor,
+          agency, and carrier workflows.
+        </p>
       </header>
 
       <section aria-labelledby="use-cases-heading" className="pw-docs-section">

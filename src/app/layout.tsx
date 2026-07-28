@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s · PolicyWell",
   },
   description:
-    "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
+    "PolicyWell helps insurers, agencies, advisors, and policyholders analyze coverage, automate insurance workflows, identify risks, and make better insurance decisions.",
   applicationName: "PolicyWell",
   icons: {
     icon: [
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     siteName: "PolicyWell",
     title: "PolicyWell | AI Infrastructure for Insurance",
     description:
-      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
+      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze coverage, automate insurance workflows, identify risks, and make better insurance decisions.",
     images: [
       {
         url: OG_IMAGE,
@@ -92,7 +92,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PolicyWell | AI Infrastructure for Insurance",
     description:
-      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
+      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze coverage, automate insurance workflows, identify risks, and make better insurance decisions.",
     images: [OG_IMAGE],
   },
   verification: {

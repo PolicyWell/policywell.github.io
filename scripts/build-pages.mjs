@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
  * Static export for GitHub Pages.
- * Temporarily parks /api (route handlers aren't supported with output: "export").
- * Client-side agent still works; optional reasoning-engine enhance API is omitted on Pages.
+ * Temporarily parks API route handlers (unsupported with output: "export").
+ * Keeps marketing pages under src/app/api/ (e.g. /api/page.tsx).
+ * Client-side agent still works; optional LLM enhance API is omitted on Pages.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -10,8 +11,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const apiDir = path.join(root, "src", "app", "api");
-const parkDir = path.join(root, ".pages-api-park");
+/** Route-handler folders only — marketing `/api` page stays in the tree. */
+const apiRouteDirs = [path.join(root, "src", "app", "api", "agent")];
+const parkRoot = path.join(root, ".pages-api-park");
 const middlewareFile = path.join(root, "middleware.ts");
 const middlewarePark = path.join(root, ".pages-middleware-park.ts");
 
@@ -26,20 +28,32 @@ function run(cmd, args, env = {}) {
   }
 }
 
-function parkApi() {
-  if (!fs.existsSync(apiDir)) return false;
-  fs.rmSync(parkDir, { recursive: true, force: true });
-  fs.mkdirSync(path.dirname(parkDir), { recursive: true });
-  fs.renameSync(apiDir, parkDir);
-  return true;
+function parkApiRoutes() {
+  const parked = [];
+  fs.rmSync(parkRoot, { recursive: true, force: true });
+  fs.mkdirSync(parkRoot, { recursive: true });
+  for (const dir of apiRouteDirs) {
+    if (!fs.existsSync(dir)) continue;
+    const name = path.basename(dir);
+    const dest = path.join(parkRoot, name);
+    fs.renameSync(dir, dest);
+    parked.push(name);
+  }
+  return parked;
 }
 
-function restoreApi(parked) {
-  if (!parked) return;
-  if (fs.existsSync(apiDir)) {
-    fs.rmSync(apiDir, { recursive: true, force: true });
+function restoreApiRoutes(parked) {
+  for (const name of parked) {
+    const dest = path.join(root, "src", "app", "api", name);
+    const src = path.join(parkRoot, name);
+    if (!fs.existsSync(src)) continue;
+    if (fs.existsSync(dest)) {
+      fs.rmSync(dest, { recursive: true, force: true });
+    }
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.renameSync(src, dest);
   }
-  fs.renameSync(parkDir, apiDir);
+  fs.rmSync(parkRoot, { recursive: true, force: true });
 }
 
 /** Middleware is unsupported with `output: "export"` (GitHub Pages). */
@@ -58,13 +72,13 @@ function restoreMiddleware(parked) {
   fs.renameSync(middlewarePark, middlewareFile);
 }
 
-const parkedApi = parkApi();
+const parkedApi = parkApiRoutes();
 const parkedMiddleware = parkMiddleware();
 try {
   run("npx", ["next", "build"], { STATIC_EXPORT: "1" });
 } finally {
   restoreMiddleware(parkedMiddleware);
-  restoreApi(parkedApi);
+  restoreApiRoutes(parkedApi);
 }
 
 if (!fs.existsSync(path.join(root, "out", "index.html"))) {
