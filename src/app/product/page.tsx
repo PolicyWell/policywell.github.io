@@ -4,10 +4,11 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = marketingMetadata({
-  title: "Product",
+  title: "PolicyWell Product Tour | Interactive Platform Walkthrough",
   description:
-    "Interactive PolicyWell product demo with a swift downloadable YC MP4 covering every feature. Live step-by-step walkthrough on /product.",
+    "Interactive PolicyWell product demo covering dashboard, risk, marketplace, claims, CRM, and policy analyzer modules.",
   path: "/product",
+  absoluteTitle: true,
 });
 
 export default function ProductPage() {
@@ -16,6 +17,7 @@ export default function ProductPage() {
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
+          { name: "Platform", path: "/platform" },
           { name: "Product", path: "/product" },
         ])}
       />

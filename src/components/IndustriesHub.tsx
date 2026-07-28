@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SiteBreadcrumbs } from "@/components/seo/SiteBreadcrumbs";
 import { SiteNav } from "@/components/ui";
 import {
   INDUSTRY_CATEGORIES,
@@ -16,6 +17,13 @@ export function IndustriesHub() {
       <main className="pw-industry-page">
         <section className="pw-industries-hub-hero">
           <div className="pw-shell">
+            <SiteBreadcrumbs
+              className="mb-4"
+              items={[
+                { name: "Home", path: "/" },
+                { name: "Industries", path: "/industries" },
+              ]}
+            />
             <p className="pw-industry-eyebrow">Industries</p>
             <h1 className="font-display text-pine">
               Insurance for every business we understand

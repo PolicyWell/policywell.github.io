@@ -8,42 +8,72 @@ import { SiteNav } from "@/components/ui";
 import {
   marketingMetadata,
   organizationJsonLd,
+  softwareApplicationJsonLd,
   webSiteJsonLd,
 } from "@/lib/seo";
 
 export const metadata: Metadata = marketingMetadata({
   title: "PolicyWell | AI Infrastructure for Insurance",
   description:
-    "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
+    "PolicyWell helps insurers, agencies, advisors, and policyholders analyze coverage, automate insurance workflows, identify risks, and make better insurance decisions.",
   path: "/",
   absoluteTitle: true,
   ogTitle: "PolicyWell | AI Infrastructure for Insurance",
 });
 
-const AUDIENCES = [
-  { href: "/agent", label: "Individuals and Families" },
-  { href: "/commercial", label: "Businesses" },
-  { href: "/login", label: "Producers and Advisors" },
-  { href: "/pricing", label: "MGAs and IMOs" },
-  { href: "/docs/api", label: "Insurance Carriers" },
-] as const;
-
-const ENGINE = [
-  "Policy Intelligence",
-  "Illustration Intelligence",
-  "Underwriting Intelligence",
-  "Commercial Risk Intelligence",
-  "Carrier Intelligence",
-  "Distribution Intelligence",
-  "Claims Intelligence",
-  "Recommendation Intelligence",
-  "Document Intelligence",
+const PRIMARY_LINKS = [
+  {
+    href: "/platform/",
+    label: "Explore the PolicyWell Platform",
+    blurb: "Product tour, demos, and insurance intelligence modules.",
+  },
+  {
+    href: "/industries/",
+    label: "Browse insurance industry solutions",
+    blurb: "Life, annuities, commercial verticals, and more.",
+  },
+  {
+    href: "/demo/",
+    label: "Watch the PolicyWell demo",
+    blurb: "See policy ingest, context, and recommendations in action.",
+  },
+  {
+    href: "/api/",
+    label: "Explore the PolicyWell API",
+    blurb: "Developer endpoints for documents, policies, and quotes.",
+  },
+  {
+    href: "/docs/",
+    label: "Read product documentation",
+    blurb: "Guides, CLI notes, and integration references.",
+  },
+  {
+    href: "/pricing/",
+    label: "View PolicyWell pricing",
+    blurb: "Plans for policyholders, advisors, IMOs, and carriers.",
+  },
+  {
+    href: "/about/",
+    label: "About the company",
+    blurb: "Mission, locations, press, and careers.",
+  },
+  {
+    href: "/contact/",
+    label: "Contact PolicyWell",
+    blurb: "Email, phone, quote requests, and discovery calls.",
+  },
 ] as const;
 
 export default function HomePage() {
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-clip">
-      <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
+      <JsonLd
+        data={[
+          organizationJsonLd(),
+          webSiteJsonLd(),
+          softwareApplicationJsonLd(),
+        ]}
+      />
       <SiteNav />
       <main className="relative flex-1 min-w-0 w-full overflow-x-clip">
         <section className="relative overflow-hidden flex flex-col pw-home-hero">
@@ -60,6 +90,11 @@ export default function HomePage() {
               The Agentic Operating System for the Insurance &amp; Financial
               Services Industry
             </h1>
+            <p className="animate-rise-delay mt-4 max-w-2xl text-sm md:text-base text-stone">
+              Analyze coverage, automate insurance workflows, identify risks,
+              and make better insurance decisions — with human review in the
+              loop.
+            </p>
           </div>
 
           <div className="pw-shell pb-4 md:pb-6 animate-rise-delay-2">
@@ -68,10 +103,10 @@ export default function HomePage() {
 
           <div className="pw-shell pb-8 md:pb-10 flex flex-col sm:flex-row flex-wrap gap-3 animate-rise-delay-2">
             <Link
-              href="/agent"
+              href="/platform/"
               className="pw-btn w-full sm:w-auto justify-center"
             >
-              Talk to the agent
+              Explore the Platform
             </Link>
             <Link
               href="/quote/#contact"
@@ -80,57 +115,213 @@ export default function HomePage() {
               Get a Quote
             </Link>
             <Link
-              href="/demo"
+              href="/demo/"
               className="pw-btn pw-btn-secondary w-full sm:w-auto justify-center"
             >
-              Product demo
+              Watch the demo
             </Link>
           </div>
         </section>
 
-        <section className="border-t border-pine/10 bg-foam/50">
+        <section
+          className="border-t border-pine/10 bg-foam/50"
+          aria-labelledby="home-platform"
+        >
           <div className="pw-shell py-10 md:py-14 space-y-6">
             <div className="max-w-2xl">
-              <h2 className="font-display text-2xl md:text-3xl text-pine">
-                Built for every side of the market
+              <h2
+                id="home-platform"
+                className="font-display text-2xl md:text-3xl text-pine"
+              >
+                Platform
               </h2>
               <p className="text-stone mt-2 text-sm md:text-base">
-                PolicyWell sits above existing workflows - it is not a CRM,
-                brokerage portal, carrier admin system, or autonomous underwriter.
+                Insurance intelligence modules for policy analysis, commercial
+                risk, and advisor-ready workflows.
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {AUDIENCES.map((a) => (
-                <Link
-                  key={a.label}
-                  href={a.href}
-                  className="px-3.5 py-2 rounded-full border border-pine/15 bg-white/70 text-sm text-pine hover:border-pine/35"
-                >
-                  {a.label}
-                </Link>
-              ))}
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/platform/"
+                className="pw-btn"
+              >
+                Explore the PolicyWell Platform
+              </Link>
+              <Link
+                href="/product/"
+                className="pw-btn pw-btn-secondary"
+              >
+                Open the product tour
+              </Link>
             </div>
           </div>
         </section>
 
-        <section className="border-t border-pine/10">
-          <div className="pw-shell py-10 md:py-14 space-y-5">
+        <section
+          className="border-t border-pine/10"
+          aria-labelledby="home-industries"
+        >
+          <div className="pw-shell py-10 md:py-14 space-y-6">
             <div className="max-w-2xl">
-              <h2 className="font-display text-2xl md:text-3xl text-pine">
-                Insurance Intelligence Engine
+              <h2
+                id="home-industries"
+                className="font-display text-2xl md:text-3xl text-pine"
+              >
+                Industries
               </h2>
               <p className="text-stone mt-2 text-sm md:text-base">
-                Modular intelligence across personal and commercial lines - with
-                evidence, confidence, and human approval gates.
+                Coverage review for life insurance, annuities, and commercial
+                verticals from contractors to restaurants and trucking.
               </p>
             </div>
-            <ul className="flex flex-wrap gap-2">
-              {ENGINE.map((item) => (
-                <li
-                  key={item}
-                  className="px-3 py-1.5 rounded-full bg-mist/80 text-sm text-pine border border-pine/10"
-                >
-                  {item}
+            <Link
+              href="/industries/"
+              className="inline-flex text-sm text-moss underline hover:text-pine"
+            >
+              Browse insurance industry solutions
+            </Link>
+          </div>
+        </section>
+
+        <section
+          className="border-t border-pine/10 bg-foam/40"
+          aria-labelledby="home-demo"
+        >
+          <div className="pw-shell py-10 md:py-14 space-y-6">
+            <div className="max-w-2xl">
+              <h2
+                id="home-demo"
+                className="font-display text-2xl md:text-3xl text-pine"
+              >
+                Demo
+              </h2>
+              <p className="text-stone mt-2 text-sm md:text-base">
+                Watch PolicyWell ingest a policy, build household context, and
+                surface recommendations with advisors in the loop.
+              </p>
+            </div>
+            <Link href="/demo/" className="pw-btn">
+              Watch the PolicyWell demo
+            </Link>
+          </div>
+        </section>
+
+        <section
+          className="border-t border-pine/10"
+          aria-labelledby="home-developers"
+        >
+          <div className="pw-shell py-10 md:py-14 space-y-6">
+            <div className="max-w-2xl">
+              <h2
+                id="home-developers"
+                className="font-display text-2xl md:text-3xl text-pine"
+              >
+                Developers
+              </h2>
+              <p className="text-stone mt-2 text-sm md:text-base">
+                Integrate insurance intelligence into carrier and distribution
+                systems with documented REST endpoints.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/api/" className="pw-btn">
+                Explore the PolicyWell API
+              </Link>
+              <Link href="/docs/" className="pw-btn pw-btn-secondary">
+                Read product documentation
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="border-t border-pine/10 bg-foam/50"
+          aria-labelledby="home-pricing"
+        >
+          <div className="pw-shell py-10 md:py-14 space-y-6">
+            <div className="max-w-2xl">
+              <h2
+                id="home-pricing"
+                className="font-display text-2xl md:text-3xl text-pine"
+              >
+                Pricing
+              </h2>
+              <p className="text-stone mt-2 text-sm md:text-base">
+                Free for policyholders, with plans for advisors, IMOs, and
+                carriers across the insurance ecosystem.
+              </p>
+            </div>
+            <Link href="/pricing/" className="pw-btn">
+              View PolicyWell pricing
+            </Link>
+          </div>
+        </section>
+
+        <section
+          className="border-t border-pine/10"
+          aria-labelledby="home-company"
+        >
+          <div className="pw-shell py-10 md:py-14 space-y-6">
+            <div className="max-w-2xl">
+              <h2
+                id="home-company"
+                className="font-display text-2xl md:text-3xl text-pine"
+              >
+                Company
+              </h2>
+              <p className="text-stone mt-2 text-sm md:text-base">
+                Built in Atlanta and Boston. Reach the team for partnerships,
+                press, careers, or product questions.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 text-sm">
+              <Link href="/about/" className="underline hover:text-pine text-moss">
+                About the company
+              </Link>
+              <Link
+                href="/contact/"
+                className="underline hover:text-pine text-moss"
+              >
+                Contact PolicyWell
+              </Link>
+              <Link href="/press/" className="underline hover:text-pine text-moss">
+                Press
+              </Link>
+              <Link
+                href="/careers/"
+                className="underline hover:text-pine text-moss"
+              >
+                Careers
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="border-t border-pine/10 bg-foam/40"
+          aria-labelledby="home-sitemap-links"
+        >
+          <div className="pw-shell py-10 md:py-14 space-y-5">
+            <h2
+              id="home-sitemap-links"
+              className="font-display text-2xl md:text-3xl text-pine"
+            >
+              Explore PolicyWell
+            </h2>
+            <ul className="grid gap-3 sm:grid-cols-2 max-w-4xl">
+              {PRIMARY_LINKS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="block rounded-[var(--radius)] border border-pine/10 bg-white/70 px-4 py-3 hover:border-pine/30"
+                  >
+                    <span className="text-sm font-medium text-pine">
+                      {item.label}
+                    </span>
+                    <span className="block text-xs text-stone mt-1">
+                      {item.blurb}
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -155,7 +346,6 @@ export default function HomePage() {
                 Open full deck
               </Link>
             </div>
-
             <DeckViewer compact />
           </div>
         </section>

@@ -118,6 +118,19 @@ const VERIFIED_SAME_AS = [
   "https://www.linkedin.com/company/policywell",
 ] as const;
 
+/** Primary sitelink-oriented marketing hubs (trailing-slash canonicals). */
+export const PRIMARY_HUB_PATHS = [
+  "/",
+  "/platform",
+  "/industries",
+  "/pricing",
+  "/docs",
+  "/demo",
+  "/api",
+  "/about",
+  "/contact",
+] as const;
+
 /** Organization JSON-LD for the marketing site (truthful fields only). */
 export function organizationJsonLd() {
   return {
@@ -125,11 +138,10 @@ export function organizationJsonLd() {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: "PolicyWell",
-    alternateName: "Policy Well",
     url: `${SITE_URL}/`,
     logo: `${SITE_URL}/logo.png?v=20260727d`,
     description:
-      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze policies, automate insurance workflows, improve underwriting decisions, and act on insurance intelligence.",
+      "PolicyWell helps insurers, agencies, advisors, and policyholders analyze coverage, automate insurance workflows, identify risks, and make better insurance decisions.",
     telephone: "+1-470-887-0449",
     email: "info@policywell.ai",
     sameAs: [...VERIFIED_SAME_AS],
@@ -143,10 +155,37 @@ export function webSiteJsonLd() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: "PolicyWell",
-    alternateName: "Policy Well",
     url: `${SITE_URL}/`,
     publisher: {
       "@id": `${SITE_URL}/#organization`,
+    },
+  };
+}
+
+/**
+ * SoftwareApplication JSON-LD for the homepage only.
+ * Describes PolicyWell as a web business application with a free policyholder tier.
+ */
+export function softwareApplicationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": `${SITE_URL}/#software`,
+    name: "PolicyWell",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: `${SITE_URL}/`,
+    description:
+      "AI insurance intelligence platform for policy analysis, commercial risk review, advisor workflows, and carrier integrations.",
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      description: "Free for policyholders; paid plans for advisors, IMOs, and carriers.",
+      url: absoluteUrl("/pricing"),
     },
   };
 }

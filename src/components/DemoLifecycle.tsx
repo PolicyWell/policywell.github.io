@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { SiteBreadcrumbs } from "@/components/seo/SiteBreadcrumbs";
 import { SiteNav } from "@/components/ui";
 import { DEMO_USERS, buildDemoSeed } from "@/lib/seed";
 import { createOnboardingState } from "@/lib/onboarding";
@@ -260,6 +261,13 @@ export function DemoLifecycle() {
       <section className="pw-demo-hero">
         <div className="pw-demo-hero-glow" aria-hidden />
         <div className="pw-shell pw-demo-hero-inner">
+          <SiteBreadcrumbs
+            className="mb-4"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Demo", path: "/demo" },
+            ]}
+          />
           <p className="pw-demo-eyebrow animate-rise">Product demo</p>
           <h1 className="pw-demo-h1 animate-rise-delay">
             Watch insurance

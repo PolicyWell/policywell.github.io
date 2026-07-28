@@ -6,6 +6,7 @@ import { PricingCard } from "@/components/PricingCard";
 import { PricingComparison } from "@/components/PricingComparison";
 import { PricingFAQ } from "@/components/PricingFAQ";
 import { PricingToggle } from "@/components/PricingToggle";
+import { SiteBreadcrumbs } from "@/components/seo/SiteBreadcrumbs";
 import { SiteNav } from "@/components/ui";
 import type { BillingPeriod } from "@/lib/pricing-data";
 import { PRICING } from "@/lib/pricing-data";
@@ -19,6 +20,13 @@ export function PricingPage() {
       <main>
         <section className="pw-pricing-hero">
           <div className="pw-shell pw-pricing-hero-inner">
+            <SiteBreadcrumbs
+              className="mb-4 justify-center sm:justify-start"
+              items={[
+                { name: "Home", path: "/" },
+                { name: "Pricing", path: "/pricing" },
+              ]}
+            />
             <p className="pw-pricing-eyebrow animate-rise">{PRICING.hero.eyebrow}</p>
             <h1 className="pw-pricing-h1 animate-rise-delay">
               {PRICING.hero.headlineLines.map((line) => (
