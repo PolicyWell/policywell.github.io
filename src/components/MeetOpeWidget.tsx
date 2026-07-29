@@ -622,7 +622,7 @@ export function MeetOpeWidget() {
               Clear attachments
             </button>
             <Link href="/upload" onClick={() => setOpen(false)}>
-              Full upload desk
+              Open the well
             </Link>
           </div>
         </div>

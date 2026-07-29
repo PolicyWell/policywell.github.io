@@ -697,7 +697,7 @@ export function AppNav({ role }: { role?: string }) {
     { href: "/commercial", label: "Commercial" },
     { href: "/onboarding", label: "Onboarding" },
     { href: "/profile", label: "Profile" },
-    { href: "/upload", label: "Upload" },
+    { href: "/upload", label: "The Well" },
     { href: "/compare", label: "Compare" },
     { href: "/tasks", label: "Tasks" },
     { href: "/report", label: "Report" },
