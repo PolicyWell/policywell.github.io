@@ -25,24 +25,37 @@ const STEPS = [
 
 type StepId = (typeof STEPS)[number]["id"];
 
+const OVERALL_SCORE = 74;
+
 const EXPOSURE = [
-  { label: "Product Liability", level: "Medium", pct: 75, tone: "mid" },
-  { label: "Cyber Insurance", level: "High", pct: 85, tone: "high" },
-  { label: "Shipping & Cargo", level: "Medium", pct: 60, tone: "mid" },
+  { label: "General Liability", level: "Medium", pct: 62, tone: "mid" },
+  { label: "Cyber Liability", level: "High", pct: 91, tone: "high" },
+  { label: "Property Damage", level: "Medium", pct: 58, tone: "mid" },
 ] as const;
 
 const QUOTES = [
-  { carrier: "Hartford Financial", premium: "$4,300", best: true },
-  { carrier: "Travelers Group", premium: "$4,550", best: false },
-  { carrier: "Chubb Limited", premium: "$6,120", best: false },
-  { carrier: "Liberty Mutual", premium: "$6,480", best: false },
+  { carrier: "Pacific Crest Mutual", premium: "$3,840", best: true },
+  { carrier: "Summit Oak Insurance", premium: "$4,125", best: false },
+  { carrier: "Northline Specialty", premium: "$5,690", best: false },
+  { carrier: "Rivermark Assurance", premium: "$5,975", best: false },
 ] as const;
 
+const QUOTES_RECEIVED = 14;
+const BEST_QUOTE = QUOTES.find((q) => q.best) ?? QUOTES[0];
+
+const CLAIM = {
+  id: "PW-4817-3095",
+  resolution: "< 48 hours",
+  priority: "High",
+  advisors: [
+    { initials: "JL", name: "Jordan Lee", role: "Lead" },
+    { initials: "PN", name: "Priya Nair", role: "Ops" },
+  ],
+} as const;
+
 function moneyRingScore() {
-  // Circular gauge via conic-gradient; 68/100
-  const pct = 68;
   return {
-    background: `conic-gradient(var(--moss) ${pct * 3.6}deg, rgba(15, 47, 40, 0.08) 0)`,
+    background: `conic-gradient(var(--moss) ${OVERALL_SCORE * 3.6}deg, rgba(15, 47, 40, 0.08) 0)`,
   };
 }
 
@@ -62,7 +75,7 @@ function AnalyzePanel() {
         <div className="pw-wf-score">
           <div className="pw-wf-score-ring" style={moneyRingScore()}>
             <div className="pw-wf-score-inner">
-              <strong>68</strong>
+              <strong>{OVERALL_SCORE}</strong>
               <span>Overall Score</span>
             </div>
           </div>
@@ -117,10 +130,10 @@ function ShopPanel() {
         </ul>
         <aside className="pw-wf-quote-summary">
           <p className="pw-wf-section-label">Quotes received</p>
-          <p className="pw-wf-summary-stat">20</p>
+          <p className="pw-wf-summary-stat">{QUOTES_RECEIVED}</p>
           <p className="pw-wf-section-label">Best premium</p>
-          <p className="pw-wf-summary-premium">$4,300</p>
-          <p className="pw-wf-summary-note">Hartford Financial · annual</p>
+          <p className="pw-wf-summary-premium">{BEST_QUOTE.premium}</p>
+          <p className="pw-wf-summary-note">{BEST_QUOTE.carrier} · annual</p>
         </aside>
       </div>
     </div>
@@ -145,32 +158,32 @@ function ManagePanel() {
       <div className="pw-wf-manage-meta">
         <div>
           <span className="pw-wf-meta-label">Claim #</span>
-          <strong>PW-2224-8162</strong>
+          <strong>{CLAIM.id}</strong>
         </div>
         <div>
           <span className="pw-wf-meta-label">Resolution</span>
-          <strong className="is-accent">&lt; 72 hours</strong>
+          <strong className="is-accent">{CLAIM.resolution}</strong>
         </div>
         <div>
           <span className="pw-wf-meta-label">Priority</span>
           <strong>
-            <span className="pw-wf-priority-dot" aria-hidden /> Medium
+            <span className="pw-wf-priority-dot" aria-hidden /> {CLAIM.priority}
           </strong>
         </div>
         <div className="pw-wf-advisors">
           <span className="pw-wf-meta-label">Advisors</span>
-          <div className="pw-wf-advisor-row">
-            <span className="pw-wf-avatar">SM</span>
-            <span>
-              Sarah M. <em>Lead</em>
-            </span>
-          </div>
-          <div className="pw-wf-advisor-row">
-            <span className="pw-wf-avatar is-alt">MT</span>
-            <span>
-              Max T. <em>Ops</em>
-            </span>
-          </div>
+          {CLAIM.advisors.map((advisor, index) => (
+            <div key={advisor.initials} className="pw-wf-advisor-row">
+              <span
+                className={`pw-wf-avatar${index > 0 ? " is-alt" : ""}`}
+              >
+                {advisor.initials}
+              </span>
+              <span>
+                {advisor.name} <em>{advisor.role}</em>
+              </span>
+            </div>
+          ))}
         </div>
       </div>
       <div className="pw-wf-timeline">
