@@ -18,7 +18,7 @@ const manrope = Manrope({
 });
 
 /** Bump to force browsers/CDNs/Google to pick up refreshed favicons. */
-const ICON_V = "20260727d";
+const ICON_V = "20260729a";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
