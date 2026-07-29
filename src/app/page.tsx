@@ -3,6 +3,7 @@ import Link from "next/link";
 import { DeckViewer } from "@/components/DeckViewer";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
+import { WorkflowStepsShowcase } from "@/components/WorkflowStepsShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteNav } from "@/components/ui";
 import {
@@ -78,6 +79,8 @@ export default function HomePage() {
             </Link>
           </div>
         </section>
+
+        <WorkflowStepsShowcase />
 
         <section
           id="deck"
