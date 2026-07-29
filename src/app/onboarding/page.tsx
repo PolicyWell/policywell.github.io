@@ -236,7 +236,7 @@ export default function OnboardingPage() {
               <p className="mt-3 text-sm text-ok">
                 Profile saved. Continue to{" "}
                 <Link href="/upload" className="underline">
-                  document upload
+                  the well
                 </Link>{" "}
                 or{" "}
                 <Link href="/workspace" className="underline">

@@ -424,7 +424,7 @@ export default function AgentPage() {
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <Link href="/upload" className="pw-btn pw-btn-secondary !py-2 text-xs">
-                Upload docs
+                Drop into the well
               </Link>
               <Link
                 href="/workspace"
