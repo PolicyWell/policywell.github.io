@@ -10,6 +10,7 @@ import {
   type RefObject,
 } from "react";
 import { IndustriesMegaMenu } from "@/components/IndustriesMegaMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function BrandMark({ large = false }: { large?: boolean }) {
   const iconSize = large ? 48 : 32;
@@ -581,6 +582,7 @@ export function SiteNav() {
               >
                 Sign in
               </Link>
+              <ThemeToggle compact className="pw-nav-theme" />
               <span className="pw-nav-version" aria-label="Version 0.1">
                 v0.1
               </span>
@@ -682,6 +684,9 @@ export function SiteNav() {
           >
             Sign in
           </Link>
+          <div className="mt-3 px-1">
+            <ThemeToggle className="w-full justify-center" />
+          </div>
           <p className="pw-nav-version pw-nav-version-mobile">v0.1</p>
         </nav>
       )}
@@ -719,11 +724,14 @@ export function AppNav({ role }: { role?: string }) {
       <div className="pw-shell flex flex-col gap-2 py-3 md:py-4">
         <div className="flex items-center justify-between gap-3">
           <BrandMark />
-          {role && (
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-moss shrink-0">
-              {role}
-            </span>
-          )}
+          <div className="flex items-center gap-2 shrink-0">
+            {role && (
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-moss">
+                {role}
+              </span>
+            )}
+            <ThemeToggle compact />
+          </div>
         </div>
         <nav className="flex items-center gap-1 text-sm overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
           {links.map((l) => (
