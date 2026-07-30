@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import {
+  applyTheme,
+  getSystemTheme,
   persistTheme,
-  resolveTheme,
+  readStoredTheme,
   type ThemeMode,
 } from "@/lib/theme";
 
