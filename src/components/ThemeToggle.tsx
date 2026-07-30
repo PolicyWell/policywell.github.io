@@ -17,21 +17,18 @@ export function ThemeToggle({ className = "", compact = false }: ThemeToggleProp
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const next = resolveTheme();
+    const stored = readStoredTheme();
+    const next = stored ?? getSystemTheme();
     setTheme(next);
-    persistTheme(next);
+    applyTheme(next);
     setReady(true);
 
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const onSystem = () => {
-      try {
-        if (window.localStorage.getItem("pw-theme")) return;
-      } catch {
-        // fall through
-      }
+      if (readStoredTheme()) return;
       const system = mq.matches ? "dark" : "light";
       setTheme(system);
-      persistTheme(system);
+      applyTheme(system);
     };
     mq.addEventListener("change", onSystem);
     return () => mq.removeEventListener("change", onSystem);
