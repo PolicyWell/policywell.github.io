@@ -266,7 +266,8 @@ export function WorkflowStepsShowcase() {
           </h2>
           <p className="pw-wf-lede">
             One operating system for coverage intelligence, marketplace
-            shopping, and claims workflows — with advisors in the loop.
+            shopping, and claims workflows — with advisors at the forefront of
+            the loop.
           </p>
         </div>
 
