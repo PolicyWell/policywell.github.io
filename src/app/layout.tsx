@@ -3,6 +3,7 @@ import { Fraunces, Manrope } from "next/font/google";
 import { MeetOpeWidget } from "@/components/MeetOpeWidget";
 import { SiteFooter } from "@/components/SiteFooter";
 import { OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -19,6 +20,8 @@ const manrope = Manrope({
 
 /** Bump to force browsers/CDNs/Google to pick up refreshed favicons. */
 const ICON_V = "20260729a";
+
+const themeBootScript = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var t=localStorage.getItem(k);if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);document.documentElement.style.colorScheme=t;}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -110,8 +113,10 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <meta
           name="google-site-verification"
           content="YWZ2M2Q486Ke411V0zJ6FkhO6ykrmZN9WYEexjrutF4"
