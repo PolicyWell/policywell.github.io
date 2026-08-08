@@ -130,6 +130,9 @@ export type DocumentKind =
   | "property_schedule"
   | "cyber_questionnaire"
   | "claims_document"
+  | "financial_statement"
+  | "contract"
+  | "environmental_questionnaire"
   | "other";
 
 export interface ExtractedPolicyData {
