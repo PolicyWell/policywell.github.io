@@ -54,3 +54,9 @@ Static export cannot run middleware; `scripts/build-pages.mjs` parks `middleware
 
 - Demo login remains localStorage until Auth is migrated.
 - Never commit the service role key.
+
+## Commercial V1 schema
+
+Imperative migration: `supabase/migrations/20260808233000_commercial_v1.sql`
+
+Creates owner-scoped commercial account / document / coverage / diligence tables plus a **private** Storage bucket `commercial-documents`. The `/commercial` UI remains localStorage-first until Auth is wired; apply the migration against prod/dev Supabase when ready.

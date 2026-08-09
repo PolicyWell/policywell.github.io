@@ -1,3 +1,54 @@
+# PolicyWell Morning Report - Sprint 9 (Commercial V1)
+
+**Date:** 2026-08-08  
+**Branch:** `cursor/commercial-v1-workspace-0458`  
+**Manual version:** 0.1  
+**Previous sprint:** Sprint 8 (CLI design)
+
+## Verdict
+
+Shipped **PolicyWell Commercial V1** inside the existing app: a broker commercial account workspace at `/commercial` with private document ingest, provenanced extraction, diligence + readiness (not underwriting), and normalized program aggregation — reusing localStorage, AppNav, and commercial risk engines.
+
+## Shipped
+
+### Commercial Account Workspace
+- Account entity: company, industry, HQ, revenue, employees, locations, premium, renewal, producer, AM, status, last updated
+- Workspace nav: Overview → Renewal (Submission/Markets/Quotes/Proposal stubbed for later)
+- Overview metrics: policies, premium, renewal, readiness, missing diligence, coverage issues, loss-run discrepancies
+
+### Documents + extraction
+- Accept PDF/DOCX/XLSX/CSV/PNG/JPG/EML; classify into commercial document types
+- Private-by-default storage metadata + Supabase migration for `commercial-documents` bucket
+- Material fields keep source document, page, confidence, excerpt — never invent missing values
+
+### Diligence + readiness
+- Checklist with severity, category, status, assignee, due date, source, resolution notes
+- Account Readiness Score explicitly disclaimer’d as completeness for broker review, not underwriting
+
+### Policy aggregation
+- Normalized coverages across Property, GL, WC, Auto, Umbrella, Excess, Cyber, D&O, E&O, Crime, Fiduciary, Environmental, Marine, Builders Risk, Professional Liability, Specialty
+
+### Schema
+- First imperative migration: `supabase/migrations/20260808233000_commercial_v1.sql` (RLS owner-scoped)
+
+## Tests
+
+`npm test`: **54/54** (7 new Commercial V1 tests). `tsc --noEmit` clean.
+
+## How to feel it
+
+1. Sign in → **/commercial** → Load Harbor Fab demo  
+2. Overview readiness + diligence → Documents upload → Policies program table  
+3. Resolve diligence items and watch readiness change
+
+## Next
+
+- Submission / markets / quotes / proposal flows  
+- Wire commercial persistence to Supabase Auth + Storage when Auth migrates  
+- Deeper exposure schedules and loss-run reconciliation UX
+
+---
+
 # PolicyWell Morning Report - Sprint 7 (Firm ops)
 
 **Date:** 2026-07-21  

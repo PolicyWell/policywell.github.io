@@ -15,6 +15,8 @@ const ACTIVE_CLIENT_KEY = "policywell_active_client";
 const RECS_KEY = "policywell_recommendations";
 const HISTORY_KEY = "policywell_score_history";
 const TASKS_KEY = "policywell_tasks";
+const COMMERCIAL_ACCOUNT_KEY = "policywell_commercial_account";
+const ACTIVE_COMMERCIAL_ACCOUNT_KEY = "policywell_active_commercial_account";
 
 function canUseStorage() {
   return typeof window !== "undefined" && !!window.localStorage;
@@ -160,6 +162,30 @@ export function loadTasksRaw(): string | null {
   return localStorage.getItem(TASKS_KEY);
 }
 
+export function saveCommercialAccountRaw(raw: string) {
+  if (!canUseStorage()) return;
+  localStorage.setItem(COMMERCIAL_ACCOUNT_KEY, raw);
+}
+
+export function loadCommercialAccountRaw(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(COMMERCIAL_ACCOUNT_KEY);
+}
+
+export function saveActiveCommercialAccountId(id: string | null) {
+  if (!canUseStorage()) return;
+  if (id == null) {
+    localStorage.removeItem(ACTIVE_COMMERCIAL_ACCOUNT_KEY);
+    return;
+  }
+  localStorage.setItem(ACTIVE_COMMERCIAL_ACCOUNT_KEY, id);
+}
+
+export function loadActiveCommercialAccountId(): string | null {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(ACTIVE_COMMERCIAL_ACCOUNT_KEY);
+}
+
 export function clearWorkspaceData() {
   if (!canUseStorage()) return;
   localStorage.removeItem(PROFILE_KEY);
@@ -171,4 +197,6 @@ export function clearWorkspaceData() {
   localStorage.removeItem(RECS_KEY);
   localStorage.removeItem(HISTORY_KEY);
   localStorage.removeItem(TASKS_KEY);
+  localStorage.removeItem(COMMERCIAL_ACCOUNT_KEY);
+  localStorage.removeItem(ACTIVE_COMMERCIAL_ACCOUNT_KEY);
 }

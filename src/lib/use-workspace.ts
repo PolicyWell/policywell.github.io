@@ -13,9 +13,12 @@ import type { ClientRecord } from "./clients";
 import type { ScoreSnapshot } from "./history";
 import type { Recommendation } from "./recommendations";
 import type { FollowUpTask } from "./tasks";
+import type { CommercialAccount } from "./commercial-types";
 import {
   loadActiveClientId,
+  loadActiveCommercialAccountId,
   loadClientsRaw,
+  loadCommercialAccountRaw,
   loadDocumentsRaw,
   loadFeedbackRaw,
   loadHistoryRaw,
@@ -25,7 +28,9 @@ import {
   loadProfile,
   loadSession,
   saveActiveClientId,
+  saveActiveCommercialAccountId,
   saveClientsRaw,
+  saveCommercialAccountRaw,
   saveDocuments,
   saveFeedback,
   saveHistoryRaw,
@@ -272,5 +277,53 @@ export function useTasks(): FollowUpTask[] {
 
 export function persistTasks(tasks: FollowUpTask[]) {
   saveTasksRaw(JSON.stringify(tasks));
+  notifyStore();
+}
+
+const EMPTY_COMMERCIAL_ACCOUNTS: CommercialAccount[] = [];
+const readCommercialAccounts = makeJsonSnapshot<CommercialAccount[]>(
+  loadCommercialAccountRaw,
+  EMPTY_COMMERCIAL_ACCOUNTS,
+);
+
+export function useCommercialAccounts(): CommercialAccount[] {
+  return useSyncExternalStore(
+    subscribe,
+    readCommercialAccounts,
+    () => EMPTY_COMMERCIAL_ACCOUNTS,
+  );
+}
+
+export function useActiveCommercialAccountId(): string | null {
+  return useSyncExternalStore(
+    subscribe,
+    loadActiveCommercialAccountId,
+    () => null,
+  );
+}
+
+export function persistCommercialAccounts(accounts: CommercialAccount[]) {
+  saveCommercialAccountRaw(JSON.stringify(accounts));
+  notifyStore();
+}
+
+export function activateCommercialAccount(account: CommercialAccount) {
+  saveActiveCommercialAccountId(account.id);
+  const existing = readCommercialAccounts();
+  const next = [
+    account,
+    ...existing.filter((a) => a.id !== account.id),
+  ];
+  saveCommercialAccountRaw(JSON.stringify(next));
+  notifyStore();
+}
+
+export function persistCommercialAccount(account: CommercialAccount) {
+  const existing = readCommercialAccounts();
+  const next = existing.some((a) => a.id === account.id)
+    ? existing.map((a) => (a.id === account.id ? account : a))
+    : [account, ...existing];
+  saveCommercialAccountRaw(JSON.stringify(next));
+  saveActiveCommercialAccountId(account.id);
   notifyStore();
 }
