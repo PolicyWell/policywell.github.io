@@ -10,6 +10,7 @@ import {
   navForTab,
 } from "@/lib/docs-nav";
 import { getApiGroup } from "@/lib/api-reference-data";
+import { DocsAccessGate } from "@/components/docs/DocsAccessGate";
 
 function NavLinks({
   groups,
@@ -157,6 +158,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
   }, [open]);
 
   return (
+    <DocsAccessGate>
     <div
       className={`pw-docs-app flex-1 flex flex-col min-h-0${isApiTab ? " is-api-tab" : ""}`}
     >
@@ -323,5 +325,6 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
         </p>
       </div>
     </div>
+    </DocsAccessGate>
   );
 }

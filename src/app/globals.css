@@ -12874,3 +12874,174 @@ html[data-theme="dark"] ::selection {
   background: rgba(126, 184, 154, 0.35);
   color: #f5faf7;
 }
+
+/* Private docs access gate (soft client-side unlock) */
+.pw-docs-access {
+  flex: 1;
+  min-height: calc(100vh - 4rem);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem calc(2rem + env(safe-area-inset-bottom));
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+.pw-docs-access-card {
+  width: min(100%, 22.5rem);
+  background: #ffffff;
+  border: 1px solid rgba(24, 24, 27, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(24, 24, 27, 0.06);
+  padding: 2rem 1.5rem 1.6rem;
+  text-align: center;
+}
+
+.pw-docs-access-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  margin: 0 auto 1.1rem;
+  display: block;
+  border-radius: 0.45rem;
+}
+
+.pw-docs-access-title {
+  margin: 0;
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #18181b;
+}
+
+.pw-docs-access-lede,
+.pw-docs-access-muted {
+  margin: 0.55rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #71717a;
+}
+
+.pw-docs-access-form {
+  margin-top: 1.35rem;
+  text-align: left;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.pw-docs-access-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3f3f46;
+}
+
+.pw-docs-access-input {
+  width: 100%;
+  border: 1px solid rgba(24, 24, 27, 0.14);
+  border-radius: 0.55rem;
+  background: #fff;
+  color: #18181b;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.pw-docs-access-input::placeholder {
+  color: #a1a1aa;
+}
+
+.pw-docs-access-input:focus {
+  border-color: rgba(24, 24, 27, 0.45);
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
+}
+
+.pw-docs-access-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #b42318;
+}
+
+.pw-docs-access-submit {
+  margin-top: 0.35rem;
+  width: 100%;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #18181b;
+  color: #fafafa;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.pw-docs-access-submit:hover {
+  background: #27272a;
+}
+
+.pw-docs-access-submit:focus-visible {
+  outline: 2px solid #18181b;
+  outline-offset: 2px;
+}
+
+.pw-docs-access-lock {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  z-index: 35;
+  border: 1px solid rgba(24, 24, 27, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: #52525b;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.pw-docs-access-lock:hover {
+  color: #18181b;
+  border-color: rgba(24, 24, 27, 0.22);
+}
+
+html[data-theme="dark"] .pw-docs-access {
+  background: #0f1412;
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .pw-docs-access-card {
+  background: #15211d;
+  border-color: rgba(215, 235, 226, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .pw-docs-access-title {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .pw-docs-access-lede,
+html[data-theme="dark"] .pw-docs-access-muted {
+  color: var(--stone);
+}
+
+html[data-theme="dark"] .pw-docs-access-label {
+  color: var(--moss);
+}
+
+html[data-theme="dark"] .pw-docs-access-input {
+  background: #101a17;
+  border-color: rgba(215, 235, 226, 0.14);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .pw-docs-access-submit {
+  background: var(--foam);
+  color: #0f2f28;
+}
+
+html[data-theme="dark"] .pw-docs-access-lock {
+  background: rgba(21, 33, 29, 0.92);
+  border-color: rgba(215, 235, 226, 0.14);
+  color: var(--stone);
+}

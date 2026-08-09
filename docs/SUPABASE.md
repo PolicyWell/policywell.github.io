@@ -54,3 +54,7 @@ Static export cannot run middleware; `scripts/build-pages.mjs` parks `middleware
 
 - Demo login remains localStorage until Auth is migrated.
 - Never commit the service role key.
+
+## Private docs access (optional)
+
+Set `NEXT_PUBLIC_DOCS_ACCESS_CODE` to soft-gate `/docs` with an access-code screen (session unlock; also accepts `?code=`). Leave unset to keep docs public. For GitHub Pages, add the same name as an Actions secret.
