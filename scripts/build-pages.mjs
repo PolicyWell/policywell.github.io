@@ -4,7 +4,11 @@
  * Temporarily parks API route handlers (unsupported with output: "export").
  * Keeps marketing pages under src/app/api/ (e.g. /api/page.tsx).
  * Client-side agent still works; optional LLM enhance API is omitted on Pages.
+ *
+ * Private docs: requires DOCS_ACCESS_CODE (or NEXT_PUBLIC_DOCS_ACCESS_CODE).
+ * Injects NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH so the plaintext code is not shipped.
  */
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -72,10 +76,34 @@ function restoreMiddleware(parked) {
   fs.renameSync(middlewarePark, middlewareFile);
 }
 
+const docsAccessCode = (
+  process.env.DOCS_ACCESS_CODE ||
+  process.env.NEXT_PUBLIC_DOCS_ACCESS_CODE ||
+  ""
+).trim();
+
+if (!docsAccessCode) {
+  console.error(
+    "Pages build blocked: set DOCS_ACCESS_CODE (recommended) or NEXT_PUBLIC_DOCS_ACCESS_CODE.\n" +
+      "Docs are private — refusing to export without an access code.",
+  );
+  process.exit(1);
+}
+
+const docsAccessCodeHash = createHash("sha256")
+  .update(docsAccessCode)
+  .digest("hex");
+
 const parkedApi = parkApiRoutes();
 const parkedMiddleware = parkMiddleware();
 try {
-  run("npx", ["next", "build"], { STATIC_EXPORT: "1" });
+  run("npx", ["next", "build"], {
+    STATIC_EXPORT: "1",
+    // Ship hash only — do not embed plaintext access code in the client bundle.
+    NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH: docsAccessCodeHash,
+    NEXT_PUBLIC_DOCS_ACCESS_CODE: "",
+    DOCS_ACCESS_CODE: docsAccessCode,
+  });
 } finally {
   restoreMiddleware(parkedMiddleware);
   restoreApiRoutes(parkedApi);

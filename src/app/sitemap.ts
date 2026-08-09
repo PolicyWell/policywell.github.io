@@ -9,8 +9,9 @@ export const dynamic = "force-static";
 /**
  * Indexable public paths only.
  *
+ * /docs is private (access-code gated) and intentionally omitted.
  * Segmented helpers keep future sitemap indexes easy
- * (core / commercial / life / annuities / industries / docs / api)
+ * (core / commercial / life / annuities / industries)
  * without emitting multiple files until URL volume requires it.
  */
 
@@ -20,7 +21,6 @@ function corePaths(): string[] {
     "/platform",
     "/industries",
     "/pricing",
-    "/docs",
     "/demo",
     "/api",
     "/about",
@@ -28,10 +28,6 @@ function corePaths(): string[] {
     "/privacy",
     "/terms",
     "/quote",
-    "/docs/api",
-    "/docs/api/reference",
-    "/docs/cli",
-    "/docs/engineering",
     "/product",
     "/book-a-call",
     "/press",
@@ -55,18 +51,16 @@ function commercialIndustryPaths(): string[] {
   ).map((p) => p.path);
 }
 
-/** Guides with public, non-placeholder content only (exclude Planned). */
+/** @deprecated Docs are private — kept so segmented helpers stay referenced. */
 function docsGuidePaths(): string[] {
-  return DOCS_USE_CASES.filter((useCase) => useCase.status !== "Planned").map(
-    (useCase) => `/docs/guides/${useCase.slug}`,
-  );
+  void DOCS_USE_CASES;
+  return [];
 }
 
-/** API group pages with non-placeholder contracts only. */
+/** @deprecated Docs are private — kept so segmented helpers stay referenced. */
 function docsApiPaths(): string[] {
-  return API_GROUPS.filter((group) => group.status !== "Planned").map(
-    (group) => `/docs/api/${group.slug}`,
-  );
+  void API_GROUPS;
+  return [];
 }
 
 function dedupe(paths: string[]): string[] {
@@ -83,20 +77,17 @@ function dedupe(paths: string[]): string[] {
 
 /**
  * Single sitemap for current URL count.
- * Excludes: private apps, deck, agent, commercial workspace, legacy
- * /industries/ecommerce/* aliases, Planned docs, redirects.
+ * Excludes: private apps, deck, agent, commercial workspace, /docs,
+ * legacy /industries/ecommerce/* aliases, redirects.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   // Keep segmented builders referenced so future split stays trivial.
   void financialProductPaths;
   void commercialIndustryPaths;
+  void docsGuidePaths;
+  void docsApiPaths;
 
-  const paths = dedupe([
-    ...corePaths(),
-    ...industryPaths(),
-    ...docsGuidePaths(),
-    ...docsApiPaths(),
-  ]);
+  const paths = dedupe([...corePaths(), ...industryPaths()]);
 
   // Omit lastModified — no trustworthy per-page content dates available.
   // Do not emit changefreq or priority.

@@ -1,29 +1,52 @@
+import { createHash } from "node:crypto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  getConfiguredDocsAccessCode,
+  getDocsAccessCodeHash,
+  getDocsAccessCodePlaintext,
   isDocsAccessGateEnabled,
+  isDocsUnlockConfigured,
   normalizeAccessCode,
+  sha256Hex,
   verifyDocsAccessCode,
 } from "@/lib/docs-access";
 
-describe("docs access gate", () => {
+describe("docs access gate (always private)", () => {
   afterEach(() => {
     vi.unstubAllEnvs();
   });
 
-  it("is disabled when no access code is configured", () => {
+  it("is always enabled", () => {
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
-    expect(isDocsAccessGateEnabled()).toBe(false);
-    expect(verifyDocsAccessCode("anything")).toBe(true);
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    expect(isDocsAccessGateEnabled()).toBe(true);
   });
 
-  it("requires the configured access code when enabled", () => {
-    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "harbor-docs");
-    expect(isDocsAccessGateEnabled()).toBe(true);
-    expect(getConfiguredDocsAccessCode()).toBe("harbor-docs");
-    expect(verifyDocsAccessCode("harbor-docs")).toBe(true);
-    expect(verifyDocsAccessCode("  harbor-docs  ")).toBe(true);
-    expect(verifyDocsAccessCode("wrong")).toBe(false);
+  it("fails closed when no credential is configured", async () => {
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    expect(isDocsUnlockConfigured()).toBe(false);
+    expect(await verifyDocsAccessCode("anything")).toBe(false);
+  });
+
+  it("verifies against SHA-256 hash when configured", async () => {
+    const code = "harbor-docs";
+    const hash = createHash("sha256").update(code).digest("hex");
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", hash);
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
+    expect(isDocsUnlockConfigured()).toBe(true);
+    expect(getDocsAccessCodeHash()).toBe(hash);
+    expect(await verifyDocsAccessCode(code)).toBe(true);
+    expect(await verifyDocsAccessCode("  harbor-docs  ")).toBe(true);
+    expect(await verifyDocsAccessCode("wrong")).toBe(false);
+    expect(await sha256Hex(code)).toBe(hash);
+  });
+
+  it("supports plaintext local-dev fallback", async () => {
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "local-secret");
+    expect(getDocsAccessCodePlaintext()).toBe("local-secret");
+    expect(await verifyDocsAccessCode("local-secret")).toBe(true);
+    expect(await verifyDocsAccessCode("nope")).toBe(false);
     expect(normalizeAccessCode("  x  ")).toBe("x");
   });
 });

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApiEndpointBlock } from "@/components/docs/ApiEndpointBlock";
 import { API_GROUPS, getApiGroup } from "@/lib/api-reference-data";
-import { marketingMetadata } from "@/lib/seo";
+import { noindexMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -17,15 +17,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const group = getApiGroup(slug);
   if (!group) return { title: "Not found" };
-  return marketingMetadata({
+  return noindexMetadata({
     title: group.title,
     description: group.summary,
     path: `/docs/api/${group.slug}`,
-    ogTitle: `${group.title} · PolicyWell API`,
-    robots:
-      group.status === "Planned"
-        ? { index: false, follow: true }
-        : undefined,
   });
 }
 

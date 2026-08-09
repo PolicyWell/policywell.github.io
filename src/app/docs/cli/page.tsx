@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { markdownToHtml } from "@/lib/markdown";
 import { sanitizePublicDocsMarkdown } from "@/lib/sanitize-public-docs";
-import { marketingMetadata } from "@/lib/seo";
+import { noindexMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = marketingMetadata({
+export const metadata: Metadata = noindexMetadata({
   title: "CLI",
   description:
     "Compliance-first PolicyWell CLI (pw) for producers, IMOs, carriers, and clients.",

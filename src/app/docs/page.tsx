@@ -3,14 +3,13 @@ import Link from "next/link";
 import { UseCaseCard } from "@/components/docs/UseCaseCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { DOCS_USE_CASES } from "@/lib/docs-data";
-import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, noindexMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = marketingMetadata({
+export const metadata: Metadata = noindexMetadata({
   title: "PolicyWell Documentation | Product Guides",
   description:
     "Explore PolicyWell product guides, common use cases, CLI patterns, and integration documentation.",
   path: "/docs",
-  absoluteTitle: true,
 });
 
 export default function DocsStartHerePage() {
