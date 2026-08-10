@@ -606,6 +606,24 @@ export type Database = {
         }
         Relationships: []
       }
+      site_stats: {
+        Row: {
+          analyzed_count: number
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          analyzed_count?: number
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          analyzed_count?: number
+          id?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
