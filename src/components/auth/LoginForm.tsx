@@ -7,6 +7,7 @@ import { authenticateDemo } from "@/lib/seed";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { ensureProfileForUser } from "@/lib/supabase/ensure-profile";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { syncWorkspaceSessionFromAuth } from "@/lib/supabase/sync-workspace-session";
 import { clearWorkspaceData } from "@/lib/storage";
 import { clearOnboardingBoot, persistSession } from "@/lib/use-workspace";
 
@@ -147,6 +148,9 @@ export function LoginForm() {
             last_name: lastName.trim(),
             phone: phone.trim() || null,
           });
+          if (data.session) {
+            await syncWorkspaceSessionFromAuth(supabase, data.user);
+          }
         }
         if (data.session) {
           router.push(next);
@@ -173,6 +177,7 @@ export function LoginForm() {
       }
       if (data.user) {
         await ensureProfileForUser(supabase, data.user);
+        await syncWorkspaceSessionFromAuth(supabase, data.user);
       }
       router.push(next);
       router.refresh();

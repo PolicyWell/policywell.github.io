@@ -1,5 +1,10 @@
 /** Application routes that require an authenticated Supabase session. */
-export const PROTECTED_PATH_PREFIXES = ["/app", "/cases", "/policies"] as const;
+export const PROTECTED_PATH_PREFIXES = [
+  "/app",
+  "/cases",
+  "/policies",
+  "/upload",
+] as const;
 
 export function isProtectedPath(pathname: string): boolean {
   const path = pathname.split("?")[0] ?? pathname;

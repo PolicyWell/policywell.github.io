@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppNav, ConfidenceBadge } from "@/components/ui";
 import { ingestEmail } from "@/lib/email-import";
 import {
@@ -10,6 +10,9 @@ import {
   verifyDocument,
 } from "@/lib/extraction";
 import { field } from "@/lib/profile";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { persistDocumentToSupabase } from "@/lib/supabase/persist-document";
+import { syncWorkspaceSessionFromAuth } from "@/lib/supabase/sync-workspace-session";
 import {
   persistDocuments,
   useDocuments,
@@ -112,35 +115,83 @@ export default function UploadPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
   const [emailRaw, setEmailRaw] = useState("");
   const [dragging, setDragging] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   const resolvedActiveId = activeId ?? docs[0]?.id ?? null;
   const active = docs.find((d) => d.id === resolvedActiveId) ?? null;
   const visible = searchDocuments(docs, query);
+  const ownerId = authUserId ?? session?.id ?? null;
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+    if (!supabase) return;
+    let cancelled = false;
+    void supabase.auth.getUser().then(async ({ data }) => {
+      if (cancelled || !data.user) return;
+      setAuthUserId(data.user.id);
+      await syncWorkspaceSessionFromAuth(supabase, data.user);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function persist(next: IngestedDocument[]) {
     persistDocuments(next);
   }
 
-  function onFiles(files: FileList | null) {
-    if (!files?.length || !session) return;
+  async function onFiles(files: FileList | null) {
+    if (!files?.length || !ownerId) return;
+    setError("");
+    setSaving(true);
+    const supabase = createBrowserSupabaseClient();
     const created: IngestedDocument[] = [];
-    Array.from(files).forEach((file) => {
-      created.push(
-        ingestDocument({
-          userId: session.id,
-          filename: file.name,
-          mimeType: file.type || "application/pdf",
-        }),
-      );
-    });
+    let saved = 0;
+    const failures: string[] = [];
+
+    for (const file of Array.from(files)) {
+      const localDoc = ingestDocument({
+        userId: ownerId,
+        filename: file.name,
+        mimeType: file.type || "application/pdf",
+      });
+      created.push(localDoc);
+
+      if (!supabase) {
+        failures.push(`${file.name}: Supabase is not configured`);
+        continue;
+      }
+      const result = await persistDocumentToSupabase({
+        supabase,
+        ownerUserId: ownerId,
+        file,
+        filename: file.name,
+        mimeType: file.type || "application/pdf",
+      });
+      if (result.ok) {
+        saved += 1;
+        localDoc.id = result.documentId;
+      } else {
+        failures.push(`${file.name}: ${result.error}`);
+      }
+    }
+
     const next = [...created, ...docs];
     persist(next);
-    setActiveId(created[0].id);
+    setActiveId(created[0]?.id ?? null);
+    setSaving(false);
     setStatus(
-      `Pulled ${created.length} document${created.length > 1 ? "s" : ""} from the well. Please verify.`,
+      saved > 0
+        ? `Saved ${saved} document${saved > 1 ? "s" : ""} to the live database. Hero count will update.`
+        : `Processed ${created.length} document${created.length > 1 ? "s" : ""} locally.`,
     );
+    if (failures.length) {
+      setError(failures.join(" · "));
+    }
   }
 
   function updateField(key: keyof IngestedDocument["extraction"], raw: string) {
@@ -186,15 +237,15 @@ export default function UploadPage() {
     setStatus("Human verification recorded. Structured JSON ready.");
   }
 
-  if (!session) {
+  if (!session && !authUserId) {
     return (
       <div className="pw-shell py-20">
         <p className="text-stone">
           Please{" "}
-          <Link href="/login" className="underline">
+          <Link href="/login/?next=/upload/" className="underline">
             sign in
-          </Link>
-          .
+          </Link>{" "}
+          with Supabase Auth to save documents to the live database.
         </p>
       </div>
     );
@@ -202,7 +253,7 @@ export default function UploadPage() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <AppNav role={session.role} />
+      <AppNav role={session?.role ?? "policyholder"} />
       <main className="pw-shell py-10 space-y-8">
         <div className="animate-rise pw-well-intro">
           <p className="pw-well-eyebrow">PolicyWell</p>
@@ -232,10 +283,10 @@ export default function UploadPage() {
             if (e.currentTarget.contains(e.relatedTarget as Node)) return;
             setDragging(false);
           }}
-          onDrop={(e) => {
+            onDrop={(e) => {
             e.preventDefault();
             setDragging(false);
-            onFiles(e.dataTransfer.files);
+            void onFiles(e.dataTransfer.files);
           }}
         >
           <GreenWell active={dragging} />
@@ -259,7 +310,8 @@ export default function UploadPage() {
                 className="hidden"
                 multiple
                 accept=".pdf,.png,.jpg,.jpeg,.txt"
-                onChange={(e) => onFiles(e.target.files)}
+                onChange={(e) => void onFiles(e.target.files)}
+                disabled={saving}
               />
             </label>
           </div>
@@ -270,7 +322,8 @@ export default function UploadPage() {
             Email import
           </summary>
           <p className="text-sm text-stone mt-2 mb-3">
-            Paste a forwarded email (headers optional).
+            Paste a forwarded email (headers optional). Imports are saved to the
+            live database when you are signed in.
           </p>
           <textarea
             className="pw-input min-h-[140px] font-mono text-xs"
@@ -283,23 +336,56 @@ export default function UploadPage() {
           <button
             type="button"
             className="pw-btn mt-3"
-            disabled={!emailRaw.trim()}
+            disabled={!emailRaw.trim() || saving || !ownerId}
             onClick={() => {
-              if (!session || !emailRaw.trim()) return;
-              const doc = ingestEmail(session.id, emailRaw);
-              persist([doc, ...docs]);
-              setActiveId(doc.id);
-              setEmailRaw("");
-              setStatus(
-                `Email imported as ${doc.filename}. Please verify extraction.`,
-              );
+              void (async () => {
+                if (!ownerId || !emailRaw.trim()) return;
+                setError("");
+                setSaving(true);
+                const doc = ingestEmail(ownerId, emailRaw);
+                const blob = new Blob([emailRaw], { type: "text/plain" });
+                const supabase = createBrowserSupabaseClient();
+                if (supabase) {
+                  const result = await persistDocumentToSupabase({
+                    supabase,
+                    ownerUserId: ownerId,
+                    file: blob,
+                    filename: doc.filename.endsWith(".txt")
+                      ? doc.filename
+                      : `${doc.filename}.txt`,
+                    mimeType: "text/plain",
+                  });
+                  if (result.ok) {
+                    doc.id = result.documentId;
+                    setStatus(
+                      `Email imported and saved to the live database as ${doc.filename}.`,
+                    );
+                  } else {
+                    setStatus(`Email imported locally as ${doc.filename}.`);
+                    setError(result.error);
+                  }
+                } else {
+                  setStatus(`Email imported locally as ${doc.filename}.`);
+                  setError("Supabase is not configured.");
+                }
+                persist([doc, ...docs]);
+                setActiveId(doc.id);
+                setEmailRaw("");
+                setSaving(false);
+              })();
             }}
           >
-            Import email
+            {saving ? "Saving…" : "Import email"}
           </button>
         </details>
 
         {status && <p className="text-sm text-ok animate-rise">{status}</p>}
+        {error && <p className="text-sm text-danger animate-rise">{error}</p>}
+        {saving && (
+          <p className="text-sm text-stone animate-rise">
+            Saving documents to Supabase…
+          </p>
+        )}
 
         <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-6">
           <section className="pw-panel p-5 animate-rise">
