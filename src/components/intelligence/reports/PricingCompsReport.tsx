@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   formatMoney,
   type CommercialPolicyRow,
@@ -16,8 +16,34 @@ const MATCH_LABEL = {
   gap: "Gap",
 } as const;
 
+const SEGMENT_TONES = [
+  "tone-0",
+  "tone-1",
+  "tone-2",
+  "tone-3",
+  "tone-4",
+] as const;
+
 export function PricingCompsReport({ book }: { book: CommercialReportBook }) {
-  const [expanded, setExpanded] = useState<string | null>(book.policies[0]?.id ?? null);
+  const [expanded, setExpanded] = useState<string | null>(
+    book.policies.find((p) => p.premium != null)?.id ?? null,
+  );
+
+  const premiumRows = useMemo(() => {
+    const rows = book.policies.filter(
+      (p) => p.premium != null && p.status !== "not_on_file",
+    );
+    const total = rows.reduce((sum, r) => sum + (r.premium ?? 0), 0);
+    return rows.map((row, i) => ({
+      row,
+      share: total > 0 ? (row.premium ?? 0) / total : 0,
+      tone: SEGMENT_TONES[i % SEGMENT_TONES.length]!,
+    }));
+  }, [book.policies]);
+
+  const totalPremium =
+    book.currentPremium ??
+    premiumRows.reduce((sum, r) => sum + (r.row.premium ?? 0), 0);
 
   return (
     <div className="pw-report-body">
@@ -26,27 +52,63 @@ export function PricingCompsReport({ book }: { book: CommercialReportBook }) {
         subtitle="Program premiums on file plus illustrative appetite fit — no invented market ROL."
       />
 
-      <p className="pw-report-banner">
-        Multi-carrier quote comps are shown only when grounded appetite data exists.
-        Harbor Mutual premiums below are from the commercial demo seed; appetite
-        carriers are labeled illustrative and do not include premium estimates.
-      </p>
+      <div className="pw-report-premium-module">
+        <p className="pw-report-kicker pw-report-kicker-accent">
+          Benchmarks to market pricing
+        </p>
+        <h4 className="pw-report-premium-title">Premium by policy</h4>
+        <p className="pw-report-mono pw-report-premium-meta">
+          Lines · {premiumRows.length} policies
+        </p>
 
-      <div className="pw-report-summary">
-        <div className="pw-report-stat">
-          <span className="pw-report-stat-label">Program premium</span>
-          <strong className="pw-report-stat-value">
-            {formatMoney(book.currentPremium)}
-          </strong>
+        <div className="pw-report-premium-layout">
+          <div className="pw-report-premium-stack" aria-hidden="true">
+            <strong className="pw-report-premium-total">
+              {formatMoney(totalPremium)}
+            </strong>
+            <div className="pw-report-premium-bar">
+              {premiumRows.map(({ row, share, tone }) => (
+                <span
+                  key={row.id}
+                  className={`pw-report-premium-seg ${tone}`}
+                  style={{ flexGrow: Math.max(share, 0.04) }}
+                  title={`${row.name}: ${formatMoney(row.premium)}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="pw-report-scroll pw-report-premium-table-wrap">
+            <table className="pw-report-table pw-report-premium-table">
+              <thead>
+                <tr>
+                  <th>Policy</th>
+                  <th>Premium</th>
+                  <th>Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                {premiumRows.map(({ row, share, tone }) => (
+                  <tr key={row.id}>
+                    <td>
+                      <span className={`pw-report-swatch ${tone}`} aria-hidden="true" />
+                      {row.name}
+                    </td>
+                    <td className="pw-report-mono">{formatMoney(row.premium)}</td>
+                    <td className="pw-report-mono">
+                      {Math.round(share * 100)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className="pw-report-stat">
-          <span className="pw-report-stat-label">Lines on file</span>
-          <strong className="pw-report-stat-value">{book.totalPolicies}</strong>
-        </div>
-        <div className="pw-report-stat">
-          <span className="pw-report-stat-label">Appetite matches</span>
-          <strong className="pw-report-stat-value">{book.appetite.length}</strong>
-        </div>
+
+        <p className="pw-report-footnote">
+          Source: premium recap from the commercial demo program · excludes lines
+          not on file · no market ROL invented when carrier quotes are absent.
+        </p>
       </div>
 
       <div className="pw-report-scroll">
@@ -127,7 +189,8 @@ function PolicyPriceRow({
               ))}
             </ul>
             <p className="pw-report-muted">
-              Limit {formatMoney(row.limit)} · Deductible {formatMoney(row.deductible)}
+              Limit {formatMoney(row.limit)} · Deductible{" "}
+              {formatMoney(row.deductible)}
             </p>
           </td>
         </tr>
