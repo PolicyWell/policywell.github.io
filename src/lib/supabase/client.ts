@@ -1,8 +1,11 @@
 import { createBrowserClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "./database.types";
 import { getSupabasePublicEnv } from "./env";
 
-let browserClient: SupabaseClient | null | undefined;
+export type TypedSupabaseClient = SupabaseClient<Database>;
+
+let browserClient: TypedSupabaseClient | null | undefined;
 
 /**
  * Browser / static-export Supabase client (publishable key).
@@ -10,7 +13,7 @@ let browserClient: SupabaseClient | null | undefined;
  *
  * Prefer `utils/supabase/client` in app code that always has env set.
  */
-export function createBrowserSupabaseClient(): SupabaseClient | null {
+export function createBrowserSupabaseClient(): TypedSupabaseClient | null {
   if (browserClient !== undefined) return browserClient;
 
   const env = getSupabasePublicEnv();
@@ -19,11 +22,11 @@ export function createBrowserSupabaseClient(): SupabaseClient | null {
     return null;
   }
 
-  browserClient = createBrowserClient(env.url, env.publishableKey);
+  browserClient = createBrowserClient<Database>(env.url, env.publishableKey);
   return browserClient;
 }
 
 /** Convenience alias used by app code. */
-export function getSupabase(): SupabaseClient | null {
+export function getSupabase(): TypedSupabaseClient | null {
   return createBrowserSupabaseClient();
 }

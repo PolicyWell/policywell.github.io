@@ -50,9 +50,22 @@ Repo → **Settings → Secrets and variables → Actions**:
 
 Static export cannot run middleware; `scripts/build-pages.mjs` parks `middleware.ts` for that build. Browser client + publishable key still work when baked in at build time.
 
+## Data foundation (Auth + case intelligence schema)
+
+Imperative migrations (apply in order; do not create these tables from app code):
+
+| Migration | Purpose |
+|-----------|---------|
+| `supabase/migrations/20260810062250_policywell_data_foundation.sql` | `profiles` (→ `auth.users`), cases, documents, ingestions, policies, facts, ledgers, analyses, opportunities, conversations, audit_events; RLS; indexes |
+| `supabase/migrations/20260810062356_policywell_data_foundation_security_hardening.sql` | `search_path` + revoke anon/PUBLIC execute on SECURITY DEFINER helpers |
+
+Typed definitions: `src/lib/supabase/database.types.ts` (wired into `utils/supabase/*` and `src/lib/supabase` clients).
+
+Supabase Auth owns credentials. `public.profiles` has **no** password columns.
+
 ## Notes
 
-- Demo login remains localStorage until Auth is migrated.
+- Demo login remains localStorage until Auth is migrated to Supabase Auth.
 - Never commit the service role key.
 
 ## Private docs access (required for Pages)
