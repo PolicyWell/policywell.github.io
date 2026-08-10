@@ -121,10 +121,8 @@ const VERIFIED_SAME_AS = [
 /** Primary sitelink-oriented marketing hubs (trailing-slash canonicals). */
 export const PRIMARY_HUB_PATHS = [
   "/",
-  "/platform",
   "/industries",
   "/pricing",
-  "/demo",
   "/api",
   "/about",
   "/contact",

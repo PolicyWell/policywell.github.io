@@ -9,7 +9,8 @@ export const dynamic = "force-static";
 /**
  * Indexable public paths only.
  *
- * /docs is private (access-code gated) and intentionally omitted.
+ * /docs, /demo, /product, /platform, /deck, /agent are private
+ * (request-access / access-code gated) and intentionally omitted.
  * Segmented helpers keep future sitemap indexes easy
  * (core / commercial / life / annuities / industries)
  * without emitting multiple files until URL volume requires it.
@@ -18,17 +19,14 @@ export const dynamic = "force-static";
 function corePaths(): string[] {
   return [
     "/",
-    "/platform",
     "/industries",
     "/pricing",
-    "/demo",
     "/api",
     "/about",
     "/contact",
     "/privacy",
     "/terms",
     "/quote",
-    "/product",
     "/book-a-call",
     "/press",
     "/careers",

@@ -87,12 +87,27 @@ function resolveDocsAccessCodeHash(): string {
 
 const docsAccessCodeHash = resolveDocsAccessCodeHash();
 
+function resolveProductAccessCodeHash(): string {
+  const explicit = (process.env.NEXT_PUBLIC_PRODUCT_ACCESS_CODE_HASH ?? "")
+    .trim()
+    .toLowerCase();
+  if (explicit) return explicit;
+  const code = (process.env.PRODUCT_ACCESS_CODE ?? "").trim();
+  if (!code) return "";
+  return createHash("sha256").update(code).digest("hex");
+}
+
+const productAccessCodeHash = resolveProductAccessCodeHash();
+
 const nextConfig: NextConfig = {
   // Trailing slashes match GitHub Pages static export + canonical policy.
   trailingSlash: true,
   env: {
     ...(docsAccessCodeHash
       ? { NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH: docsAccessCodeHash }
+      : {}),
+    ...(productAccessCodeHash
+      ? { NEXT_PUBLIC_PRODUCT_ACCESS_CODE_HASH: productAccessCodeHash }
       : {}),
   },
   ...(staticExport
