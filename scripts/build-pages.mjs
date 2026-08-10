@@ -16,8 +16,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-/** Route-handler folders only — marketing `/api` page stays in the tree. */
-const apiRouteDirs = [path.join(root, "src", "app", "api", "agent")];
+const apiAppRoot = path.join(root, "src", "app", "api");
+/**
+ * Route-handler trees under /api (unsupported with output: "export").
+ * Marketing `/api` page + layout stay in the tree.
+ * Keep in sync when adding new App Router route handlers under src/app/api/.
+ */
+const apiRouteDirs = [
+  path.join(apiAppRoot, "agent"),
+  path.join(apiAppRoot, "v1"),
+];
 const parkRoot = path.join(root, ".pages-api-park");
 const middlewareFile = path.join(root, "middleware.ts");
 const middlewarePark = path.join(root, ".pages-middleware-park.ts");
@@ -39,8 +47,12 @@ function parkApiRoutes() {
   fs.mkdirSync(parkRoot, { recursive: true });
   for (const dir of apiRouteDirs) {
     if (!fs.existsSync(dir)) continue;
-    const name = path.basename(dir);
+    const name = path.relative(apiAppRoot, dir);
+    if (!name || name.startsWith("..")) {
+      throw new Error(`Refusing to park unexpected API path: ${dir}`);
+    }
     const dest = path.join(parkRoot, name);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.renameSync(dir, dest);
     parked.push(name);
   }
@@ -49,7 +61,7 @@ function parkApiRoutes() {
 
 function restoreApiRoutes(parked) {
   for (const name of parked) {
-    const dest = path.join(root, "src", "app", "api", name);
+    const dest = path.join(apiAppRoot, name);
     const src = path.join(parkRoot, name);
     if (!fs.existsSync(src)) continue;
     if (fs.existsSync(dest)) {
