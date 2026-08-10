@@ -16,8 +16,6 @@ export function ReportSlide({
       className={`pw-report-slide${active ? " is-active" : ""}`}
       role="tabpanel"
       aria-labelledby={labelledBy}
-      aria-hidden={!active}
-      inert={!active ? true : undefined}
     >
       <div className="pw-report-canvas">{children}</div>
     </div>
