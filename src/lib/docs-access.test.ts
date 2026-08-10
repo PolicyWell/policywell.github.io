@@ -24,11 +24,27 @@ describe("docs access gate (always private)", () => {
   it("fails closed when no credential is configured", async () => {
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE", "");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
     expect(isDocsUnlockConfigured()).toBe(false);
     expect(await verifyDocsAccessCode("anything")).toBe(false);
+  });
+
+  it("accepts universal access code hash for docs", async () => {
+    const code = "universal-ops";
+    const hash = createHash("sha256").update(code).digest("hex");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH", hash);
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
+    expect(isDocsUnlockConfigured()).toBe(true);
+    expect(await verifyDocsAccessCode(code)).toBe(true);
+    expect(await verifyDocsAccessCode("wrong")).toBe(false);
   });
 
   it("verifies against SHA-256 hash when configured", async () => {

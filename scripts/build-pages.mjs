@@ -5,8 +5,9 @@
  * Keeps marketing pages under src/app/api/ (e.g. /api/page.tsx).
  * Client-side agent still works; optional LLM enhance API is omitted on Pages.
  *
- * Private docs: requires DOCS_ACCESS_CODE (or NEXT_PUBLIC_DOCS_ACCESS_CODE).
- * Injects NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH so the plaintext code is not shipped.
+ * Private docs/product: requires DOCS_ACCESS_CODE and/or UNIVERSAL_ACCESS_CODE
+ * (or their NEXT_PUBLIC_ plaintext fallbacks). Injects SHA-256 hashes so
+ * plaintext codes are not shipped in the client bundle.
  */
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
@@ -82,27 +83,45 @@ const docsAccessCode = (
   ""
 ).trim();
 
-if (!docsAccessCode) {
+const universalAccessCode = (
+  process.env.UNIVERSAL_ACCESS_CODE ||
+  process.env.NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE ||
+  ""
+).trim();
+
+if (!docsAccessCode && !universalAccessCode) {
   console.error(
-    "Pages build blocked: set DOCS_ACCESS_CODE (recommended) or NEXT_PUBLIC_DOCS_ACCESS_CODE.\n" +
-      "Docs are private — refusing to export without an access code.",
+    "Pages build blocked: set UNIVERSAL_ACCESS_CODE and/or DOCS_ACCESS_CODE\n" +
+      "(or their NEXT_PUBLIC_ plaintext fallbacks).\n" +
+      "Private docs/product surfaces refuse to export without an access code.",
   );
   process.exit(1);
 }
 
-const docsAccessCodeHash = createHash("sha256")
-  .update(docsAccessCode)
-  .digest("hex");
+const docsAccessCodeHash = docsAccessCode
+  ? createHash("sha256").update(docsAccessCode).digest("hex")
+  : "";
+
+const universalAccessCodeHash = universalAccessCode
+  ? createHash("sha256").update(universalAccessCode).digest("hex")
+  : "";
 
 const parkedApi = parkApiRoutes();
 const parkedMiddleware = parkMiddleware();
 try {
   run("npx", ["next", "build"], {
     STATIC_EXPORT: "1",
-    // Ship hash only — do not embed plaintext access code in the client bundle.
-    NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH: docsAccessCodeHash,
+    // Ship hashes only — do not embed plaintext access codes in the client bundle.
+    ...(docsAccessCodeHash
+      ? { NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH: docsAccessCodeHash }
+      : {}),
     NEXT_PUBLIC_DOCS_ACCESS_CODE: "",
     DOCS_ACCESS_CODE: docsAccessCode,
+    ...(universalAccessCodeHash
+      ? { NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH: universalAccessCodeHash }
+      : {}),
+    NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE: "",
+    UNIVERSAL_ACCESS_CODE: universalAccessCode,
   });
 } finally {
   restoreMiddleware(parkedMiddleware);
