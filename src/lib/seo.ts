@@ -124,7 +124,6 @@ export const PRIMARY_HUB_PATHS = [
   "/platform",
   "/industries",
   "/pricing",
-  "/docs",
   "/demo",
   "/api",
   "/about",

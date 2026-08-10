@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { NextConfig } from "next";
 
 const staticExport = process.env.STATIC_EXPORT === "1";
@@ -70,9 +71,30 @@ const ECOMMERCE_LEGACY_REDIRECTS = [
   },
 ] as const;
 
+/**
+ * Prefer hashing DOCS_ACCESS_CODE so the plaintext never ships to the client.
+ * Falls back to an explicit NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH when provided.
+ */
+function resolveDocsAccessCodeHash(): string {
+  const explicit = (process.env.NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH ?? "")
+    .trim()
+    .toLowerCase();
+  if (explicit) return explicit;
+  const code = (process.env.DOCS_ACCESS_CODE ?? "").trim();
+  if (!code) return "";
+  return createHash("sha256").update(code).digest("hex");
+}
+
+const docsAccessCodeHash = resolveDocsAccessCodeHash();
+
 const nextConfig: NextConfig = {
   // Trailing slashes match GitHub Pages static export + canonical policy.
   trailingSlash: true,
+  env: {
+    ...(docsAccessCodeHash
+      ? { NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH: docsAccessCodeHash }
+      : {}),
+  },
   ...(staticExport
     ? {
         output: "export" as const,

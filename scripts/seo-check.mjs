@@ -136,6 +136,10 @@ async function main() {
 
   // Forbidden paths
   const forbidden = [
+    "/docs/",
+    "/docs/api/",
+    "/docs/cli/",
+    "/docs/engineering/",
     "/agent/",
     "/commercial/",
     "/deck/",

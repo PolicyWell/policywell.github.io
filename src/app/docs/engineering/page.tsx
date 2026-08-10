@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { marketingMetadata } from "@/lib/seo";
+import { noindexMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = marketingMetadata({
+export const metadata: Metadata = noindexMetadata({
   title: "Engineering",
   description:
     "Architecture overview for the PolicyWell insurance intelligence platform.",

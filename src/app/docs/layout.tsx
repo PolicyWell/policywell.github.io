@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { DocsShell } from "@/components/docs/DocsShell";
+import { DocsPrivateShell } from "@/components/docs/DocsPrivateShell";
 import { DOCS_META } from "@/lib/docs-data";
+import { NOINDEX_ROBOTS } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: {
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
     template: "%s · PolicyWell Docs",
   },
   description: DOCS_META.description,
+  robots: NOINDEX_ROBOTS,
 };
 
 export default function DocsLayout({
@@ -15,5 +17,5 @@ export default function DocsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <DocsShell>{children}</DocsShell>;
+  return <DocsPrivateShell>{children}</DocsPrivateShell>;
 }

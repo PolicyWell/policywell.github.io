@@ -55,6 +55,19 @@ Static export cannot run middleware; `scripts/build-pages.mjs` parks `middleware
 - Demo login remains localStorage until Auth is migrated.
 - Never commit the service role key.
 
+## Private docs access (required for Pages)
+
+`/docs` is always access-code gated (Access Restricted). Fail closed when no code is configured.
+
+| Env | Purpose |
+|-----|---------|
+| `DOCS_ACCESS_CODE` | Preferred. Hashed at build into `NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH` (plaintext not shipped). **Required** for `npm run build:pages` / GitHub Actions. |
+| `NEXT_PUBLIC_DOCS_ACCESS_CODE` | Local-dev convenience only (plaintext in the client bundle). |
+
+GitHub → Settings → Secrets and variables → Actions → create **`DOCS_ACCESS_CODE`**.
+
+Unlock persists for the browser session; `?code=` share links work and are stripped after unlock. Docs are omitted from `sitemap.xml` and disallowed in `robots.txt`.
+
 ## Commercial V1 schema
 
 Imperative migration: `supabase/migrations/20260808233000_commercial_v1.sql`

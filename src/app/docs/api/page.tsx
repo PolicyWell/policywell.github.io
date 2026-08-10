@@ -7,13 +7,12 @@ import {
   API_META,
   allApiEndpoints,
 } from "@/lib/api-reference-data";
-import { marketingMetadata } from "@/lib/seo";
+import { noindexMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = marketingMetadata({
+export const metadata: Metadata = noindexMetadata({
   title: API_META.title,
   description: API_META.description,
   path: "/docs/api",
-  ogTitle: `${API_META.title} · PolicyWell Docs`,
 });
 
 export default function ApiReferenceIndexPage() {

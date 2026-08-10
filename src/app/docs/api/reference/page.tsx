@@ -8,9 +8,9 @@ import {
   API_META,
   allApiEndpoints,
 } from "@/lib/api-reference-data";
-import { marketingMetadata } from "@/lib/seo";
+import { noindexMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = marketingMetadata({
+export const metadata: Metadata = noindexMetadata({
   title: "Full API reference",
   description:
     "Complete PolicyWell REST API reference - every endpoint on one page.",

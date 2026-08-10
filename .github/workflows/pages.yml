@@ -29,6 +29,9 @@ jobs:
           # Production Supabase project (Settings → API). Optional until wired.
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          # Required: private docs access code (hashed into the client at build).
+          # Repo → Settings → Secrets and variables → Actions → DOCS_ACCESS_CODE
+          DOCS_ACCESS_CODE: ${{ secrets.DOCS_ACCESS_CODE }}
         run: npm run build:pages
       - uses: actions/upload-pages-artifact@v3
         with:
