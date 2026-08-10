@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { persistSession } from "@/lib/use-workspace";
 
 export function LogoutButton({ className = "" }: { className?: string }) {
   const router = useRouter();
@@ -14,6 +15,7 @@ export function LogoutButton({ className = "" }: { className?: string }) {
     if (supabase) {
       await supabase.auth.signOut();
     }
+    persistSession(null);
     router.push("/login/");
     router.refresh();
   }

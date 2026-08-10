@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
+import { AuthSessionBridge } from "@/components/auth/AuthSessionBridge";
 import { MeetOpeWidget } from "@/components/MeetOpeWidget";
 import { SiteFooter } from "@/components/SiteFooter";
 import { OG_IMAGE, SITE_URL } from "@/lib/seo";
@@ -162,6 +163,7 @@ export default function RootLayout({
         <link rel="manifest" href={`/site.webmanifest?v=${ICON_V}`} />
       </head>
       <body className="min-h-full flex flex-col font-sans text-[15px] leading-relaxed overflow-x-clip w-full max-w-full">
+        <AuthSessionBridge />
         {children}
         <SiteFooter />
         <MeetOpeWidget />

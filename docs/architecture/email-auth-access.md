@@ -31,7 +31,26 @@ Magic-link–first UI (Hilt-style card):
 - **Google / GitHub** → `signInWithOAuth` → `/auth/callback/`
 - **Login with password** → `signInWithPassword`
 - **Forgot password?** → `resetPasswordForEmail` → `/auth/update-password/`
-- On success, `ensureProfileForUser` upserts `public.profiles` (1:1 with `auth.users`)
+- On success:
+  1. `ensureProfileForUser` upserts `public.profiles` (1:1 with `auth.users`)
+  2. `syncWorkspaceSessionFromAuth` mirrors the Auth user into the local `SessionUser` used by product pages (`useSession`) on the static GitHub Pages build
+  3. `AuthSessionBridge` in the root layout keeps that mirror in sync across reloads
+
+### Live project (required for production Pages)
+Production must use the **Policywell AI** Supabase project:
+
+| Setting | Value |
+|---------|--------|
+| Project ref | `mdcvzhwxdwxmgbdhxviy` |
+| URL | `https://mdcvzhwxdwxmgbdhxviy.supabase.co` |
+| Publishable key | Dashboard → Project Settings → API Keys |
+
+GitHub Actions secrets for `build:pages`:
+
+- `NEXT_PUBLIC_SUPABASE_URL=https://mdcvzhwxdwxmgbdhxviy.supabase.co`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable key from that project>`
+
+A previous Pages deploy pointed at a deleted project (`wbltjqojecepcdarmraq…`) whose host no longer resolves — that breaks every sign-in attempt on `policywell.ai` until the secrets above are updated and Pages is redeployed.
 
 ## What you must configure (outside this repo)
 

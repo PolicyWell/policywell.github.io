@@ -6,12 +6,16 @@ import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { ensureProfileForUser } from "@/lib/supabase/ensure-profile";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import {
+  defaultPostLoginPath,
+  syncWorkspaceSessionFromAuth,
+} from "@/lib/supabase/session-bridge";
 
 type View = "magic" | "password";
 
-function safeNext(raw: string | null): string {
+function safeNext(raw: string | null, fallback = "/app/"): string {
   if (raw && raw.startsWith("/") && !raw.startsWith("//")) return raw;
-  return "/app/";
+  return fallback;
 }
 
 function GoogleGlyph() {
@@ -154,6 +158,14 @@ export function LoginForm() {
       }
       if (data.user) {
         await ensureProfileForUser(supabase, data.user);
+        const session = await syncWorkspaceSessionFromAuth(supabase, data.user);
+        const dest = safeNext(
+          searchParams.get("next"),
+          defaultPostLoginPath(session.role),
+        );
+        router.push(dest);
+        router.refresh();
+        return;
       }
       router.push(next);
       router.refresh();
