@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RequestAccessTeaser } from "@/components/access/RequestAccessGate";
+import { ProposalCarousel } from "@/components/intelligence/proposals/ProposalCarousel";
 import { ReportCarousel } from "@/components/intelligence/reports/ReportCarousel";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
@@ -94,27 +95,11 @@ export default function HomePage() {
 
         <section
           id="proposals"
-          className="pw-proposals-cta"
+          className="pw-proposals-section"
           aria-labelledby="pw-proposals-heading"
         >
-          <div className="pw-shell pw-shell-wide pw-proposals-cta-inner">
-            <p className="pw-proposals-cta-eyebrow">Client proposals</p>
-            <h2 id="pw-proposals-heading" className="pw-proposals-cta-title">
-              Build elite client proposals instantly
-            </h2>
-            <p className="pw-proposals-cta-copy">
-              Modernize sales with proposals powered by price benchmarks, visual
-              analysis, and data-driven recommendations. PolicyWell delivers more
-              than just a coverage summary to clients.
-            </p>
-            <div className="pw-proposals-cta-actions">
-              <Link href="/demo/" className="pw-btn">
-                Request demo access
-              </Link>
-              <Link href="/book-a-call/" className="pw-btn pw-btn-secondary">
-                Book a call
-              </Link>
-            </div>
+          <div className="pw-shell pw-shell-wide">
+            <ProposalCarousel />
           </div>
         </section>
 
