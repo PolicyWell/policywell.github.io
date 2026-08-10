@@ -50,9 +50,45 @@ Repo → **Settings → Secrets and variables → Actions**:
 
 Static export cannot run middleware; `scripts/build-pages.mjs` parks `middleware.ts` for that build. Browser client + publishable key still work when baked in at build time.
 
+## Data foundation (Auth + case intelligence schema)
+
+Imperative migrations (apply in order; do not create these tables from app code):
+
+| Migration | Purpose |
+|-----------|---------|
+| `supabase/migrations/20260810062250_policywell_data_foundation.sql` | `profiles` (→ `auth.users`), cases, documents, ingestions, policies, facts, ledgers, analyses, opportunities, conversations, audit_events; RLS; indexes |
+| `supabase/migrations/20260810062356_policywell_data_foundation_security_hardening.sql` | `search_path` + revoke anon/PUBLIC execute on SECURITY DEFINER helpers |
+
+Typed definitions: `src/lib/supabase/database.types.ts` (wired into `utils/supabase/*` and `src/lib/supabase` clients).
+
+Supabase Auth owns credentials. `public.profiles` has **no** password columns.
+
+## Strict RLS + private document storage
+
+| Migration | Purpose |
+|-----------|---------|
+| `supabase/migrations/20260810062857_strict_rls_and_private_storage.sql` | Owner / assigned-producer only; no client `policywell_admin` bypass; agency-admin hook (always false until org membership exists); private `policy-documents` bucket |
+
+Access model:
+
+- **Consumers** — own profile + own cases + case-linked documents/policies/facts/analyses
+- **Producers** — only cases where `assigned_producer_id = auth.uid()`
+- **Agency admins** — `is_agency_admin_for_case()` hook only (returns false today)
+- **PolicyWell admins** — `service_role` / backend only (`src/lib/supabase/admin.ts`); never a client RLS OR
+
+Storage path convention: `{case_id}/...` in bucket `policy-documents`. Browser viewing uses short-lived signed URLs (`src/lib/supabase/signed-url.ts`) under the user session — not public object URLs.
+
+| Env | Client? | Purpose |
+|-----|---------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | yes | Project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | yes | Browser / SSR publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | **never** | Server-only admin (bypasses RLS). Never `NEXT_PUBLIC_*`. |
+
+RLS authorization tests: `supabase/tests/rls_authorization.sql` + `src/lib/supabase/rls-authorization.test.ts`.
+
 ## Notes
 
-- Demo login remains localStorage until Auth is migrated.
+- Demo login remains localStorage until Auth is migrated to Supabase Auth.
 - Never commit the service role key.
 
 ## Private docs access (required for Pages)
