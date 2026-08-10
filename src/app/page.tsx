@@ -43,7 +43,7 @@ export default function HomePage() {
               PolicyWell
             </p>
             <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight text-pine">
-              Agentic Operating System for Insurance
+              The Agentic Operating System for the Insurance Industry
             </h1>
             <p className="animate-rise-delay mt-4 max-w-2xl text-sm md:text-base text-stone">
               PolicyWell transforms insurance data into personalized
