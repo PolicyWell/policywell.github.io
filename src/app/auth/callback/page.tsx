@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { ensureProfileForUser } from "@/lib/supabase/ensure-profile";
+import { syncWorkspaceSessionFromAuth } from "@/lib/supabase/sync-workspace-session";
 
 /**
  * Handles email confirmation / OAuth-style PKCE redirects.
@@ -36,6 +37,7 @@ export default function AuthCallbackPage() {
         }
         if (data.user) {
           await ensureProfileForUser(supabase!, data.user);
+          await syncWorkspaceSessionFromAuth(supabase!, data.user);
         }
         router.replace(dest);
         router.refresh();
@@ -46,6 +48,11 @@ export default function AuthCallbackPage() {
       // verify session then continue.
       const { data } = await supabase!.auth.getClaims();
       if (data?.claims?.sub) {
+        const { data: userData } = await supabase!.auth.getUser();
+        if (userData.user) {
+          await ensureProfileForUser(supabase!, userData.user);
+          await syncWorkspaceSessionFromAuth(supabase!, userData.user);
+        }
         router.replace(dest);
         router.refresh();
         return;

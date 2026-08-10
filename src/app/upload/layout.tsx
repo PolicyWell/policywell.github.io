@@ -1,8 +1,6 @@
-import type { Metadata } from "next";
-import { privateRouteMetadata } from "@/lib/private-route-metadata";
+import type { ReactNode } from "react";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 
-export const metadata: Metadata = privateRouteMetadata;
-
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function UploadLayout({ children }: { children: ReactNode }) {
+  return <RequireAuth nextPath="/upload/">{children}</RequireAuth>;
 }

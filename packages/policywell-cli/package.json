@@ -1,0 +1,25 @@
+{
+  "name": "policywell-cli",
+  "version": "0.1.0",
+  "description": "PolicyWell command-line client for the local HTTP API",
+  "private": false,
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "bin": {
+    "policywell": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ./scripts/add-shebang.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "typescript": "^5.8.2"
+  }
+}

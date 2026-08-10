@@ -8,11 +8,13 @@ describe("isProtectedPath", () => {
     expect(isProtectedPath("/app/settings")).toBe(true);
   });
 
-  it("protects /cases/* and /policies/*", () => {
+  it("protects /cases/*, /policies/*, and /upload", () => {
     expect(isProtectedPath("/cases")).toBe(true);
     expect(isProtectedPath("/cases/abc")).toBe(true);
     expect(isProtectedPath("/policies")).toBe(true);
     expect(isProtectedPath("/policies/xyz/")).toBe(true);
+    expect(isProtectedPath("/upload")).toBe(true);
+    expect(isProtectedPath("/upload/")).toBe(true);
   });
 
   it("leaves marketing and auth pages public", () => {
