@@ -7,7 +7,7 @@ function formatCount(n: number) {
 }
 
 /** Placeholder seed until site_stats is wired on production again. */
-const PLACEHOLDER_START = 2_847;
+const PLACEHOLDER_START = 5;
 
 /**
  * Hero “live” counter — temporary client-side ticker.
