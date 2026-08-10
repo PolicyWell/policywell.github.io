@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RequestAccessTeaser } from "@/components/access/RequestAccessGate";
+import { ReportCarousel } from "@/components/intelligence/reports/ReportCarousel";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { WorkflowStepsShowcase } from "@/components/WorkflowStepsShowcase";
@@ -80,6 +81,16 @@ export default function HomePage() {
         </section>
 
         <WorkflowStepsShowcase />
+
+        <section
+          id="reports"
+          className="pw-demo-section pw-demo-reports"
+          aria-label="PolicyWell intelligence reports"
+        >
+          <div className="pw-shell pw-shell-wide">
+            <ReportCarousel />
+          </div>
+        </section>
 
         <section
           id="deck"
