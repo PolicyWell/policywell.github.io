@@ -10,6 +10,8 @@ import {
   normalizeAccessCode,
   sha256Hex,
 } from "@/lib/docs-access";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { invokeEdgeFunction } from "@/lib/supabase/functions";
 
 export const PRODUCT_ACCESS_STORAGE_KEY = "policywell_product_access_v1";
 
@@ -54,41 +56,63 @@ function getProductAccessCodePlaintext(): string {
   return (process.env.NEXT_PUBLIC_PRODUCT_ACCESS_CODE ?? "").trim();
 }
 
-/** Prefer product-specific credentials, else fall back to docs credentials. */
+/**
+ * Unlock is available when a static env code is set, or when Supabase can
+ * verify emailed one-time codes via the verify-access-code Edge Function.
+ */
 export function isProductUnlockConfigured(): boolean {
   return Boolean(
     getProductAccessCodeHash() ||
       getProductAccessCodePlaintext() ||
       getDocsAccessCodeHash() ||
-      getDocsAccessCodePlaintext(),
+      getDocsAccessCodePlaintext() ||
+      isSupabaseConfigured(),
   );
 }
 
-export async function verifyProductAccessCode(input: string): Promise<boolean> {
+async function verifyIssuedAccessCode(
+  input: string,
+  surface?: ProductAccessSurface,
+): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  const result = await invokeEdgeFunction<{ ok?: boolean }>(
+    "verify-access-code",
+    {
+      code: input,
+      surface,
+    },
+  );
+  return result.ok && result.data.ok === true;
+}
+
+export async function verifyProductAccessCode(
+  input: string,
+  surface?: ProductAccessSurface,
+): Promise<boolean> {
   const normalized = normalizeAccessCode(input);
   if (!normalized) return false;
 
   const productHash = getProductAccessCodeHash();
-  if (productHash) {
-    return (await sha256Hex(normalized)) === productHash;
+  if (productHash && (await sha256Hex(normalized)) === productHash) {
+    return true;
   }
 
   const productPlain = getProductAccessCodePlaintext();
-  if (productPlain) {
-    return normalized === productPlain;
+  if (productPlain && normalized === productPlain) {
+    return true;
   }
 
   const docsHash = getDocsAccessCodeHash();
-  if (docsHash) {
-    return (await sha256Hex(normalized)) === docsHash;
+  if (docsHash && (await sha256Hex(normalized)) === docsHash) {
+    return true;
   }
 
   const docsPlain = getDocsAccessCodePlaintext();
-  if (docsPlain) {
-    return normalized === docsPlain;
+  if (docsPlain && normalized === docsPlain) {
+    return true;
   }
 
-  return false;
+  return verifyIssuedAccessCode(normalized, surface);
 }
 
 export function readProductAccessUnlocked(): boolean {
@@ -151,14 +175,55 @@ export function buildAccessRequestMailto(payload: AccessRequestPayload): string 
   return `mailto:info@policywell.ai?subject=${subject}&body=${body}`;
 }
 
-/** Optional webhook (Formspree / custom). */
+/** Optional webhook (Formspree / custom) — used only if Edge Function is unavailable. */
 export function getAccessRequestWebhook(): string {
   return (process.env.NEXT_PUBLIC_ACCESS_REQUEST_WEBHOOK ?? "").trim();
 }
 
+export type AccessRequestSubmitResult = {
+  ok: boolean;
+  via: "edge" | "webhook" | "mailto";
+  message?: string;
+  emailedTo?: string;
+};
+
+/**
+ * Prefer Supabase Edge Function (emails a workable code).
+ * Falls back to Formspree webhook, then mailto.
+ */
 export async function submitAccessRequest(
   payload: AccessRequestPayload,
-): Promise<{ ok: boolean; via: "webhook" | "mailto" }> {
+): Promise<AccessRequestSubmitResult> {
+  if (isSupabaseConfigured()) {
+    const result = await invokeEdgeFunction<{
+      ok?: boolean;
+      message?: string;
+      emailedTo?: string;
+      error?: string;
+    }>("request-access", {
+      ...payload,
+      siteOrigin:
+        typeof window !== "undefined" ? window.location.origin : undefined,
+    });
+
+    if (result.ok) {
+      return {
+        ok: true,
+        via: "edge",
+        message:
+          result.data.message ??
+          "Check your email for your access code.",
+        emailedTo: result.data.emailedTo,
+      };
+    }
+
+    // If Resend isn’t configured yet, surface the server message.
+    if (result.status && result.status >= 500) {
+      throw new Error(result.error);
+    }
+    throw new Error(result.error);
+  }
+
   const webhook = getAccessRequestWebhook();
   if (webhook) {
     const res = await fetch(webhook, {
@@ -179,7 +244,6 @@ export async function submitAccessRequest(
     return { ok: true, via: "webhook" };
   }
 
-  // Static-friendly fallback: open mail client with a prefilled request.
   if (typeof window !== "undefined") {
     window.location.href = buildAccessRequestMailto(payload);
   }
