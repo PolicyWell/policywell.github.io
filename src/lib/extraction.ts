@@ -72,6 +72,26 @@ export function detectDocumentKind(filename: string, ocrText: string): DocumentK
     return "cyber_questionnaire";
   }
   if (
+    blob.includes("environmental questionnaire") ||
+    blob.includes("pollution questionnaire")
+  ) {
+    return "environmental_questionnaire";
+  }
+  if (
+    blob.includes("financial statement") ||
+    blob.includes("balance sheet") ||
+    blob.includes("income statement")
+  ) {
+    return "financial_statement";
+  }
+  if (
+    blob.includes("contract") ||
+    blob.includes("hold harmless") ||
+    blob.includes("additional insured endorsement")
+  ) {
+    return "contract";
+  }
+  if (
     blob.includes("claim") &&
     (blob.includes("notice") || blob.includes("loss") || blob.includes("fnol"))
   ) {

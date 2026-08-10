@@ -91,6 +91,17 @@ Every task must:
 |-------|--------|
 | Compliance-first `pw` CLI for client / producer / IMO / carrier | Design - [web Docs](/docs/cli) · [CLI_DESIGN.md](./CLI_DESIGN.md) |
 
+## Sprint 9 status (PolicyWell Commercial V1)
+
+| Scope | Status |
+|-------|--------|
+| Commercial Account Workspace (`/commercial`) with broker nav | Done |
+| Private document upload + classification (PDF/DOCX/XLSX/CSV/images/email) | Done |
+| Provenanced structured extraction (source, page, confidence, excerpt) | Done |
+| Diligence checklist + Account Readiness (not underwriting) | Done |
+| Existing policy / program aggregation across commercial LOBs | Done |
+| First Supabase migration for commercial tables + private storage bucket | Done (schema; app still localStorage-first) |
+
 ## Architecture
 
 - **Next.js App Router** UI (minimal, premium, natural pine/sage aesthetic)
