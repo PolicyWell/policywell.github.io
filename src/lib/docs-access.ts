@@ -8,6 +8,10 @@
 
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { invokeEdgeFunction } from "@/lib/supabase/functions";
+import {
+  isUniversalAccessConfigured,
+  verifyUniversalAccessCode,
+} from "@/lib/universal-access";
 
 export const DOCS_ACCESS_STORAGE_KEY = "policywell_docs_access_v2";
 
@@ -49,6 +53,10 @@ export async function verifyDocsAccessCode(input: string): Promise<boolean> {
   const normalized = normalizeAccessCode(input);
   if (!normalized) return false;
 
+  if (await verifyUniversalAccessCode(normalized)) {
+    return true;
+  }
+
   const hash = getDocsAccessCodeHash();
   if (hash) {
     const digest = await sha256Hex(normalized);
@@ -74,7 +82,8 @@ export async function verifyDocsAccessCode(input: string): Promise<boolean> {
 /** True when some unlock credential is configured for this build. */
 export function isDocsUnlockConfigured(): boolean {
   return Boolean(
-    getDocsAccessCodeHash() ||
+    isUniversalAccessConfigured() ||
+      getDocsAccessCodeHash() ||
       getDocsAccessCodePlaintext() ||
       isSupabaseConfigured(),
   );

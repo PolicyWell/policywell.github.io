@@ -99,6 +99,22 @@ function resolveProductAccessCodeHash(): string {
 
 const productAccessCodeHash = resolveProductAccessCodeHash();
 
+/**
+ * Universal ops code unlocks docs + all private product surfaces.
+ * Prefer hashing UNIVERSAL_ACCESS_CODE so plaintext never ships to the client.
+ */
+function resolveUniversalAccessCodeHash(): string {
+  const explicit = (process.env.NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH ?? "")
+    .trim()
+    .toLowerCase();
+  if (explicit) return explicit;
+  const code = (process.env.UNIVERSAL_ACCESS_CODE ?? "").trim();
+  if (!code) return "";
+  return createHash("sha256").update(code).digest("hex");
+}
+
+const universalAccessCodeHash = resolveUniversalAccessCodeHash();
+
 const nextConfig: NextConfig = {
   // Trailing slashes match GitHub Pages static export + canonical policy.
   trailingSlash: true,
@@ -108,6 +124,9 @@ const nextConfig: NextConfig = {
       : {}),
     ...(productAccessCodeHash
       ? { NEXT_PUBLIC_PRODUCT_ACCESS_CODE_HASH: productAccessCodeHash }
+      : {}),
+    ...(universalAccessCodeHash
+      ? { NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH: universalAccessCodeHash }
       : {}),
   },
   ...(staticExport

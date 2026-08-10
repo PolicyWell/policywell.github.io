@@ -12,6 +12,10 @@ import {
 } from "@/lib/docs-access";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { invokeEdgeFunction } from "@/lib/supabase/functions";
+import {
+  isUniversalAccessConfigured,
+  verifyUniversalAccessCode,
+} from "@/lib/universal-access";
 
 export const PRODUCT_ACCESS_STORAGE_KEY = "policywell_product_access_v1";
 
@@ -65,7 +69,8 @@ function getProductAccessCodePlaintext(): string {
  */
 export function isProductUnlockConfigured(): boolean {
   return Boolean(
-    getProductAccessCodeHash() ||
+    isUniversalAccessConfigured() ||
+      getProductAccessCodeHash() ||
       getProductAccessCodePlaintext() ||
       getDocsAccessCodeHash() ||
       getDocsAccessCodePlaintext() ||
@@ -94,6 +99,10 @@ export async function verifyProductAccessCode(
 ): Promise<boolean> {
   const normalized = normalizeAccessCode(input);
   if (!normalized) return false;
+
+  if (await verifyUniversalAccessCode(normalized)) {
+    return true;
+  }
 
   const productHash = getProductAccessCodeHash();
   if (productHash && (await sha256Hex(normalized)) === productHash) {

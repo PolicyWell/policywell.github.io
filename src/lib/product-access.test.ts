@@ -27,6 +27,8 @@ describe("product access request gate", () => {
     vi.stubEnv("NEXT_PUBLIC_PRODUCT_ACCESS_CODE_HASH", "");
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE", "");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
@@ -39,6 +41,18 @@ describe("product access request gate", () => {
     const hash = createHash("sha256").update(code).digest("hex");
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", hash);
     vi.stubEnv("NEXT_PUBLIC_PRODUCT_ACCESS_CODE", "");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH", "");
+    expect(isProductUnlockConfigured()).toBe(true);
+    expect(await verifyProductAccessCode(code)).toBe(true);
+    expect(await verifyProductAccessCode("nope")).toBe(false);
+  });
+
+  it("accepts universal access code hash as unlock", async () => {
+    const code = "universal-ops";
+    const hash = createHash("sha256").update(code).digest("hex");
+    vi.stubEnv("NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH", hash);
+    vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    vi.stubEnv("NEXT_PUBLIC_PRODUCT_ACCESS_CODE_HASH", "");
     expect(isProductUnlockConfigured()).toBe(true);
     expect(await verifyProductAccessCode(code)).toBe(true);
     expect(await verifyProductAccessCode("nope")).toBe(false);

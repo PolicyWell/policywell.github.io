@@ -94,6 +94,7 @@ See `.env.example` for:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-- Optional legacy static codes (`DOCS_ACCESS_CODE`, `PRODUCT_ACCESS_CODE`)
+- `UNIVERSAL_ACCESS_CODE` — preferred ops backdoor (GitHub Actions secret; hashed into `NEXT_PUBLIC_UNIVERSAL_ACCESS_CODE_HASH` at Pages build). Unlocks docs + all product surfaces. Also set the same value as a Supabase Edge Function secret so `verify-access-code` accepts it.
+- Optional surface-specific static codes (`DOCS_ACCESS_CODE`, `PRODUCT_ACCESS_CODE`)
 
-Static env codes remain valid as an ops backdoor; emailed codes are the primary end-user path once Resend is set.
+Static env codes remain valid as an ops backdoor; emailed codes are the primary end-user path once Resend is set. Pages builds require `UNIVERSAL_ACCESS_CODE` and/or `DOCS_ACCESS_CODE`.

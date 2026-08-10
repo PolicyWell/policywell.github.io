@@ -21,6 +21,17 @@ Deno.serve(async (req) => {
       return jsonResponse({ ok: false, error: "Code is required." }, 400);
     }
 
+    // Ops universal code (Supabase Edge secret UNIVERSAL_ACCESS_CODE).
+    // Unlocks every surface without a one-time issued_access_codes row.
+    const universal = (Deno.env.get("UNIVERSAL_ACCESS_CODE") ?? "").trim();
+    if (universal && code === universal) {
+      return jsonResponse({
+        ok: true,
+        surfaces: ["*"],
+        universal: true,
+      });
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!supabaseUrl || !serviceKey) {
