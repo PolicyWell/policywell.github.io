@@ -696,6 +696,9 @@ export function SiteNav() {
 
 export function AppNav({ role }: { role?: string }) {
   const links = [
+    { href: "/app", label: "App" },
+    { href: "/cases", label: "Cases" },
+    { href: "/policies", label: "Policies" },
     { href: "/agent", label: "Agent" },
     { href: "/docs", label: "Docs" },
     { href: "/workspace", label: "Workspace" },

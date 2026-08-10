@@ -86,9 +86,22 @@ Storage path convention: `{case_id}/...` in bucket `policy-documents`. Browser v
 
 RLS authorization tests: `supabase/tests/rls_authorization.sql` + `src/lib/supabase/rls-authorization.test.ts`.
 
+## Auth UI (SSR)
+
+| Surface | Notes |
+|---------|--------|
+| `/login` | Email/password sign-in + sign-up (adapts existing login page) |
+| `/forgot-password` | `resetPasswordForEmail` |
+| `/auth/update-password` | Set new password after recovery |
+| `/auth/callback` | PKCE / email confirm exchange (client page for Pages export) |
+| `/app`, `/cases/*`, `/policies/*` | Protected via middleware `getClaims()` + `RequireAuth` |
+
+On signup, migration `20260810063357_auth_profile_signup_metadata.sql` updates `handle_new_user`, and the UI calls `ensureProfileForUser`, to create `public.profiles` (`first_name`, `last_name`, `phone`, `role=consumer`). Passwords never leave Supabase Auth.
+
+LocalStorage demo login remains as an optional collapsible on `/login` for legacy demo routes only — it does **not** unlock `/app` / `/cases` / `/policies`.
+
 ## Notes
 
-- Demo login remains localStorage until Auth is migrated to Supabase Auth.
 - Never commit the service role key.
 
 ## Private docs access (required for Pages)
