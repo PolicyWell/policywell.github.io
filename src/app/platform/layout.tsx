@@ -1,17 +1,11 @@
-import type { Metadata } from "next";
-import { PrivateProductShell } from "@/components/access/PrivateProductShell";
-import { NOINDEX_ROBOTS } from "@/lib/seo";
-
-export const metadata: Metadata = {
-  robots: NOINDEX_ROBOTS,
-};
-
+/**
+ * Shared /platform segment layout.
+ * Access gating applies only under (gated); Coverage Library stays public.
+ */
 export default function PlatformLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PrivateProductShell surface="platform">{children}</PrivateProductShell>
-  );
+  return children;
 }

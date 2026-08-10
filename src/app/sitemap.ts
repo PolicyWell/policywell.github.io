@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { API_GROUPS } from "@/lib/api-reference-data";
+import { getCoverageProfileSlugs } from "@/lib/coverage-library";
 import { DOCS_USE_CASES } from "@/lib/docs-data";
 import { INDUSTRY_PAGES } from "@/lib/industry-pages-data";
 import { absoluteUrl } from "@/lib/seo";
@@ -9,8 +10,9 @@ export const dynamic = "force-static";
 /**
  * Indexable public paths only.
  *
- * /docs, /demo, /product, /platform, /deck, /agent, /api are private
+ * /docs, /demo, /product, /platform (overview), /deck, /agent, /api are private
  * (request-access / access-code gated) and intentionally omitted.
+ * /platform/coverage-library is public and included.
  * Segmented helpers keep future sitemap indexes easy
  * (core / commercial / life / annuities / industries)
  * without emitting multiple files until URL volume requires it.
@@ -29,7 +31,14 @@ function corePaths(): string[] {
     "/book-a-call",
     "/press",
     "/careers",
+    "/platform/coverage-library",
   ];
+}
+
+function coverageLibraryPaths(): string[] {
+  return getCoverageProfileSlugs().map(
+    (slug) => `/platform/coverage-library/${slug}`,
+  );
 }
 
 function industryPaths(): string[] {
@@ -84,7 +93,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   void docsGuidePaths;
   void docsApiPaths;
 
-  const paths = dedupe([...corePaths(), ...industryPaths()]);
+  const paths = dedupe([
+    ...corePaths(),
+    ...industryPaths(),
+    ...coverageLibraryPaths(),
+  ]);
 
   // Omit lastModified — no trustworthy per-page content dates available.
   // Do not emit changefreq or priority.
