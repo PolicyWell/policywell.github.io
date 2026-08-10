@@ -85,7 +85,7 @@ export default function HomePage() {
         <section
           id="reports"
           className="pw-demo-section pw-demo-reports"
-          aria-label="PolicyWell intelligence reports"
+          aria-label="PolicyWell commercial simulations"
         >
           <div className="pw-shell pw-shell-wide">
             <ReportCarousel />
