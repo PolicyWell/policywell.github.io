@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { BOOK_A_CALL_PATH } from "@/lib/book-a-call";
 import { isUsState, StateTypeahead } from "@/components/StateTypeahead";
+import { invokeEdgeFunction } from "@/lib/supabase/functions";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 const BOOK_A_CALL_HREF = BOOK_A_CALL_PATH;
 
@@ -225,7 +227,10 @@ export function QuoteRequestForm({
     setError("");
   }
 
-  function onSubmit(e: FormEvent) {
+  const [busy, setBusy] = useState(false);
+  const [submitNote, setSubmitNote] = useState("");
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!form.name.trim()) {
       setError("Please enter your name.");
@@ -262,7 +267,52 @@ export function QuoteRequestForm({
       setError("Enter your annual revenue estimate.");
       return;
     }
-    setSubmitted(true);
+
+    setError("");
+    setBusy(true);
+    try {
+      if (isSupabaseConfigured()) {
+        const result = await invokeEdgeFunction<{
+          ok?: boolean;
+          message?: string;
+          emailed?: boolean;
+          error?: string;
+        }>("request-quote", {
+          name: form.name.trim(),
+          email: form.email.trim() || undefined,
+          phone: form.phone.trim() || undefined,
+          company: form.company.trim() || undefined,
+          line,
+          state: form.state,
+          siteOrigin: window.location.origin,
+          payload: {
+            ...form,
+            line,
+            industry: defaultIndustry ?? null,
+            path: defaultPath ?? null,
+          },
+        });
+        if (!result.ok) {
+          setError(result.error);
+          return;
+        }
+        setSubmitNote(
+          result.data.message ??
+            (result.data.emailed
+              ? "Check your email for confirmation and a product access code."
+              : "An advisor will follow up shortly."),
+        );
+      } else {
+        setSubmitNote(
+          "Request recorded locally — email delivery requires Supabase + Resend configuration.",
+        );
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not submit request.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   const asideCopy = isPersonal
@@ -314,9 +364,15 @@ export function QuoteRequestForm({
               We received your request.
             </h2>
             <p className="text-stone mt-3 max-w-md">
-              This is decision support for coverage — not a bindable quote or
-              underwriting decision.
+              {submitNote ||
+                "This is decision support for coverage — not a bindable quote or underwriting decision."}
             </p>
+            {submitNote ? (
+              <p className="text-stone mt-2 max-w-md text-sm">
+                This is decision support for coverage — not a bindable quote or
+                underwriting decision.
+              </p>
+            ) : null}
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href={BOOK_A_CALL_HREF} className="pw-btn">
                 Book a call
@@ -622,8 +678,12 @@ export function QuoteRequestForm({
 
           {error ? <p className="pw-quote-error">{error}</p> : null}
 
-          <button type="submit" className="pw-btn pw-quote-submit">
-            {submitLabel}
+          <button
+            type="submit"
+            className="pw-btn pw-quote-submit"
+            disabled={busy}
+          >
+            {busy ? "Sending…" : submitLabel}
           </button>
           <p className="pw-quote-footnote">
             A licensed advisor reviews every request, usually a reply within the

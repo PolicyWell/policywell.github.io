@@ -3,7 +3,11 @@
  *
  * Production/Pages: build injects NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH (SHA-256).
  * Local dev: set DOCS_ACCESS_CODE or NEXT_PUBLIC_DOCS_ACCESS_CODE in .env.local.
+ * Emailed one-time codes are verified via Supabase Edge Function when configured.
  */
+
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { invokeEdgeFunction } from "@/lib/supabase/functions";
 
 export const DOCS_ACCESS_STORAGE_KEY = "policywell_docs_access_v2";
 
@@ -48,12 +52,20 @@ export async function verifyDocsAccessCode(input: string): Promise<boolean> {
   const hash = getDocsAccessCodeHash();
   if (hash) {
     const digest = await sha256Hex(normalized);
-    return digest === hash;
+    if (digest === hash) return true;
   }
 
   const plain = getDocsAccessCodePlaintext();
-  if (plain) {
-    return normalized === plain;
+  if (plain && normalized === plain) {
+    return true;
+  }
+
+  if (isSupabaseConfigured()) {
+    const result = await invokeEdgeFunction<{ ok?: boolean }>(
+      "verify-access-code",
+      { code: normalized, surface: "docs" },
+    );
+    return result.ok && result.data.ok === true;
   }
 
   return false;
@@ -61,7 +73,11 @@ export async function verifyDocsAccessCode(input: string): Promise<boolean> {
 
 /** True when some unlock credential is configured for this build. */
 export function isDocsUnlockConfigured(): boolean {
-  return Boolean(getDocsAccessCodeHash() || getDocsAccessCodePlaintext());
+  return Boolean(
+    getDocsAccessCodeHash() ||
+      getDocsAccessCodePlaintext() ||
+      isSupabaseConfigured(),
+  );
 }
 
 export function readDocsAccessUnlocked(): boolean {

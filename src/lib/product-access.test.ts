@@ -25,6 +25,9 @@ describe("product access request gate", () => {
     vi.stubEnv("NEXT_PUBLIC_PRODUCT_ACCESS_CODE_HASH", "");
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE", "");
     vi.stubEnv("NEXT_PUBLIC_DOCS_ACCESS_CODE_HASH", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
     expect(isProductUnlockConfigured()).toBe(false);
     expect(await verifyProductAccessCode("secret")).toBe(false);
   });

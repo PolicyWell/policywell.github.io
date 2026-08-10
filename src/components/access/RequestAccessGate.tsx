@@ -41,6 +41,7 @@ export function RequestAccessGate({
   const [unlocked, setUnlocked] = useState(false);
   const [mode, setMode] = useState<Mode>("request");
   const [submitted, setSubmitted] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -56,7 +57,7 @@ export function RequestAccessGate({
     const fromQuery = params.get("code") ?? params.get("access_code");
 
     void (async () => {
-      if (fromQuery && (await verifyProductAccessCode(fromQuery))) {
+      if (fromQuery && (await verifyProductAccessCode(fromQuery, surface))) {
         persistProductAccessUnlocked();
         setUnlocked(true);
         params.delete("code");
@@ -71,7 +72,7 @@ export function RequestAccessGate({
       setUnlocked(readProductAccessUnlocked());
       setReady(true);
     })();
-  }, []);
+  }, [surface]);
 
   async function onRequest(e: FormEvent) {
     e.preventDefault();
@@ -86,7 +87,7 @@ export function RequestAccessGate({
     }
     setBusy(true);
     try {
-      await submitAccessRequest({
+      const result = await submitAccessRequest({
         name: name.trim(),
         email: email.trim(),
         company: company.trim(),
@@ -95,9 +96,21 @@ export function RequestAccessGate({
         notes: notes.trim(),
         pagePath: pathname,
       });
+      setSubmitMessage(
+        result.via === "edge"
+          ? result.message ??
+              `Check ${result.emailedTo ?? "your email"} for a workable access code.`
+          : result.via === "webhook"
+            ? "Request received. We’ll email an access code shortly."
+            : "Your mail app should open with the request. We’ll reply with a code.",
+      );
       setSubmitted(true);
-    } catch {
-      setError("Couldn’t send your request. Email info@policywell.ai instead.");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Couldn’t send your request. Email info@policywell.ai instead.",
+      );
     } finally {
       setBusy(false);
     }
@@ -108,7 +121,7 @@ export function RequestAccessGate({
     setError("");
     setBusy(true);
     try {
-      const ok = await verifyProductAccessCode(code);
+      const ok = await verifyProductAccessCode(code, surface);
       if (!ok) {
         setError(
           isProductUnlockConfigured()
@@ -170,10 +183,15 @@ export function RequestAccessGate({
           {mode === "request" ? (
             submitted ? (
               <div className="pw-access-success">
-                <p className="pw-access-success-title">Request received</p>
+                <p className="pw-access-success-title">Check your email</p>
                 <p className="pw-access-lede">
-                  Thanks{name ? `, ${name.split(" ")[0]}` : ""}. We’ll review and
-                  email an access code to <strong>{email}</strong> if approved.
+                  Thanks{name ? `, ${name.split(" ")[0]}` : ""}.{" "}
+                  {submitMessage || (
+                    <>
+                      We emailed a workable access code to{" "}
+                      <strong>{email}</strong>.
+                    </>
+                  )}
                 </p>
                 <button
                   type="button"
