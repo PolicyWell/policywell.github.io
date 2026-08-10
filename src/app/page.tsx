@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RequestAccessTeaser } from "@/components/access/RequestAccessGate";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
+import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteNav } from "@/components/ui";
 import {
@@ -52,12 +53,7 @@ export default function HomePage() {
           </div>
 
           <div className="pw-shell pb-4 md:pb-6 animate-rise-delay-2">
-            <RequestAccessTeaser
-              surface="demo"
-              title="Product demos are private"
-              description="Request access to unlock the interactive demo, product tour, agent, and deck."
-              href="/demo/"
-            />
+            <PolicyWellCLIShowcase compact />
           </div>
 
           <div className="pw-shell pb-8 md:pb-10 flex flex-col sm:flex-row flex-wrap gap-3 animate-rise-delay-2">
