@@ -66,6 +66,13 @@ export function ReportCarousel() {
       ) {
         return;
       }
+      const root = document.getElementById("reports");
+      if (!root) return;
+      const rect = root.getBoundingClientRect();
+      const inView =
+        rect.top < window.innerHeight * 0.7 &&
+        rect.bottom > window.innerHeight * 0.25;
+      if (!inView) return;
       if (e.key === "ArrowRight") {
         e.preventDefault();
         next();
