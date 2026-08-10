@@ -112,8 +112,9 @@ export function ReportCarousel() {
         <p className="pw-demo-eyebrow">Insurance intelligence</p>
         <h2 className="pw-demo-h2">Reports that read like underwriting, not a dashboard.</h2>
         <p className="pw-demo-section-copy">
-          Swipe or click through the working book. Simulated households are labeled;
-          live workspace ingest appears when present.
+          Swipe or click through Policy Health, Gaps, Book Health, Funding, At-Risk,
+          and Opportunities. Simulated book rows are labeled; live workspace ingest
+          appears when present.
         </p>
         <p className="pw-report-live-line">
           <span className="pw-report-tag pw-report-tag-live">
