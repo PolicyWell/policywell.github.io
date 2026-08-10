@@ -43,7 +43,6 @@ export function ReportCarousel() {
 
   const book = useMemo(() => {
     void tick;
-    // Harbor Fab commercial seed + scoring/diligence engines (simulated, labeled).
     return buildCommercialReportBook({ provenance: "simulated" });
   }, [tick]);
 
@@ -111,9 +110,7 @@ export function ReportCarousel() {
           is labeled; live commercial workspace accounts appear when present.
         </p>
         <p className="pw-report-live-line">
-          <span
-            className={`pw-report-tag pw-report-tag-${book.provenance}`}
-          >
+          <span className={`pw-report-tag pw-report-tag-${book.provenance}`}>
             {book.provenance === "live" ? "Live" : "Simulated"}
           </span>
           <span className="pw-report-mono">{book.accountName}</span>
@@ -128,31 +125,29 @@ export function ReportCarousel() {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {SLIDES.map((slide, index) => (
-          <ReportSlide
-            key={slide.id}
-            active={index === activeIndex}
-            labelledBy={`pw-report-tab-${slide.id}`}
-          >
-            <div id={`pw-report-panel-${slide.id}`}>
-              {slide.id === "peril-heatmap" ? (
-                <PerilHeatmapReport book={book} />
-              ) : null}
-              {slide.id === "policy-gaps" ? (
-                <CommercialGapsReport book={book} />
-              ) : null}
-              {slide.id === "case-compliance" ? (
-                <CaseComplianceReport book={book} />
-              ) : null}
-              {slide.id === "pricing-comps" ? (
-                <PricingCompsReport book={book} />
-              ) : null}
-              {slide.id === "at-risk" ? (
-                <CommercialAtRiskReport book={book} />
-              ) : null}
-            </div>
-          </ReportSlide>
-        ))}
+        <ReportSlide
+          key={active.id}
+          active
+          labelledBy={`pw-report-tab-${active.id}`}
+        >
+          <div id={`pw-report-panel-${active.id}`}>
+            {active.id === "peril-heatmap" ? (
+              <PerilHeatmapReport book={book} />
+            ) : null}
+            {active.id === "policy-gaps" ? (
+              <CommercialGapsReport book={book} />
+            ) : null}
+            {active.id === "case-compliance" ? (
+              <CaseComplianceReport book={book} />
+            ) : null}
+            {active.id === "pricing-comps" ? (
+              <PricingCompsReport book={book} />
+            ) : null}
+            {active.id === "at-risk" ? (
+              <CommercialAtRiskReport book={book} />
+            ) : null}
+          </div>
+        </ReportSlide>
       </div>
 
       <ReportNavigation
