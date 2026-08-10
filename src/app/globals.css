@@ -1371,12 +1371,19 @@ span.pw-footer-group-title {
   max-width: 100%;
 }
 
+.pw-demo-reports .pw-shell {
+  min-width: 0;
+}
+
 .pw-demo-reports .pw-demo-eyebrow {
   color: #8fafa0;
 }
 
 .pw-demo-reports .pw-demo-h2 {
   color: #f5faf7;
+  font-size: clamp(1.55rem, 5.5vw, 3.15rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
 }
 
 .pw-demo-reports .pw-demo-section-copy {
