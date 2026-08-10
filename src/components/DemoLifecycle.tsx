@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { ReportCarousel } from "@/components/intelligence/reports/ReportCarousel";
 import { SiteBreadcrumbs } from "@/components/seo/SiteBreadcrumbs";
 import { SiteNav } from "@/components/ui";
 import { DEMO_USERS, buildDemoSeed } from "@/lib/seed";
@@ -380,75 +381,11 @@ export function DemoLifecycle() {
         </div>
       </section>
 
-      {/* Intelligence Dashboard */}
-      <section className="pw-demo-section">
-        <div className="pw-shell">
+      {/* Intelligence Reports carousel */}
+      <section className="pw-demo-section pw-demo-reports" id="reports">
+        <div className="pw-shell pw-shell-wide">
           <Reveal>
-            <p className="pw-demo-eyebrow">Insurance intelligence</p>
-            <h2 className="pw-demo-h2">One household. Full clarity.</h2>
-            <p className="pw-demo-section-copy">
-              Scores, gaps, and context in a single operating view.
-            </p>
-          </Reveal>
-
-          <Reveal delay={100} className="pw-demo-dash">
-            <div className="pw-demo-dash-top">
-              <div>
-                <p className="pw-demo-dash-kicker">Household</p>
-                <h3 className="pw-demo-dash-title">Rivera family</h3>
-                <p className="pw-demo-dash-meta">
-                  Dual income · 3 dependents · primary residence
-                </p>
-              </div>
-              <ScoreRing value={64} label="Health" />
-            </div>
-
-            <div className="pw-demo-dash-grid">
-              <div className="pw-demo-metric">
-                <span className="pw-demo-metric-label">Funding gap</span>
-                <span className="pw-demo-metric-value">$800 / mo</span>
-                <div className="score-bar mt-3">
-                  <span style={{ width: "72%" }} />
-                </div>
-              </div>
-              <div className="pw-demo-metric">
-                <span className="pw-demo-metric-label">Lapse risk</span>
-                <span className="pw-demo-metric-value text-amber">Elevated</span>
-                <div className="score-bar mt-3">
-                  <span style={{ width: "58%", background: "linear-gradient(90deg, var(--amber-water), #d4b56e)" }} />
-                </div>
-              </div>
-              <div className="pw-demo-metric">
-                <span className="pw-demo-metric-label">Coverage vs needs</span>
-                <span className="pw-demo-metric-value">82%</span>
-                <div className="score-bar mt-3">
-                  <span style={{ width: "82%" }} />
-                </div>
-              </div>
-              <div className="pw-demo-metric">
-                <span className="pw-demo-metric-label">Peer comparison</span>
-                <span className="pw-demo-metric-value">48 policies</span>
-                <p className="pw-demo-metric-note">Benchmarked in-force universe</p>
-              </div>
-            </div>
-
-            <div className="pw-demo-context">
-              <p className="pw-demo-dash-kicker">Context graph</p>
-              <div className="pw-demo-chips">
-                {[
-                  "Retirement target",
-                  "Mortgage balance",
-                  "College timeline",
-                  "Income stability",
-                  "Risk tolerance",
-                  "Existing riders",
-                ].map((c) => (
-                  <span key={c} className="pw-demo-chip">
-                    {c}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <ReportCarousel />
           </Reveal>
         </div>
       </section>
