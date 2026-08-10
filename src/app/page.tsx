@@ -3,6 +3,7 @@ import Link from "next/link";
 import { RequestAccessTeaser } from "@/components/access/RequestAccessGate";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
+import { WorkflowStepsShowcase } from "@/components/WorkflowStepsShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteNav } from "@/components/ui";
 import {
@@ -78,22 +79,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-pine/10">
-          <div className="pw-shell py-12 md:py-16 grid md:grid-cols-2 gap-5">
-            <RequestAccessTeaser
-              surface="product"
-              title="Interactive product tour"
-              description="Walk the platform modules after we approve your access request."
-              href="/product/"
-            />
-            <RequestAccessTeaser
-              surface="agent"
-              title="Insurance intelligence agent"
-              description="The live agent workspace is private. Request access to try it."
-              href="/agent/"
-            />
-          </div>
-        </section>
+        <WorkflowStepsShowcase />
 
         <section
           id="deck"
