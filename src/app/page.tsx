@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DeckViewer } from "@/components/DeckViewer";
+import { RequestAccessTeaser } from "@/components/access/RequestAccessGate";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
-import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
-import { WorkflowStepsShowcase } from "@/components/WorkflowStepsShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteNav } from "@/components/ui";
 import {
@@ -45,8 +43,7 @@ export default function HomePage() {
               PolicyWell
             </p>
             <h1 className="animate-rise font-display text-[2rem] leading-[1.05] sm:text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight text-pine">
-              The Agentic Operating System for the Insurance &amp; Financial
-              Services Industry
+              Agentic Operating System for Insurance
             </h1>
             <p className="animate-rise-delay mt-4 max-w-2xl text-sm md:text-base text-stone">
               PolicyWell transforms insurance data into personalized
@@ -55,15 +52,20 @@ export default function HomePage() {
           </div>
 
           <div className="pw-shell pb-4 md:pb-6 animate-rise-delay-2">
-            <PolicyWellCLIShowcase compact />
+            <RequestAccessTeaser
+              surface="demo"
+              title="Product demos are private"
+              description="Request access to unlock the interactive demo, product tour, agent, and deck."
+              href="/demo/"
+            />
           </div>
 
           <div className="pw-shell pb-8 md:pb-10 flex flex-col sm:flex-row flex-wrap gap-3 animate-rise-delay-2">
             <Link
-              href="/platform/"
+              href="/demo/"
               className="pw-btn w-full sm:w-auto justify-center"
             >
-              Explore the Platform
+              Request demo access
             </Link>
             <Link
               href="/quote/#contact"
@@ -72,35 +74,42 @@ export default function HomePage() {
               Get a Quote
             </Link>
             <Link
-              href="/demo/"
+              href="/book-a-call/"
               className="pw-btn pw-btn-secondary w-full sm:w-auto justify-center"
             >
-              Watch the demo
+              Book a call
             </Link>
           </div>
         </section>
 
-        <WorkflowStepsShowcase />
+        <section className="border-t border-pine/10">
+          <div className="pw-shell py-12 md:py-16 grid md:grid-cols-2 gap-5">
+            <RequestAccessTeaser
+              surface="product"
+              title="Interactive product tour"
+              description="Walk the platform modules after we approve your access request."
+              href="/product/"
+            />
+            <RequestAccessTeaser
+              surface="agent"
+              title="Insurance intelligence agent"
+              description="The live agent workspace is private. Request access to try it."
+              href="/agent/"
+            />
+          </div>
+        </section>
 
         <section
           id="deck"
           className="border-t border-pine/10 bg-foam/40 backdrop-blur-sm"
         >
           <div className="pw-shell py-12 md:py-20 space-y-6 md:space-y-8">
-            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end justify-between gap-4">
-              <div className="max-w-xl">
-                <h2 className="font-display text-3xl md:text-4xl text-pine">
-                  View our deck
-                </h2>
-              </div>
-              <Link
-                href="/deck"
-                className="pw-btn !py-2.5 text-sm w-full sm:w-auto justify-center"
-              >
-                Open full deck
-              </Link>
-            </div>
-            <DeckViewer compact />
+            <RequestAccessTeaser
+              surface="deck"
+              title="View our deck"
+              description="The full PolicyWell deck is available on request. We’ll send an access code after review."
+              href="/deck/"
+            />
           </div>
         </section>
       </main>

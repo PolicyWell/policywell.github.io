@@ -13045,3 +13045,268 @@ html[data-theme="dark"] .pw-docs-access-lock {
   border-color: rgba(215, 235, 226, 0.14);
   color: var(--stone);
 }
+
+/* Product request-access gate */
+.pw-access {
+  flex: 1;
+  min-height: calc(100vh - 4rem);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem calc(2rem + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(720px 360px at 15% 10%, rgba(143, 175, 160, 0.18), transparent 60%),
+    linear-gradient(165deg, #f5faf7 0%, #eef5f1 45%, #e7f0eb 100%);
+  color: #0f2f28;
+}
+
+.pw-access-card {
+  width: min(100%, 26rem);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 47, 40, 0.1);
+  border-radius: 1.1rem;
+  box-shadow: 0 16px 40px rgba(15, 47, 40, 0.08);
+  padding: 1.75rem 1.5rem 1.4rem;
+}
+
+.pw-access-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  margin: 0 auto 0.85rem;
+  display: block;
+  border-radius: 0.45rem;
+}
+
+.pw-access-eyebrow {
+  margin: 0;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3d6b5a;
+}
+
+.pw-access-title {
+  margin: 0.45rem 0 0;
+  text-align: center;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-size: 1.55rem;
+  letter-spacing: -0.03em;
+  color: #0f2f28;
+}
+
+.pw-access-lede {
+  margin: 0.55rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #5c6f68;
+}
+
+.pw-access-tabs {
+  margin-top: 1.15rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: rgba(15, 47, 40, 0.06);
+}
+
+.pw-access-tab {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #5c6f68;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.55rem 0.4rem;
+  cursor: pointer;
+}
+
+.pw-access-tab.is-active {
+  background: #0f2f28;
+  color: #f5faf7;
+}
+
+.pw-access-form {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.pw-access-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #214a3c;
+}
+
+.pw-access-input {
+  width: 100%;
+  border: 1px solid rgba(15, 47, 40, 0.14);
+  border-radius: 0.55rem;
+  background: #fff;
+  color: #0f2f28;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.92rem;
+  outline: none;
+}
+
+.pw-access-textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.pw-access-input:focus {
+  border-color: rgba(15, 47, 40, 0.4);
+  box-shadow: 0 0 0 3px rgba(15, 47, 40, 0.08);
+}
+
+.pw-access-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #b42318;
+}
+
+.pw-access-submit {
+  margin-top: 0.35rem;
+  width: 100%;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #0f2f28;
+  color: #f5faf7;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.pw-access-submit:hover {
+  background: #214a3c;
+}
+
+.pw-access-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.pw-access-submit-secondary {
+  background: transparent;
+  color: #0f2f28;
+  border: 1px solid rgba(15, 47, 40, 0.18);
+}
+
+.pw-access-submit-secondary:hover {
+  background: rgba(15, 47, 40, 0.04);
+}
+
+.pw-access-success {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.pw-access-success-title {
+  margin: 0;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-size: 1.2rem;
+  color: #0f2f28;
+}
+
+.pw-access-footnote {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #5c6f68;
+}
+
+.pw-access-footnote a {
+  color: #0f2f28;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pw-access-lock {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  z-index: 35;
+  border: 1px solid rgba(15, 47, 40, 0.14);
+  background: rgba(255, 255, 255, 0.92);
+  color: #5c6f68;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.pw-access-teaser {
+  border: 1px solid rgba(15, 47, 40, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  display: grid;
+  gap: 0.65rem;
+  justify-items: center;
+}
+
+.pw-access-teaser-title {
+  margin: 0;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-size: 1.45rem;
+  color: #0f2f28;
+  letter-spacing: -0.02em;
+}
+
+html[data-theme="dark"] .pw-access {
+  background:
+    radial-gradient(720px 360px at 15% 10%, rgba(126, 184, 154, 0.12), transparent 60%),
+    linear-gradient(165deg, #121c19 0%, #15211d 55%, #101a17 100%);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .pw-access-card,
+html[data-theme="dark"] .pw-access-teaser {
+  background: #15211d;
+  border-color: rgba(215, 235, 226, 0.12);
+}
+
+html[data-theme="dark"] .pw-access-title,
+html[data-theme="dark"] .pw-access-teaser-title,
+html[data-theme="dark"] .pw-access-success-title,
+html[data-theme="dark"] .pw-access-label {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .pw-access-lede,
+html[data-theme="dark"] .pw-access-footnote,
+html[data-theme="dark"] .pw-access-tab {
+  color: var(--stone);
+}
+
+html[data-theme="dark"] .pw-access-tab.is-active {
+  background: var(--foam);
+  color: #0f2f28;
+}
+
+html[data-theme="dark"] .pw-access-input {
+  background: #101a17;
+  border-color: rgba(215, 235, 226, 0.14);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .pw-access-submit {
+  background: var(--foam);
+  color: #0f2f28;
+}
+
+html[data-theme="dark"] .pw-access-lock {
+  background: rgba(21, 33, 29, 0.92);
+  border-color: rgba(215, 235, 226, 0.14);
+  color: var(--stone);
+}
