@@ -18,6 +18,8 @@ describe("product access request gate", () => {
     expect(surfaceFromPathname("/deck/")).toBe("deck");
     expect(surfaceFromPathname("/agent")).toBe("agent");
     expect(surfaceFromPathname("/platform/")).toBe("platform");
+    expect(surfaceFromPathname("/api")).toBe("api");
+    expect(surfaceFromPathname("/api/")).toBe("api");
   });
 
   it("fails closed without credentials", async () => {

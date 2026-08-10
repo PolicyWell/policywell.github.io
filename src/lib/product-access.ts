@@ -1,5 +1,5 @@
 /**
- * Private product surfaces (demo, product tour, deck, agent, platform).
+ * Private product surfaces (demo, product tour, deck, agent, platform, API).
  * Unlock with the same hashed access code used for docs when configured,
  * or PRODUCT_ACCESS_CODE / NEXT_PUBLIC_PRODUCT_ACCESS_CODE.
  */
@@ -21,6 +21,7 @@ export const PRODUCT_ACCESS_SURFACES = [
   "deck",
   "agent",
   "platform",
+  "api",
 ] as const;
 
 export type ProductAccessSurface = (typeof PRODUCT_ACCESS_SURFACES)[number];
@@ -34,6 +35,7 @@ export const PRODUCT_ACCESS_SURFACE_LABELS: Record<
   deck: "Investor / product deck",
   agent: "Insurance intelligence agent",
   platform: "Platform overview",
+  api: "Developer API",
 };
 
 export function surfaceFromPathname(pathname: string): ProductAccessSurface {
@@ -43,6 +45,7 @@ export function surfaceFromPathname(pathname: string): ProductAccessSurface {
   if (clean.startsWith("/deck")) return "deck";
   if (clean.startsWith("/agent")) return "agent";
   if (clean.startsWith("/platform")) return "platform";
+  if (clean === "/api" || clean.startsWith("/api/")) return "api";
   return "demo";
 }
 
