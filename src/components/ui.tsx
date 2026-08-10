@@ -46,6 +46,11 @@ const PLATFORM_LINKS = [
     blurb: "AI insurance intelligence platform hub",
   },
   {
+    href: "/platform/coverage-library/",
+    label: "Coverage Library",
+    blurb: "Benchmark coverage standards by industry",
+  },
+  {
     href: "/product/",
     label: "Product",
     blurb: "Interactive 3-minute product tour",

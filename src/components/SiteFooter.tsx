@@ -31,6 +31,7 @@ const PRIMARY_LINKS = [
 ] as const;
 
 const SUPPORTING_LINKS = [
+  { href: "/platform/coverage-library/", label: "Coverage Library" },
   { href: "/product/", label: "Product tour" },
   { href: "/life-insurance/", label: "Life Insurance" },
   { href: "/annuities/", label: "Annuities" },
