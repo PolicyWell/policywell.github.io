@@ -3,18 +3,46 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { authenticateDemo } from "@/lib/seed";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { ensureProfileForUser } from "@/lib/supabase/ensure-profile";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { clearWorkspaceData } from "@/lib/storage";
-import { clearOnboardingBoot, persistSession } from "@/lib/use-workspace";
 
-type Mode = "signin" | "signup";
+type View = "magic" | "password";
 
 function safeNext(raw: string | null): string {
   if (raw && raw.startsWith("/") && !raw.startsWith("//")) return raw;
   return "/app/";
+}
+
+function GoogleGlyph() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
+      <path
+        fill="#4285F4"
+        d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.91c1.7-1.57 2.69-3.88 2.69-6.62z"
+      />
+      <path
+        fill="#34A853"
+        d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.84.86-3.05.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M3.95 10.7A5.4 5.4 0 0 1 3.66 9c0-.59.1-1.17.29-1.7V4.97H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.03l2.99-2.33z"
+      />
+      <path
+        fill="#EA4335"
+        d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A8.87 8.87 0 0 0 9 0 9 9 0 0 0 .96 4.97l2.99 2.33C4.66 5.17 6.65 3.58 9 3.58z"
+      />
+    </svg>
+  );
+}
+
+function GitHubGlyph() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden fill="currentColor">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.5 7.5 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+    </svg>
+  );
 }
 
 export function LoginForm() {
@@ -23,12 +51,9 @@ export function LoginForm() {
   const next = safeNext(searchParams.get("next"));
   const configError = searchParams.get("error") === "supabase_not_configured";
 
-  const [mode, setMode] = useState<Mode>("signin");
+  const [view, setView] = useState<View>("magic");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
   const [error, setError] = useState(
     configError
       ? "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY."
@@ -36,13 +61,16 @@ export function LoginForm() {
   );
   const [info, setInfo] = useState("");
   const [pending, setPending] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
   const supabaseReady = isSupabaseConfigured();
 
-  async function onGoogleSignIn() {
+  function resetMessages() {
     setError("");
     setInfo("");
+  }
+
+  async function onOAuth(provider: "google" | "github") {
+    resetMessages();
     setPending(true);
     const supabase = createBrowserSupabaseClient();
     if (!supabase) {
@@ -52,30 +80,33 @@ export function LoginForm() {
     }
     const origin = window.location.origin;
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider,
       options: {
         redirectTo: `${origin}/auth/callback/?next=${encodeURIComponent(next)}`,
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
-        },
+        ...(provider === "google"
+          ? {
+              queryParams: {
+                access_type: "offline",
+                prompt: "consent",
+              },
+            }
+          : {}),
       },
     });
     if (oauthError) {
+      const label = provider === "google" ? "Google" : "GitHub";
       setError(
         oauthError.message.includes("provider is not enabled")
-          ? "Google sign-in is not enabled yet. In Supabase → Authentication → Providers, enable Google and paste your Google Cloud OAuth Client ID/secret."
+          ? `${label} sign-in is not enabled yet. Enable it in Supabase → Authentication → Providers.`
           : oauthError.message,
       );
       setPending(false);
     }
-    // On success the browser navigates away to Google.
   }
 
-  async function onEmailCode(e: React.FormEvent) {
+  async function onMagicContinue(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
-    setInfo("");
+    resetMessages();
     setPending(true);
     const supabase = createBrowserSupabaseClient();
     if (!supabase) {
@@ -91,76 +122,26 @@ export function LoginForm() {
         shouldCreateUser: true,
       },
     });
+    setPending(false);
     if (otpError) {
       setError(otpError.message);
-      setPending(false);
       return;
     }
-    setOtpSent(true);
-    setInfo(
-      "Check your email for a sign-in link / one-time code from Supabase Auth.",
-    );
-    setPending(false);
+    setMagicSent(true);
+    setInfo("Check your email for your magic link.");
   }
 
-  async function onSupabaseSubmit(e: React.FormEvent) {
+  async function onPasswordSignIn(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
-    setInfo("");
+    resetMessages();
     setPending(true);
-
     const supabase = createBrowserSupabaseClient();
     if (!supabase) {
       setError("Supabase is not configured for this environment.");
       setPending(false);
       return;
     }
-
     try {
-      if (mode === "signup") {
-        if (!firstName.trim() || !lastName.trim()) {
-          setError("First and last name are required.");
-          setPending(false);
-          return;
-        }
-        const origin = window.location.origin;
-        const { data, error: signUpError } = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: {
-            emailRedirectTo: `${origin}/auth/callback/`,
-            data: {
-              first_name: firstName.trim(),
-              last_name: lastName.trim(),
-              phone: phone.trim() || null,
-            },
-          },
-        });
-        if (signUpError) {
-          setError(signUpError.message);
-          setPending(false);
-          return;
-        }
-        if (data.user) {
-          await ensureProfileForUser(supabase, data.user, {
-            first_name: firstName.trim(),
-            last_name: lastName.trim(),
-            phone: phone.trim() || null,
-          });
-        }
-        if (data.session) {
-          router.push(next);
-          router.refresh();
-          return;
-        }
-        setInfo(
-          "Check your email to confirm your account, then sign in.",
-        );
-        setMode("signin");
-        setPending(false);
-        return;
-      }
-
       const { data, error: signInError } =
         await supabase.auth.signInWithPassword({
           email: email.trim(),
@@ -182,239 +163,155 @@ export function LoginForm() {
     }
   }
 
-  function onDemoSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const user = authenticateDemo(email);
-    if (!user) {
-      setError(
-        "Unknown demo user. Try alex@example.com, jordan@advisors.example, casey@imo.example, riley@firm.example, or morgan@carrier.example",
-      );
-      return;
-    }
-    persistSession(user);
-    const destination =
-      user.role === "imo"
-        ? "/imo/"
-        : user.role === "broker_dealer"
-          ? "/firm/"
-          : user.role === "advisor"
-            ? "/clients/"
-            : user.role === "carrier"
-              ? "/carrier/"
-              : "/agent/";
-    router.push(destination);
-  }
-
   return (
-    <div className="space-y-6">
-      <div className="flex gap-2 text-sm">
-        <button
-          type="button"
-          className={`px-3 py-1.5 rounded-full ${mode === "signin" ? "bg-pine text-foam" : "text-stone hover:bg-pine/5"}`}
-          onClick={() => {
-            setMode("signin");
-            setError("");
-            setInfo("");
-          }}
-        >
-          Sign in
-        </button>
-        <button
-          type="button"
-          className={`px-3 py-1.5 rounded-full ${mode === "signup" ? "bg-pine text-foam" : "text-stone hover:bg-pine/5"}`}
-          onClick={() => {
-            setMode("signup");
-            setError("");
-            setInfo("");
-          }}
-        >
-          Sign up
-        </button>
-      </div>
-
-      <div className="pw-panel p-6 space-y-3 shadow-[var(--shadow-soft)]">
-        <button
-          type="button"
-          className="pw-btn w-full"
-          disabled={pending || !supabaseReady}
-          onClick={() => void onGoogleSignIn()}
-        >
-          Continue with Google
-        </button>
-        <p className="text-xs text-stone text-center">
-          Google OAuth must be enabled in the Supabase dashboard (see docs).
-        </p>
-        <div className="relative py-2 text-center text-xs uppercase tracking-wider text-moss">
-          <span className="bg-[var(--panel,theme(colors.white))] px-2 relative z-10">
-            or email
-          </span>
-          <span
-            aria-hidden
-            className="absolute inset-x-0 top-1/2 border-t border-pine/10"
-          />
+    <div className="pw-login-card">
+      <div className="pw-login-card-head">
+        <div>
+          <h1 className="pw-login-title">Welcome back</h1>
+          <p className="pw-login-lede">
+            {view === "magic"
+              ? "Enter your email to get your magic link."
+              : "Sign in with your email and password."}
+          </p>
         </div>
-        <form onSubmit={(e) => void onEmailCode(e)} className="space-y-3">
-          <label className="block text-sm text-stone">
-            Email magic link / OTP
-            <input
-              className="pw-input mt-2"
-              name="otp_email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </label>
-          <button
-            type="submit"
-            className="pw-btn-secondary w-full"
-            disabled={pending || !supabaseReady}
-          >
-            {otpSent ? "Resend email code" : "Email me a sign-in code"}
-          </button>
-        </form>
+        <Link
+          href="/"
+          className="pw-login-close"
+          aria-label="Close and return home"
+        >
+          ×
+        </Link>
       </div>
 
-      <form
-        onSubmit={(e) => void onSupabaseSubmit(e)}
-        className="pw-panel p-6 space-y-4 shadow-[var(--shadow-soft)]"
-      >
-        <p className="text-xs uppercase tracking-wider text-moss">
-          Or use email + password
+      {!supabaseReady && (
+        <p className="pw-login-error">
+          Supabase env vars are missing — sign-in will not work until they are
+          set.
         </p>
-        {mode === "signup" && (
-          <>
-            <label className="block text-sm text-stone">
-              First name
-              <input
-                className="pw-input mt-2"
-                name="first_name"
-                autoComplete="given-name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </label>
-            <label className="block text-sm text-stone">
-              Last name
-              <input
-                className="pw-input mt-2"
-                name="last_name"
-                autoComplete="family-name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </label>
-            <label className="block text-sm text-stone">
-              Phone{" "}
-              <span className="text-moss normal-case tracking-normal">
-                (optional)
-              </span>
-              <input
-                className="pw-input mt-2"
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </label>
-          </>
-        )}
-        <label className="block text-sm text-stone">
-          Email
+      )}
+      {error && <p className="pw-login-error">{error}</p>}
+      {info && <p className="pw-login-info">{info}</p>}
+
+      {view === "magic" ? (
+        <form
+          onSubmit={(e) => void onMagicContinue(e)}
+          className="pw-login-stack"
+        >
+          <label className="sr-only" htmlFor="login-email">
+            Email
+          </label>
           <input
-            className="pw-input mt-2"
+            id="login-email"
+            className="pw-login-input"
             name="email"
             type="email"
             autoComplete="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </label>
-        <label className="block text-sm text-stone">
-          Password
+          <button
+            type="submit"
+            className="pw-login-primary"
+            disabled={pending || !supabaseReady}
+          >
+            {pending ? "Sending…" : magicSent ? "Resend magic link" : "Continue"}
+          </button>
+        </form>
+      ) : (
+        <form
+          onSubmit={(e) => void onPasswordSignIn(e)}
+          className="pw-login-stack"
+        >
+          <label className="sr-only" htmlFor="login-email-password">
+            Email
+          </label>
           <input
-            className="pw-input mt-2"
+            id="login-email-password"
+            className="pw-login-input"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <label className="sr-only" htmlFor="login-password">
+            Password
+          </label>
+          <input
+            id="login-password"
+            className="pw-login-input"
             name="password"
             type="password"
-            autoComplete={mode === "signup" ? "new-password" : "current-password"}
+            autoComplete="current-password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             minLength={8}
             required
           />
-        </label>
-        {!supabaseReady && (
-          <p className="text-sm text-amber">
-            Supabase env vars are missing — sign-in will not work until they are
-            set.
-          </p>
-        )}
-        {error && <p className="text-sm text-danger">{error}</p>}
-        {info && <p className="text-sm text-ok">{info}</p>}
-        <button type="submit" className="pw-btn w-full" disabled={pending}>
-          {pending
-            ? "Please wait…"
-            : mode === "signup"
-              ? "Create account"
-              : "Sign in"}
-        </button>
-        {mode === "signin" && (
-          <p className="text-sm text-stone text-center">
-            <Link href="/forgot-password/" className="underline hover:text-pine">
-              Forgot password?
-            </Link>
-          </p>
-        )}
-      </form>
+          <button
+            type="submit"
+            className="pw-login-primary"
+            disabled={pending || !supabaseReady}
+          >
+            {pending ? "Signing in…" : "Continue"}
+          </button>
+        </form>
+      )}
 
-      <div className="text-sm text-stone">
+      <div className="pw-login-stack pw-login-oauth">
         <button
           type="button"
-          className="text-xs uppercase tracking-wider text-moss"
-          onClick={() => setShowDemo((v) => !v)}
+          className="pw-login-oauth-btn"
+          disabled={pending || !supabaseReady}
+          onClick={() => void onOAuth("google")}
         >
-          {showDemo ? "Hide" : "Show"} local demo workspace
+          <GoogleGlyph />
+          Continue with Google
         </button>
-        {showDemo && (
-          <form
-            onSubmit={onDemoSubmit}
-            className="mt-4 pw-panel p-4 space-y-3 border border-pine/10"
-          >
-            <p className="text-xs text-stone">
-              LocalStorage-only demo (not Supabase Auth). Does not unlock{" "}
-              <code>/app</code>, <code>/cases</code>, or <code>/policies</code>.
-            </p>
-            <label className="block text-sm text-stone">
-              Demo email
-              <input
-                className="pw-input mt-2"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="alex@example.com"
-              />
-            </label>
-            <button type="submit" className="pw-btn-secondary w-full !py-2">
-              Continue to demo
-            </button>
-            <button
-              type="button"
-              className="text-xs uppercase tracking-wider text-moss"
-              onClick={() => {
-                clearWorkspaceData();
-                clearOnboardingBoot();
-                setError("");
-              }}
-            >
-              Clear local workspace data
-            </button>
-          </form>
-        )}
+        <button
+          type="button"
+          className="pw-login-oauth-btn"
+          disabled={pending || !supabaseReady}
+          onClick={() => void onOAuth("github")}
+        >
+          <GitHubGlyph />
+          Continue with GitHub
+        </button>
+      </div>
+
+      {view === "magic" ? (
+        <button
+          type="button"
+          className="pw-login-text-link"
+          onClick={() => {
+            resetMessages();
+            setView("password");
+          }}
+        >
+          Login with password
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="pw-login-text-link"
+          onClick={() => {
+            resetMessages();
+            setView("magic");
+          }}
+        >
+          Login with magic link
+        </button>
+      )}
+
+      <div className="pw-login-footer">
+        <Link href="/forgot-password/" className="pw-login-footer-link">
+          Forgot your password?
+        </Link>
       </div>
     </div>
   );

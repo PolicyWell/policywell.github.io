@@ -25,11 +25,13 @@ This document answers: **do you need DNS?** and how PolicyWell wires workable co
 2. Row stored in `quote_requests`
 3. If an email was provided, a product access code is issued and emailed with the confirmation
 
-### Sign in
-- **Google** → `signInWithOAuth({ provider: "google" })` → `/auth/callback/`
-- **Email code** → `signInWithOtp` (Supabase Auth emails the link/code)
-- **Email + password** → existing signup/signin
-- Profile row is created/updated in `public.profiles` (linked to `auth.users`)
+### Sign in (`/login/`)
+Magic-link–first UI (Hilt-style card):
+- **Continue** → `signInWithOtp` magic link (creates user if needed) → `/auth/callback/`
+- **Google / GitHub** → `signInWithOAuth` → `/auth/callback/`
+- **Login with password** → `signInWithPassword`
+- **Forgot password?** → `resetPasswordForEmail` → `/auth/update-password/`
+- On success, `ensureProfileForUser` upserts `public.profiles` (1:1 with `auth.users`)
 
 ## What you must configure (outside this repo)
 
@@ -58,19 +60,29 @@ Until DNS verifies, use Resend’s onboarding domain for smoke tests only.
 
 You do **not** need a separate “DNS product” beyond the DNS zone you already use for `policywell.ai`.
 
-### 3. Google OAuth (Gmail login)
+### 3. Google + GitHub OAuth
 
-1. [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials → OAuth 2.0 Client ID (Web)
-2. Authorized redirect URI (exact):
+**Google**
+1. [Google Cloud Console](https://console.cloud.google.com/) → OAuth 2.0 Client ID (Web)
+2. Authorized redirect URI:
 
    `https://mdcvzhwxdwxmgbdhxviy.supabase.co/auth/v1/callback`
 
-3. Supabase Dashboard → Authentication → Providers → **Google** → paste Client ID + Secret → Enable
-4. Authentication → URL configuration:
-   - Site URL: `https://policywell.ai` (and local `http://localhost:3000` for dev)
-   - Redirect allow list: `https://policywell.ai/auth/callback/`, `http://localhost:3000/auth/callback/`
+3. Supabase → Authentication → Providers → **Google** → enable
 
-No DNS change is required for Google OAuth itself.
+**GitHub**
+1. GitHub → Settings → Developer settings → OAuth Apps → New
+2. Authorization callback URL:
+
+   `https://mdcvzhwxdwxmgbdhxviy.supabase.co/auth/v1/callback`
+
+3. Supabase → Authentication → Providers → **GitHub** → enable
+
+**URL configuration (both)**
+- Site URL: `https://policywell.ai`
+- Redirect allow list: `https://policywell.ai/auth/callback/`, `http://localhost:3000/auth/callback/`
+
+No DNS change is required for OAuth itself.
 
 ### 4. Supabase Auth email (OTP / magic link)
 

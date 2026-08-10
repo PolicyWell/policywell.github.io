@@ -1,31 +1,22 @@
-import { BrandMark } from "@/components/ui";
 import type { ReactNode } from "react";
 
+/**
+ * Centered auth stage — brand lives in the modal card (Hilt-style),
+ * not as a separate page header overpowering the form.
+ */
 export function AuthShell({
-  title,
-  description,
   children,
+  className = "",
 }: {
-  title: string;
+  title?: string;
   description?: string;
   children: ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="flex-1 flex flex-col">
-      <div className="pw-shell py-8">
-        <BrandMark />
-      </div>
-      <main className="pw-shell flex-1 flex items-center pb-16">
-        <div className="w-full max-w-md animate-rise">
-          <h1 className="font-display text-4xl text-pine mb-3">{title}</h1>
-          {description ? (
-            <p className="text-stone mb-8">{description}</p>
-          ) : (
-            <div className="mb-8" />
-          )}
-          {children}
-        </div>
-      </main>
+    <div className={`pw-login-stage ${className}`.trim()}>
+      <div className="pw-login-stage-bg" aria-hidden />
+      <main className="pw-login-stage-main">{children}</main>
     </div>
   );
 }

@@ -1,16 +1,22 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { LoginForm } from "@/components/auth/LoginForm";
 
+export const metadata: Metadata = {
+  title: "Sign in | PolicyWell",
+  description:
+    "Sign in to PolicyWell with a magic link, Google, GitHub, or email and password.",
+};
+
 export default function LoginPage() {
   return (
-    <AuthShell
-      title="Sign in"
-      description="Sign in with Google, an email one-time code, or email and password. Sessions are stored in Supabase Auth and linked to your profile."
-    >
+    <AuthShell>
       <Suspense
         fallback={
-          <div className="pw-panel p-6 text-sm text-stone">Loading…</div>
+          <div className="pw-login-card">
+            <p className="pw-login-lede">Loading…</p>
+          </div>
         }
       >
         <LoginForm />

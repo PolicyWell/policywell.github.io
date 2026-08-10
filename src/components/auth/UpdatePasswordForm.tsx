@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
@@ -40,38 +41,58 @@ export function UpdatePasswordForm() {
   }
 
   return (
-    <form
-      onSubmit={(e) => void onSubmit(e)}
-      className="pw-panel p-6 space-y-4 shadow-[var(--shadow-soft)]"
-    >
-      <label className="block text-sm text-stone">
-        New password
+    <div className="pw-login-card">
+      <div className="pw-login-card-head">
+        <div>
+          <h1 className="pw-login-title">Choose a new password</h1>
+          <p className="pw-login-lede">
+            Credentials stay in Supabase Auth — never in application tables.
+          </p>
+        </div>
+        <Link
+          href="/login/"
+          className="pw-login-close"
+          aria-label="Back to sign in"
+        >
+          ×
+        </Link>
+      </div>
+
+      {error && <p className="pw-login-error">{error}</p>}
+
+      <form onSubmit={(e) => void onSubmit(e)} className="pw-login-stack">
+        <label className="sr-only" htmlFor="new-password">
+          New password
+        </label>
         <input
-          className="pw-input mt-2"
+          id="new-password"
+          className="pw-login-input"
           type="password"
           autoComplete="new-password"
+          placeholder="New password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           minLength={8}
           required
         />
-      </label>
-      <label className="block text-sm text-stone">
-        Confirm password
+        <label className="sr-only" htmlFor="confirm-password">
+          Confirm password
+        </label>
         <input
-          className="pw-input mt-2"
+          id="confirm-password"
+          className="pw-login-input"
           type="password"
           autoComplete="new-password"
+          placeholder="Confirm password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           minLength={8}
           required
         />
-      </label>
-      {error && <p className="text-sm text-danger">{error}</p>}
-      <button type="submit" className="pw-btn w-full" disabled={pending}>
-        {pending ? "Updating…" : "Update password"}
-      </button>
-    </form>
+        <button type="submit" className="pw-login-primary" disabled={pending}>
+          {pending ? "Updating…" : "Continue"}
+        </button>
+      </form>
+    </div>
   );
 }

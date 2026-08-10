@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [pending, setPending] = useState(false);
+  const supabaseReady = isSupabaseConfigured();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,31 +37,54 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form
-      onSubmit={(e) => void onSubmit(e)}
-      className="pw-panel p-6 space-y-4 shadow-[var(--shadow-soft)]"
-    >
-      <label className="block text-sm text-stone">
-        Email
+    <div className="pw-login-card">
+      <div className="pw-login-card-head">
+        <div>
+          <h1 className="pw-login-title">Forgot password?</h1>
+          <p className="pw-login-lede">
+            Enter your email and we&apos;ll send a secure reset link.
+          </p>
+        </div>
+        <Link
+          href="/login/"
+          className="pw-login-close"
+          aria-label="Back to sign in"
+        >
+          ×
+        </Link>
+      </div>
+
+      {error && <p className="pw-login-error">{error}</p>}
+      {info && <p className="pw-login-info">{info}</p>}
+
+      <form onSubmit={(e) => void onSubmit(e)} className="pw-login-stack">
+        <label className="sr-only" htmlFor="forgot-email">
+          Email
+        </label>
         <input
-          className="pw-input mt-2"
+          id="forgot-email"
+          className="pw-login-input"
           type="email"
           autoComplete="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-      </label>
-      {error && <p className="text-sm text-danger">{error}</p>}
-      {info && <p className="text-sm text-ok">{info}</p>}
-      <button type="submit" className="pw-btn w-full" disabled={pending}>
-        {pending ? "Sending…" : "Send reset link"}
-      </button>
-      <p className="text-sm text-stone text-center">
-        <Link href="/login/" className="underline hover:text-pine">
+        <button
+          type="submit"
+          className="pw-login-primary"
+          disabled={pending || !supabaseReady}
+        >
+          {pending ? "Sending…" : "Continue"}
+        </button>
+      </form>
+
+      <div className="pw-login-footer">
+        <Link href="/login/" className="pw-login-footer-link">
           Back to sign in
         </Link>
-      </p>
-    </form>
+      </div>
+    </div>
   );
 }
