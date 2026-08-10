@@ -1,4 +1,5 @@
 /** Generated from Supabase project schema. Regenerate via Supabase MCP generate_typescript_types or `supabase gen types`. Do not hand-edit table shapes. */
+
 export type Json =
   | string
   | number
@@ -140,6 +141,54 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "documents_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "insurance_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feedback: {
+        Row: {
+          analysis_id: string | null
+          case_id: string
+          correction: string | null
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["feedback_kind"]
+          recommendation_id: string | null
+          user_id: string
+        }
+        Insert: {
+          analysis_id?: string | null
+          case_id: string
+          correction?: string | null
+          created_at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["feedback_kind"]
+          recommendation_id?: string | null
+          user_id: string
+        }
+        Update: {
+          analysis_id?: string | null
+          case_id?: string
+          correction?: string | null
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["feedback_kind"]
+          recommendation_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "policy_analyses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feedback_case_id_fkey"
             columns: ["case_id"]
             isOneToOne: false
             referencedRelation: "insurance_cases"
@@ -615,8 +664,34 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["profile_role"]
       }
+      document_precedence_rank: {
+        Args: { p_type: Database["public"]["Enums"]["document_type"] }
+        Returns: number
+      }
+      is_agency_admin_for_case: {
+        Args: { p_case_id: string }
+        Returns: boolean
+      }
+      is_assigned_producer: { Args: { p_case_id: string }; Returns: boolean }
       is_case_accessible: { Args: { p_case_id: string }; Returns: boolean }
+      is_case_owner: { Args: { p_case_id: string }; Returns: boolean }
+      is_policy_document_path_accessible: {
+        Args: { object_name: string }
+        Returns: boolean
+      }
+      is_policy_document_path_owner: {
+        Args: { object_name: string }
+        Returns: boolean
+      }
       is_policywell_admin: { Args: never; Returns: boolean }
+      supersede_policy_facts: {
+        Args: {
+          p_case_id: string
+          p_except_fact_id?: string
+          p_field_path: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       document_status:
@@ -642,6 +717,7 @@ export type Database = {
         | "user_verified"
         | "producer_verified"
         | "superseded"
+      feedback_kind: "accurate" | "needs_correction" | "not_helpful"
       ingestion_status: "queued" | "processing" | "completed" | "failed"
       insurance_case_status:
         | "created"
@@ -819,6 +895,7 @@ export const Constants = {
         "producer_verified",
         "superseded",
       ],
+      feedback_kind: ["accurate", "needs_correction", "not_helpful"],
       ingestion_status: ["queued", "processing", "completed", "failed"],
       insurance_case_status: [
         "created",
