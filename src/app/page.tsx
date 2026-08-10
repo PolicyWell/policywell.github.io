@@ -9,6 +9,10 @@ import { WorkflowStepsShowcase } from "@/components/WorkflowStepsShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteNav } from "@/components/ui";
 import {
+  listCoverageShowcaseProfiles,
+  listIndustries,
+} from "@/lib/coverage-library";
+import {
   marketingMetadata,
   organizationJsonLd,
   softwareApplicationJsonLd,
@@ -99,7 +103,10 @@ export default function HomePage() {
           aria-labelledby="pw-proposals-heading"
         >
           <div className="pw-shell pw-shell-wide">
-            <ProposalCarousel />
+            <ProposalCarousel
+              coverageProfiles={listCoverageShowcaseProfiles()}
+              coverageIndustries={listIndustries()}
+            />
           </div>
         </section>
 

@@ -9,6 +9,10 @@ import {
   useState,
   type TouchEvent,
 } from "react";
+import {
+  CoverageLibraryShowcase,
+  type CoverageShowcaseProfile,
+} from "@/components/coverage-library/CoverageLibraryShowcase";
 import { buildProposalBook } from "@/lib/intelligence/proposal-book";
 import { CohortStrengthSlide } from "./CohortStrengthSlide";
 import { CoverageStatusSlide } from "./CoverageStatusSlide";
@@ -24,7 +28,13 @@ const SLIDES: ProposalThumbMeta[] = [
   { id: "status", index: 3, label: "Coverage status", preview: "status" },
 ];
 
-export function ProposalCarousel() {
+export function ProposalCarousel({
+  coverageProfiles,
+  coverageIndustries,
+}: {
+  coverageProfiles: CoverageShowcaseProfile[];
+  coverageIndustries: string[];
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const book = useMemo(() => buildProposalBook(), []);
@@ -100,6 +110,11 @@ export function ProposalCarousel() {
           easily digestible presentations for clients.
         </p>
       </div>
+
+      <CoverageLibraryShowcase
+        profiles={coverageProfiles}
+        industries={coverageIndustries}
+      />
 
       <div
         className="pw-proposal-stage"

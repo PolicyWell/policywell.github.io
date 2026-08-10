@@ -20,6 +20,27 @@ export function listCoverageProfiles(): CoverageProfile[] {
   return [...PROFILES].sort((a, b) => b.completionScore - a.completionScore);
 }
 
+/** Slim rows for the homepage Coverage Library window widget. */
+export function listCoverageShowcaseProfiles() {
+  return listCoverageProfiles().map((profile) => {
+    const perils = new Set(
+      profile.tower.flatMap((line) => line.perils.map((p) => p.peril)),
+    );
+    return {
+      slug: profile.slug,
+      name: profile.name,
+      industry: profile.industry,
+      assetTypes: profile.assetTypes,
+      completionScore: profile.completionScore,
+      takeaways: profile.takeaways,
+      requirementCount: profile.requirements.length,
+      coverageCount: profile.tower.length,
+      perilCount: perils.size,
+      pairCount: profile.pairCount,
+    };
+  });
+}
+
 export function getCoverageProfile(slug: string): CoverageProfile | undefined {
   return BY_SLUG.get(slug);
 }
