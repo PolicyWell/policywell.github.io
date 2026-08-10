@@ -12,7 +12,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        // Coverage Library is public; longer Allow path wins over /platform disallow.
+        allow: ["/", "/platform/coverage-library", "/platform/coverage-library/"],
         disallow: [
           "/docs",
           "/docs/",
