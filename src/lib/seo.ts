@@ -123,7 +123,6 @@ export const PRIMARY_HUB_PATHS = [
   "/",
   "/industries",
   "/pricing",
-  "/api",
   "/about",
   "/contact",
 ] as const;

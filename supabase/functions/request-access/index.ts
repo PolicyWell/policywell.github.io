@@ -18,6 +18,7 @@ const SURFACE_LABELS: Record<string, string> = {
   deck: "Investor / product deck",
   agent: "Insurance intelligence agent",
   platform: "Platform overview",
+  api: "Developer API",
   docs: "Documentation",
 };
 
@@ -129,7 +130,9 @@ Deno.serve(async (req) => {
               ? "/agent/"
               : surface === "platform"
                 ? "/platform/"
-                : "/demo/";
+                : surface === "api"
+                  ? "/api/"
+                  : "/demo/";
     const unlockUrl = `${origin}${unlockPath}?access_code=${encodeURIComponent(code)}`;
 
     const mail = accessCodeEmail({

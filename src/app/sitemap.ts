@@ -9,7 +9,7 @@ export const dynamic = "force-static";
 /**
  * Indexable public paths only.
  *
- * /docs, /demo, /product, /platform, /deck, /agent are private
+ * /docs, /demo, /product, /platform, /deck, /agent, /api are private
  * (request-access / access-code gated) and intentionally omitted.
  * Segmented helpers keep future sitemap indexes easy
  * (core / commercial / life / annuities / industries)
@@ -21,7 +21,6 @@ function corePaths(): string[] {
     "/",
     "/industries",
     "/pricing",
-    "/api",
     "/about",
     "/contact",
     "/privacy",

@@ -4,19 +4,18 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteBreadcrumbs } from "@/components/seo/SiteBreadcrumbs";
 import { SiteNav } from "@/components/ui";
 import { API_BASE_URL, API_GROUPS, API_META } from "@/lib/api-reference-data";
-import { breadcrumbJsonLd, marketingMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, noindexMetadata } from "@/lib/seo";
 
 const CRUMBS = [
   { name: "Home", path: "/" },
   { name: "API", path: "/api" },
 ] as const;
 
-export const metadata: Metadata = marketingMetadata({
+export const metadata: Metadata = noindexMetadata({
   title: "PolicyWell API | Insurance Intelligence for Developers",
   description:
     "Integrate PolicyWell insurance intelligence into carrier, IMO, and agency systems. Explore REST endpoints for documents, policies, quotes, and workflows.",
   path: "/api",
-  absoluteTitle: true,
 });
 
 export default function ApiLandingPage() {
