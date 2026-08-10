@@ -20,6 +20,12 @@ export const metadata: Metadata = marketingMetadata({
 
 const MODULES = [
   {
+    href: "/platform/coverage-library/",
+    title: "Coverage Library",
+    body: "Browse benchmark coverage standards by industry, open requirement sets, and apply profiles to live gap assessments.",
+    cta: "Open the Coverage Library",
+  },
+  {
     href: "/product/",
     title: "Interactive product tour",
     body: "Walk through dashboard, risk, marketplace, claims, CRM, and policy analyzer modules in a guided tour.",
