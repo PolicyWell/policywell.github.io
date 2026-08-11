@@ -89,7 +89,7 @@ export default function HomePage() {
         <WorkflowStepsShowcase />
 
         <section
-          id="book-of-business"
+          id="intelligent-insights"
           className="pw-bob-section"
           aria-labelledby="pw-bob-heading"
         >

@@ -129,8 +129,7 @@ export const BOOK_OF_BUSINESS_SCENES: BobScene[] = [
     lines: [
       line("$ policywell opportunities", "command", 100),
       blank(50),
-      line("Who should I call today?", "accent"),
-      line("Warm, contextual actions — not another document dump.", "dim"),
+      line("Intelligent insights — prioritized actions", "accent"),
       blank(70),
       line("── 01  HOA ─────────────────────────────────", "muted"),
       rich([
@@ -217,11 +216,30 @@ export const BOOK_OF_BUSINESS_SCENES: BobScene[] = [
         { text: "3 lapses to prevent", tone: "danger" },
       ]),
       blank(),
-      line("Client value ↔ producer economics", "success"),
-      line(
-        "Proactive servicing for the client. Warm context for the producer.",
-        "dim",
-      ),
+      line("✓ Opportunity queue ready", "success"),
     ],
   },
 ];
+
+/** Combined ingest → opportunities session for /pear2 */
+export function getPear2CombinedScene(): BobScene {
+  const ingest = BOOK_OF_BUSINESS_SCENES.find((s) => s.id === "ingest");
+  const opportunities = BOOK_OF_BUSINESS_SCENES.find(
+    (s) => s.id === "opportunities",
+  );
+  if (!ingest || !opportunities) {
+    throw new Error("Book of business scenes missing");
+  }
+  return {
+    id: "pear2",
+    label: "pear2",
+    cwd: "~/book-of-business",
+    lines: [
+      ...ingest.lines,
+      blank(100),
+      line("── pear2 · unified intelligence ────────────", "accent", 90),
+      blank(60),
+      ...opportunities.lines,
+    ],
+  };
+}
