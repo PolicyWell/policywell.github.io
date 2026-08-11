@@ -331,61 +331,87 @@ grant select, insert, update, delete on public.commercial_diligence_items to aut
 grant select, insert, update, delete on public.commercial_loss_events to authenticated;
 grant select, insert, update, delete on public.commercial_loss_run_discrepancies to authenticated;
 
--- Private storage bucket for commercial documents
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values (
-  'commercial-documents',
-  'commercial-documents',
-  false,
-  52428800,
-  array[
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'text/csv',
-    'image/png',
-    'image/jpeg',
-    'message/rfc822'
-  ]
-)
-on conflict (id) do update
-set public = excluded.public,
-    file_size_limit = excluded.file_size_limit,
-    allowed_mime_types = excluded.allowed_mime_types;
+-- Private storage bucket + policies for commercial documents
+-- Guarded because the storage schema may not exist during minimal local DB resets.
+do $storage$
+begin
+  if to_regclass('storage.buckets') is not null
+     and to_regclass('storage.objects') is not null then
 
--- Storage policies: path convention commercial/{account_id}/...
-drop policy if exists commercial_docs_storage_select on storage.objects;
-create policy commercial_docs_storage_select on storage.objects
-  for select to authenticated
-  using (
-    bucket_id = 'commercial-documents'
-    and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
-  );
+    insert into storage.buckets (
+      id,
+      name,
+      public,
+      file_size_limit,
+      allowed_mime_types
+    )
+    values (
+      'commercial-documents',
+      'commercial-documents',
+      false,
+      52428800,
+      array[
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/csv',
+        'image/png',
+        'image/jpeg',
+        'message/rfc822'
+      ]
+    )
+    on conflict (id) do update
+    set public = excluded.public,
+        file_size_limit = excluded.file_size_limit,
+        allowed_mime_types = excluded.allowed_mime_types;
 
-drop policy if exists commercial_docs_storage_insert on storage.objects;
-create policy commercial_docs_storage_insert on storage.objects
-  for insert to authenticated
-  with check (
-    bucket_id = 'commercial-documents'
-    and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
-  );
+    execute 'drop policy if exists commercial_docs_storage_select on storage.objects';
+    execute $p$
+      create policy commercial_docs_storage_select on storage.objects
+      for select to authenticated
+      using (
+        bucket_id = 'commercial-documents'
+        and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
+      )
+    $p$;
 
-drop policy if exists commercial_docs_storage_update on storage.objects;
-create policy commercial_docs_storage_update on storage.objects
-  for update to authenticated
-  using (
-    bucket_id = 'commercial-documents'
-    and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
-  )
-  with check (
-    bucket_id = 'commercial-documents'
-    and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
-  );
+    execute 'drop policy if exists commercial_docs_storage_insert on storage.objects';
+    execute $p$
+      create policy commercial_docs_storage_insert on storage.objects
+      for insert to authenticated
+      with check (
+        bucket_id = 'commercial-documents'
+        and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
+      )
+    $p$;
 
-drop policy if exists commercial_docs_storage_delete on storage.objects;
-create policy commercial_docs_storage_delete on storage.objects
-  for delete to authenticated
-  using (
-    bucket_id = 'commercial-documents'
-    and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
-  );
+    execute 'drop policy if exists commercial_docs_storage_update on storage.objects';
+    execute $p$
+      create policy commercial_docs_storage_update on storage.objects
+      for update to authenticated
+      using (
+        bucket_id = 'commercial-documents'
+        and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
+      )
+      with check (
+        bucket_id = 'commercial-documents'
+        and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
+      )
+    $p$;
+
+    execute 'drop policy if exists commercial_docs_storage_delete on storage.objects';
+    execute $p$
+      create policy commercial_docs_storage_delete on storage.objects
+      for delete to authenticated
+      using (
+        bucket_id = 'commercial-documents'
+        and public.is_commercial_account_owner((storage.foldername(name))[1]::uuid)
+      )
+    $p$;
+
+  else
+    raise notice 'Supabase Storage schema unavailable; skipping commercial storage bucket/policies.';
+  end if;
+end
+$storage$;
+

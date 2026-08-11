@@ -109,7 +109,10 @@ export function MeetOpeWidget() {
   const hideOnAgent =
     pathname === "/agent" ||
     pathname === "/agent/" ||
-    pathname?.startsWith("/agent/");
+    pathname?.startsWith("/agent/") ||
+    pathname === "/pear" ||
+    pathname === "/pear/" ||
+    pathname?.startsWith("/pear/");
 
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);

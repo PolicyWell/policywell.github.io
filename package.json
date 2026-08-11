@@ -17,19 +17,25 @@
     "typecheck": "tsc --noEmit",
     "seo:check": "node scripts/seo-check.mjs",
     "demo:video": "node scripts/record-yc-demo-video.mjs",
+    "cli:link": "npm install -g ./packages/policywell-cli",
+    "policywell": "node packages/policywell-cli/bin/policywell.js",
     "verify": "npm run typecheck && npm test && npm run build && npm run build:pages && SEO_CHECK_DIR=out npm run seo:check"
+  },
+  "bin": {
+    "policywell": "./packages/policywell-cli/bin/policywell.js"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.20",
     "@ai-sdk/openai": "^4.0.17",
     "@supabase/ssr": "^0.12.3",
-    "@supabase/supabase-js": "^2.110.8",
+    "@supabase/supabase-js": "^2.112.2",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@vitejs/plugin-react": "^6.0.3",
     "ai": "^7.0.33",
     "jsdom": "^29.1.1",
-    "next": "16.2.10",
+    "next": "^16.3.0",
+    "pdf-parse": "^1.1.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1",

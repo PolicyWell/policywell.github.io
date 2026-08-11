@@ -15495,6 +15495,26 @@ button.pw-pt-action:disabled {
   display: block;
 }
 
+.pear-upload-art {
+  background: #0a0a0a;
+  border-radius: 1.25rem;
+  padding: 0.65rem;
+}
+
+.pear-upload-asset {
+  width: min(100%, 11.5rem);
+  height: auto;
+  display: block;
+  border-radius: 0.85rem;
+}
+
+.pw-well-drop.is-dragging .pear-upload-art,
+.pear-upload-art.is-active {
+  transform: scale(1.03);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 0 2px rgba(61, 107, 90, 0.35);
+}
+
 .pw-well-doc {
   transform-origin: 100px 35px;
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);

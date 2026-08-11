@@ -48,3 +48,6 @@ next-env.d.ts
 
 # local staging
 .tmp/
+
+# local VC demo CLI config (may contain access tokens)
+.policywell.json

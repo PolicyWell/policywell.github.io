@@ -9,8 +9,7 @@ export const dynamic = "force-static";
 /**
  * Indexable public paths only.
  *
- * /docs, /demo, /product, /platform, /deck, /agent, /api are private
- * (request-access / access-code gated) and intentionally omitted.
+ * /docs, /demo, /product, /platform, /deck, /agent, /pear, /api are private * (request-access / access-code gated) and intentionally omitted.
  * Segmented helpers keep future sitemap indexes easy
  * (core / commercial / life / annuities / industries)
  * without emitting multiple files until URL volume requires it.

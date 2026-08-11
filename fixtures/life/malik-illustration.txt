@@ -1,0 +1,39 @@
+PAGE 1
+Carrier: Mutual of Omaha Insurance Company
+Product: Life Protection Advantage IUL
+Product Type: Indexed Universal Life
+Insured Name: Alex Malik
+Issue Age: 42
+Sex: Male
+Risk Class: Preferred Non-Tobacco
+Tobacco Status: Non-Tobacco
+Death Benefit: $500,000
+Death Benefit Option: Level
+Monthly Premium: $150.00
+Annual Premium: $1,800.00
+No-Lapse Annual Premium: $1,440.00
+Guideline Maximum Level Premium: $4,200.00
+TAMRA 7-Pay Premium: $3,100.00
+Guideline Single Premium: $38,500.00
+Crediting Strategy: S&P 500 Annual Point-to-Point Cap
+Allocation Percentage: 100%
+Guaranteed Rate: 2.0%
+Alternate Rate: 4.5%
+Illustrated Rate: 6.0%
+Riders: Accelerated Death Benefit, Waiver of Premium
+Guaranteed Coverage Cessation Age: 78
+Midpoint Coverage Cessation Age: 95
+Illustrated Duration Years: 53
+
+LEDGER
+Year | Age | Premium | Guar AV | Guar SV | Guar DB | Alt AV | Alt SV | Alt DB | Ill AV | Ill SV | Ill DB
+1 | 43 | 1800 | 900 | 0 | 500000 | 1200 | 200 | 500000 | 1500 | 400 | 500000
+2 | 44 | 1800 | 1800 | 400 | 500000 | 2600 | 1100 | 500000 | 3200 | 1600 | 500000
+5 | 47 | 1800 | 5200 | 2800 | 500000 | 8200 | 5400 | 500000 | 11000 | 7800 | 500000
+10 | 52 | 1800 | 11000 | 7600 | 500000 | 21000 | 16500 | 500000 | 32000 | 26500 | 500000
+20 | 62 | 1800 | 22000 | 16000 | 500000 | 52000 | 44000 | 500000 | 88000 | 76000 | 500000
+30 | 72 | 1800 | 28000 | 19000 | 450000 | 98000 | 86000 | 500000 | 185000 | 168000 | 500000
+36 | 78 | 1800 | 0 | 0 | 0 | 140000 | 125000 | 500000 | 290000 | 270000 | 500000
+40 | 82 | 1800 | 0 | 0 | 0 | 175000 | 158000 | 500000 | 360000 | 340000 | 500000
+53 | 95 | 1800 | 0 | 0 | 0 | 0 | 0 | 0 | 520000 | 505000 | 500000
+END LEDGER
