@@ -2837,6 +2837,7 @@ span.pw-footer-group-title {
   max-width: min(40rem, 100%);
   margin-inline: auto;
   min-width: 0;
+  overflow: clip;
 }
 
 .pw-cl-showcase-glow {
@@ -2858,7 +2859,11 @@ span.pw-footer-group-title {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: #fff;
   border: 1px solid rgba(15, 47, 40, 0.12);
   border-radius: 12px;
@@ -2945,9 +2950,14 @@ span.pw-footer-group-title {
 .pw-cl-window-detail {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 0.85rem 0.9rem 1rem;
   animation: pw-report-slide-in 220ms ease both;
+  overflow: hidden;
 }
 
 .pw-cl-window-search {
@@ -2992,6 +3002,8 @@ span.pw-footer-group-title {
   gap: 0.55rem;
   margin-top: 0.75rem;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .pw-cl-window-show {
@@ -3005,10 +3017,13 @@ span.pw-footer-group-title {
 
 .pw-cl-window-chips {
   display: flex;
+  flex: 1 1 auto;
   gap: 0.4rem;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
   min-width: 0;
+  max-width: 100%;
   padding-bottom: 0.1rem;
   -webkit-overflow-scrolling: touch;
 }
@@ -3044,9 +3059,10 @@ span.pw-footer-group-title {
 }
 
 .pw-cl-window-cols {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.75rem;
+  gap: 0.75rem;
+  align-items: end;
   margin: 0.9rem 0.15rem 0.35rem;
   font-size: 0.64rem;
   letter-spacing: 0.14em;
@@ -3055,12 +3071,19 @@ span.pw-footer-group-title {
   font-weight: 600;
 }
 
+.pw-cl-window-cols span:last-child {
+  text-align: right;
+}
+
 .pw-cl-window-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
   overflow-y: auto;
+  min-width: 0;
   min-height: 0;
+  width: 100%;
   flex: 1;
   border-top: 1px solid rgba(15, 47, 40, 0.06);
   scrollbar-width: thin;
@@ -3073,12 +3096,16 @@ span.pw-footer-group-title {
 
 .pw-cl-window-row {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 6.75rem;
   gap: 0.75rem;
   align-items: center;
   padding: 0.78rem 0.15rem;
   border: 0;
+  border-radius: 0;
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -3120,25 +3147,20 @@ span.pw-footer-group-title {
 }
 
 .pw-cl-window-row-meta {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.35rem 0.85rem;
   align-items: center;
-  gap: 0.45rem;
-  flex: none;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .pw-cl-window-bar {
-  width: clamp(2.4rem, 8vw, 3.6rem);
-  height: 0.28rem;
+  width: 100%;
+  height: 0.3rem;
   border-radius: 999px;
   background: rgba(15, 47, 40, 0.08);
   overflow: hidden;
-  display: none;
-}
-
-@media (min-width: 420px) {
-  .pw-cl-window-bar {
-    display: block;
-  }
+  display: block;
 }
 
 .pw-cl-window-bar > span {
@@ -3150,18 +3172,19 @@ span.pw-footer-group-title {
 }
 
 .pw-cl-window-pct {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--pine);
   font-variant-numeric: tabular-nums;
-  min-width: 2.4rem;
   text-align: right;
+  line-height: 1;
 }
 
 .pw-cl-window-chevron {
   color: #9aaba3;
   font-size: 0.95rem;
   line-height: 1;
+  text-align: right;
 }
 
 .pw-cl-window-empty {
@@ -3172,13 +3195,29 @@ span.pw-footer-group-title {
 
 .pw-cl-window-footer {
   position: relative;
-  margin-top: 0.35rem;
+  flex: none;
+  margin-top: auto;
   padding-top: 0.85rem;
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
     #fff 28%
   );
+}
+
+@media (max-width: 419px) {
+  .pw-cl-window-cols,
+  .pw-cl-window-row {
+    grid-template-columns: minmax(0, 1fr) 4.35rem;
+  }
+
+  .pw-cl-window-row-meta {
+    grid-template-columns: 2.35rem 0.85rem;
+  }
+
+  .pw-cl-window-bar {
+    display: none;
+  }
 }
 
 .pw-cl-window-cta {
