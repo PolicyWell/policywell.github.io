@@ -109,7 +109,7 @@ export function CoverageLibraryShowcase({
                   .slice(0, 3)
                   .map((item) => (
                     <li key={item}>
-                      <span className="pw-cl-window-check" aria-hidden>
+                      <span className="pw-cl-window-check is-moss" aria-hidden>
                         <svg viewBox="0 0 16 16" width="10" height="10">
                           <path
                             fill="none"
@@ -149,19 +149,39 @@ export function CoverageLibraryShowcase({
               </dl>
             </div>
 
-            <Link
-              href={`/platform/coverage-library/${active.slug}/`}
-              className="pw-cl-window-cta"
-            >
-              Read full report »
-            </Link>
+            <div className="pw-cl-window-protection">
+              <div className="pw-cl-window-protection-head">
+                <p className="pw-cl-window-kicker">Protection</p>
+                <strong>{active.completionScore}%</strong>
+              </div>
+              <div className="pw-cl-window-bar pw-cl-window-bar-lg" aria-hidden>
+                <span
+                  style={{
+                    width: `${Math.max(8, Math.min(100, active.completionScore))}%`,
+                  }}
+                />
+              </div>
+            </div>
 
             {active.assetTypes.length ? (
               <div className="pw-cl-window-assets">
                 <p className="pw-cl-window-kicker">Asset types covered</p>
-                <p>{active.assetTypes.join(" · ")}</p>
+                <ul className="pw-cl-risk-card-assets">
+                  {active.assetTypes.slice(0, 4).map((asset) => (
+                    <li key={asset}>{asset}</li>
+                  ))}
+                </ul>
               </div>
             ) : null}
+
+            <div className="pw-cl-window-footer is-overlay">
+              <Link
+                href={`/platform/coverage-library/${active.slug}/`}
+                className="pw-cl-window-cta"
+              >
+                Read full report »
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="pw-cl-window-browse">
@@ -263,7 +283,7 @@ export function CoverageLibraryShowcase({
               )}
             </ul>
 
-            <div className="pw-cl-window-footer">
+            <div className="pw-cl-window-footer is-overlay">
               <Link
                 href="/platform/coverage-library/"
                 className="pw-cl-window-cta"

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CoverageConditionBuilder } from "@/components/coverage-library/CoverageConditionBuilder";
 import { CoverageLibraryBrowse } from "@/components/coverage-library/CoverageLibraryBrowse";
 import { CoverageLibraryCta } from "@/components/coverage-library/CoverageLibraryCta";
+import { CoverageRiskProfileCard } from "@/components/coverage-library/CoverageRiskProfileCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteBreadcrumbs } from "@/components/seo/SiteBreadcrumbs";
 import { SiteNav } from "@/components/ui";
@@ -102,9 +104,17 @@ export default function CoverageLibraryPage() {
               Browse, then take action.
             </h2>
             <p className="pw-cl-section-copy">
-              Filter by industry, sort by risk. Find your gold-standard
-              benchmark.
+              Filter by industry, sort by risk. Find your{" "}
+              <strong>gold-standard benchmark.</strong>
             </p>
+            <div className="pw-cl-hero-actions pw-cl-browse-actions">
+              <Link href="/demo/" className="pw-btn">
+                Request demo access
+              </Link>
+              <Link href="/book-a-call/" className="pw-btn pw-btn-secondary">
+                Book a call
+              </Link>
+            </div>
             <CoverageLibraryBrowse
               profiles={profiles}
               industries={industries}
@@ -119,9 +129,9 @@ export default function CoverageLibraryPage() {
         >
           <div className="pw-shell pw-shell-wide pw-cl-split">
             <div>
-              <p className="pw-cl-eyebrow">Analyze</p>
+              <p className="pw-cl-eyebrow">Risk profiles</p>
               <h2 id="pw-cl-analyze-heading" className="pw-cl-section-title">
-                Full transparency into every risk profile.
+                Requirements, portfolio metrics, and version control.
               </h2>
               <p className="pw-cl-section-copy">
                 Check protection scores, appetite signals, and individual
@@ -139,24 +149,9 @@ export default function CoverageLibraryPage() {
                 </Link>
               </div>
             </div>
-            <aside className="pw-cl-panel" aria-label="Risk profile preview">
-              <p className="pw-cl-panel-kicker">Risk profile</p>
-              <p className="pw-cl-panel-title">Completion &amp; requirements</p>
-              <ul className="pw-cl-panel-list">
-                <li>
-                  <span>Published requirements</span>
-                  <strong>Limits · deductibles · ratings</strong>
-                </li>
-                <li>
-                  <span>Coverage tower</span>
-                  <strong>Line × peril benchmarks</strong>
-                </li>
-                <li>
-                  <span>Gap assessment</span>
-                  <strong>Apply to a live policy</strong>
-                </li>
-              </ul>
-            </aside>
+            {profiles[0] ? (
+              <CoverageRiskProfileCard profile={profiles[0]} />
+            ) : null}
           </div>
         </section>
 
@@ -176,33 +171,8 @@ export default function CoverageLibraryPage() {
                 the library is not a fit. Choose asset types, coverages, and
                 requirement-level details to build the exact profile you need.
               </p>
-              <div className="pw-cl-hero-actions">
-                <Link href="/demo/" className="pw-btn">
-                  Request demo access
-                </Link>
-                <Link href="/book-a-call/" className="pw-btn pw-btn-secondary">
-                  Book a call
-                </Link>
-              </div>
             </div>
-            <aside className="pw-cl-panel" aria-label="Condition builder">
-              <p className="pw-cl-panel-kicker">Condition builder</p>
-              <p className="pw-cl-panel-title">Compose requirements</p>
-              <ul className="pw-cl-panel-list">
-                <li>
-                  <span>Fields</span>
-                  <strong>Limit · deductible · rating</strong>
-                </li>
-                <li>
-                  <span>Operators</span>
-                  <strong>≥ · ≤ · includes · equals</strong>
-                </li>
-                <li>
-                  <span>Values</span>
-                  <strong>Money · % TIV · statutory</strong>
-                </li>
-              </ul>
-            </aside>
+            <CoverageConditionBuilder />
           </div>
         </section>
 
