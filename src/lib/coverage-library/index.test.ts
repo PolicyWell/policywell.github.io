@@ -4,6 +4,7 @@ import {
   getCoverageProfileSlugs,
   libraryStats,
   listCoverageProfiles,
+  listCoverageShowcaseProfiles,
   relatedProfiles,
 } from "./index";
 
@@ -32,5 +33,21 @@ describe("coverage library catalog", () => {
     expect(stats.profileCount).toBe(listCoverageProfiles().length);
     expect(stats.industryCount).toBeGreaterThan(5);
     expect(stats.filterCount).toBeGreaterThan(10);
+  });
+
+  it("builds slim showcase rows for the homepage window", () => {
+    const rows = listCoverageShowcaseProfiles();
+    expect(rows.length).toBe(listCoverageProfiles().length);
+    expect(rows[0]).toMatchObject({
+      slug: expect.any(String),
+      name: expect.any(String),
+      industry: expect.any(String),
+      completionScore: expect.any(Number),
+      requirementCount: expect.any(Number),
+      coverageCount: expect.any(Number),
+      perilCount: expect.any(Number),
+    });
+    expect(rows[0]!.takeaways.length).toBeGreaterThan(0);
+    expect(rows[0]!.assetTypes.length).toBeGreaterThan(0);
   });
 });
