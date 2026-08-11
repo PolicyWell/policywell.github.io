@@ -5171,6 +5171,311 @@ body:has(.pw-404) > .pw-site-footer {
   }
 }
 
+/* ── Book of business commercial CLI demo ── */
+.pw-bob-section {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  padding: clamp(2.75rem, 7vw, 5rem) 0;
+  border-top: 1px solid rgba(15, 47, 40, 0.08);
+  background:
+    radial-gradient(ellipse 70% 55% at 80% 0%, rgba(15, 47, 40, 0.14), transparent 60%),
+    linear-gradient(180deg, #eef4f0 0%, #f5faf7 45%, #e8f0eb 100%);
+  overflow-x: clip;
+}
+
+.pw-bob-showcase {
+  display: grid;
+  gap: 1.35rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.pw-bob-meta {
+  max-width: min(42rem, 100%);
+  min-width: 0;
+}
+
+.pw-bob-eyebrow {
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  font-weight: 650;
+}
+
+.pw-bob-heading {
+  margin: 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.7rem, 5.5vw, 2.55rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--pine);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.pw-bob-lede {
+  margin: 1rem 0 0;
+  font-size: clamp(0.98rem, 2.6vw, 1.05rem);
+  line-height: 1.55;
+  color: var(--stone);
+  max-width: 38rem;
+}
+
+.pw-bob-lede-secondary {
+  margin-top: 0.75rem;
+}
+
+.pw-bob-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pw-bob-tab {
+  border: 1px solid rgba(15, 47, 40, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--pine);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.pw-bob-tab-cmd {
+  color: var(--moss);
+  margin-right: 0.35rem;
+}
+
+.pw-bob-tab.is-active,
+.pw-bob-tab[aria-selected="true"] {
+  background: var(--pine);
+  border-color: var(--pine);
+  color: #f5faf7;
+}
+
+.pw-bob-tab.is-active .pw-bob-tab-cmd,
+.pw-bob-tab[aria-selected="true"] .pw-bob-tab-cmd {
+  color: #8fafa0;
+}
+
+.pw-bob-window {
+  width: 100%;
+  max-width: min(52rem, 100%);
+  min-width: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 47, 40, 0.35);
+  background: #0c1714;
+  box-shadow:
+    0 28px 60px rgba(10, 31, 26, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  animation: pw-bob-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pw-bob-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pw-bob-chrome {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.9rem;
+  background: linear-gradient(180deg, #15241f 0%, #101c18 100%);
+  border-bottom: 1px solid rgba(143, 175, 160, 0.14);
+}
+
+.pw-bob-traffic {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.pw-bob-traffic i {
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 999px;
+  display: block;
+}
+
+.pw-bob-traffic .is-red {
+  background: #ff5f57;
+}
+
+.pw-bob-traffic .is-yellow {
+  background: #febc2e;
+}
+
+.pw-bob-traffic .is-green {
+  background: #28c840;
+}
+
+.pw-bob-title {
+  margin: 0;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  color: rgba(231, 240, 235, 0.62);
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pw-bob-chrome-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pw-bob-chrome-btn {
+  border: 1px solid rgba(143, 175, 160, 0.28);
+  background: rgba(143, 175, 160, 0.08);
+  color: rgba(231, 240, 235, 0.82);
+  border-radius: 999px;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.68rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  cursor: pointer;
+}
+
+.pw-bob-chrome-btn:hover {
+  background: rgba(143, 175, 160, 0.16);
+}
+
+.pw-bob-body {
+  max-height: min(28rem, 68vh);
+  overflow: auto;
+  padding: 1rem 1.05rem 1.15rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143, 175, 160, 0.35) transparent;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(61, 107, 90, 0.18), transparent 55%),
+    #0c1714;
+}
+
+.pw-bob-pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(0.74rem, 2.3vw, 0.86rem);
+  line-height: 1.58;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.pw-bob-line {
+  min-height: 1.2em;
+}
+
+.pw-bob-tone-default {
+  color: rgba(220, 228, 224, 0.88);
+}
+
+.pw-bob-tone-command {
+  color: #8ec8ff;
+}
+
+.pw-bob-tone-success {
+  color: #7ddea0;
+}
+
+.pw-bob-tone-muted {
+  color: rgba(143, 175, 160, 0.95);
+}
+
+.pw-bob-tone-warn {
+  color: #e6c27a;
+}
+
+.pw-bob-tone-accent {
+  color: #c9efe0;
+  font-weight: 650;
+}
+
+.pw-bob-tone-dim {
+  color: rgba(231, 240, 235, 0.48);
+}
+
+.pw-bob-tone-money {
+  color: #f0d39a;
+  font-weight: 700;
+  text-shadow: 0 0 18px rgba(240, 211, 154, 0.22);
+}
+
+.pw-bob-tone-danger {
+  color: #ff7b7b;
+  font-weight: 650;
+}
+
+.pw-bob-tone-blank {
+  height: 0.7em;
+}
+
+.pw-bob-cursor-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.pw-bob-prompt {
+  color: #8ec8ff;
+}
+
+.pw-bob-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  background: #7ddea0;
+  border-radius: 1px;
+  animation: pw-cli-blink 1.05s steps(1, end) infinite;
+}
+
+.pw-bob-cursor.is-idle {
+  animation-duration: 1.2s;
+  opacity: 0.7;
+}
+
+@media (max-width: 720px) {
+  .pw-bob-section {
+    padding: 2.25rem 0 2.75rem;
+  }
+
+  .pw-bob-body {
+    max-height: min(26rem, 64vh);
+    padding: 0.85rem 0.8rem 1rem;
+  }
+
+  .pw-bob-title {
+    font-size: 0.64rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-bob-window {
+    animation: none;
+  }
+
+  .pw-bob-cursor {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+
 /* ── Pricing page ── */
 .pw-pricing {
   --pw-price-border: rgba(15, 47, 40, 0.1);

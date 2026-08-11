@@ -4,6 +4,7 @@ import { RequestAccessTeaser } from "@/components/access/RequestAccessGate";
 import { ProposalCarousel } from "@/components/intelligence/proposals/ProposalCarousel";
 import { ReportCarousel } from "@/components/intelligence/reports/ReportCarousel";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
+import { BookOfBusinessCLIShowcase } from "@/components/BookOfBusinessCLIShowcase";
 import { PolicyWellCLIShowcase } from "@/components/PolicyWellCLIShowcase";
 import { WorkflowStepsShowcase } from "@/components/WorkflowStepsShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -86,6 +87,16 @@ export default function HomePage() {
         </section>
 
         <WorkflowStepsShowcase />
+
+        <section
+          id="book-of-business"
+          className="pw-bob-section"
+          aria-labelledby="pw-bob-heading"
+        >
+          <div className="pw-shell pw-shell-wide">
+            <BookOfBusinessCLIShowcase />
+          </div>
+        </section>
 
         <section
           id="reports"
