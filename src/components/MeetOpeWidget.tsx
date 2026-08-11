@@ -112,7 +112,10 @@ export function MeetOpeWidget() {
     pathname?.startsWith("/agent/") ||
     pathname === "/pear" ||
     pathname === "/pear/" ||
-    pathname?.startsWith("/pear/");
+    pathname?.startsWith("/pear/") ||
+    pathname === "/pear2" ||
+    pathname === "/pear2/" ||
+    pathname?.startsWith("/pear2/");
 
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);

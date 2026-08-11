@@ -5229,6 +5229,76 @@ body:has(.pw-404) > .pw-site-footer {
   margin-top: 0.75rem;
 }
 
+.pw-bob-pear2-link {
+  margin: 1rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem 0.85rem;
+}
+
+.pw-bob-pear2-link a {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--pine);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(15, 47, 40, 0.28);
+}
+
+.pw-bob-pear2-link a:hover {
+  color: var(--moss);
+  border-bottom-color: var(--moss);
+}
+
+.pw-bob-pear2-note {
+  font-size: 0.85rem;
+  color: var(--stone);
+}
+
+.pw-pear2-page {
+  padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(3rem, 7vw, 5rem);
+  background:
+    radial-gradient(ellipse 70% 55% at 20% 0%, rgba(15, 47, 40, 0.12), transparent 60%),
+    linear-gradient(180deg, #eef4f0 0%, #f5faf7 50%, #e8f0eb 100%);
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.pw-pear2 {
+  display: grid;
+  gap: 1.35rem;
+  max-width: min(52rem, 100%);
+}
+
+.pw-pear2-hero {
+  max-width: 40rem;
+}
+
+.pw-pear2-sub {
+  margin: 0.85rem 0 0;
+  color: var(--stone);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.pw-pear2-sub code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  color: var(--pine);
+  background: rgba(15, 47, 40, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.pw-pear2 .pw-bob-window {
+  max-width: 100%;
+}
+
+.pw-pear2 .pw-bob-body {
+  max-height: min(34rem, 72vh);
+}
+
 .pw-bob-tabs {
   display: flex;
   flex-wrap: wrap;
