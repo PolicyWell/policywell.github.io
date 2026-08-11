@@ -175,21 +175,28 @@ export function CoverageProfileRequirements({
         <table className="pw-cl-table pw-cl-req-table">
           <thead>
             <tr>
-              <th>Applicability</th>
               <th>Requirement</th>
+              <th>Peril</th>
+              <th>Requirement type</th>
+              <th>Applicability</th>
+              <th>Requirement — tabulated</th>
             </tr>
           </thead>
           <tbody>
             {shown.map((row) => (
               <tr key={row.id}>
-                <td>{row.applicability}</td>
-                <td>
+                <td className="pw-cl-req-name">
                   <span className="pw-cl-req-path">
-                    {row.group} › {row.coverage} · {row.kind} · {row.peril}
+                    {row.group} — {row.coverage}
                   </span>
                   <strong>{row.name}</strong>
-                  <em>{row.text}</em>
                 </td>
+                <td className="pw-cl-req-peril-cell">{row.peril}</td>
+                <td>
+                  <span className="pw-cl-req-type-tag">{row.kind}</span>
+                </td>
+                <td className="pw-cl-req-applicability">{row.applicability}</td>
+                <td className="pw-cl-req-tabulated">{row.text}</td>
               </tr>
             ))}
           </tbody>
