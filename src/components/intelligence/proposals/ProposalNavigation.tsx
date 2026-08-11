@@ -27,10 +27,14 @@ export function ProposalNavigation({
     const active = root.querySelector<HTMLElement>(
       ".pw-proposal-thumb.is-active",
     );
-    active?.scrollIntoView({
+    if (!active) return;
+    // Scroll only inside the thumbnail strip — never the page.
+    // scrollIntoView would jump the homepage landing down to this section.
+    const target =
+      active.offsetLeft - (root.clientWidth - active.clientWidth) / 2;
+    root.scrollTo({
+      left: Math.max(0, target),
       behavior: "smooth",
-      inline: "center",
-      block: "nearest",
     });
   }, [activeIndex]);
 
