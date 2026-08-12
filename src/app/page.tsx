@@ -5,6 +5,7 @@ import { HomeCaseStories } from "@/components/home/HomeCaseStories";
 import { HomeFinalCta } from "@/components/home/HomeFinalCta";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeIntelligenceTeam } from "@/components/home/HomeIntelligenceTeam";
+import { HomeLiveDemos } from "@/components/home/HomeLiveDemos";
 import { HomePlatformShowcase } from "@/components/home/HomePlatformShowcase";
 import { HomeValueProp } from "@/components/home/HomeValueProp";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -51,7 +52,8 @@ export default function HomePage() {
         <HomeValueProp />
         <HomeIntelligenceTeam />
         <HomeAiExpertsSplit />
-        <HomePlatformShowcase
+        <HomePlatformShowcase />
+        <HomeLiveDemos
           coverageProfiles={coverageProfiles}
           coverageIndustries={coverageIndustries}
         />
