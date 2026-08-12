@@ -444,6 +444,29 @@ export function MeetOpeWidget() {
         saveOpeIdentity(nextIdentity);
         setIdentity(nextIdentity);
         identityRef.current = nextIdentity;
+        // Keep workspace profile name in sync so tool replies don't say "Jordan"/Guest.
+        const syncedUser = ensureSession(nextIdentity.name);
+        const currentProfile =
+          latest.current.profile ??
+          createEmptyProfile(
+            syncedUser.id,
+            syncedUser.role,
+            nextIdentity.name,
+            nextIdentity.email || syncedUser.email,
+          );
+        if (
+          currentProfile.displayName !== nextIdentity.name ||
+          (nextIdentity.email && currentProfile.email !== nextIdentity.email)
+        ) {
+          const syncedProfile = {
+            ...currentProfile,
+            displayName: nextIdentity.name,
+            email: nextIdentity.email || currentProfile.email,
+            updatedAt: new Date().toISOString(),
+          };
+          persistProfile(syncedProfile);
+          latest.current = { ...latest.current, profile: syncedProfile };
+        }
       }
 
       const identityOnly =
