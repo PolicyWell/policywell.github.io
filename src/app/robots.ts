@@ -22,6 +22,7 @@ export default function robots(): MetadataRoute.Robots {
           "/deck",
           "/agent",
           "/pear",
+          "/pear-x",
           "/api",
           "/api/",
           "/openapi.json",

@@ -18,11 +18,11 @@
     "seo:check": "node scripts/seo-check.mjs",
     "demo:video": "node scripts/record-yc-demo-video.mjs",
     "cli:link": "npm install -g ./packages/policywell-cli",
-    "policywell": "node packages/policywell-cli/bin/policywell.js",
+    "policywell": "node packages/policywell-cli/bin/policywell.mjs",
     "verify": "npm run typecheck && npm test && npm run build && npm run build:pages && SEO_CHECK_DIR=out npm run seo:check"
   },
   "bin": {
-    "policywell": "./packages/policywell-cli/bin/policywell.js"
+    "policywell": "./packages/policywell-cli/bin/policywell.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.20",

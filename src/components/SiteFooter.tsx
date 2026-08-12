@@ -43,6 +43,7 @@ const SUPPORTING_LINKS = [
 const LEGAL_LINKS = [
   { href: "/privacy/", label: "Privacy Policy" },
   { href: "/terms/", label: "Terms of Service" },
+  { href: "/sitemap/", label: "Sitemap" },
 ] as const;
 
 export function SiteFooter() {
