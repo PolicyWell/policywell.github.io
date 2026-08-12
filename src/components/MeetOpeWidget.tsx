@@ -509,7 +509,7 @@ export function MeetOpeWidget() {
       }
 
       const workspace = buildWorkspace(user);
-      const local = runAgentTurn(prompt, workspace);
+      const local = runAgentTurn(prompt, workspace, { mode: "ope" });
       persistProfile(local.workspace.profile);
       persistRecommendations(local.workspace.recommendations);
       persistTasks(local.workspace.tasks);

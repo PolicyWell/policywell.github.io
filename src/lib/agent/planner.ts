@@ -6,6 +6,8 @@ export interface PlannedCall {
   args: Record<string, unknown>;
 }
 
+export type AgentPlanMode = "analyst" | "ope";
+
 /**
  * Intent planner: maps a user utterance to an ordered list of tool calls.
  * Always updates context from free-form speech first (Manual §7).
@@ -13,7 +15,9 @@ export interface PlannedCall {
 export function planToolCalls(
   message: string,
   workspace: AgentWorkspace,
+  options: { mode?: AgentPlanMode } = {},
 ): PlannedCall[] {
+  const mode = options.mode ?? "analyst";
   const q = message.toLowerCase();
   const calls: PlannedCall[] = [];
 
@@ -104,12 +108,13 @@ export function planToolCalls(
     calls.push({ tool: "assess_commercial_risk", args: { focus } });
   }
 
-  // Default analyst path when nothing matched except maybe update_context
+  // Default path when nothing matched except maybe update_context
   if (calls.filter((c) => c.tool !== "update_context").length === 0) {
     if (workspace.documents.length) {
       calls.push({ tool: "analyze_policy", args: { question: message } });
       calls.push({ tool: "get_scores", args: {} });
-    } else if (!looksLikeFacts) {
+    } else if (!looksLikeFacts && mode !== "ope") {
+      // Analyst console defaults to a context dump; Meet Ope stays conversational.
       calls.push({ tool: "get_context", args: {} });
     }
   }

@@ -1,6 +1,12 @@
 import type { ToolResult } from "./tools";
 import type { AgentWorkspace } from "./tools";
 
+function firstName(workspace: AgentWorkspace): string {
+  const raw = workspace.profile.displayName?.trim() || "";
+  if (!raw || /^guest/i.test(raw)) return "";
+  return raw.split(/\s+/)[0] || "";
+}
+
 /** Analyst-style reply synthesized from tool results - never invents claims. */
 export function synthesizeReply(
   message: string,
@@ -125,6 +131,143 @@ export function synthesizeReply(
         .slice(0, 4)
         .join(", ")}.`,
     );
+  }
+
+  return parts.filter(Boolean).join("\n\n");
+}
+
+/**
+ * Meet Ope voice: short, ChatGPT-like, still grounded in tool results.
+ * Never leads with a raw "live context" dump.
+ */
+export function synthesizeOpeReply(
+  message: string,
+  toolResults: ToolResult[],
+  workspace: AgentWorkspace,
+): string {
+  const name = firstName(workspace);
+  const hi = name ? `${name}, ` : "";
+  const profile = workspace.profile;
+  const q = message.toLowerCase();
+
+  if (!toolResults.length) {
+    if (/^(hi|hello|hey|yo|howdy|good\s+(morning|afternoon|evening))\b/i.test(message.trim())) {
+      return `${hi}hey — I'm here. Want to look at coverage, funding, lapse risk, or just bounce a question?`;
+    }
+    if (/\b(thanks|thank you|thx|cool|ok|okay|got it|sounds good)\b/i.test(q)) {
+      return `${hi}anytime. What should we dig into next?`;
+    }
+    if (/\b(help|what can you|who are you)\b/i.test(q)) {
+      return `${hi}I'm Ope — think of me as a friendly PolicyWell guide. I can talk through coverage, funding, lapse risk, or review a policy PDF you drop in. What's on your mind?`;
+    }
+    return `${hi}happy to help. Ask about coverage, funding, or lapse risk — or attach a policy PDF/screenshot and I'll ground the answer in what you share.`;
+  }
+
+  const parts: string[] = [];
+  const updated = toolResults.find((t) => t.tool === "update_context" && t.ok);
+  if (updated) {
+    parts.push(`${hi}got it — I noted that.${updated.summary ? ` ${updated.summary}` : ""}`.trim());
+  }
+
+  for (const t of toolResults) {
+    if (t.tool === "update_context") continue;
+    if (!t.ok) {
+      parts.push(t.summary);
+      continue;
+    }
+    switch (t.tool) {
+      case "get_context": {
+        const thin =
+          profile.missingFields.length >= 3 ||
+          /incomplete|unset|docs none|unknown/i.test(t.summary);
+        if (thin) {
+          parts.push(
+            `${hi}honestly I don't have much on file for you yet — mostly a blank household profile and no policy docs.`,
+          );
+          parts.push(
+            "Easiest next step: upload a policy PDF/screenshot, or tell me your state and whether you're worried about coverage, funding, or lapse risk.",
+          );
+        } else {
+          parts.push(
+            `${hi}here's what I have so far, in plain English:\n${t.summary}`,
+          );
+        }
+        break;
+      }
+      case "get_scores":
+        parts.push(
+          `${hi}quick read on your PolicyWell scores:\n${t.summary}\n\nThese are explainable model outputs — not vibes. Want me to walk through funding scenarios or recommendations next?`,
+        );
+        break;
+      case "analyze_policy": {
+        const refs = t.data as
+          | {
+              document?: string;
+              extractedValues?: string[];
+              confidence?: number;
+              assumptions?: string[];
+            }
+          | undefined;
+        parts.push(t.summary);
+        if (refs?.document || (refs?.confidence != null && refs.confidence > 0)) {
+          const conf =
+            refs.confidence != null
+              ? ` (~${Math.round(refs.confidence * 100)}% confidence)`
+              : "";
+          parts.push(
+            `I'm grounding that in ${refs.document ?? "what you've shared"}${conf}. Upload more docs anytime if you want a sharper read.`,
+          );
+        } else if (!workspace.documents.length) {
+          parts.push(
+            "I don't have a policy on file yet, so this is a general take. Drop a PDF or screenshot and I'll get specific.",
+          );
+        }
+        break;
+      }
+      case "run_scenarios":
+        parts.push(
+          `${hi}here are three funding paths under the documented assumptions:\n${t.summary}\n\nUseful for planning — not a guarantee. Want me to turn one into next steps?`,
+        );
+        break;
+      case "compare_policies": {
+        const data = t.data as
+          | { warnings?: string[]; questions?: string[] }
+          | undefined;
+        parts.push(t.summary);
+        if (data?.questions?.length) {
+          parts.push(
+            `A couple things worth clarifying:\n${data.questions
+              .slice(0, 3)
+              .map((question) => `• ${question}`)
+              .join("\n")}`,
+          );
+        }
+        break;
+      }
+      case "generate_recommendations": {
+        const data = t.data as { id: string; title: string }[] | undefined;
+        parts.push(t.summary);
+        if (data?.length) {
+          parts.push(
+            "Ideas on the table (still need your OK before anything client-facing):\n" +
+              data.map((r) => `• ${r.title}`).join("\n"),
+          );
+        }
+        break;
+      }
+      default:
+        parts.push(t.summary);
+    }
+  }
+
+  // Soft nudge only when they asked about their profile and we're thin — never a lecture dump.
+  if (
+    /\b(who am i|what do you know|context|my profile|household)\b/i.test(q) &&
+    profile.missingFields.length &&
+    parts.length <= 2
+  ) {
+    const soft = profile.missingFields.slice(0, 2).join(" and ").toLowerCase();
+    parts.push(`If you want, share ${soft} and I can tighten this up.`);
   }
 
   return parts.filter(Boolean).join("\n\n");

@@ -47,4 +47,14 @@ describe("humanizeOpeReply", () => {
     });
     expect(out.startsWith("Alex,")).toBe(true);
   });
+
+  it("rewrites stiff live-context dumps", () => {
+    const out = humanizeOpeReply(
+      "Here's the live context I'm working from:\nContext for Josh...\n\nTo sharpen the analysis, I still need: Marital status.",
+      { name: "Josh" },
+    );
+    expect(out).not.toMatch(/live context/i);
+    expect(out).not.toMatch(/sharpen the analysis/i);
+    expect(out.toLowerCase()).toMatch(/josh|policy|coverage|funding|lapse/);
+  });
 });

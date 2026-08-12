@@ -1,5 +1,5 @@
-import { planToolCalls } from "./planner";
-import { synthesizeReply } from "./runtime";
+import { planToolCalls, type AgentPlanMode } from "./planner";
+import { synthesizeOpeReply, synthesizeReply } from "./runtime";
 import {
   runTool,
   type AgentTurnResult,
@@ -8,7 +8,12 @@ import {
 } from "./tools";
 
 export type { AgentTurnResult, AgentWorkspace, ToolResult };
+export type { AgentPlanMode };
 export { TOOL_CATALOG } from "./tools";
+
+export type RunAgentTurnOptions = {
+  mode?: AgentPlanMode;
+};
 
 function applyWorkspace(
   workspace: AgentWorkspace,
@@ -36,8 +41,10 @@ function applyWorkspace(
 export function runAgentTurn(
   message: string,
   workspace: AgentWorkspace,
+  options: RunAgentTurnOptions = {},
 ): AgentTurnResult {
-  const plan = planToolCalls(message, workspace);
+  const mode = options.mode ?? "analyst";
+  const plan = planToolCalls(message, workspace, { mode });
   const toolResults: ToolResult[] = [];
   let current = workspace;
 
@@ -47,7 +54,11 @@ export function runAgentTurn(
     current = applyWorkspace(current, [result]);
   }
 
-  const reply = synthesizeReply(message, toolResults, current);
+  const reply =
+    mode === "ope"
+      ? synthesizeOpeReply(message, toolResults, current)
+      : synthesizeReply(message, toolResults, current);
+
   return {
     reply,
     toolResults,
