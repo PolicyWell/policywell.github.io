@@ -21,14 +21,14 @@ export async function runAgentTurnWithOptionalLlm(
   workspace: AgentWorkspace,
   options: AgentLlmOptions = {},
 ): Promise<AgentTurnResult> {
-  const base = runAgentTurn(message, workspace);
+  const mode = options.mode ?? "analyst";
+  const base = runAgentTurn(message, workspace, { mode });
   const key =
     process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
     process.env.GEMINI_API_KEY?.trim() ||
     process.env.GOOGLE_AI_API_KEY?.trim();
   if (!key) return base;
 
-  const mode = options.mode ?? "analyst";
   const history = (options.history ?? [])
     .filter((m) => m.content?.trim() && m.role !== "system")
     .slice(-8);
