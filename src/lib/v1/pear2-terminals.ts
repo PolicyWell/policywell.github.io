@@ -252,7 +252,7 @@ export function runPear2CliCommand(raw: string): PearTermLine[] {
       { text: `Scenario — monthly premium ${money(premium)}`, tone: "muted" },
       { text: "", tone: "blank" },
       {
-        text: `  Current monthly                      ${money(scenario.currentMonthlyPremium)}`,
+        text: `  Current monthly                      ${money(ctx.monthlyPremium)}`,
         tone: "default",
       },
       {
