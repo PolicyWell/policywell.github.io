@@ -21,6 +21,23 @@ function emptyWorkspace(): AgentWorkspace {
 }
 
 describe("Insurance Intelligence Agent", () => {
+  it("Ope mode does not dump blank live context for casual chat", () => {
+    const result = runAgentTurn("Hey there", emptyWorkspace(), { mode: "ope" });
+    expect(result.toolResults.some((t) => t.tool === "get_context")).toBe(false);
+    expect(result.reply).not.toMatch(/live context I'm working from/i);
+    expect(result.reply).not.toMatch(/To sharpen the analysis/i);
+    expect(result.reply.toLowerCase()).toMatch(/hey|here|help|coverage|funding/);
+  });
+
+  it("Ope mode answers 'what do you know' without analyst boilerplate", () => {
+    const result = runAgentTurn("What do you know about me?", emptyWorkspace(), {
+      mode: "ope",
+    });
+    expect(result.reply).not.toMatch(/Here's the live context I'm working from/i);
+    expect(result.reply).not.toMatch(/To sharpen the analysis, I still need/i);
+    expect(result.reply.length).toBeGreaterThan(20);
+  });
+
   it("updates context from conversational facts before answering", () => {
     const result = runAgentTurn(
       "I'm married with three kids in TX and worried about my policy lapsing.",

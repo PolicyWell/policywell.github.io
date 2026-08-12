@@ -195,16 +195,35 @@ export function humanizeOpeReply(
       : "Tell me a bit more about the policy or question and I'll dig in.";
   }
 
-  // Strip stiff markdown headers / system-y prefixes when possible
+  // Rewrite leftover analyst boilerplate if an older path still emits it.
+  if (/here'?s the live context i'?m working from/i.test(text)) {
+    const first = identity?.name?.split(/\s+/)[0];
+    const hi = first ? `${first}, ` : "";
+    return `${hi}I don't have a full picture on file yet. Want to upload a policy PDF, or tell me what you're trying to figure out — coverage, funding, or lapse risk?`;
+  }
+
   text = text
     .replace(/^#+\s+/gm, "")
+    .replace(/^Got it,\s+/i, "Got it — ")
+    .replace(
+      /\n*\s*To sharpen the analysis, I still need:[^\n.]+\.?/gi,
+      "",
+    )
+    .replace(
+      /Here are your deterministic PolicyWell scores:/gi,
+      "Here's a quick score read:",
+    )
+    .replace(
+      /These are explainable and not LLM guesses\./gi,
+      "These are explainable model outputs.",
+    )
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
-  if (identity?.name && !new RegExp(`\\b${identity.name}\\b`, "i").test(text)) {
-    // Light personalization — only on short replies so we don't spam
-    if (text.length < 420 && !/^(hey|hi|hello)\b/i.test(text)) {
-      text = `${identity.name}, ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+  const first = identity?.name?.split(/\s+/)[0];
+  if (first && !new RegExp(`\\b${first}\\b`, "i").test(text)) {
+    if (text.length < 420 && !/^(hey|hi|hello|got it)\b/i.test(text)) {
+      text = `${first}, ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
     }
   }
 
