@@ -18794,8 +18794,9 @@ html[data-theme="dark"] .pw-access-lock {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .pw-site-header-overlay {
+  .pw-wc-top .pw-site-header-overlay {
     position: relative;
+    top: auto;
     background: var(--pw-wc-ink);
     border-bottom-color: rgba(255, 255, 255, 0.08);
   }
