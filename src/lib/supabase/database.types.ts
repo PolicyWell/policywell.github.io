@@ -624,6 +624,83 @@ export type Database = {
         }
         Relationships: []
       }
+      ope_chat_leads: {
+        Row: {
+          id: string
+          created_at: string
+          updated_at: string
+          session_key: string
+          name: string
+          email: string | null
+          company: string | null
+          role: string | null
+          page_path: string | null
+          user_agent: string | null
+          status: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          session_key: string
+          name: string
+          email?: string | null
+          company?: string | null
+          role?: string | null
+          page_path?: string | null
+          user_agent?: string | null
+          status?: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          session_key?: string
+          name?: string
+          email?: string | null
+          company?: string | null
+          role?: string | null
+          page_path?: string | null
+          user_agent?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      ope_chat_messages: {
+        Row: {
+          id: string
+          created_at: string
+          lead_id: string
+          role: string
+          content: string
+          seq: number
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          lead_id: string
+          role: string
+          content: string
+          seq?: number
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          lead_id?: string
+          role?: string
+          content?: string
+          seq?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ope_chat_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "ope_chat_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

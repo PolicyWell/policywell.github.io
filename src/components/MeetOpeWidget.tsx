@@ -13,6 +13,17 @@ import {
 } from "react";
 import { runAgentTurn, type AgentWorkspace } from "@/lib/agent";
 import { ingestDocument } from "@/lib/extraction";
+import {
+  humanizeOpeReply,
+  identityAck,
+  loadOpeIdentity,
+  mergeIdentity,
+  opeWelcome,
+  parseIdentityFromMessage,
+  recordOpeChat,
+  saveOpeIdentity,
+  type OpeChatIdentity,
+} from "@/lib/ope-chat";
 import { createEmptyProfile } from "@/lib/profile";
 import type { SessionUser } from "@/lib/types";
 import {
@@ -52,14 +63,13 @@ interface PendingAttachment {
   kind: ChatAttachment["kind"];
 }
 
-const WELCOME: ChatMessage = {
-  id: "ope-welcome",
-  role: "assistant",
-  content:
-    "Hi - I'm Ope, your PolicyWell guide. Ask about coverage, funding, or next steps - or attach a policy PDF / screenshot and I'll ground the reply in what you upload.",
-};
+const STARTERS_INTRO = [
+  "I'm Alex",
+  "Jordan — jordan@firm.com",
+  "Just browsing coverage options",
+];
 
-const STARTERS = [
+const STARTERS_KNOWN = [
   "Will my policy lapse?",
   "What do you recommend?",
   "What do you know about me?",
@@ -104,6 +114,28 @@ function formatBytes(n: number): string {
   return `${(n / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function looksLikeIdentityOnly(text: string, patch: Partial<OpeChatIdentity>): boolean {
+  if (!patch.name && !patch.email) return false;
+  const stripped = text
+    .replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "")
+    .replace(
+      /(?:my name is|i'?m|i am|this is|it'?s|call me|hi|hello|hey|name[:\s]+)/gi,
+      "",
+    )
+    .replace(/[^\w\s'-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = stripped.split(" ").filter(Boolean);
+  if (words.length <= 4) return true;
+  if (
+    patch.name &&
+    stripped.toLowerCase() === patch.name.toLowerCase()
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export function MeetOpeWidget() {
   const pathname = usePathname();
   const hideOnAgent =
@@ -121,7 +153,10 @@ export function MeetOpeWidget() {
     pathname?.startsWith("/pear-x/");
 
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
+  const [identity, setIdentity] = useState<OpeChatIdentity | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { id: "ope-welcome", role: "assistant", content: opeWelcome(null) },
+  ]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState<PendingAttachment[]>([]);
@@ -134,6 +169,10 @@ export function MeetOpeWidget() {
   const fileRef = useRef<HTMLInputElement>(null);
   const busyRef = useRef(false);
   const pendingRef = useRef<PendingAttachment[]>([]);
+  const identityRef = useRef<OpeChatIdentity | null>(null);
+  const askedEmailRef = useRef(false);
+  const seqRef = useRef(0);
+  const hydratedRef = useRef(false);
 
   const session = useSession();
   const profile = useProfile();
@@ -149,6 +188,24 @@ export function MeetOpeWidget() {
   useEffect(() => {
     pendingRef.current = pending;
   }, [pending]);
+
+  useEffect(() => {
+    identityRef.current = identity;
+  }, [identity]);
+
+  useEffect(() => {
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    const stored = loadOpeIdentity();
+    if (stored) {
+      setIdentity(stored);
+      identityRef.current = stored;
+      setMessages([
+        { id: "ope-welcome", role: "assistant", content: opeWelcome(stored) },
+      ]);
+      seqRef.current = 1;
+    }
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -192,13 +249,20 @@ export function MeetOpeWidget() {
     });
   }, [open, messages, busy, pending]);
 
-  function ensureSession(): SessionUser {
+  function ensureSession(nameHint?: string): SessionUser {
     const current = latest.current.session;
-    if (current) return current;
+    if (current) {
+      if (nameHint && current.name === "Guest Analyst") {
+        const updated = { ...current, name: nameHint };
+        persistSession(updated);
+        return updated;
+      }
+      return current;
+    }
     const guest: SessionUser = {
       id: "user_guest",
-      email: "guest@policywell.local",
-      name: "Guest Analyst",
+      email: identityRef.current?.email || "guest@policywell.local",
+      name: nameHint || identityRef.current?.name || "Guest Analyst",
       role: "policyholder",
     };
     persistSession(guest);
@@ -221,6 +285,27 @@ export function MeetOpeWidget() {
       recommendations: recs,
       tasks: t,
     };
+  }
+
+  async function persistTurn(
+    nextIdentity: OpeChatIdentity | null,
+    turnMessages: { role: "user" | "assistant" | "system"; content: string }[],
+  ) {
+    if (!nextIdentity?.name) return;
+    const seqStart = seqRef.current;
+    seqRef.current = seqStart + turnMessages.length;
+    const result = await recordOpeChat({
+      identity: nextIdentity,
+      pagePath: pathname || "/",
+      messages: turnMessages,
+      messageSeqStart: seqStart,
+    });
+    if (result.ok && result.data.leadId) {
+      const withLead = { ...nextIdentity, leadId: result.data.leadId };
+      saveOpeIdentity(withLead);
+      setIdentity(withLead);
+      identityRef.current = withLead;
+    }
   }
 
   function clearPending() {
@@ -336,20 +421,75 @@ export function MeetOpeWidget() {
         ? `I uploaded ${names}. Please review the attachment${files.length > 1 ? "s" : ""} and tell me what you can extract.`
         : "");
 
-    setMessages((m) => [
-      ...m,
-      {
-        id: `u_${newId()}`,
-        role: "user",
-        content: trimmed || `Attached ${files.length} file${files.length > 1 ? "s" : ""}`,
-        attachments: chatAttachments.length ? chatAttachments : undefined,
-      },
-    ]);
-    // Keep object URLs alive for the message bubble; clear composer queue.
+    const userBubble: ChatMessage = {
+      id: `u_${newId()}`,
+      role: "user",
+      content: trimmed || `Attached ${files.length} file${files.length > 1 ? "s" : ""}`,
+      attachments: chatAttachments.length ? chatAttachments : undefined,
+    };
+
+    setMessages((m) => [...m, userBubble]);
     setPending([]);
 
     try {
-      const user = ensureSession();
+      const priorIdentity = identityRef.current;
+      const patch = trimmed ? parseIdentityFromMessage(trimmed) : {};
+      const nextIdentity = mergeIdentity(priorIdentity, patch);
+      const capturedSomething =
+        Boolean(patch.name && patch.name !== priorIdentity?.name) ||
+        Boolean(patch.email && patch.email !== priorIdentity?.email) ||
+        Boolean(patch.company && patch.company !== priorIdentity?.company);
+
+      if (nextIdentity) {
+        saveOpeIdentity(nextIdentity);
+        setIdentity(nextIdentity);
+        identityRef.current = nextIdentity;
+        // Keep workspace profile name in sync so tool replies don't say "Jordan"/Guest.
+        const syncedUser = ensureSession(nextIdentity.name);
+        const currentProfile =
+          latest.current.profile ??
+          createEmptyProfile(
+            syncedUser.id,
+            syncedUser.role,
+            nextIdentity.name,
+            nextIdentity.email || syncedUser.email,
+          );
+        if (
+          currentProfile.displayName !== nextIdentity.name ||
+          (nextIdentity.email && currentProfile.email !== nextIdentity.email)
+        ) {
+          const syncedProfile = {
+            ...currentProfile,
+            displayName: nextIdentity.name,
+            email: nextIdentity.email || currentProfile.email,
+            updatedAt: new Date().toISOString(),
+          };
+          persistProfile(syncedProfile);
+          latest.current = { ...latest.current, profile: syncedProfile };
+        }
+      }
+
+      const identityOnly =
+        !files.length &&
+        Boolean(trimmed) &&
+        looksLikeIdentityOnly(trimmed, patch) &&
+        capturedSomething;
+
+      if (identityOnly && nextIdentity) {
+        const ack = identityAck(nextIdentity, patch);
+        const assistantId = `a_${newId()}`;
+        setMessages((m) => [
+          ...m,
+          { id: assistantId, role: "assistant", content: ack },
+        ]);
+        void persistTurn(nextIdentity, [
+          { role: "user", content: userBubble.content },
+          { role: "assistant", content: ack },
+        ]);
+        return;
+      }
+
+      const user = ensureSession(nextIdentity?.name);
       const created = [];
       for (const item of files) {
         const rawText = await readTextFile(item.file);
@@ -374,19 +514,39 @@ export function MeetOpeWidget() {
       persistRecommendations(local.workspace.recommendations);
       persistTasks(local.workspace.tasks);
 
-      const assistantId = `a_${newId()}`;
+      let reply = humanizeOpeReply(local.reply, nextIdentity);
+      if (
+        nextIdentity?.name &&
+        !nextIdentity.email &&
+        !askedEmailRef.current &&
+        capturedSomething === false
+      ) {
+        askedEmailRef.current = true;
+        reply += `\n\nBy the way — what's the best email if we need to follow up?`;
+      } else if (!nextIdentity?.name && !askedEmailRef.current) {
+        askedEmailRef.current = true;
+        reply += `\n\nQuick one — who should I say I'm chatting with?`;
+      }
+
       const ingestNote =
         created.length > 0
           ? `\n\nIngested ${created.length} attachment${created.length > 1 ? "s" : ""} into your PolicyWell workspace (verify on Upload when ready).`
           : "";
+
+      const assistantId = `a_${newId()}`;
       setMessages((m) => [
         ...m,
         {
           id: assistantId,
           role: "assistant",
-          content: `${local.reply}${ingestNote}`,
+          content: `${reply}${ingestNote}`,
         },
       ]);
+
+      const historyForApi = [...messages, userBubble]
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .slice(-8)
+        .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
 
       try {
         const res = await fetch("/api/agent", {
@@ -395,28 +555,44 @@ export function MeetOpeWidget() {
           body: JSON.stringify({
             message: prompt,
             workspace: local.workspace,
+            mode: "ope",
+            visitorName: nextIdentity?.name,
+            history: historyForApi,
           }),
         });
-        if (!res.ok) return;
-        const enhanced = (await res.json()) as {
-          usedLlm?: boolean;
-          reply?: string;
-        };
-        if (enhanced.usedLlm && enhanced.reply?.trim()) {
-          setMessages((m) =>
-            m.map((msg) =>
-              msg.id === assistantId
-                ? {
-                    ...msg,
-                    content: `${enhanced.reply!.trim()}${ingestNote}`,
-                  }
-                : msg,
-            ),
-          );
+        if (res.ok) {
+          const enhanced = (await res.json()) as {
+            usedLlm?: boolean;
+            reply?: string;
+          };
+          if (enhanced.usedLlm && enhanced.reply?.trim()) {
+            const polished = humanizeOpeReply(
+              enhanced.reply.trim(),
+              nextIdentity,
+            );
+            const finalReply = `${polished}${ingestNote}`;
+            setMessages((m) =>
+              m.map((msg) =>
+                msg.id === assistantId
+                  ? { ...msg, content: finalReply }
+                  : msg,
+              ),
+            );
+            void persistTurn(nextIdentity, [
+              { role: "user", content: userBubble.content },
+              { role: "assistant", content: finalReply },
+            ]);
+            return;
+          }
         }
       } catch {
         // Keep grounded local reply.
       }
+
+      void persistTurn(nextIdentity, [
+        { role: "user", content: userBubble.content },
+        { role: "assistant", content: `${reply}${ingestNote}` },
+      ]);
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : "Ope could not finish that turn.";
@@ -436,6 +612,10 @@ export function MeetOpeWidget() {
   }
 
   if (hideOnAgent) return null;
+
+  const starters = identity?.name ? STARTERS_KNOWN : STARTERS_INTRO;
+  const showStarters =
+    messages.length <= 2 && pending.length === 0 && !busy;
 
   return (
     <div
@@ -464,7 +644,9 @@ export function MeetOpeWidget() {
             />
             <div className="min-w-0">
               <p className="pw-ope-kicker">Meet Ope</p>
-              <h2 className="pw-ope-title">Chat in place</h2>
+              <h2 className="pw-ope-title">
+                {identity?.name ? `Chat with ${identity.name.split(" ")[0]}` : "Live chat"}
+              </h2>
             </div>
             <button
               type="button"
@@ -511,14 +693,14 @@ export function MeetOpeWidget() {
             ))}
             {busy && (
               <div className="pw-ope-bubble pw-ope-bubble-assistant pw-ope-typing">
-                Ope is thinking…
+                Ope is typing…
               </div>
             )}
           </div>
 
-          {messages.length <= 2 && pending.length === 0 && (
+          {showStarters && (
             <div className="pw-ope-starters">
-              {STARTERS.map((s) => (
+              {starters.map((s) => (
                 <button
                   key={s}
                   type="button"
@@ -605,11 +787,13 @@ export function MeetOpeWidget() {
               placeholder={
                 pending.length
                   ? "Add a note about the attachment…"
-                  : "Ask Ope or attach a file…"
+                  : identity?.name
+                    ? `Message Ope…`
+                    : "Your name, or ask Ope anything…"
               }
               aria-label="Message Ope"
               disabled={busy}
-              autoComplete="off"
+              autoComplete="name"
             />
             <button
               type="submit"
