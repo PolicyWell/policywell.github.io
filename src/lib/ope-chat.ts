@@ -75,10 +75,18 @@ function cleanName(raw: string): string | undefined {
   // Drop trailing "and my email is…" leftovers
   name = name.replace(/\s+and\b.*$/i, "").trim();
   if (name.length < 2 || name.length > 80) return undefined;
-  if (/^(i|me|my|the|a|an|yes|no|ok|okay|sure|hi|hello|hey)$/i.test(name)) {
+  // Reject pronouns / incomplete intros like "I'm" / "I am"
+  if (
+    /^(i|i'?m|im|i am|me|my|the|a|an|yes|no|ok|okay|sure|hi|hello|hey|yo)$/i.test(
+      name,
+    )
+  ) {
     return undefined;
   }
-  if (/\b(policy|coverage|lapse|premium|insurance|recommend)\b/i.test(name)) {
+  if (/^i'?m\b/i.test(name) && name.split(/\s+/).length < 2) {
+    return undefined;
+  }
+  if (/\b(policy|coverage|lapse|premium|insurance|recommend|browsing)\b/i.test(name)) {
     return undefined;
   }
   // Title-case lightly when all lowercase / uppercase
@@ -180,7 +188,7 @@ export function opeWelcome(identity: OpeChatIdentity | null): string {
       : "";
     return `Hey ${identity.name} — welcome back. I'm Ope, your PolicyWell guide.${emailBit} What's on your mind about coverage, funding, or next steps? You can also drop a policy PDF or screenshot anytime.`;
   }
-  return "Hey — I'm Ope, your PolicyWell guide. Before we dig in: who am I chatting with? A first name is perfect, and an email helps if you want a follow-up.";
+  return "Hey — I'm Ope, your PolicyWell guide. Who am I chatting with?";
 }
 
 /** Soften tool-grounded analyst text into a chatty Ope voice (no LLM). */
@@ -234,12 +242,15 @@ export function identityAck(
   identity: OpeChatIdentity,
   justCaptured: Partial<OpeChatIdentity>,
 ): string {
-  const first = identity.name.split(/\s+/)[0] || identity.name;
-  if (justCaptured.email && justCaptured.name) {
-    return `Nice to meet you, ${first}. I've got you down as ${identity.email}. What should we look at first — coverage, funding, lapse risk, or something else?`;
+  const first = (identity.name.split(/\s+/)[0] || identity.name).trim();
+  if (!first || /^(i|i'?m|im)$/i.test(first)) {
+    return "Thanks — what should we call you, and what's the insurance question on your mind?";
   }
-  if (justCaptured.name && !identity.email) {
-    return `Great to meet you, ${first}. If you're open to it, drop your email too so we can follow up — otherwise, what's the insurance question on your mind?`;
+  if (justCaptured.email && justCaptured.name) {
+    return `Nice to meet you, ${first}. I've got ${identity.email}. What should we look at first — coverage, funding, or renewals?`;
+  }
+  if (justCaptured.name) {
+    return `Great to meet you, ${first}. What's on your mind?`;
   }
   if (justCaptured.email && identity.name) {
     return `Perfect — I've noted ${identity.email}. How can I help today?`;
