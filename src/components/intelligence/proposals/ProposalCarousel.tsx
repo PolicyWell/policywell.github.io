@@ -31,9 +31,12 @@ const SLIDES: ProposalThumbMeta[] = [
 export function ProposalCarousel({
   coverageProfiles,
   coverageIndustries,
+  hideCoverageLibrary = false,
 }: {
   coverageProfiles: CoverageShowcaseProfile[];
   coverageIndustries: string[];
+  /** When true, omit the Coverage Library window (homepage platform tabs). */
+  hideCoverageLibrary?: boolean;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -111,10 +114,12 @@ export function ProposalCarousel({
         </p>
       </div>
 
-      <CoverageLibraryShowcase
-        profiles={coverageProfiles}
-        industries={coverageIndustries}
-      />
+      {!hideCoverageLibrary ? (
+        <CoverageLibraryShowcase
+          profiles={coverageProfiles}
+          industries={coverageIndustries}
+        />
+      ) : null}
 
       <div
         className="pw-proposal-stage"

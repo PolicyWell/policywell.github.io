@@ -459,7 +459,12 @@ function CompanyMenu({
   );
 }
 
-export function SiteNav() {
+export function SiteNav({
+  variant = "default",
+}: {
+  /** Overlay = transparent bar for full-bleed homepage hero (WithCoverage-style). */
+  variant?: "default" | "overlay";
+}) {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
@@ -521,7 +526,11 @@ export function SiteNav() {
   }
 
   return (
-    <header className="pw-site-header relative z-40">
+    <header
+      className={`pw-site-header relative z-40${
+        variant === "overlay" ? " pw-site-header-overlay" : ""
+      }`}
+    >
       <div className="pw-site-nav-row">
         <div className="pw-site-nav-brand">
           <BrandMark />
