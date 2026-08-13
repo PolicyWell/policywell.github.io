@@ -18032,7 +18032,7 @@ html[data-theme="dark"] .pw-access-lock {
   background: var(--pw-wc-ink);
   color: rgba(255, 255, 255, 0.92);
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: clamp(0.72rem, 1.9vw, 0.8125rem);
   line-height: 1.35;
   padding: 0.55rem 1rem;
   position: relative;
@@ -18123,6 +18123,15 @@ html[data-theme="dark"] .pw-access-lock {
   opacity: 1;
   transform: scale(1.02);
   animation: pw-wc-hero-drift 28s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Hide any native / webkit media chrome so it never shows a play button */
+.pw-wc-hero-video::-webkit-media-controls,
+.pw-wc-hero-video::-webkit-media-controls-enclosure,
+.pw-wc-hero-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
 }
 
 @keyframes pw-wc-hero-drift {
@@ -18190,12 +18199,12 @@ html[data-theme="dark"] .pw-access-lock {
 
 .pw-wc-hero-title {
   font-family: var(--font-fraunces), Georgia, serif;
-  font-size: clamp(2.1rem, 5.4vw, 3.85rem);
+  font-size: clamp(1.85rem, 4.8vw, 3.35rem);
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.08;
   font-weight: 500;
   margin: 0;
-  max-width: 16ch;
+  max-width: 22ch;
 }
 
 .pw-wc-hero-lede {
