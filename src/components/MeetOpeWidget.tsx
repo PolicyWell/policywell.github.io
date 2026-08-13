@@ -24,6 +24,7 @@ import {
   saveOpeIdentity,
   type OpeChatIdentity,
 } from "@/lib/ope-chat";
+import { requestOpeChatTurn } from "@/lib/ope-chat-client";
 import { createEmptyProfile } from "@/lib/profile";
 import type { SessionUser } from "@/lib/types";
 import {
@@ -444,7 +445,6 @@ export function MeetOpeWidget() {
         saveOpeIdentity(nextIdentity);
         setIdentity(nextIdentity);
         identityRef.current = nextIdentity;
-        // Keep workspace profile name in sync so tool replies don't say "Jordan"/Guest.
         const syncedUser = ensureSession(nextIdentity.name);
         const currentProfile =
           latest.current.profile ??
@@ -469,26 +469,6 @@ export function MeetOpeWidget() {
         }
       }
 
-      const identityOnly =
-        !files.length &&
-        Boolean(trimmed) &&
-        looksLikeIdentityOnly(trimmed, patch) &&
-        capturedSomething;
-
-      if (identityOnly && nextIdentity) {
-        const ack = identityAck(nextIdentity, patch);
-        const assistantId = `a_${newId()}`;
-        setMessages((m) => [
-          ...m,
-          { id: assistantId, role: "assistant", content: ack },
-        ]);
-        void persistTurn(nextIdentity, [
-          { role: "user", content: userBubble.content },
-          { role: "assistant", content: ack },
-        ]);
-        return;
-      }
-
       const user = ensureSession(nextIdentity?.name);
       const created = [];
       for (const item of files) {
@@ -509,89 +489,86 @@ export function MeetOpeWidget() {
       }
 
       const workspace = buildWorkspace(user);
-      const local = runAgentTurn(prompt, workspace, { mode: "ope" });
-      persistProfile(local.workspace.profile);
-      persistRecommendations(local.workspace.recommendations);
-      persistTasks(local.workspace.tasks);
+      const historyForApi = [...messages, userBubble]
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .slice(-10)
+        .map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        }));
 
-      let reply = humanizeOpeReply(local.reply, nextIdentity);
-      if (
-        nextIdentity?.name &&
-        !nextIdentity.email &&
-        !askedEmailRef.current &&
-        capturedSomething === false
-      ) {
-        askedEmailRef.current = true;
-        reply += `\n\nBy the way — what's the best email if we need to follow up?`;
-      } else if (!nextIdentity?.name && !askedEmailRef.current) {
-        askedEmailRef.current = true;
-        reply += `\n\nQuick one — who should I say I'm chatting with?`;
-      }
+      // Gemini-first (edge /api) so the visitor sees one smart reply, not a dumb local flash.
+      const live = await requestOpeChatTurn({
+        message: prompt,
+        history: historyForApi,
+        visitorName: nextIdentity?.name,
+        visitorEmail: nextIdentity?.email,
+        workspace,
+      });
 
       const ingestNote =
         created.length > 0
           ? `\n\nIngested ${created.length} attachment${created.length > 1 ? "s" : ""} into your PolicyWell workspace (verify on Upload when ready).`
           : "";
 
-      const assistantId = `a_${newId()}`;
+      let reply = "";
+      if (live?.usedLlm && live.reply.trim()) {
+        reply = humanizeOpeReply(live.reply.trim(), nextIdentity);
+        // Keep local workspace tools in sync without using their text as the chat reply.
+        try {
+          const local = runAgentTurn(prompt, workspace, { mode: "ope" });
+          persistProfile(local.workspace.profile);
+          persistRecommendations(local.workspace.recommendations);
+          persistTasks(local.workspace.tasks);
+        } catch {
+          /* non-fatal */
+        }
+      } else {
+        const identityOnly =
+          !files.length &&
+          Boolean(trimmed) &&
+          looksLikeIdentityOnly(trimmed, patch) &&
+          capturedSomething;
+
+        if (identityOnly && nextIdentity) {
+          reply = identityAck(nextIdentity, patch);
+        } else {
+          const local = runAgentTurn(prompt, workspace, { mode: "ope" });
+          persistProfile(local.workspace.profile);
+          persistRecommendations(local.workspace.recommendations);
+          persistTasks(local.workspace.tasks);
+          reply = humanizeOpeReply(
+            live?.reply?.trim() || local.reply,
+            nextIdentity,
+          );
+          // Offline / no-key fallback only: soft identity prompts (LLM handles this when live).
+          if (
+            nextIdentity?.name &&
+            !nextIdentity.email &&
+            !askedEmailRef.current &&
+            !capturedSomething
+          ) {
+            askedEmailRef.current = true;
+            reply += `\n\nBy the way — what's the best email if we need to follow up?`;
+          } else if (!nextIdentity?.name && !askedEmailRef.current) {
+            askedEmailRef.current = true;
+            reply += `\n\nQuick one — who should I say I'm chatting with?`;
+          }
+        }
+      }
+
+      const finalReply = `${reply}${ingestNote}`;
       setMessages((m) => [
         ...m,
         {
-          id: assistantId,
+          id: `a_${newId()}`,
           role: "assistant",
-          content: `${reply}${ingestNote}`,
+          content: finalReply,
         },
       ]);
-
-      const historyForApi = [...messages, userBubble]
-        .filter((m) => m.role === "user" || m.role === "assistant")
-        .slice(-8)
-        .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
-
-      try {
-        const res = await fetch("/api/agent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: prompt,
-            workspace: local.workspace,
-            mode: "ope",
-            visitorName: nextIdentity?.name,
-            history: historyForApi,
-          }),
-        });
-        if (res.ok) {
-          const enhanced = (await res.json()) as {
-            usedLlm?: boolean;
-            reply?: string;
-          };
-          if (enhanced.usedLlm && enhanced.reply?.trim()) {
-            const polished = humanizeOpeReply(
-              enhanced.reply.trim(),
-              nextIdentity,
-            );
-            const finalReply = `${polished}${ingestNote}`;
-            setMessages((m) =>
-              m.map((msg) =>
-                msg.id === assistantId
-                  ? { ...msg, content: finalReply }
-                  : msg,
-              ),
-            );
-            void persistTurn(nextIdentity, [
-              { role: "user", content: userBubble.content },
-              { role: "assistant", content: finalReply },
-            ]);
-            return;
-          }
-        }
-      } catch {
-        // Keep grounded local reply.
-      }
-
       void persistTurn(nextIdentity, [
         { role: "user", content: userBubble.content },
-        { role: "assistant", content: `${reply}${ingestNote}` },
+        { role: "assistant", content: finalReply },
       ]);
     } catch (err) {
       const msg =
