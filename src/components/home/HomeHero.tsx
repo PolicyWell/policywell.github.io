@@ -25,6 +25,16 @@ export function HomeHero() {
     const el = videoRef.current;
     if (!el) return;
 
+    // Required for reliable autoplay (React's `muted` prop alone is flaky).
+    el.muted = true;
+    el.defaultMuted = true;
+    el.playsInline = true;
+    el.loop = true;
+    el.controls = false;
+    el.setAttribute("muted", "");
+    el.setAttribute("playsinline", "");
+    el.setAttribute("webkit-playsinline", "");
+
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -34,18 +44,25 @@ export function HomeHero() {
       return;
     }
 
-    // Autoplay can be blocked until muted play() is requested again after mount.
     const play = () => {
+      el.muted = true;
       void el.play().catch(() => {
-        /* keep poster visible */
+        /* poster stays until autoplay is allowed */
       });
     };
+
     play();
+    el.addEventListener("loadeddata", play);
+    el.addEventListener("canplay", play);
     const onVis = () => {
       if (document.visibilityState === "visible") play();
     };
     document.addEventListener("visibilitychange", onVis);
-    return () => document.removeEventListener("visibilitychange", onVis);
+    return () => {
+      el.removeEventListener("loadeddata", play);
+      el.removeEventListener("canplay", play);
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, []);
 
   return (
@@ -62,8 +79,13 @@ export function HomeHero() {
           muted
           loop
           playsInline
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
           preload="auto"
           poster={HERO_POSTER}
+          aria-hidden
+          tabIndex={-1}
         >
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
