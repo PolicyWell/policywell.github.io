@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   humanizeOpeReply,
+  identityAck,
   mergeIdentity,
   parseIdentityFromMessage,
 } from "@/lib/ope-chat";
@@ -15,6 +16,11 @@ describe("parseIdentityFromMessage", () => {
 
   it("parses bare name", () => {
     expect(parseIdentityFromMessage("Jordan")).toEqual({ name: "Jordan" });
+  });
+
+  it("rejects incomplete I'm intros", () => {
+    expect(parseIdentityFromMessage("I'm")).toEqual({});
+    expect(parseIdentityFromMessage("I'm.")).toEqual({});
   });
 
   it("does not treat insurance questions as names", () => {
@@ -37,6 +43,14 @@ describe("mergeIdentity", () => {
     expect(
       mergeIdentity({ name: "Alex" }, { email: "a@b.co" }),
     ).toEqual({ name: "Alex", email: "a@b.co" });
+  });
+});
+
+describe("identityAck", () => {
+  it("does not greet with broken I'm name", () => {
+    const out = identityAck({ name: "I'm" }, { name: "I'm" });
+    expect(out).not.toMatch(/Great to meet you, I'm/i);
+    expect(out.toLowerCase()).toMatch(/what should we call you|what's on your mind|help/);
   });
 });
 
