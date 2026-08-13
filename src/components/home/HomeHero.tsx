@@ -96,9 +96,9 @@ export function HomeHero() {
         <LiveAnalysisCounter className="pw-wc-hero-live animate-rise" />
         <p className="pw-wc-hero-brand animate-rise">PolicyWell</p>
         <h1 className="pw-wc-hero-title animate-rise">
-          You underwrite the future.
+          Your Coverage Data, Made Intelligent.
           <br />
-          We make it intelligent.
+          Analyze, Optimized &amp; Protected
         </h1>
         <p className="pw-wc-hero-lede animate-rise-delay">
           PolicyWell is the agentic operating system for the insurance

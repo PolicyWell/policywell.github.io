@@ -4,8 +4,12 @@ import Link from "next/link";
 export function HomeAnnouncementBar() {
   return (
     <div className="pw-wc-announce">
-      <Link href="/#meet-ope" className="pw-wc-announce-link">
-        Meet Ope — PolicyWell&apos;s live insurance guide is now on every page
+      <Link
+        href="/platform/coverage-library/"
+        className="pw-wc-announce-link"
+      >
+        View our newest industry coverage library and the global insurance
+        benchmarks — live data injected into our engine
         <span aria-hidden="true"> →</span>
       </Link>
     </div>

@@ -18124,17 +18124,14 @@ html[data-theme="dark"] .pw-access-lock {
   transform: scale(1.02);
   animation: pw-wc-hero-drift 28s ease-in-out infinite alternate;
   pointer-events: none;
-  /* Hide any native / webkit media chrome so it never shows a play button */
-  &::-webkit-media-controls {
-    display: none !important;
-  }
-  &::-webkit-media-controls-enclosure {
-    display: none !important;
-  }
-  &::-webkit-media-controls-start-playback-button {
-    display: none !important;
-    -webkit-appearance: none;
-  }
+}
+
+/* Hide any native / webkit media chrome so it never shows a play button */
+.pw-wc-hero-video::-webkit-media-controls,
+.pw-wc-hero-video::-webkit-media-controls-enclosure,
+.pw-wc-hero-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
 }
 
 @keyframes pw-wc-hero-drift {
