@@ -1,31 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { LiveAnalysisCounter } from "@/components/LiveAnalysisCounter";
 
-const HERO_SCENES = [
-  {
-    src: "/industries/heroes/flooring-contractor-insurance-hero.webp",
-    label: "Commercial construction",
-  },
-  {
-    src: "/industries/heroes/technology-hero.webp",
-    label: "Technology",
-  },
-  {
-    src: "/industries/heroes/restaurant-group-insurance-hero.webp",
-    label: "Restaurants",
-  },
-  {
-    src: "/industries/heroes/semi-truck-insurance-hero.webp",
-    label: "Trucking",
-  },
-  {
-    src: "/industries/heroes/commercial-property-management-insurance-hero.webp",
-    label: "Property",
-  },
-] as const;
+const HERO_VIDEO = "/hero/policywell-city-loop.mp4";
+const HERO_POSTER = "/hero/policywell-city-loop.jpg";
 
 const PROOF_STRIP = [
   "Agencies",
@@ -39,29 +19,40 @@ const PROOF_STRIP = [
 ] as const;
 
 export function HomeHero() {
-  const [scene, setScene] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const id = window.setInterval(() => {
-      setScene((i) => (i + 1) % HERO_SCENES.length);
-    }, 5600);
-    return () => window.clearInterval(id);
+    const el = videoRef.current;
+    if (!el) return;
+    // Autoplay can be blocked until muted play() is requested again after mount.
+    const play = () => {
+      void el.play().catch(() => {
+        /* keep poster visible */
+      });
+    };
+    play();
+    const onVis = () => {
+      if (document.visibilityState === "visible") play();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
   return (
     <section className="pw-wc-hero" aria-label="PolicyWell hero">
       <div className="pw-wc-hero-media" aria-hidden>
-        {HERO_SCENES.map((s, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={s.src}
-            src={s.src}
-            alt=""
-            className={`pw-wc-hero-img${i === scene ? " is-active" : ""}`}
-            decoding="async"
-            fetchPriority={i === 0 ? "high" : "low"}
-          />
-        ))}
+        <video
+          ref={videoRef}
+          className="pw-wc-hero-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={HERO_POSTER}
+        >
+          <source src={HERO_VIDEO} type="video/mp4" />
+        </video>
         <div className="pw-wc-hero-shade" />
       </div>
 
