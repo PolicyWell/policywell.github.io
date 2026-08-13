@@ -101,9 +101,9 @@ export function HomeHero() {
           Analyze, Optimized &amp; Protected
         </h1>
         <p className="pw-wc-hero-lede animate-rise-delay">
-          PolicyWell is the agentic operating system for the insurance
-          industry — coverage analysis, book intelligence, and AI agents in
-          one platform.
+          Turn complex insurance data into clear coverage insights, portfolio
+          intelligence, and automated workflows—from individual policies to
+          entire books of business.
         </p>
         <div className="pw-wc-hero-cta animate-rise-delay-2">
           <Link href="/book-a-call/" className="pw-wc-btn-light">
