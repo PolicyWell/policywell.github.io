@@ -18791,6 +18791,83 @@ html[data-theme="dark"] .pw-access-lock {
   color: inherit;
 }
 
+/*
+ * Dark mode: homepage light panels still use light surfaces, but theme tokens
+ * (--pine-deep, --ink, --stone, --foam) flip to light colors — which washes
+ * out titles/body text and makes white CTA labels invisible. Lock contrast.
+ */
+html[data-theme="dark"] .pw-site-header-overlay .pw-nav-cta.pw-btn,
+html[data-theme="dark"] .pw-wc-btn-light {
+  background: #fff;
+  color: #0a1f1a;
+  border-color: #fff;
+}
+
+html[data-theme="dark"] .pw-wc-btn-light:hover {
+  background: #f5faf7;
+  color: #0a1f1a;
+}
+
+html[data-theme="dark"] .pw-wc-btn-outline {
+  color: #0f2f28;
+  border-color: #0f2f28;
+}
+
+html[data-theme="dark"] .pw-wc-btn-outline:hover {
+  background: rgba(15, 47, 40, 0.06);
+  color: #0f2f28;
+}
+
+html[data-theme="dark"] .pw-wc-announce {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+html[data-theme="dark"] .pw-wc-hero-lede {
+  color: rgba(245, 250, 247, 0.96);
+}
+
+html[data-theme="dark"] .pw-wc-proof-item {
+  color: rgba(245, 250, 247, 0.88);
+}
+
+html[data-theme="dark"] .pw-wc-value-title,
+html[data-theme="dark"] .pw-wc-section-title,
+html[data-theme="dark"] .pw-wc-split-title,
+html[data-theme="dark"] .pw-wc-risk-card-head,
+html[data-theme="dark"] .pw-wc-advise-change,
+html[data-theme="dark"] .pw-wc-stories-head .pw-wc-section-title {
+  color: #0a1f1a;
+}
+
+html[data-theme="dark"] .pw-wc-section-lede,
+html[data-theme="dark"] .pw-wc-split-lede,
+html[data-theme="dark"] .pw-wc-risk-meta,
+html[data-theme="dark"] .pw-wc-advise-kicker,
+html[data-theme="dark"] .pw-wc-advise-note {
+  color: #3a4d45;
+}
+
+html[data-theme="dark"] .pw-wc-advise-row {
+  color: #0f2f28;
+}
+
+html[data-theme="dark"] .pw-wc-risk-check {
+  background: #0f2f28;
+  color: #fff;
+}
+
+html[data-theme="dark"] .pw-wc-platform-stage {
+  color: #13201c;
+}
+
+html[data-theme="dark"] .pw-wc-split-foot-meta {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+html[data-theme="dark"] .pw-wc-team-blurb {
+  color: rgba(245, 250, 247, 0.86);
+}
+
 @media (max-width: 1100px) {
   .pw-wc-team-grid,
   .pw-wc-stories-track,

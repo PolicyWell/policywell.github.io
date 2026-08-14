@@ -1,80 +1,93 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { formatAnalyzedCounter } from "@/lib/v1/ingestion-stats";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-type StatsPayload = {
-  documents: {
-    uploaded: number;
-    successfullyIngested: number;
-  };
-  ingestions: {
-    queued: number;
-    processing: number;
-    completed: number;
-    failed: number;
-  };
-  updatedAt: string;
-};
-
-type LoadState =
-  | { status: "loading" }
-  | { status: "error" }
-  | { status: "ready"; stats: StatsPayload };
-
-const POLL_MS = 4000;
-
-async function fetchStats(): Promise<StatsPayload> {
-  const res = await fetch("/api/v1/ingestions/stats/", {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    throw new Error(`stats ${res.status}`);
-  }
-  return (await res.json()) as StatsPayload;
+function formatCount(n: number) {
+  return n.toLocaleString("en-US");
 }
 
 /**
- * Live homepage counter — prefers GET /api/v1/ingestions/stats when available.
+ * Hero live counter backed by public.site_stats.
+ * That row is refreshed by a DB trigger whenever documents are inserted/updated,
+ * and is readable with the publishable key (works on static GitHub Pages).
  */
 export function LiveAnalysisCounter({
   className = "",
 }: {
   className?: string;
 }) {
-  const [state, setState] = useState<LoadState>({ status: "loading" });
+  const [count, setCount] = useState<number | null>(null);
+  const [failed, setFailed] = useState(false);
+  const configured = isSupabaseConfigured();
 
   useEffect(() => {
-    let cancelled = false;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    async function tick() {
-      try {
-        const stats = await fetchStats();
-        if (!cancelled) setState({ status: "ready", stats });
-      } catch {
-        if (!cancelled) {
-          setState((prev) =>
-            prev.status === "ready" ? prev : { status: "error" },
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          timer = setTimeout(tick, POLL_MS);
-        }
-      }
+    if (!configured) {
+      setFailed(true);
+      return;
     }
 
-    void tick();
+    const supabase = createBrowserSupabaseClient();
+    if (!supabase) {
+      setFailed(true);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function load() {
+      const { data, error } = await supabase!
+        .from("site_stats")
+        .select("analyzed_count")
+        .eq("id", 1)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        setFailed(true);
+        return;
+      }
+      setFailed(false);
+      setCount(Number(data?.analyzed_count ?? 0));
+    }
+
+    void load();
+
+    const channel = supabase
+      .channel("hero-site-stats")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "site_stats",
+          filter: "id=eq.1",
+        },
+        (payload) => {
+          const next = (payload.new as { analyzed_count?: number } | null)
+            ?.analyzed_count;
+          if (typeof next === "number" && Number.isFinite(next)) {
+            setCount(next);
+            setFailed(false);
+            return;
+          }
+          void load();
+        },
+      )
+      .subscribe();
+
+    const poll = window.setInterval(() => {
+      void load();
+    }, 20_000);
+
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
+      window.clearInterval(poll);
+      void supabase.removeChannel(channel);
     };
-  }, []);
+  }, [configured]);
 
-  if (state.status === "error") {
+  if (failed) {
     return (
       <div
         className={`pw-live-counter is-ready ${className}`.trim()}
@@ -91,55 +104,24 @@ export function LiveAnalysisCounter({
     );
   }
 
-  if (state.status === "loading") {
-    return (
-      <div
-        className={`pw-live-counter ${className}`.trim()}
-        role="status"
-        aria-live="polite"
-        aria-busy="true"
-      >
-        <span className="pw-live-counter-dot" aria-hidden="true" />
-        <span className="pw-live-counter-num" style={{ minWidth: "1.5ch" }}>
-          {"\u00a0"}
-        </span>
-        <span className="pw-live-counter-label">Loading analysis count…</span>
-      </div>
-    );
-  }
-
-  const active =
-    state.stats.ingestions.queued + state.stats.ingestions.processing;
-  if (active > 0) {
-    return (
-      <div
-        className={`pw-live-counter is-ready ${className}`.trim()}
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <span className="pw-live-counter-dot" aria-hidden="true" />
-        <span className="pw-live-counter-num">…</span>
-        <span className="pw-live-counter-label">Analyzing…</span>
-      </div>
-    );
-  }
-
-  const display = formatAnalyzedCounter(
-    state.stats.documents.successfullyIngested,
-  );
+  const ready = count !== null;
 
   return (
     <div
-      className={`pw-live-counter is-ready ${className}`.trim()}
+      className={`pw-live-counter ${ready ? "is-ready" : ""} ${className}`.trim()}
       role="status"
       aria-live="polite"
       aria-atomic="true"
+      aria-busy={!ready}
     >
       <span className="pw-live-counter-dot" aria-hidden="true" />
-      <span className="pw-live-counter-num">{display.numberText}</span>
+      <span className="pw-live-counter-num">
+        {ready ? formatCount(count) : "\u00a0"}
+      </span>
       <span className="pw-live-counter-label">
-        Policies and Illustrations Analyzed • Live
+        {ready
+          ? "Policies and Illustrations Analyzed • Live"
+          : "Loading analysis count…"}
       </span>
     </div>
   );
